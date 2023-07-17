@@ -61,7 +61,7 @@ CREATE TABLE `room` (
   `video` int(11) DEFAULT NULL,
   `title` varchar(20) DEFAULT NULL,
   `megi_setting` tinyint(4) NOT NULL,
-  `limit_rating` int(11) NOT NULL,
+  `limit_rating` varchar(20) NOT NULL,
   PRIMARY KEY (`room_id`),
   UNIQUE KEY `room_id_UNIQUE` (`room_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -140,7 +140,7 @@ CREATE TABLE `user` (
   `profile_image_src` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_id_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,4 +167,4 @@ CREATE TABLE `warn` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-17 14:20:21
+-- Dump completed on 2023-07-17 14:47:37
