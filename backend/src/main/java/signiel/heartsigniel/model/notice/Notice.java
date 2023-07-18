@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class NoticeDto {
+public class Notice {
     private String example;
 }
 

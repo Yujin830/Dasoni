@@ -8,6 +8,6 @@ import lombok.*;
 @ToString(exclude = "password")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class User {
     private int userId;
 }

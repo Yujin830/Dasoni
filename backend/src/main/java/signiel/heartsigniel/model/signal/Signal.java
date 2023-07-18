@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.room;
+package signiel.heartsigniel.model.signal;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomDto {
+public class Signal {
     private String example;
 
 }
