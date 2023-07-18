@@ -1,6 +1,7 @@
 package signiel.heartsigniel.model.user;
 
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import signiel.heartsigniel.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class UserEntity extends BaseTimeEntity {
 
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private int userId;
 
     @Column(name="login_id", unique = true, length = 20)
     private String loginId;
@@ -50,5 +51,9 @@ public class UserEntity extends BaseTimeEntity {
 
     @Column(name = "profile_image_src", length = 200)
     private String profileImageSrc;
+
+    public void encodePassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(password);
+    }
 
 }
