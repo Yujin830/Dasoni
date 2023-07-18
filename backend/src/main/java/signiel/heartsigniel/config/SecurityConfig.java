@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,10 +24,9 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/login").permitAll()
-                .antMatchers("/user/regist").permitAll()
+                .antMatchers("/users/login").permitAll()
+                .antMatchers("/users/regist").permitAll()
                 .anyRequest().authenticated();
-
         return http.build();
     }
 
@@ -34,8 +34,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
-    private static final String[] AUTH_WHITELIST={
+    private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs",
             "/v3/api-docs/**",
             "/configuration/ui",
@@ -50,7 +49,8 @@ public class SecurityConfig {
             "/h2/**"
     };
 
-    public void configure(WebSecurity web) throws Exception{
-        web.ignoring().antMatchers(AUTH_WHITELIST);
-    }
+    // 정적인 파일 요청에 대해 무시
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers(AUTH_WHITELIST);
+//    }
 }

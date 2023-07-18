@@ -21,7 +21,7 @@ import java.util.List;
 public class JwtTokenProvider {
 //    private String secretKey = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY4OTY2NTM1MywiaWF0IjoxNjg5NjY1MzUzfQ.ITqjrPwA_Mp10uLaYAn-LjxCkYMVf37DRLIXoA65bEM";
     private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private String secret;
+    private String secret; ////////////다시
     // 토큰 유효시간 72시간 (3일)
     private final long tokenValidTime = 1440 * 60 * 3 * 1000L;
     private final UserDetailsService userDetailsService;
