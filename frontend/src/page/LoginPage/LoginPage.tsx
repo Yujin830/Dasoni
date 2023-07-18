@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../../components/Button/FilledButton';
 import Input from '../../components/NoLabelInput/NoLabelInput';
 import './LoginPage.css';
@@ -35,6 +35,27 @@ const styles = {
 };
 
 function LoginPage() {
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleChangeId = (event: any) => {
+    setId(event.target.value);
+  };
+
+  const handleChangeIdPassword = (event: any) => {
+    setPassword(event.target.value);
+  };
+
+  const Login = (event: any) => {
+    event.preventDefault();
+    const data = {
+      id: id,
+      password: password,
+    };
+    console.log('login');
+    console.log(data);
+  };
+
   return (
     <div className="box">
       <div className="left-box">
@@ -51,9 +72,23 @@ function LoginPage() {
         <img className="signal right" src={rightSignal} alt="시그널 아이콘" />
         <div className="right-box-content">
           <img src={logo} alt="다소니 로고 이미지" />
-          <Input style={styles.input} type="text" placeholer="아이디를 입력해주세요." />
-          <Input style={styles.input} type="password" placeholer="비밀번호를 입력해주세요." />
-          <Button style={styles.button} content="로그인" />
+          <form>
+            <Input
+              style={styles.input}
+              type="text"
+              value={id}
+              handleChange={handleChangeId}
+              placeholer="아이디를 입력해주세요."
+            />
+            <Input
+              style={styles.input}
+              type="password"
+              value={password}
+              handleChange={handleChangeIdPassword}
+              placeholer="비밀번호를 입력해주세요."
+            />
+            <Button style={styles.button} content="로그인" handleClick={Login} />
+          </form>
           <p>
             아직 회원이 아니신가요?{' '}
             <a id="regist" href="/">
