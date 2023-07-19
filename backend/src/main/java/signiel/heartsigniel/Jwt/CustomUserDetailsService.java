@@ -1,25 +1,17 @@
 package signiel.heartsigniel.Jwt;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-//import signiel.heartsigniel.model.user.UserEntity;
 import signiel.heartsigniel.model.user.UserEntity;
 import signiel.heartsigniel.model.user.UserRepo;
-
-import java.util.Optional;
-
-//import static org.springframework.security.core.userdetails.User.*;
 
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepo userRepo;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
