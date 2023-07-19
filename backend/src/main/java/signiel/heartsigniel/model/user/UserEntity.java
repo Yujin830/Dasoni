@@ -1,22 +1,28 @@
 package signiel.heartsigniel.model.user;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import signiel.heartsigniel.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * UserEntity 정보
  */
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-public class UserEntity extends BaseTimeEntity {
+@ToString
+@Entity(name = "User")
+public class UserEntity implements UserDetails { ///수정
 
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +53,7 @@ public class UserEntity extends BaseTimeEntity {
     @Column(length = 20)
     private String rank;
 
+    @Column(name = "meeting_count")
     private int meetingCount;
 
     @Column(name = "profile_image_src", length = 200)
@@ -56,4 +63,45 @@ public class UserEntity extends BaseTimeEntity {
         this.password = passwordEncoder.encode(password);
     }
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    //////
+    @Override
+    public String getUsername() {
+        return loginId;
+    }
+
+    @Override
+    public String getPassword(){
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
