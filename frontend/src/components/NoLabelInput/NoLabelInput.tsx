@@ -5,19 +5,19 @@ type NoLableInputProps = {
   style: object;
   type: string;
   value: string;
-  handleChange: any;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholer: string;
 };
 
-function NoLableInput(props: NoLableInputProps) {
+function NoLableInput({ style, type, value, handleChange, placeholer }: NoLableInputProps) {
   return (
     <input
       className="no-label-input"
-      style={props.style}
-      type={props.type}
-      value={props.value}
-      onChange={props.handleChange}
-      placeholder={props.placeholer}
+      style={style}
+      type={type}
+      value={value}
+      onChange={handleChange}
+      placeholder={placeholer}
     />
   );
 }
