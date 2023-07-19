@@ -15,20 +15,20 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity
-public class UserEntity extends BaseTimeEntity {
+@Entity(name = "user")
+public class UserEntity{
 
-    @Id @Column(name = "user_id")
+    @Id @Column(name = "`user_id`")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @Column(name="login_id", unique = true, length = 20)
+    @Column(name="`login_id`", length = 20)
     private String loginId;
 
     @Column(length = 100)
     private String password;
 
-    @Column(unique = true, length = 10)
+    @Column(unique = true, length = 100)
     private String nickname;
 
     private int age;
@@ -38,18 +38,19 @@ public class UserEntity extends BaseTimeEntity {
 
     private Date birth;
 
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "`phone_number`", length = 100)
     private String phoneNumber;
 
-    @Column(name = "isblack")
+    @Column(name = "`isblack`")
     private boolean isBlack;
 
-    @Column(length = 20)
+    @Column(name = "`rank`", length = 20)
     private String rank;
 
+    @Column(name = "`meeting_count`")
     private int meetingCount;
 
-    @Column(name = "profile_image_src", length = 200)
+    @Column(name = "`profile_image_src`", length = 200)
     private String profileImageSrc;
 
     public void encodePassword(PasswordEncoder passwordEncoder){
