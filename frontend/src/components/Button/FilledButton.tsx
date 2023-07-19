@@ -4,13 +4,13 @@ import './Button.css';
 type FilledButtonProps = {
   style: object;
   content: string;
-  handleClick: any;
+  handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-function FilledButton(props: FilledButtonProps) {
+function FilledButton({ style, content, handleClick }: FilledButtonProps) {
   return (
-    <button className="btn" style={props.style} onClick={props.handleClick}>
-      {props.content}
+    <button className="btn" style={style} onClick={handleClick}>
+      {content}
     </button>
   );
 }
