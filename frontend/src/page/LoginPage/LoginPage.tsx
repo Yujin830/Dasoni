@@ -38,11 +38,11 @@ function LoginPage() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleChangeId = (event: any) => {
+  const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setId(event.target.value);
   };
 
-  const handleChangeIdPassword = (event: any) => {
+  const handleChangeIdPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
 

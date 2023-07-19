@@ -20,7 +20,7 @@ public class UserController {
 
     @PostMapping("/regist")
     @ResponseStatus(HttpStatus.OK)
-    public Integer regist(@Validated @RequestBody User user) throws Exception{
+    public User regist(@Validated @RequestBody User user) throws Exception{
         return userService.register(user);
     }
 

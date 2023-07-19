@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Integer register(User user) throws Exception {
+    public User register(User user) throws Exception {
         if(userRepo.findByLoginId(user.getLoginId()).isPresent()){
             throw  new Exception("이미 존재하는 아이디 입니다.");
         }
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         userEntity.encodePassword(passwordEncoder);
 
 //        userEntity.addUserAuthority();
-        return userEntity.getUserId();
+        return user;
     }
 
     @Transactional
