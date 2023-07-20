@@ -27,6 +27,7 @@ const userSlice = createSlice({
 
 // 로그인 시 필요한 함수
 export const setUserAsync = createAsyncThunk('SET_USER', async (user: User) => {
+  // TODO : 로그인 API 개발
   return user;
 });
 
