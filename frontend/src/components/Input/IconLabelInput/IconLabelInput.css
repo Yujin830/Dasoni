@@ -1,0 +1,7 @@
+.icon {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  color: #232323;
+}
