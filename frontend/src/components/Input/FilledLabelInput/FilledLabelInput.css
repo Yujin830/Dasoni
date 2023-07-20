@@ -1,0 +1,11 @@
+.filled {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #232323;
+  text-align: center;
+  font-weight: 500;
+  border-radius: 0.6rem;
+  background: #d9d9d9;
+  padding: 0.8rem 2.5rem;
+}
