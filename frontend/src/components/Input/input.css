@@ -6,11 +6,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .label {
   margin-right: 1.5rem;
   font-size: 1.2rem;
+  color: #232323;
 }
 
 .disabled {
