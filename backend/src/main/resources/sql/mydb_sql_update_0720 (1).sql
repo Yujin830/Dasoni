@@ -87,7 +87,7 @@ CREATE TABLE `room` (
   `room_id` int NOT NULL AUTO_INCREMENT,
   `type` tinyint NOT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
-  `people_cnt` int DEFAULT NULL,
+  `people_count` int DEFAULT NULL,
   `video` int DEFAULT NULL,
   `title` varchar(20) DEFAULT NULL,
   `megi_setting` tinyint NOT NULL,
@@ -216,4 +216,4 @@ CREATE TABLE `warn` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-20 14:31:38
+-- Dump completed on 2023-07-20 15:17:43
