@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './NoLabelInput.css';
+import './input.css';
 
 type NoLableInputProps = {
   style: object;
