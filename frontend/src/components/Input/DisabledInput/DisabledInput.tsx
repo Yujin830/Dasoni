@@ -1,5 +1,6 @@
 import React from 'react';
 import '../input.css';
+import './DisabledInput.css';
 
 type DisabledInputProps = {
   style: object;
