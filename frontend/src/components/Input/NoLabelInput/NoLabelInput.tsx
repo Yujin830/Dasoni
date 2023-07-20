@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './NoLabelInput.css';
+import '../input.css';
 
 type NoLableInputProps = {
   style: object;
@@ -12,7 +12,7 @@ type NoLableInputProps = {
 function NoLableInput({ style, type, value, handleChange, placeholer }: NoLableInputProps) {
   return (
     <input
-      className="no-label-input"
+      className="input"
       style={style}
       type={type}
       value={value}
