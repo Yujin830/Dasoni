@@ -28,7 +28,7 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @Column(name="`login_id`", length = 20)
+    @Column(name="`login_id`", unique = true, length = 20)
     private String loginId;
 
     @Column(length = 100)
@@ -42,6 +42,7 @@ public class UserEntity implements UserDetails {
     @Column(length = 10)
     private String gender;
 
+    @Column(name = "birth")
     private Date birth;
 
     @Column(name = "`phone_number`", length = 100)
@@ -50,14 +51,23 @@ public class UserEntity implements UserDetails {
     @Column(name = "`isblack`")
     private boolean isBlack;
 
-    @Column(name = "`rank`", length = 20)
-    private String rank;
+    @Column(name = "`rank`")
+    private int rank;
 
     @Column(name = "`meeting_count`")
     private int meetingCount;
 
     @Column(name = "`profile_image_src`", length = 200)
     private String profileImageSrc;
+
+    @Column(name = "`job`", length = 20)
+    private String job;
+
+    @Column(name = "si_do")
+    private int siDo;
+
+    @Column(name = "gu_gun")
+    private int guGun;
 
     public void encodePassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(password);

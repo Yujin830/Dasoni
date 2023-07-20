@@ -1,7 +1,7 @@
 use mydb;
 
-insert into user values(1,"ssafy","ssafy","김싸피",21,"male","2023-07-16","010-1111-1111",0,"white","imagesrc",0,"USER");
-insert into user values(2,"ssafy2","ssafy2","강싸피",28,"male","2023-07-16","010-1111-1111",1,"white","imagesrc",0,"USER");
+insert into user values(1,"ssafy","ssafy","김싸피",21,"male","2023-07-16","010-1111-1111",0,2300,"imagesrc",0,"USER","HomeProtector", 1,1);
+insert into user values(2,"ssafy2","ssafy2","강싸피",28,"male","2023-07-16","010-1111-1111",1,0,"imagesrc",0,"USER", "PokemonTrainer",2,3);
 
 insert into warn (user_id) values(1);
 insert into warn (user_id) values(2);
@@ -9,7 +9,6 @@ insert into warn (user_id) values(2);
 insert into room values (1, 0, now(), 6, 1, "방제목" , 0, 1);
 insert into room values (2, 1, now(), 3, 1, "방제목3" , 1, 1);
 
-insert into room_q values(rand() * (select count(*) from question),1); 
 
 INSERT INTO mydb.notice (content, visible_time) VALUES ("다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.", 0);
 INSERT INTO mydb.notice (content, visible_time) VALUES ("사랑에 빠지는 시간은 3초라고 합니다. 첫인상을 봤을 때 호감이 있는 이성에게 채팅을 보내주세요. 제한 시간은 30초 입니다.", 5);
@@ -73,3 +72,9 @@ INSERT INTO mydb.question (content) VALUES ("결혼은 언제쯤 하고 싶으�
 INSERT INTO mydb.question (content) VALUES ("지금까지 연애 몇 번 해보셨나요?");
 INSERT INTO mydb.question (content) VALUES ("여기서 제일 이상형에 가까운 사람은?");
 
+-- Room_q에 랜덤으로 3개 생성, room_id는 나중에...
+INSERT INTO room_q (question_id, room_id)
+SELECT question_id, 1
+FROM question
+ORDER BY RAND()
+    LIMIT 3;
