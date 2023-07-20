@@ -1,0 +1,14 @@
+.input {
+  box-sizing: border-box;
+}
+
+.input-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  margin-right: 1.5rem;
+  font-size: 1.2rem;
+}
