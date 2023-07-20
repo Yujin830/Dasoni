@@ -6,6 +6,8 @@ import logo from '../../assets/image/logo.png';
 import main from '../../assets/image/main_img.jpg';
 import leftSignal from '../../assets/image/left_signal.png';
 import rightSignal from '../../assets/image/right_signal.png';
+import { useAppDispatch } from '../../app/hooks';
+import { setUserAsync } from '../../app/modules/user';
 
 const styles = {
   button: {
@@ -46,7 +48,8 @@ function LoginPage() {
     setPassword(event.target.value);
   };
 
-  const Login = (event: any) => {
+  const dispatch = useAppDispatch();
+  const Login = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const data = {
       id: id,
@@ -54,6 +57,7 @@ function LoginPage() {
     };
     console.log('login');
     console.log(data);
+    dispatch(setUserAsync(data));
   };
 
   return (
