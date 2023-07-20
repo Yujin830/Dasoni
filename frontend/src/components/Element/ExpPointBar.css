@@ -1,0 +1,27 @@
+.exp-point-bar {
+  position: relative;
+  width: 20rem; /* 바의 전체 너비 */
+  height: 1rem; /* 바의 높이 */
+  background-color: #dedede; /* 바의 배경색 */
+  border-radius: 10px; /* 바의 테두리를 둥글게 만듦 */
+  overflow: hidden; /* 내부 채우기를 위해 오버플로우를 숨김 */
+  display: flex;
+}
+
+.exp-point-fill {
+  height: 100%; /* 채워지는 부분의 높이를 100%로 설정 */
+  background-color: #ff257e; /* 채워지는 부분의 배경색 */
+}
+
+.exp-point-label {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 포인트 라벨을 가운데로 정렬 */
+  font-size: 3rem;
+  font-weight: 600;
+  color: #ff257e;
+  pointer-events: none; /* 포인트 라벨이 마우스 이벤트를 가로채지 않도록 설정 */
+  display: flex; /* 추가: 포인트 라벨을 flex 컨테이너로 설정 */
+  justify-content: center; /* 추가: 포인트 숫자를 가로 방향으로 가운데 정렬 */
+  align-items: center; /* 추가: 포인트 숫자를 세로 방향으로 가운데 정렬 */
+}
