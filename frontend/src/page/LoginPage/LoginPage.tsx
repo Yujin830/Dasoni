@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../../components/Button/FilledButton';
-import Input from '../../components/NoLabelInput/NoLabelInput';
-import InfoElement from '../../components/Element/InfoElement';
-import ExpPointBar from '../../components/Element/ExpPointBar';
-import TimeDisplay from '../../components/Element/TimeDisplay';
+import Input from '../../components/Input/NoLabelInput/NoLabelInput';
 import './LoginPage.css';
 import logo from '../../assets/image/logo.png';
 import main from '../../assets/image/main_img.jpg';
