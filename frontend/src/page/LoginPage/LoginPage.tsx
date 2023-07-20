@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../../components/Button/FilledButton';
-import Input from '../../components/Input/NoLabelInput/NoLabelInput';
+import Input from '../../components/NoLabelInput/NoLabelInput';
 import './LoginPage.css';
 import logo from '../../assets/image/logo.png';
 import main from '../../assets/image/main_img.jpg';
