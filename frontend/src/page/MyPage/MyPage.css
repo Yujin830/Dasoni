@@ -1,0 +1,63 @@
+.mypage main {
+  margin: 1rem;
+}
+
+.side-bar {
+  border-radius: 1rem;
+  border: 3px solid #d9d9d9;
+  min-width: 10rem;
+  width: 25rem;
+  height: 86vh;
+}
+
+.side-bar .top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid #d9d9d9;
+  width: 100%;
+  height: 18rem;
+  margin-bottom: 0.5rem;
+}
+
+.side-bar .header h3 {
+  margin-top: 1rem;
+}
+
+.side-bar .info .title {
+  color: #232323;
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+  margin-right: auto;
+}
+
+.side-bar .signal {
+  margin-bottom: 2.5rem;
+}
+
+.side-bar .match {
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #d9d9d9;
+}
+
+.side-bar .match h3 {
+  font-size: 3rem;
+  text-align: center;
+  font-weight: 600;
+  color: #ff257e;
+  padding-bottom: 1rem;
+}
+
+.side-bar .footer {
+  color: #061386;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.side-bar .footer p {
+  cursor: pointer;
+}
