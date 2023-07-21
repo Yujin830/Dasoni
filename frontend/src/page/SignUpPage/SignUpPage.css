@@ -1,0 +1,135 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 4rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header {
+  width: 81.5rem;
+  height: 13.5625rem;
+  flex-shrink: 0;
+  border-radius: 1rem;
+  background: #ffd8e4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.signal {
+  width: 9.8125rem;
+  height: 1.9375rem;
+  flex-shrink: 0;
+}
+
+.signup-box {
+  width: 81.5rem;
+  height: 38.875rem;
+  flex-shrink: 0;
+  border-radius: 1rem;
+  border: 5px solid #d9d9d9;
+  background: #fff;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.label {
+  color: #000;
+  font-family: Roboto;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25rem;
+  width: 10rem;
+  height: 2rem;
+  flex-shrink: 0;
+  margin-right: 20px;
+  display: inline-block;
+}
+
+.signup-content {
+  width: 50rem;
+  height: 30rem;
+  flex-shrink: 0;
+  background: #fff;
+  flex-direction: column;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+}
+
+.signup-id {
+  display: flex;
+  align-items: center;
+}
+
+.signup-phone {
+  display: flex;
+  align-items: center;
+}
+
+.signup-gender {
+  display: flex;
+  align-items: center;
+}
+
+.button-multicheck {
+  display: flex;
+  margin-left: 50px;
+}
+
+.button-certify {
+  display: flex;
+  margin-left: 50px;
+}
+
+.button-signup {
+  display: flex;
+  margin-left: auto;
+  margin-right: 30px;
+}
+
+.gender-container {
+  display: flex;
+  width: 12rem;
+  height: 2rem;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  border: 1px solid var(--m-3-sys-light-outline, #79747e);
+  background: var(--m-3-sys-light-surface-container-high, #ece6f0);
+}
+
+.gender-man {
+  display: flex;
+  width: 6rem;
+  height: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* gap: 0.625rem; */
+  border-right: 1px solid var(--m-3-sys-light-outline, #79747e);
+  background: #ffd8e4;
+  border-top-left-radius: 0.5rem; /* 추가 */
+  border-bottom-left-radius: 0.5rem; /* 추가 */
+}
+
+.gender-woman {
+  display: flex;
+  width: 6rem;
+  height: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* gap: 0.625rem; */
+  background: #dedede;
+  border-top-right-radius: 0.5rem; /* 추가 */
+  border-bottom-right-radius: 0.5rem; /* 추가 */
+}
