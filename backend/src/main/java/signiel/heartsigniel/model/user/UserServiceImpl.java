@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.Jwt.JwtTokenProvider;
 import signiel.heartsigniel.Jwt.TokenInfo;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public TokenInfo login(String loginId, String password){
+    public TokenInfo login(int userId, List<String> roles, String loginId, String password){
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
