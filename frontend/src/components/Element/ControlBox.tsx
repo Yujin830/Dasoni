@@ -3,12 +3,10 @@ import './ControlBox.css';
 
 type ControlBoxProps = {
   style: object;
-  type: string;
-  value: string;
 };
 
-function ControlBox({ style, type, value }: ControlBoxProps) {
-  return <input className="control-box" style={style} type={type} value={value} />;
+function ControlBox({ style }: ControlBoxProps) {
+  return <input className="control-box" />;
 }
 
 export default ControlBox;
