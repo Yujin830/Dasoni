@@ -1,28 +1,41 @@
 package signiel.heartsigniel.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
-import lombok.RequiredArgsConstructor;
-import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@OpenAPIDefinition(
-        info = @Info(title = "하트시그니엘 API 명세서",
-                description = "대한민국 저출산 문제를 구제할 유일한 희망",
-                version = "v1"))
-@RequiredArgsConstructor
 @Configuration
+@EnableSwagger2
+@ComponentScan(basePackages = {
+        "signiel.heartsigniel.controller"
+})
 public class SwaggerConfig {
 
+    /** swagger */
     @Bean
-    public GroupedOpenApi chatOpenApi() {
-        String[] paths = {"/v1/**"};
+    public Docket MeetingApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Shop API")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("signiel.heartsigniel.controller"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(this.DasoniApiInfo());
 
-        return GroupedOpenApi.builder()
-                .group("미팅서비스 API v1")
-                .pathsToMatch(paths)
+    }
+
+    private ApiInfo DasoniApiInfo() {
+        return new ApiInfoBuilder()
+                .title("다소니 API")
+                .description("대한민국 저출산 문제를 해결한 유일한 희망")
+                .version("1.0")
                 .build();
     }
-    
 }
