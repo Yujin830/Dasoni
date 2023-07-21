@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/test")
-@Tag("")
 public class QuestionController {
     @Autowired
     private QuestionRepo questionRepo;
