@@ -1,5 +1,6 @@
 package signiel.heartsigniel.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,14 @@ public class UserController {
 
     @PostMapping("/login")
     public TokenInfo login(@RequestBody UserEntity userEntity){
+//        int userId = userEntity.getUserId();
         String loginId = userEntity.getLoginId();
         String password = userEntity.getPassword();
-        return userService.login(loginId, password);
+        return userService.login(userEntity.getUserId(), userEntity.getRoles(), loginId, password);
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "Ok";
     }
 }

@@ -15,9 +15,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        return userRepo.findByLoginId(loginId)
+        UserDetails user = userRepo.findByLoginId(loginId)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+
+        System.out.println(user.getAuthorities().toArray()[0].toString()); // role 확인을 위해
+        return user;
     }
 
     private UserDetails createUserDetails(UserEntity user){

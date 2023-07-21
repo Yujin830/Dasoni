@@ -1,0 +1,17 @@
+.rank-avartar {
+  border-radius: 50%;
+  position: relative;
+}
+
+.rank-avartar .profile {
+  border-radius: 50%;
+  width: 15rem;
+  height: 15rem;
+}
+
+.rank-avartar .rank {
+  width: 4rem;
+  position: absolute;
+  bottom: 0rem;
+  right: 1rem;
+}
