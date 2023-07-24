@@ -7,7 +7,7 @@
 
 .exp-point-bar {
   position: relative;
-  width: 20rem; /* 바의 전체 너비 */
+  width: 100%; /* 바의 전체 너비 >> 컴포넌트 사용한 곳의 너비에 맞추기 위해 %로 단위 변경 */
   height: 1rem; /* 바의 높이 */
   background-color: #dedede; /* 바의 배경색 */
   border-radius: 10px; /* 바의 테두리를 둥글게 만듦 */
