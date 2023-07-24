@@ -57,7 +57,7 @@ function LoginPage() {
     };
     console.log('login');
     console.log(data);
-    dispatch(setUserAsync(data));
+    // dispatch(setUserAsync(data));
   };
 
   return (

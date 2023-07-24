@@ -5,12 +5,22 @@ import { RootState } from '../store';
 export type User = {
   id: string;
   password: string;
+  nickname: string;
+  birth: string;
+  job: string;
+  sido: string;
+  gugun: string;
 };
 
 // 초기상태를 선언
 const initialState: User = {
-  id: '',
+  id: 'zero9657',
   password: '',
+  nickname: '나전문',
+  birth: '1998.06.07',
+  job: 'FE개발자',
+  sido: '서울특별시',
+  gugun: '영등포구',
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
