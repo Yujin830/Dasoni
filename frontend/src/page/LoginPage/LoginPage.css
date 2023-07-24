@@ -1,4 +1,4 @@
-.box {
+#login .box {
   display: flex;
   padding: 2rem 4rem;
   justify-content: center;
@@ -6,21 +6,21 @@
   gap: 0.5rem;
 }
 
-.signal {
+#login .signal {
   position: absolute;
   top: 3rem;
   width: 13rem;
 }
 
-.signal.left {
+#login .signal.left {
   right: -1rem;
 }
 
-.signal.right {
+#login .signal.right {
   left: 0;
 }
 
-.left-box {
+#login .left-box {
   width: 30rem;
   height: 40rem;
   flex-shrink: 0;

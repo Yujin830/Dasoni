@@ -14,7 +14,7 @@ type SideBarProps = {
 
 function SideBar({ points, percent, match }: SideBarProps) {
   return (
-    <div className="side-bar">
+    <div className="my-side-bar">
       <div className="top">
         <RankAvartar src="rank_profile.png" point={points} />
         <h3>나전문</h3>
@@ -90,9 +90,13 @@ function MyPageContent() {
       <div id="recent-matched-user-box">
         <p>최근 매칭된 다소니</p>
         <div id="matched-user-list">
-          {faketUserList.map((user) => (
-            <RecentMatchAvartar key={user.userId} src={user.profileImg} />
-          ))}
+          {recentUserList.length > 0 ? (
+            faketUserList.map((user) => (
+              <RecentMatchAvartar key={user.userId} src={user.profileImg} />
+            ))
+          ) : (
+            <p>최근 매칭된 다소니가 없습니다</p>
+          )}
         </div>
       </div>
       <footer>

@@ -7,7 +7,7 @@
   gap: 0.5rem;
 }
 
-.header {
+.signupbox .header {
   width: 81.5rem;
   height: 13.5625rem;
   flex-shrink: 0;
@@ -19,7 +19,7 @@
   align-items: center;
   position: relative;
 }
-.signal {
+.signupbox .signal {
   width: 9.8125rem;
   height: 1.9375rem;
   flex-shrink: 0;
