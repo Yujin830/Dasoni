@@ -7,7 +7,8 @@ import main from '../../assets/image/main_img.jpg';
 import leftSignal from '../../assets/image/left_signal.png';
 import rightSignal from '../../assets/image/right_signal.png';
 import { useAppDispatch } from '../../app/hooks';
-import { setUserAsync } from '../../app/modules/user';
+import { setUserAsync, getUserInfo } from '../../app/modules/user';
+import { Link } from 'react-router-dom';
 
 const styles = {
   button: {
@@ -56,8 +57,8 @@ function LoginPage() {
       password: password,
     };
     console.log('login');
-    console.log(data);
     dispatch(setUserAsync(data));
+    console.log(data);
   };
 
   return (
@@ -95,9 +96,9 @@ function LoginPage() {
           </form>
           <p>
             아직 회원이 아니신가요?{' '}
-            <a id="regist" href="/">
+            <Link to="/signup" id="regist">
               가입하기
-            </a>
+            </Link>
           </p>
         </div>
       </div>

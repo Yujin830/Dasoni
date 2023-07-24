@@ -1,13 +1,16 @@
 .mypage main {
   margin: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
 
 .side-bar {
   border-radius: 1rem;
   border: 3px solid #d9d9d9;
-  min-width: 10rem;
-  width: 25rem;
-  height: 86vh;
+  min-width: 25%;
+  width: 30%;
+  height: calc(100vh - 7rem);
+  box-sizing: border-box;
 }
 
 .side-bar .top {
@@ -26,11 +29,13 @@
   margin-top: 1rem;
 }
 
+.side-bar .info {
+  padding: 0 0.8rem;
+}
+
 .side-bar .info .title {
   color: #232323;
   font-size: 1.2rem;
-  margin-left: 0.5rem;
-  margin-right: auto;
 }
 
 .side-bar .signal {
@@ -60,4 +65,101 @@
 
 .side-bar .footer p {
   cursor: pointer;
+}
+
+.mypage .content {
+  border-radius: 1rem;
+  border: 3px solid #d9d9d9;
+  min-width: 28%;
+  width: 68%;
+  height: calc(100vh - 7rem);
+  font-size: 1.2rem;
+  box-sizing: border-box;
+}
+
+.mypage .content #user {
+  color: #232323;
+  padding: 0.8rem 1rem;
+}
+
+.mypage .content #name {
+  color: #ec5e98;
+  font-weight: 600;
+}
+
+.mypage .content table {
+  color: #232323;
+  font-size: 1rem;
+  width: 100%;
+  border-spacing: 0;
+}
+
+.mypage .content table tr:first-child td {
+  border-top: 2px solid #232323;
+  border-bottom: none;
+}
+
+.mypage .content table tr:last-child td {
+  border-top: none;
+}
+
+.mypage .content table td {
+  border: 1px solid #232323;
+}
+
+.mypage .content table td.name {
+  padding: 0.25rem 1.5rem;
+  width: 20%;
+}
+
+.mypage .content table td.info {
+  padding: 0.25rem 1.5rem;
+  width: 80%;
+}
+
+.mypage .content table td:first-child {
+  border-left: none;
+  border-right: none;
+}
+
+.mypage .content table td:last-child {
+  border-right: none;
+}
+
+.mypage #recent-matched-user-box {
+  padding: 1.2rem;
+  border-bottom: 1px solid #232323;
+  position: relative;
+  display: flex;
+}
+
+.mypage #recent-matched-user-box p {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.mypage #matched-user-list {
+  display: flex;
+  justify-content: space-around;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+  width: 80%;
+}
+
+.mypage .content footer {
+  text-align: right;
+  padding: 0.5rem;
+}
+.mypage .content footer a {
+  font-size: 1rem;
+  text-decoration: none;
+  margin-right: 1.5rem;
+}
+
+.mypage .content footer a.modify {
+  color: #061386;
+}
+
+.mypage .content footer a.remove {
+  color: #970808;
 }
