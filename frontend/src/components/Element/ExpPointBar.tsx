@@ -11,7 +11,7 @@ function ExpPointBar({ percent, points, style }: ExpPointBarProps) {
   const barWidth = `${percent}%`;
 
   return (
-    <div>
+    <div className="exp-point-box">
       <ExpPointLabel points={points} />
       <div className="exp-point-bar" style={{ ...style }}>
         <div className="exp-point-fill" style={{ width: barWidth }} />
