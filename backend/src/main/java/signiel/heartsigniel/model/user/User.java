@@ -1,65 +1,75 @@
 package signiel.heartsigniel.model.user;
 
-
 import lombok.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
- * UserDto
+ * UserEntity 정보
  */
-
-
-@Data
-@Builder
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
-public class User{
+@Builder
+@ToString
+@Entity(name = "user")
+public class User {
 
-    @NotBlank(message = "아이디를 입력해주세요")
+    @Id @Column(name = "`user_id`")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+
+    @Column(name="`login_id`", unique = true, length = 20)
     private String loginId;
-    @NotBlank(message = "비밀번호를 입력해주세요")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,30}$",
-            message = "비밀번호는 8~30 자리이면서 1개 이상의 알파벳, 숫자, 특수문자를 포함해야합니다.")
+
+    @Column(length = 100)
     private String password;
+
     private String nickname;
+
     private int age;
-    @NotBlank(message = "성별을 입력해 주세요.")
-    private String gender;
-    private Date birth;
-    private String phoneNumber;
-    private boolean isBlack;
-    private int rank;
-    private int meetingCount;
-    private String profileImageSrc;
-    @NotBlank(message = "직업을 입력해주세요.")
-    private String job;
-    @NotBlank(message = "지역을 선택해주세요.")
-    private int siDo;
-    @NotBlank(message = "지역을 선택해주세요.")
-    private int guGun;
 
-    @Builder
-    public UserEntity toEntity(){
-        return UserEntity.builder()
-                .loginId(loginId)
-                .password(password)
-                .nickname(nickname)
-                .age(age)
-                .gender(gender)
-                .birth(birth)
-                .phoneNumber(phoneNumber)
-                .isBlack(isBlack)
-                .rank(rank)
-                .meetingCount(meetingCount)
-                .profileImageSrc(profileImageSrc)
-                .job(job)
-                .siDo(siDo)
-                .guGun(guGun)
-                .build();
+//    @Column(length = 10)
+//    private String gender;
+//
+//    @Column(name = "birth")
+//    private Date birth;
+//
+//    @Column(name = "`phone_number`", length = 100)
+//    private String phoneNumber;
+//
+//    @Column(name = "`isblack`")
+//    private boolean isBlack;
+//
+//    @Column(name = "`rank`")
+//    private int rank;
+//
+//    @Column(name = "`meeting_count`")
+//    private int meetingCount;
+//
+//    @Column(name = "`profile_image_src`", length = 200)
+//    private String profileImageSrc;
+//
+//    @Column(name = "`job`", length = 20)
+//    private String job;
+//
+//    @Column(name = "si_do")
+//    private int siDo;
+//
+//    @Column(name = "gu_gun")
+//    private int guGun;
+
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Authority> roles = new ArrayList<>();
+
+    public void setRoles(List<Authority> role){
+        this.roles = role;
+        role.forEach(o->o.setUser(this));
     }
-
-
-
 }
