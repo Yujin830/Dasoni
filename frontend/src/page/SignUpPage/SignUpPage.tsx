@@ -80,14 +80,14 @@ function SignupPage() {
       id: id,
       password: password,
       confirmPassword: confirmPassword,
-      birthdate: birthdate,
+      birth: birthdate,
       gender: gender,
       phone: phone,
     };
     console.log('signup');
-    console.log(data);
     // 회원가입을 위한 비동기 액션을 dispatch하도록 액션 함수 작성
     dispatch(setUserAsync(data));
+    console.log(data);
   };
   //중복체크 버튼 기능
   const Multicheck = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -98,7 +98,7 @@ function SignupPage() {
     event.preventDefault();
   };
   return (
-    <div className="box">
+    <div className="signupbox">
       <div className="header">
         <img className="signal left" src={leftSignal} alt="시그널 아이콘" />
         <img className="logo" src={logo} alt="다소니 로고 이미지" />
