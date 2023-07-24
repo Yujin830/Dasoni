@@ -33,25 +33,8 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String[] PERMIT_URL_ARRAY = {
-            /* 로그인, 회원가입 */
-            "/users/login",
-            "/users/regist",
-            /* swagger v2 */
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/webjars/**",
-            "/swagger-ui.html",
-            /* swagger v3 */
-            "/v3/api-docs/**",
-            "/swagger-ui/**"
-    };
-
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 // ID, Password 문자열을 Base64로 인코딩하여 전달하는 구조
                 .httpBasic().disable()
