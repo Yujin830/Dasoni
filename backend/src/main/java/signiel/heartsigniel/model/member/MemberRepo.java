@@ -13,10 +13,9 @@ import java.util.Optional;
 public interface MemberRepo extends JpaRepository<Member, Long> {
     Optional<Member> findByLoginId(String loginId);
 
-
     @Modifying
-    @Query(value = "DELETE FROM authority where name = :name and id = :id", nativeQuery = true)
-    void deleteUserRole(@Param("name") String name, @Param("id") Long memberId);
+    @Query(value = "delete from Authority a where a.name in :name and a.member.memberId in :member")
+    void deleteUserRole(@Param("name")String name, @Param("member") Long member);
 
 
 }
