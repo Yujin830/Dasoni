@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -16,15 +15,13 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import signiel.heartsigniel.Jwt.JwtAuthenticationFilter;
-import signiel.heartsigniel.Jwt.JwtTokenProvider;
+import signiel.heartsigniel.jwt.JwtAuthenticationFilter;
+import signiel.heartsigniel.jwt.JwtTokenProvider;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Configuration
@@ -63,8 +60,10 @@ public class SecurityConfig {
                 .authorizeRequests()
                 // 회원가입과 로그인은 모두 승인
                 .antMatchers("/register", "/login").permitAll()
-                // /users 로 시작하는 요청은 USER 권한이 있는 유저에게만 허용
-                .antMatchers("/users/**").hasRole("USER")
+                // /users 로 시작하는 요청은 GUEST(회원가입한 누구나) 권한이 있는 유저에게만 허용
+                .antMatchers("/users/**").hasRole("GUEST")
+                // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
+                .antMatchers("/rooms/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
                 // JWT 인증 필터 적용

@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Transactional
-public interface UserRepo extends JpaRepository<User, Long> {
-//    Optional<UserEntity> findByLoginId(String loginId);
-    Optional<User> findByLoginId(String loginId);
+public interface MemberRepo extends JpaRepository<Member, Long> {
+    Optional<Member> findByLoginId(String loginId);
 }

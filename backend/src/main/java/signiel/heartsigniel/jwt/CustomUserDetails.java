@@ -1,21 +1,21 @@
-package signiel.heartsigniel.Jwt;
+package signiel.heartsigniel.jwt;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import signiel.heartsigniel.model.user.User;
+import signiel.heartsigniel.model.user.Member;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
-    private final User user;
+    private final Member user;
 
-    public CustomUserDetails(User user){
+    public CustomUserDetails(Member user){
         this.user = user;
     }
 
-    public final User getUser(){
+    public final Member getUser(){
         return user;
     }
 

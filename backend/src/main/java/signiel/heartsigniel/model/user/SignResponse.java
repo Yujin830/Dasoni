@@ -14,44 +14,51 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignResponse {
-    private Long userId;
+    private Long memberId;
 
     private String loginId;
 
     private String nickname;
 
-    private int age;
+    private String gender;
 
-//    private String gender;
+    private Date birth;
 
-//    private Date birth;
-//
-//    private String phoneNumber;
-//
-//    private boolean isBlack;
-//
-//    private int rank;
-//
-//    private int meetingCount;
-//
-//    private String profileImageSrc;
-//
-//    private String job;
-//
-//    private int siDo;
-//
-//    private int guGun;
+    private String phoneNumber;
+
+    private boolean isBlack;
+
+    private int rank;
+
+    private int meeting_cnt;
+
+    private String profile_image_src;
+
+    private String job;
+
+    private int siDo;
+
+    private int guGun;
 
     private List<Authority> roles = new ArrayList<>();
 
     private String token;
 
-    public SignResponse(User user){
-        this.userId = user.getUserId();
+    public SignResponse(Member user){
+        this.memberId = user.getMemberId();
         this.loginId = user.getLoginId();
         this.nickname = user.getNickname();
-        this.age = user.getAge();
-//        this.gender = user.getGender();
+        this.gender = user.getGender();
+        this.birth = user.getBirth();
+        this.phoneNumber = user.getPhoneNumber();
+        this.isBlack = user.isBlack();
+        this.rank = user.getRank();
+        this.meeting_cnt = user.getMeetingCount();
+        this.profile_image_src = user.getProfileImageSrc();
+        this.job = user.getJob();
+        this.siDo = user.getSiDo();
+        this.guGun = user.getGuGun();
+
         this.roles = user.getRoles();
     }
 }
