@@ -138,7 +138,7 @@ function SignupPage() {
   return (
     <div className="signupbox">
       <div className="header">
-        <img className="signal left" src={leftSignal} alt="시그널 아이콘" />
+        <img className="signup-signal" src={leftSignal} alt="시그널 아이콘" />
         <img className="logo" src={logo} alt="다소니 로고 이미지" />
       </div>
       <div className="signup-box">
