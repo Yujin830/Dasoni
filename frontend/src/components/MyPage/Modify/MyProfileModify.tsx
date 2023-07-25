@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAppSelector } from '../../../app/hooks';
 import './MyProfileModify.css';
 import BasicInput from '../../Input/BasicInput/BasicInput';
+import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
 const input = {
   width: '26rem',
@@ -17,17 +18,7 @@ const input = {
 };
 
 function MyProfileModify({ setType }: any) {
-  const { id, nickname, job, birth } = useAppSelector((state) => state.user);
-  console.log(`${id} ${job} ${birth}`);
-  const recentUserList = useState([]);
-  const faketUserList = [
-    { profileImg: 'rank_profile.png', userId: 1 },
-    { profileImg: 'rank_profile.png', userId: 2 },
-    { profileImg: 'rank_profile.png', userId: 3 },
-    { profileImg: 'rank_profile.png', userId: 4 },
-    { profileImg: 'rank_profile.png', userId: 5 },
-    { profileImg: 'rank_profile.png', userId: 6 },
-  ];
+  const { id, nickname, job } = useAppSelector((state) => state.user);
 
   const cancleModify = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -35,25 +26,31 @@ function MyProfileModify({ setType }: any) {
   };
 
   const [modifyNickname, setModifyNickname] = useState(nickname);
-  const [modifySido, setModifySido] = useState('');
+  const [modifySido, setModifySido] = useState('11');
   const [modifyGugun, setModifyGugun] = useState('');
   const [modifyJob, setModifyJob] = useState(job);
+  const [modifyProfileSrc, setModifyProfileSrc] = useState('');
 
   const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setModifyNickname(e.target.value);
   };
-  // const handleSidoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setModifyBirth(e.target.value);
-  // };
-  // const handleGugunChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setModifyBirth(e.target.value);
-  // };
   const handleJobChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setModifyJob(e.target.value);
+  };
+  const handleProfileSrcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setModifyProfileSrc(e.target.value);
   };
 
   const modifyUserProfile = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    const modifiedData = {
+      sido: Number(modifySido),
+      gugun: Number(modifyGugun),
+      job: modifyJob,
+      nickname: modifyNickname,
+      profileImageSrc: modifyProfileSrc,
+    };
+    console.log(modifiedData);
     console.log('수정 완료');
   };
 
@@ -68,17 +65,23 @@ function MyProfileModify({ setType }: any) {
       <div className="modify-form">
         <BasicInput
           style={input}
+          label="프로필"
+          type="file"
+          value={String(modifyProfileSrc)}
+          handleChange={handleProfileSrcChange}
+        />
+        <BasicInput
+          style={input}
           label="닉네임"
           type="text"
           value={String(modifyNickname)}
           handleChange={handleBirthChange}
         />
-        <BasicInput
-          style={input}
-          label="주소"
-          type="text"
-          value={String(modifySido)}
-          handleChange={handleBirthChange}
+        <AddressSelecter
+          modifySido={modifySido}
+          modifyGugun={modifyGugun}
+          setModifySido={setModifySido}
+          setModifyGugun={setModifyGugun}
         />
         <BasicInput
           style={input}

@@ -37,7 +37,7 @@ function SideBar({ points, percent, match }: SideBarProps) {
 }
 
 function MyPage() {
-  const [type, setType] = useState('modify');
+  const [type, setType] = useState('read');
 
   let content = null;
   if (type === 'read') content = <MyProfile setType={setType} />;
