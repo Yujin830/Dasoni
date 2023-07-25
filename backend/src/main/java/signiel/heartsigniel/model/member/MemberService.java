@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.user;
+package signiel.heartsigniel.model.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,35 +18,35 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public SignResponse login(SignRequest request) {
-        Member user = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(()->
+        Member member = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(()->
                 new BadCredentialsException("잘못된 계정 정보입니다."));
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("잘못된 계정정보입니다.");
         }
 
         return SignResponse.builder()
-                .memberId(user.getMemberId())
-                .loginId(user.getLoginId())
-                .nickname(user.getNickname())
-                .gender(user.getGender())
-                .birth(user.getBirth())
-                .phoneNumber(user.getPhoneNumber())
-                .isBlack(user.isBlack())
-                .rank(user.getRank())
-                .meetingCount(user.getMeetingCount())
-                .profileImageSrc(user.getProfileImageSrc())
-                .job(user.getJob())
-                .siDo(user.getSiDo())
-                .guGun(user.getGuGun())
-                .roles(user.getRoles())
-                .token(jwtTokenProvider.createToken(user.getLoginId(), user.getRoles()))
+                .memberId(member.getMemberId())
+                .loginId(member.getLoginId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .birth(member.getBirth())
+                .phoneNumber(member.getPhoneNumber())
+                .isBlack(member.isBlack())
+                .rank(member.getRank())
+                .meetingCount(member.getMeetingCount())
+                .profileImageSrc(member.getProfileImageSrc())
+                .job(member.getJob())
+                .siDo(member.getSiDo())
+                .guGun(member.getGuGun())
+                .roles(member.getRoles())
+                .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
                 .build();
     }
 
     public boolean register(SignRequest request) throws Exception {
         try {
             System.out.println(request.getLoginId());
-            Member user = Member.builder()
+            Member member = Member.builder()
                     .loginId(request.getLoginId())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .nickname(request.getNickname())
@@ -55,10 +55,10 @@ public class MemberService {
                     .phoneNumber(request.getPhoneNumber())
                     .build();
 
-            user.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
+            member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
 
-            System.out.println(request.getLoginId()+" "+user.getRoles());
-            memberRepo.save(user);
+            System.out.println(request.getLoginId()+" "+member.getRoles());
+            memberRepo.save(member);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception("잘못된 요청입니다.");
@@ -67,13 +67,12 @@ public class MemberService {
     }
 
     public SignResponse getMember(String loginId) throws Exception {
-        Member user = memberRepo.findByLoginId(loginId)
+        Member member = memberRepo.findByLoginId(loginId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
-        return new SignResponse(user);
+        return new SignResponse(member);
     }
 
-    public void deleteUserInfo(Long userId) throws Exception{
-        memberRepo.deleteById(userId);
-
+    public void deleteUserInfo(Long memberId) throws Exception{
+        memberRepo.deleteById(memberId);
     }
 }

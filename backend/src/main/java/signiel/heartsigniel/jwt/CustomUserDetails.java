@@ -3,37 +3,37 @@ package signiel.heartsigniel.jwt;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import signiel.heartsigniel.model.user.Member;
+import signiel.heartsigniel.model.member.Member;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
-    private final Member user;
+    private final Member member;
 
-    public CustomUserDetails(Member user){
-        this.user = user;
+    public CustomUserDetails(Member member){
+        this.member = member;
     }
 
-    public final Member getUser(){
-        return user;
+    public final Member getMember(){
+        return member;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream().map(o->new SimpleGrantedAuthority(
+        return member.getRoles().stream().map(o->new SimpleGrantedAuthority(
                 o.getName()
         )).collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return member.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getLoginId();
+        return member.getLoginId();
     }
 
     @Override

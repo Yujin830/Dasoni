@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.user;
+package signiel.heartsigniel.model.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;

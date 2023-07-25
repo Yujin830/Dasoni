@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.user;
+package signiel.heartsigniel.model.member;
 
 import lombok.Getter;
 import lombok.Setter;
