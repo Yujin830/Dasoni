@@ -46,6 +46,18 @@ const styles = {
     margin: '0.5rem 0',
     padding: '0.5rem 0.7rem',
   },
+  input2: {
+    width: '20rem',
+    height: '4rem',
+    flexShrink: '0',
+    borderRadius: '1.25rem',
+    border: '3px solid #D9D9D9',
+    background: '#FFF',
+    color: '#898989',
+    fontSize: '1rem',
+    margin: '0.5rem 0',
+    padding: '0.5rem 0.7rem',
+  },
 };
 
 function SignupPage() {
@@ -55,20 +67,36 @@ function SignupPage() {
   const [birthdate, setBirthdate] = useState('');
   const [gender, setGender] = useState('');
   const [phone, setPhone] = useState('');
+  const [isIdAvailable, setIsIdAvailable] = useState(false); // 중복 체크 결과를 나타내는 상태 변수
+  const [passwordMatchMessage, setPasswordMatchMessage] = useState('');
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setId(event.target.value);
+    setIsIdAvailable(false); // 아이디 입력 시 중복 체크 결과를 초기화
   };
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+    setPasswordMatchMessage(''); // 비밀번호 변경 시 비밀번호 일치 여부 메시지 초기화
   };
   const handleChangeConfirmPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(event.target.value);
+    setPasswordMatchMessage(''); // 비밀번호 확인 변경 시 비밀번호 일치 여부 메시지 초기화
+
+    // 비밀번호 확인 입력 시 비밀번호와 일치 여부를 확인하여 메시지를 설정합니다.
+    if (event.target.value === password) {
+      setPasswordMatchMessage('비밀번호가 일치합니다.');
+    } else {
+      setPasswordMatchMessage('비밀번호가 일치하지 않습니다.');
+    }
   };
+
   const handleChangeBirthdate = (event: React.ChangeEvent<HTMLInputElement>) =>
     setBirthdate(event.target.value);
-  const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setGender(event.target.value);
+
+  const handleGenderSelection = (selectedGender: string) => {
+    setGender(selectedGender);
+  };
+
   const handleChangePhone = (event: React.ChangeEvent<HTMLInputElement>) =>
     setPhone(event.target.value);
 
@@ -76,6 +104,7 @@ function SignupPage() {
 
   const Signup = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
     const data = {
       id: id,
       password: password,
@@ -84,19 +113,28 @@ function SignupPage() {
       gender: gender,
       phone: phone,
     };
-    console.log('signup');
+
     // 회원가입을 위한 비동기 액션을 dispatch하도록 액션 함수 작성
     dispatch(setUserAsync(data));
+    console.log('signup');
     console.log(data);
   };
+
   //중복체크 버튼 기능
-  const Multicheck = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleMulticheck = () => {
+    // 아이디 중복 체크를 서버에서 처리하는 비동기 함수 또는 API 호출을 작성합니다.
+    // 이 예제에서는 간단히 하기 위해 setTimeout을 사용하여 1초 후에 중복 여부를 랜덤하게 설정합니다.
+    setTimeout(() => {
+      const isDuplicate = Math.random() < 0.5; // 랜덤하게 중복 여부를 설정 (50% 확률로 중복된 아이디)
+      setIsIdAvailable(isDuplicate); // true: 사용가능한 아이디, false: 중복된 아이디
+    }, 1000);
   };
+
   //인증하기 버튼 기능
   const Certify = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+
   return (
     <div className="signupbox">
       <div className="header">
@@ -115,9 +153,16 @@ function SignupPage() {
               placeholer="사용하실 아이디를 입력해주세요."
             />
             <div className="button-multicheck">
-              <Button style={styles.button2} content="중복체크" handleClick={Multicheck} />
+              <Button style={styles.button2} content="중복체크" handleClick={handleMulticheck} />
             </div>
           </div>
+          {/* 현재 사용가능한 아이디(isIdAvailable(true))일 경우만 출력됨 */}
+          {isIdAvailable && (
+            <div className="id-availability-message">
+              {isIdAvailable ? '사용가능한 아이디입니다.' : '중복된 아이디입니다.'}
+            </div>
+          )}
+
           <div className="signup-password">
             <label htmlFor="label password">비밀번호</label>
             <Input
@@ -137,24 +182,49 @@ function SignupPage() {
               handleChange={handleChangeConfirmPassword}
               placeholer="비밀번호를 다시한번 입력해주세요"
             />
+            {/* 비밀번호 일치 여부 메시지 출력 */}
+            {passwordMatchMessage && (
+              <div className="password-match-message">{passwordMatchMessage}</div>
+            )}
           </div>
+
           <div className="signup-birthdate">
-            {/* <label htmlFor="label birthdate">생년월일</label> */}
-            <IconLabelInput
-              style={styles.input}
-              label="생년월일"
-              icon="calendar_month"
-              type="text"
+            <div className="birthdate-container">
+              <IconLabelInput
+                style={styles.input2}
+                label="생년월일"
+                type="text"
+                value={birthdate}
+                handleChange={handleChangeBirthdate}
+                placeholer="생년월일을 선택하세요"
+              />
+            </div>
+            <input
+              className="birth-calendar"
+              type="date"
+              id="start"
+              name="trip-start"
               value={birthdate}
-              handleChange={handleChangeBirthdate}
-              placeholer="생년월일을 선택하세요"
-            />
+              onChange={handleChangeBirthdate}
+              min="1980-01-01"
+              max="2005-12-31"
+            ></input>
           </div>
           <div className="signup-gender">
             <label htmlFor="label gender">성별</label>
             <div className="gender-container">
-              <span className="gender-man">남</span>
-              <span className="gender-woman">여</span>
+              <button
+                className={gender === '남' ? 'gender-man selected' : 'gender-man'}
+                onClick={() => handleGenderSelection('남')}
+              >
+                남
+              </button>
+              <button
+                className={gender === '여' ? 'gender-woman selected' : 'gender-woman'}
+                onClick={() => handleGenderSelection('여')}
+              >
+                여
+              </button>
             </div>
           </div>
           <div className="signup-phone">
