@@ -30,9 +30,9 @@ public class SignResponse {
 
     private int rank;
 
-    private int meeting_cnt;
+    private int meetingCount;
 
-    private String profile_image_src;
+    private String profileImageSrc;
 
     private String job;
 
@@ -53,8 +53,8 @@ public class SignResponse {
         this.phoneNumber = user.getPhoneNumber();
         this.isBlack = user.isBlack();
         this.rank = user.getRank();
-        this.meeting_cnt = user.getMeetingCount();
-        this.profile_image_src = user.getProfileImageSrc();
+        this.meetingCount = user.getMeetingCount();
+        this.profileImageSrc = user.getProfileImageSrc();
         this.job = user.getJob();
         this.siDo = user.getSiDo();
         this.guGun = user.getGuGun();
