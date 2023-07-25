@@ -11,6 +11,7 @@ import java.util.List;
  * MemberEntity 정보
  */
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

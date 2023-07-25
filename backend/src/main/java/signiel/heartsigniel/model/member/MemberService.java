@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @Transactional
@@ -65,20 +67,32 @@ public class MemberService {
         return true;
     }
 
-    public SignResponse getMember(String loginId) throws Exception {
-        Member member = memberRepo.findByLoginId(loginId)
+    public SignResponse getMember(Long memberId) throws Exception {
+        Member member = memberRepo.findById(memberId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
         return new SignResponse(member);
     }
 
-    public void deleteUserInfo(Long memberId) throws Exception{
+    public String deleteUserInfo(Long memberId) throws Exception{
         memberRepo.deleteById(memberId);
+        return "OK";
     }
 
-    public void patchMemberPW(Long memberId, SignRequest request) throws Exception {
+    public String patchMemberPW(Long memberId, SignRequest request) throws Exception {
         Member member = memberRepo.findById(memberId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
 
+        member.setPassword(passwordEncoder.encode(request.getPassword()));
+        memberRepo.save(member);
+        return "OK";
+    }
 
+    public boolean checkMemberPW(Long memberId, SignRequest request) throws Exception{
+        Member member = memberRepo.findById(memberId)
+                .orElseThrow(()->new Exception("계정을 찾을 수 없습니다."));
+        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+            throw new BadCredentialsException("잘못된 비밀번호입니다.");
+        }
+        return true;
     }
 }

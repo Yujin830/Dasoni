@@ -24,21 +24,23 @@ public class MemberController {
         return new ResponseEntity<>(memberService.register(request), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{loginId}")
-    public ResponseEntity<SignResponse> getMember(@PathVariable String loginId) throws Exception {
-        return new ResponseEntity<>(memberService.getMember(loginId), HttpStatus.OK);
+    @GetMapping("/users/{memberId}")
+    public ResponseEntity<SignResponse> getMember(@PathVariable Long memberId) throws Exception {
+        return new ResponseEntity<>(memberService.getMember(memberId), HttpStatus.OK);
     }
     
     @DeleteMapping("/users/{memberId}")
-    public ResponseEntity<?> deleteMember(@PathVariable Long memberId) throws  Exception {
-        memberService.deleteUserInfo(memberId);
-        return new ResponseEntity<String>("OK", HttpStatus.OK);
+    public ResponseEntity<String> deleteMember(@PathVariable Long memberId) throws  Exception {
+        return new ResponseEntity<>(memberService.deleteUserInfo(memberId), HttpStatus.OK);
     }
 
     @PatchMapping("/users/{memberId}/password")
-    public ResponseEntity<?> patchMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
-        memberService.patchMemberPW(memberId, request);
-        return new ResponseEntity<String>("OK", HttpStatus.OK);
+    public ResponseEntity<String> patchMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
+        return new ResponseEntity<>(memberService.patchMemberPW(memberId, request), HttpStatus.OK);
     }
 
+    @PostMapping("/users/{memberId}/password")
+    public ResponseEntity<Boolean> checkMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
+        return new ResponseEntity<>(memberService.checkMemberPW(memberId, request), HttpStatus.OK);
+    }
 }
