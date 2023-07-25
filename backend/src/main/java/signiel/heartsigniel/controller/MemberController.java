@@ -41,4 +41,10 @@ public class MemberController {
         return new ResponseEntity<String>("OK", HttpStatus.OK);
     }
 
+    @PatchMapping("/users/{memberId}")
+    public ResponseEntity<?> updateMember(@PathVariable Long memberId, @RequestBody Member member) throws Exception{
+        memberService.updateMember(member);
+        return new ResponseEntity<String>("OK", HttpStatus.OK);
+    }
+
 }

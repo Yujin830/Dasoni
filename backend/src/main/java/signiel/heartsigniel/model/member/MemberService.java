@@ -18,7 +18,7 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public SignResponse login(SignRequest request) {
-        Member member = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(()->
+        Member member = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정 정보입니다."));
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("잘못된 계정정보입니다.");
@@ -56,7 +56,7 @@ public class MemberService {
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
 
-            System.out.println(request.getLoginId()+" "+member.getRoles());
+            System.out.println(request.getLoginId() + " " + member.getRoles());
             memberRepo.save(member);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -71,7 +71,7 @@ public class MemberService {
         return new SignResponse(member);
     }
 
-    public void deleteUserInfo(Long memberId) throws Exception{
+    public void deleteUserInfo(Long memberId) throws Exception {
         memberRepo.deleteById(memberId);
     }
 
@@ -81,4 +81,30 @@ public class MemberService {
 
 
     }
+
+    public boolean updateMember(Member request) throws Exception {
+
+
+            Member member = Member.builder()
+                    .loginId(request.getLoginId())
+                    .gender(request.getGender())
+                    .birth(request.getBirth())
+                    .phoneNumber(request.getPhoneNumber())
+                    .nickname(request.getNickname())
+                    .profileImageSrc(request.getProfileImageSrc())
+                    .job(request.getJob())
+                    .siDo(request.getSiDo())
+                    .guGun(request.getGuGun()).build();
+
+            member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+
+            System.out.println(member.toString() + " " + member.getRoles());
+            memberRepo.save(member);
+
+        return true;
+    }
+
+
+
+
 }
