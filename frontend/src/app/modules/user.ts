@@ -4,7 +4,7 @@ import { RootState } from '../store';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export type User = {
-  memberId: number;
+  memberId?: number;
   id?: string;
   password?: string;
   nickname?: string;
