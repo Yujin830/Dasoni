@@ -4,6 +4,10 @@ import './AddressSelecter.css';
 
 type AddSelecterProps = {
   style?: object;
+  modifySido: string;
+  modifyGugun: string;
+  setModifySido: (value: string) => void;
+  setModifyGugun: (value: string) => void;
 };
 
 type Sido = {
@@ -20,18 +24,26 @@ type Gugun = {
 const sidos: Sido[] = [];
 const guguns: Gugun[] = [];
 
-function AddressSelecter({ style }: AddSelecterProps) {
+let mountCount = 1;
+
+function AddressSelecter({
+  style,
+  modifySido,
+  modifyGugun,
+  setModifySido,
+  setModifyGugun,
+}: AddSelecterProps) {
   const [sidoList, setSidoList] = useState(sidos);
   const [gugunList, setGugnList] = useState(guguns);
-  const [sido, setSido] = useState('11');
-  const [gugun, setGugun] = useState('');
+  const [didMount, setDidMount] = useState(false);
 
   const handleSidoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSido(e.target.value);
+    setModifySido(e.target.value);
   };
 
   const handleGugunChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setGugun(e.target.value);
+    console.log(e.target.value);
+    setModifyGugun(e.target.value);
   };
 
   const getSido = async () => {
@@ -40,7 +52,6 @@ function AddressSelecter({ style }: AddSelecterProps) {
     );
 
     const data = res.data.regcodes;
-    // console.log(data);
     for (let i = 0; i < data.length; i++) {
       setSidoList((prev) =>
         prev.concat({
@@ -68,25 +79,38 @@ function AddressSelecter({ style }: AddSelecterProps) {
         }),
       );
     }
+    setModifyGugun(data[1].code);
   };
 
+  // mount 완료 설정
   useEffect(() => {
-    getSido();
-    getGugun(sido);
-  }, [sido]);
+    console.log(`mount ${mountCount}`);
+    mountCount++;
+    setDidMount(true);
+    return () => console.log('unmount');
+  }, []);
+
+  // mount 됐을 때만 api 불러와서 시군구 설정
+  useEffect(() => {
+    console.log('didMount', didMount);
+    if (didMount) {
+      getSido();
+      getGugun(modifySido);
+    }
+  }, [didMount, modifySido]);
 
   return (
     <div className="AddressSelecter">
       <span>사는 곳</span>
       <div>
-        <select id="sido" value={sido} onChange={handleSidoChange}>
+        <select id="sido" value={modifySido} onChange={handleSidoChange}>
           {sidoList.map((sido) => (
             <option key={sido.sidoId} value={sido.sidoCode}>
               {sido.sidoName}
             </option>
           ))}
         </select>
-        <select id="gugun" value={gugun} onChange={handleGugunChange}>
+        <select id="gugun" value={modifyGugun} onChange={handleGugunChange}>
           {gugunList.map((gugun) => (
             <option key={gugun.gugunId} value={gugun.gugunCode}>
               {gugun.gugunName}
