@@ -34,15 +34,15 @@ public class MemberController {
         return new ResponseEntity<>(memberService.deleteUserInfo(memberId), HttpStatus.OK);
     }
 
+    @PatchMapping("/users/{memberId}")
+    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) throws Exception{
+        System.out.println(memberId);
+        return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto), HttpStatus.OK);
+    }
+
     @PatchMapping("/users/{memberId}/password")
     public ResponseEntity<String> patchMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
         return new ResponseEntity<>(memberService.patchMemberPW(memberId, request), HttpStatus.OK);
-    }
-
-    @PatchMapping("/users/{memberId}")
-    public ResponseEntity<?> updateMember(@PathVariable Long memberId, @RequestBody Member member) throws Exception{
-        memberService.updateMember(member);
-        return new ResponseEntity<String>("OK", HttpStatus.OK);
     }
 
     @PostMapping("/users/{memberId}/password")

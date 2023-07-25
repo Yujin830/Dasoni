@@ -97,29 +97,20 @@ public class MemberService {
         return true;
     }
 
-    public boolean updateMember(Member request) throws Exception {
+    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) throws Exception {
+        System.out.println(memberId);
+        Member member = memberRepo.findById(memberId)
+                .orElseThrow(()->new Exception("계정을 찾을 수 없습니다."));
 
+        member.setNickname(memberUpdateDto.getNickname());
+        member.setJob(memberUpdateDto.getJob());
+        member.setSiDo(memberUpdateDto.getSiDo());
+        member.setGuGun(memberUpdateDto.getGuGun());
+        member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
 
-            Member member = Member.builder()
-                    .loginId(request.getLoginId())
-                    .gender(request.getGender())
-                    .birth(request.getBirth())
-                    .phoneNumber(request.getPhoneNumber())
-                    .nickname(request.getNickname())
-                    .profileImageSrc(request.getProfileImageSrc())
-                    .job(request.getJob())
-                    .siDo(request.getSiDo())
-                    .guGun(request.getGuGun()).build();
+//        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
 
-            member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
-
-            System.out.println(member.toString() + " " + member.getRoles());
-            memberRepo.save(member);
-
-        return true;
+        memberRepo.save(member);
+        return "OK";
     }
-
-
-
-
 }
