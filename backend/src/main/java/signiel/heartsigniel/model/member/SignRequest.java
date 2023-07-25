@@ -14,8 +14,6 @@ public class SignRequest {
 
     private String password;
 
-    private String nickname;
-
     private String gender;
 
     private Date birth;

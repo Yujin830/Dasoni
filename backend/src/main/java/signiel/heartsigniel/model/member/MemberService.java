@@ -49,7 +49,6 @@ public class MemberService {
             Member member = Member.builder()
                     .loginId(request.getLoginId())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .nickname(request.getNickname())
                     .gender(request.getGender())
                     .birth(request.getBirth())
                     .phoneNumber(request.getPhoneNumber())
@@ -74,5 +73,12 @@ public class MemberService {
 
     public void deleteUserInfo(Long memberId) throws Exception{
         memberRepo.deleteById(memberId);
+    }
+
+    public void patchMemberPW(Long memberId, SignRequest request) throws Exception {
+        Member member = memberRepo.findById(memberId)
+                .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
+
+
     }
 }

@@ -21,7 +21,6 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<Boolean> signup(@RequestBody SignRequest request) throws Exception {
-        System.out.println("signup "+request.getLoginId());
         return new ResponseEntity<>(memberService.register(request), HttpStatus.OK);
     }
 
@@ -36,6 +35,10 @@ public class MemberController {
         return new ResponseEntity<String>("OK", HttpStatus.OK);
     }
 
-
+    @PatchMapping("/users/{memberId}/password")
+    public ResponseEntity<?> patchMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
+        memberService.patchMemberPW(memberId, request);
+        return new ResponseEntity<String>("OK", HttpStatus.OK);
+    }
 
 }
