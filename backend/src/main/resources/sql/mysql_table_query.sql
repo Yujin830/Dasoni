@@ -68,7 +68,7 @@ DROP TABLE IF EXISTS `notice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `notice` (
-                          `notice_id` bigint(20) NOT NULL,
+                          `notice_id` bigint(20) NOT NULL AUTO_INCREMENT,
                           `content` varchar(400) NOT NULL,
                           `visible_time` int(11) NOT NULL,
                           PRIMARY KEY (`notice_id`)
@@ -83,7 +83,7 @@ DROP TABLE IF EXISTS `party`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `party` (
-                         `party_id` bigint(20) NOT NULL,
+                         `party_id` bigint(20) NOT NULL AUTO_INCREMENT,
                          `party_gender` varchar(10) NOT NULL,
                          `avg_rating` int(11) DEFAULT NULL,
                          PRIMARY KEY (`party_id`)
@@ -134,7 +134,7 @@ DROP TABLE IF EXISTS `question`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `question` (
-                            `question_id` bigint(20) NOT NULL,
+                            `question_id` bigint(20) NOT NULL AUTO_INCREMENT,
                             `content` varchar(400) NOT NULL,
                             PRIMARY KEY (`question_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -165,7 +165,7 @@ DROP TABLE IF EXISTS `room`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `room` (
-                        `room_id` bigint(20) NOT NULL,
+                        `room_id` bigint(20) NOT NULL AUTO_INCREMENT,
                         `type` tinyint(1) NOT NULL,
                         `start_time` timestamp NULL DEFAULT NULL,
                         `people_cnt` int(11) DEFAULT NULL,
