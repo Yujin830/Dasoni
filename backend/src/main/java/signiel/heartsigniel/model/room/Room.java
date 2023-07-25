@@ -51,7 +51,7 @@ public class Room {
     }
 
     public boolean isGameFinished() {
-        return startTime.plusHours(1).isBefore(LocalDateTime.now());
+        return startTime.plusHours(5 / 6).isBefore(LocalDateTime.now());
     }
 
 }

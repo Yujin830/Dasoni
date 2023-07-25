@@ -18,6 +18,7 @@ public class Party {
 
     private Long avgRating;
     private String gender;
+    private String partyType;
 
     @OneToMany(mappedBy = "party")
     private List<PartyMember> members = new ArrayList<>();
@@ -38,7 +39,7 @@ public class Party {
         if (members.isEmpty()) {
             return 0L;
         }
-        Long sum = members.stream().mapToLong(member -> member.getUser().getRank()).sum();
+        Long sum = members.stream().mapToLong(member -> member.getMember().getRating()).sum();
         return sum / members.size();
     }
 }

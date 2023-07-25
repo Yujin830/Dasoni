@@ -1,40 +1,44 @@
 package signiel.heartsigniel.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import signiel.heartsigniel.Jwt.TokenInfo;
-import signiel.heartsigniel.model.user.User;
-import signiel.heartsigniel.model.user.UserEntity;
-import signiel.heartsigniel.model.user.UserService;
+import signiel.heartsigniel.model.user.*;
+import signiel.heartsigniel.model.user.dto.SignRequest;
+import signiel.heartsigniel.model.user.dto.SignResponse;
 
 
 @RequiredArgsConstructor
-@RequestMapping("/users")
 @RestController
 @Slf4j
 public class UserController {
-    private final UserService userService;
-
-    @PostMapping("/regist")
-    @ResponseStatus(HttpStatus.OK)
-    public User regist(@Validated @RequestBody User user) throws Exception{
-        return userService.register(user);
-    }
+    private final MemberService memberService;
 
     @PostMapping("/login")
-    public TokenInfo login(@RequestBody UserEntity userEntity){
-//        int userId = userEntity.getUserId();
-        String loginId = userEntity.getLoginId();
-        String password = userEntity.getPassword();
-        return userService.login(userEntity.getUserId(), userEntity.getRoles(), loginId, password);
+    public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request) throws Exception {
+        return new ResponseEntity<>(memberService.login(request), HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "Ok";
+    @PostMapping("/register")
+    public ResponseEntity<Boolean> signup(@RequestBody SignRequest request) throws Exception {
+        System.out.println("signup "+request.getLoginId());
+        return new ResponseEntity<>(memberService.register(request), HttpStatus.OK);
     }
+
+    @GetMapping("/users/{loginId}")
+    public ResponseEntity<SignResponse> getUser(@PathVariable String loginId) throws Exception {
+        return new ResponseEntity<>(memberService.getMember(loginId), HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) throws  Exception {
+        memberService.deleteUserInfo(userId);
+        return new ResponseEntity<String>("OK", HttpStatus.OK);
+
+    }
+
+
+
 }

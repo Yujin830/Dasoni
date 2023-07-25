@@ -3,7 +3,7 @@ package signiel.heartsigniel.model.partymember;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import signiel.heartsigniel.model.party.Party;
-import signiel.heartsigniel.model.user.User;
+import signiel.heartsigniel.model.user.Member;
 
 import javax.persistence.*;
 
@@ -21,8 +21,8 @@ public class PartyMember {
         private Party party;
 
         @ManyToOne
-        @JoinColumn(name = "user_id")
-        private User user;
+        @JoinColumn(name = "member_id")
+        private Member member;
 
         private boolean isPartyLeader;
         private boolean isSpecialUser;

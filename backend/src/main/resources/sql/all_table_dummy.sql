@@ -1,10 +1,14 @@
 use mydb;
 
-insert into user values(1,"ssafy","ssafy","김싸피",21,"male","2023-07-16","010-1111-1111",0,2300,"imagesrc",0,"USER","HomeProtector", 1,1);
-insert into user values(2,"ssafy2","ssafy2","강싸피",28,"male","2023-07-16","010-1111-1111",1,0,"imagesrc",0,"USER", "PokemonTrainer",2,3);
+{
+    "loginId":"ssafy",
+    "password":"ssafy1234!",
+    "nickname":"김싸피",
+    "gender":"female",
+    "birth":"1997-05-25",
+    "phoneNumber":"010-2222-9999"
+}
 
-insert into warn (user_id) values(1);
-insert into warn (user_id) values(2);
 
 insert into room values (1, 0, now(), 6, 1, "방제목" , 0, 1);
 insert into room values (2, 1, now(), 3, 1, "방제목3" , 1, 1);
