@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import signiel.heartsigniel.model.partymember.PartyMember;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class UserEntity implements UserDetails {
     private boolean isBlack;
 
     @Column(name = "`rank`")
-    private int rank;
+    private Long rank;
 
     @Column(name = "`meeting_count`")
     private int meetingCount;
@@ -76,6 +77,9 @@ public class UserEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<PartyMember> partyMembers = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,61 +1,57 @@
 package signiel.heartsigniel.model.room;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sun.istack.Nullable;
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-import signiel.heartsigniel.model.room.dto.RoomOfCreate;
-import signiel.heartsigniel.model.user.User;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import signiel.heartsigniel.model.party.Party;
+import signiel.heartsigniel.model.question.Question;
 
 import javax.persistence.*;
-import javax.validation.constraints.Null;
-import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-
+@Data
+@NoArgsConstructor
 @Entity
-@Getter
-@ToString
-@RequiredArgsConstructor
 public class Room {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ROOM_ID")
     private Long id;
 
-    //방 제목
-    @Column(name = "ROOM_TITLE")
-    private String roomTitle;
-
-    @Column(name = "MEGI_ACCEPTABLE")
-    private boolean megiAcceptable;
-
-    @Column(name = "ROOM_TYPE")
-    private boolean roomType;
-
-    @Column(name = "RATING_LIMIT")
+    @Column
+    private String roomType;
+    @Column
+    private String videoUrl;
+    @Column
     private Long ratingLimit;
 
-    @Column(name = "VIDEO_URL")
-    private URL videoURL;
-
-    @Column(name = "ROOM_START_DATE")
+    @Column
     private LocalDateTime startTime;
 
-    @Builder(access = AccessLevel.PRIVATE)
-    private Room(RoomOfCreate roomOfCreate){
-        this.roomTitle = roomOfCreate.getRoomTitle();
-        this.roomType = roomOfCreate.isRoomType();
-        this.megiAcceptable = roomOfCreate.isMegiAcceptable();
-        this.ratingLimit = roomOfCreate.getRatingLimit();
+    @Column
+    private boolean megiAcceptable;
+    // getters and setters
+
+    @ManyToOne
+    private Party maleParty;
+
+    @ManyToOne
+    private Party femaleParty;
+
+    @OneToMany
+    private List<Question> questions = new ArrayList<>();
+
+    public void setQuestions(List<Question> questions) {
+        this.questions.clear();
+        this.questions.addAll(questions);
+    }
+    public boolean isGameStarted() {
+        return startTime.isBefore(LocalDateTime.now());
     }
 
-
-    public static Room of(RoomOfCreate roomOfCreate){
-
-        return Room.builder()
-                .roomOfCreate(roomOfCreate)
-                .build();
+    public boolean isGameFinished() {
+        return startTime.plusHours(1).isBefore(LocalDateTime.now());
     }
 
 }

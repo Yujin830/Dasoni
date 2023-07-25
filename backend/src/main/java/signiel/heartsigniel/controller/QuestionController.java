@@ -1,11 +1,9 @@
 package signiel.heartsigniel.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.model.question.Question;
-import signiel.heartsigniel.model.question.QuestionRepo;
+import signiel.heartsigniel.model.question.QuestionRepository;
 
 import java.util.Optional;
 
@@ -13,7 +11,7 @@ import java.util.Optional;
 @RequestMapping("/test")
 public class QuestionController {
     @Autowired
-    private QuestionRepo questionRepo;
+    private QuestionRepository questionRepo;
 
     @PostMapping("/question")
     public Question create(@RequestBody Question question){

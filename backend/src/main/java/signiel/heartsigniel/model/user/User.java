@@ -30,7 +30,7 @@ public class User{
     private Date birth;
     private String phoneNumber;
     private boolean isBlack;
-    private int rank;
+    private Long rank;
     private int meetingCount;
     private String profileImageSrc;
     @NotBlank(message = "직업을 입력해주세요.")
