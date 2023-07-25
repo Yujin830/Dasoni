@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useAppSelector } from '../../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import './MyProfileModify.css';
 import BasicInput from '../../Input/BasicInput/BasicInput';
 import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
+
+import { modifyUserAsync } from '../../../app/modules/user';
 
 const input = {
   width: '26rem',
@@ -18,7 +20,7 @@ const input = {
 };
 
 function MyProfileModify({ setType }: any) {
-  const { id, nickname, job } = useAppSelector((state) => state.user);
+  const { id, nickname, job, memberId } = useAppSelector((state) => state.user);
 
   const cancleModify = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -41,9 +43,11 @@ function MyProfileModify({ setType }: any) {
     setModifyProfileSrc(e.target.value);
   };
 
-  const modifyUserProfile = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const dispatch = useAppDispatch();
+  const modifyUserProfile = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const modifiedData = {
+      memberId: memberId,
       sido: Number(modifySido),
       gugun: Number(modifyGugun),
       job: modifyJob,
@@ -51,7 +55,8 @@ function MyProfileModify({ setType }: any) {
       profileImageSrc: modifyProfileSrc,
     };
     console.log(modifiedData);
-    console.log('수정 완료');
+
+    dispatch(modifyUserAsync(modifiedData));
   };
 
   return (

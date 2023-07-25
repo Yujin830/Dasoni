@@ -4,24 +4,26 @@ import { RootState } from '../store';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export type User = {
-  id: string;
-  password: string;
+  memberId?: number;
+  id?: string;
+  password?: string;
   nickname?: string;
   birth?: string;
   job?: string;
-  sido?: string;
-  gugun?: string;
+  sido?: number;
+  gugun?: number;
 };
 
 // 초기상태를 선언
 const initialState: User = {
-  id: 'zero9657',
+  memberId: 0,
+  id: '',
   password: '',
-  nickname: '나전문',
-  birth: '1998.06.07',
-  job: 'FE개발자',
-  sido: '서울특별시',
-  gugun: '영등포구',
+  nickname: '',
+  birth: '',
+  job: '',
+  sido: 0,
+  gugun: 0,
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
@@ -30,10 +32,24 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(setUserAsync.fulfilled, (state, action) => {
-      return { ...state, ...action.payload };
-    });
+    builder
+      .addCase(setUserAsync.fulfilled, (state, action) => {
+        return { ...state, ...action.payload };
+      })
+      .addCase(modifyUserAsync.fulfilled, (state, action) => {
+        return { ...state, ...action.payload };
+      });
   },
+});
+
+// 유저 정보 업데이트
+export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser: User) => {
+  const res = await axios.patch(`http://localhost:8080/users/${modifyUser.memberId}`, modifyUser);
+  console.log(res);
+
+  return {
+    ...modifyUser,
+  };
 });
 
 // 로그인 시 필요한 함수
