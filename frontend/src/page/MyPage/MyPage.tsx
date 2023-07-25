@@ -5,14 +5,21 @@ import ExpPointBar from '../../components/Element/ExpPointBar';
 import './MyPage.css';
 import MyProfile from '../../components/MyPage/MyProfile';
 import MyProfileModify from '../../components/MyPage/Modify/MyProfileModify';
+import MyProfileChangePw from '../../components/MyPage/ChangePassword/MyProfileChangePw';
 
 type SideBarProps = {
   points: number; // 현재 유저의 포인트
   percent: number; //경험치 바의 퍼센트 값 (0~100 사이의 숫자)
   match: number; // 지금까지 참여한 미팅 횟수
+  setType: (type: string) => void; //set state 함수
 };
 
-function SideBar({ points, percent, match }: SideBarProps) {
+function SideBar({ points, percent, match, setType }: SideBarProps) {
+  const changePw = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setType('changePw');
+  };
+
   return (
     <div className="my-side-bar">
       <div className="top">
@@ -30,7 +37,9 @@ function SideBar({ points, percent, match }: SideBarProps) {
         </div>
       </div>
       <footer className="footer">
-        <p>비밀번호 변경</p>
+        <a href="/" onClick={changePw}>
+          비밀번호 변경
+        </a>
       </footer>
     </div>
   );
@@ -42,12 +51,12 @@ function MyPage() {
   let content = null;
   if (type === 'read') content = <MyProfile setType={setType} />;
   else if (type === 'modify') content = <MyProfileModify setType={setType} />;
-  else if (type === 'changePw') content = null;
+  else if (type === 'changePw') content = <MyProfileChangePw setType={setType} />;
   return (
     <div className="mypage">
       <Header />
       <main>
-        <SideBar percent={75} points={2750} match={109} />
+        <SideBar percent={75} points={2750} match={109} setType={setType} />
         {content}
       </main>
     </div>
