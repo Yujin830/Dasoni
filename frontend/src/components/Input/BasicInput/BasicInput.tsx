@@ -7,7 +7,7 @@ type BasicInputProps = {
   type: string;
   value: string;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholer: string;
+  placeholer?: string;
 };
 
 function BasicInput({ style, label, type, value, handleChange, placeholer }: BasicInputProps) {
