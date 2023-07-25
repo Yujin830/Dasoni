@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './page/LoginPage/LoginPage';
 import SignUpPage from './page/SignUpPage/SignUpPage';
+import MyPage from './page/MyPage/MyPage';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />}></Route>
           <Route path="/signup" element={<SignUpPage />}></Route>
+          <Route path="/mypage" element={<MyPage />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
