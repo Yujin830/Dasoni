@@ -14,7 +14,7 @@ type FiledLabelProps = {
 function FiledLabelInput({ style, label, type, value, handleChange, placeholer }: FiledLabelProps) {
   return (
     <div className="input-box">
-      <label className="label filled">{label}</label>
+      <label className="label filled-bg">{label}</label>
       <input
         className="input"
         style={style}
