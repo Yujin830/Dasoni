@@ -29,7 +29,7 @@ CREATE TABLE `life` (
                         `when` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                         UNIQUE KEY `member_id_UNIQUE` (`member_id`),
                         CONSTRAINT `FK_MEMBER_TO_LIFE_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,7 +57,7 @@ CREATE TABLE `member` (
                           PRIMARY KEY (`member_id`),
                           UNIQUE KEY `member_id_UNIQUE` (`member_id`),
                           UNIQUE KEY `login_id_UNIQUE` (`login_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `notice` (
                           `content` varchar(400) NOT NULL,
                           `visible_time` int(11) NOT NULL,
                           PRIMARY KEY (`notice_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +87,7 @@ CREATE TABLE `party` (
                          `party_gender` varchar(10) NOT NULL,
                          `avg_rating` int(11) DEFAULT NULL,
                          PRIMARY KEY (`party_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +106,7 @@ CREATE TABLE `party_member` (
                                 KEY `FK_PARTY_TO_PARTY_MEMBER_1` (`party_id`),
                                 CONSTRAINT `FK_MEMBER_TO_PARTY_MEMBER_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE,
                                 CONSTRAINT `FK_PARTY_TO_PARTY_MEMBER_1` FOREIGN KEY (`party_id`) REFERENCES `party` (`party_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE `party_room` (
                               KEY `FK_ROOM_TO_PARTY_ROOM_1` (`room_id`),
                               CONSTRAINT `FK_PARTY_TO_PARTY_ROOM_1` FOREIGN KEY (`party_id`) REFERENCES `party` (`party_id`) ON DELETE CASCADE ON UPDATE CASCADE,
                               CONSTRAINT `FK_ROOM_TO_PARTY_ROOM_1` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,7 +137,7 @@ CREATE TABLE `question` (
                             `question_id` bigint(20) NOT NULL,
                             `content` varchar(400) NOT NULL,
                             PRIMARY KEY (`question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +154,7 @@ CREATE TABLE `recent_match` (
                                 KEY `FK_MEMBER_TO_RECENT_MATCH_2` (`match_user_id`),
                                 CONSTRAINT `FK_MEMBER_TO_RECENT_MATCH_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE,
                                 CONSTRAINT `FK_MEMBER_TO_RECENT_MATCH_2` FOREIGN KEY (`match_user_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +174,7 @@ CREATE TABLE `room` (
                         `megi_setting` tinyint(1) NOT NULL,
                         `limit_rating` int(11) NOT NULL,
                         PRIMARY KEY (`room_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,7 +191,7 @@ CREATE TABLE `room_q` (
                           KEY `FK_ROOM_TO_ROOM_Q_1` (`room_id`),
                           CONSTRAINT `FK_QUESTION_TO_ROOM_Q_1` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE,
                           CONSTRAINT `FK_ROOM_TO_ROOM_Q_1` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `room_signal` (
                                `from_user` bigint(20) NOT NULL,
                                KEY `FK_ROOM_TO_ROOM_SIGNAL_1` (`room_id`),
                                CONSTRAINT `FK_ROOM_TO_ROOM_SIGNAL_1` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
@@ -223,7 +223,7 @@ CREATE TABLE `warn` (
                         `when` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                         KEY `FK_MEMBER_TO_WARN_1` (`member_id`),
                         CONSTRAINT `FK_MEMBER_TO_WARN_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -236,6 +236,3 @@ CREATE TABLE `warn` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-07-24 16:54:24
-
-
-ALTER TABLE question convert to charset utf8;
