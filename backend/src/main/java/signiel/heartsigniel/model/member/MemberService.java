@@ -1,6 +1,8 @@
 package signiel.heartsigniel.model.member;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -97,6 +100,8 @@ public class MemberService {
         return true;
     }
 
+
+
     public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) throws Exception {
         System.out.println(memberId);
         Member member = memberRepo.findById(memberId)
@@ -108,9 +113,22 @@ public class MemberService {
         member.setGuGun(memberUpdateDto.getGuGun());
         member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
 
-//        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+
+
+        Authority userRole = Authority.builder().name("ROLE_USER").member(member).build();
+
+
+        memberRepo.deleteUserRole("ROLE_GUEST", memberId);
+
+        member.getRoles().add(userRole);
 
         memberRepo.save(member);
+
         return "OK";
     }
+
+
+
+
+
 }

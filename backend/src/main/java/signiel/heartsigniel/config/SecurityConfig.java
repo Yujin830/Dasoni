@@ -60,10 +60,9 @@ public class SecurityConfig {
                 .authorizeRequests()
                 // 회원가입과 로그인은 모두 승인
                 .antMatchers("/register", "/login").permitAll()
+                .antMatchers("/users/","/rooms/").hasRole("USER")
                 // /users 로 시작하는 요청은 GUEST(회원가입한 누구나) 권한이 있는 유저에게만 허용
                 .antMatchers("/users/**").hasRole("GUEST")
-                // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
-                .antMatchers("/rooms/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
                 // JWT 인증 필터 적용
