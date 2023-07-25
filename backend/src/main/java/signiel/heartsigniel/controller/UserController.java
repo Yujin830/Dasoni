@@ -29,4 +29,14 @@ public class UserController {
     public ResponseEntity<SignResponse> getUser(@PathVariable String loginId) throws Exception {
         return new ResponseEntity<>(memberService.getMember(loginId), HttpStatus.OK);
     }
+    
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) throws  Exception {
+        memberService.deleteUserInfo(userId);
+        return new ResponseEntity<String>("OK", HttpStatus.OK);
+
+    }
+
+
+
 }
