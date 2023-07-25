@@ -63,8 +63,9 @@
   align-items: center;
 }
 
-.my-side-bar .footer p {
+.my-side-bar .footer a {
   cursor: pointer;
+  text-decoration: none;
 }
 
 .mypage .content {

@@ -1,0 +1,16 @@
+.mypage .changePw-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.mypage .changePw-box h3 {
+  margin-bottom: 1.5rem;
+}
+
+.mypage .changePw-box .confirm-currentPw,
+.mypage .changePw-box .confirm-changePw {
+  position: relative;
+}
