@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
-import signiel.heartsigniel.model.user.Authority;
+import signiel.heartsigniel.model.member.Authority;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;

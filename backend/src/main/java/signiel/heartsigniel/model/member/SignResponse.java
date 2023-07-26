@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.user;
+package signiel.heartsigniel.model.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,21 +44,21 @@ public class SignResponse {
 
     private String token;
 
-    public SignResponse(Member user){
-        this.memberId = user.getMemberId();
-        this.loginId = user.getLoginId();
-        this.nickname = user.getNickname();
-        this.gender = user.getGender();
-        this.birth = user.getBirth();
-        this.phoneNumber = user.getPhoneNumber();
-        this.isBlack = user.isBlack();
-        this.rank = user.getRank();
-        this.meetingCount = user.getMeetingCount();
-        this.profileImageSrc = user.getProfileImageSrc();
-        this.job = user.getJob();
-        this.siDo = user.getSiDo();
-        this.guGun = user.getGuGun();
+    public SignResponse(Member member){
+        this.memberId = member.getMemberId();
+        this.loginId = member.getLoginId();
+        this.nickname = member.getNickname();
+        this.gender = member.getGender();
+        this.birth = member.getBirth();
+        this.phoneNumber = member.getPhoneNumber();
+        this.isBlack = member.isBlack();
+        this.rank = member.getRank();
+        this.meetingCount = member.getMeetingCount();
+        this.profileImageSrc = member.getProfileImageSrc();
+        this.job = member.getJob();
+        this.siDo = member.getSiDo();
+        this.guGun = member.getGuGun();
 
-        this.roles = user.getRoles();
+        this.roles = member.getRoles();
     }
 }
