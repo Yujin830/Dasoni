@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .antMatchers("/register", "/login").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
                 .antMatchers("/rooms/**").hasRole("USER")
+                .antMatchers("/party/**").hasRole("GUEST")
                 // /users 로 시작하는 요청은 GUEST(회원가입한 누구나) 권한이 있는 유저에게만 허용
                 .antMatchers("/users/**").hasAnyRole("GUEST","USER")
                 .anyRequest().denyAll()
