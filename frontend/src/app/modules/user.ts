@@ -32,18 +32,19 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(setUserAsync.fulfilled, (state, action) => {
-      if (action.type === 'user/SET_USER_LOGIN') {
-        // 로그인 응답 처리 코드
-        const { nickname } = action.payload; // 예시로 받아온 데이터 중 닉네임 정보를 가져옴
-        return { ...state, nickname };
-      } else if (action.type === 'user/SET_USER_SIGNUP') {
-        // 회원가입 응답 처리 코드
-        // 회원가입 후, 필요한 정보를 state에 반영
-        return state;
-      }
-      return state; // 기존 상태를 그대로 반환
-    })
+    builder
+      .addCase(setUserAsync.fulfilled, (state, action) => {
+        if (action.type === 'user/SET_USER_LOGIN') {
+          // 로그인 응답 처리 코드
+          const { nickname } = action.payload; // 예시로 받아온 데이터 중 닉네임 정보를 가져옴
+          return { ...state, nickname };
+        } else if (action.type === 'user/SET_USER_SIGNUP') {
+          // 회원가입 응답 처리 코드
+          // 회원가입 후, 필요한 정보를 state에 반영
+          return state;
+        }
+        return state; // 기존 상태를 그대로 반환
+      })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
         return { ...state, ...action.payload };
       });

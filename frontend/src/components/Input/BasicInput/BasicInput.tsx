@@ -1,12 +1,13 @@
 import React from 'react';
 import '../input.css';
+import './BasicInput.css';
 
 type BasicInputProps = {
   style: object;
-  label: string;
+  label?: string;
   type: string;
-  value: string;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholer?: string;
 };
 
