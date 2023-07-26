@@ -3,8 +3,8 @@ package signiel.heartsigniel.model.member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public class Member {
     @Column(length = 10)
     private String gender;
 
-    private Date birth;
+    private LocalDate birth;
 
     @Column(name = "`phone_number`", length = 20)
     private String phoneNumber;

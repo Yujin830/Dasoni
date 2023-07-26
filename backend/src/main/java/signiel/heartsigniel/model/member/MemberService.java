@@ -9,9 +9,7 @@ import signiel.heartsigniel.jwt.JwtTokenProvider;
 import signiel.heartsigniel.model.life.Life;
 import signiel.heartsigniel.model.life.LifeRepo;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -53,7 +51,6 @@ public class MemberService {
 
     public boolean register(SignRequest request) throws Exception {
         try {
-            System.out.println(request.getLoginId());
             Member member = Member.builder()
                     .loginId(request.getLoginId())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -64,26 +61,19 @@ public class MemberService {
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
 
-            System.out.println(request.getLoginId() + " " + member.getRoles());
             memberRepo.save(member);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new Exception("잘못된 요청입니다.");
         }
         return true;
     }
-
-    public SignResponse getMember(Long memberId) throws Exception {
-        System.out.println(memberId);
-        Member member = memberRepo.findById(memberId)
+    public SignResponse getMember(String loginId) throws Exception {
+        Member member = memberRepo.findByLoginId(loginId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
 
-        System.out.println(LocalDate.now());
-        List<Life> lives = lifeRepo.findByMemberIdAndDate(memberId, LocalDate.now());
-        System.out.println(lives.size());
+        List<Life> lives = lifeRepo.findByMemberIdAndUseDate(member.getMemberId(), LocalDate.now());
         return new SignResponse(member, lives.size());
     }
-
 
     public String deleteUserInfo(Long memberId) {
         memberRepo.deleteById(memberId);
