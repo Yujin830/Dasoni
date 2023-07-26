@@ -32,18 +32,19 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(setUserAsync.fulfilled, (state, action) => {
-      if (action.type === 'user/SET_USER_LOGIN') {
-        // 로그인 응답 처리 코드
-        const { nickname } = action.payload; // 예시로 받아온 데이터 중 닉네임 정보를 가져옴
-        return { ...state, nickname };
-      } else if (action.type === 'user/SET_USER_SIGNUP') {
-        // 회원가입 응답 처리 코드
-        // 회원가입 후, 필요한 정보를 state에 반영
-        return state;
-      }
-      return state; // 기존 상태를 그대로 반환
-    })
+    builder
+      .addCase(setUserAsync.fulfilled, (state, action) => {
+        if (action.type === 'user/SET_USER_LOGIN') {
+          // 로그인 응답 처리 코드
+          const { nickname } = action.payload; // 예시로 받아온 데이터 중 닉네임 정보를 가져옴
+          return { ...state, nickname };
+        } else if (action.type === 'user/SET_USER_SIGNUP') {
+          // 회원가입 응답 처리 코드
+          // 회원가입 후, 필요한 정보를 state에 반영
+          return state;
+        }
+        return state; // 기존 상태를 그대로 반환
+      })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
         return { ...state, ...action.payload };
       });
@@ -63,7 +64,7 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
 // 로그인 시 필요한 함수
 export const setUserAsync = createAsyncThunk('SET_USER', async (user: User) => {
   // 스프링 부트 백엔드 서버의 로그인 API 엔드포인트 URL
-  const loginApiUrl = 'http://localhost:8080/login';
+  // const loginApiUrl = 'http://localhost:8080/login';
 
   // 서버로 전달할 데이터 (여기서는 id와 password만 보내는 예시)
   const requestData = {
@@ -72,10 +73,13 @@ export const setUserAsync = createAsyncThunk('SET_USER', async (user: User) => {
   };
 
   // 서버에 POST 요청 보내기
-  const response = await axios.post(loginApiUrl, requestData);
+  console.log('cors 테스트');
+  const response = await axios.post('/login', requestData);
 
   // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
   const data = response.data;
+  console.log('from 서버');
+  console.log(data);
 
   // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
   // 예시로 받아온 데이터 중 닉네임 정보를 업데이트하도록 함
