@@ -1,47 +1,51 @@
 package signiel.heartsigniel.model.room;
 
 
-import io.swagger.models.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import signiel.heartsigniel.model.member.Member;
+import signiel.heartsigniel.common.code.CommonCode;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.MemberRepository;
-import signiel.heartsigniel.model.party.dto.BasicPartyResponse;
-import signiel.heartsigniel.model.room.dto.BasicRoomResponse;
+import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
+import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 
 @RestController
 @RequestMapping("/rooms")
+@Slf4j
 public class RoomController {
 
-    private final MemberRepository memberRepository;
-    private final RoomRepository roomRepository;
     private final PrivateRoomService privateRoomService;
     private final MatchingRoomService matchingRoomService;
 
-    public RoomController(MemberRepository memberRepository, RoomRepository roomRepository, PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService){
-        this.memberRepository = memberRepository;
-        this.roomRepository = roomRepository;
+    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService){
         this.privateRoomService = privateRoomService;
         this.matchingRoomService = matchingRoomService;
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
     public ResponseEntity<String> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId){
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(()-> new RuntimeException("해당 룸을 찾을 수 없습니다."));
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new RuntimeException("해당 유저를 찾을 수 없습니다."));
 
-        privateRoomService.joinRoom(member, room);
 
-        //로직 추가
-
-        return ResponseEntity.ok("룸 참가에 성공했습니다.")
+        return ResponseEntity.ok("룸 참가에 성공했습니다.");
     }
 
-    @PostMapping("")
-    public ResponseEntity<String> createRoom
+    @GetMapping("")
+    public ResponseEntity<Response> getRoomList()
 
+    @PostMapping("")
+    public ResponseEntity<String> createRoom(@RequestBody PrivateRoomCreate privateRoomCreateRequest) {
+        privateRoomService.createRoom(privateRoomCreateRequest);
+        return ResponseEntity.ok(Response.of(CommonCode.GOOD_REQUEST, privateRoomService.))
+    }
+
+    @GetMapping("/{roomId}")
+    public ResponseEntity<Response> getRoomInfo(@PathVariable Long roomId){
+
+        PrivateRoomInfo privateRoomInfo;
+
+        return ResponseEntity.ok(Response.of(CommonCode.GOOD_REQUEST, privateRoomInfo))
+    }
 
 }

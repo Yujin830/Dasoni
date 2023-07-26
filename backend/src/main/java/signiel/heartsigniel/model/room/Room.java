@@ -60,4 +60,5 @@ public class Room {
         return (long) (maleParty.getMembers().size() + femaleParty.getMembers().size());
     }
 
+
 }

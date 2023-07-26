@@ -25,7 +25,7 @@ public class Party {
     private String partyGender;
 
     @Column(name="avg_rating")
-    private int avgRating;
+    private Long avgRating;
 
     @Column(name = "party_type", length = 20)
     private String partyType;
