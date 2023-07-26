@@ -14,3 +14,17 @@
 .mypage .changePw-box .confirm-changePw {
   position: relative;
 }
+
+.mypage .changePw-box .confirm-changePw .alert,
+.mypage .changePw-box .confirm-currentPw .alert {
+  display: none;
+  color: red;
+}
+
+.mypage .changePw-box .confirm-changePw .alert.show,
+.mypage .changePw-box .confirm-currentPw .alert.show {
+  display: block;
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
