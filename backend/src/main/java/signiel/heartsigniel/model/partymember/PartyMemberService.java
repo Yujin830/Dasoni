@@ -1,6 +1,7 @@
 package signiel.heartsigniel.model.partymember;
 
 import org.springframework.stereotype.Service;
+import signiel.heartsigniel.model.party.MatchingPartyService;
 import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.party.PartyRepository;
 import signiel.heartsigniel.model.room.MatchingRoomService;
@@ -11,11 +12,12 @@ import java.util.List;
 @Service
 public class PartyMemberService {
     private final PartyMemberRepository partyMemberRepository;
-    private final PartyRepository partyRepository;
+    private final MatchingPartyService matchingPartyService;
     private final MatchingRoomService matchingRoomService;
 
-    public PartyMemberService(PartyMemberRepository partyMemberRepository, PartyRepository partyRepository, MatchingRoomService matchingRoomService) {
-        this.partyRepository = partyRepository;
+
+    public PartyMemberService(PartyMemberRepository partyMemberRepository, MatchingPartyService matchingPartyService, MatchingRoomService matchingRoomService) {
+        this.matchingPartyService = matchingPartyService;
         this.partyMemberRepository = partyMemberRepository;
         this.matchingRoomService = matchingRoomService;
     }
@@ -30,10 +32,8 @@ public class PartyMemberService {
         }
 
         if (joinParty == null) {
-            joinParty = new Party();
-            joinParty.setAvgRating(member.getRating());
-            joinParty.setGender(member.getGender());
-            partyRepository.save(joinParty);
+
+
         }
 
         boolean isPartyLeader = joinParty.getMembers().isEmpty();
