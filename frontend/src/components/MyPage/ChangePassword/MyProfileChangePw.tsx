@@ -41,11 +41,17 @@ function CheckCurrentPw({ setIsCorrect, memberId }: any) {
       setAlertMsg('비밀번호를 입력해주세요');
       return;
     }
-    const res = await axios.post(`/users/${memberId}/password`);
 
-    if (res.data) {
-      setIsCorrect(true);
-      setAlertMsg('');
+    try {
+      const res = await axios.post('/users/2/password', { password: currentPw });
+      console.log('data' + res.data);
+      if (res.data) {
+        setIsCorrect(true);
+        setAlertMsg('');
+      }
+    } catch (err) {
+      console.log(err);
+      setAlertMsg('비밀번호가 틀렸습니다. 다시 입력해주세요');
     }
   };
 
@@ -80,7 +86,6 @@ function ChangePw({ setType, memberId }: any) {
   };
 
   const sendNewPw = async () => {
-    // TODO : 비밀번호 유효성 검사
     console.log(newPw);
     console.log(checkNewPw);
 
@@ -92,13 +97,17 @@ function ChangePw({ setType, memberId }: any) {
       return;
     }
 
-    const res = await axios.post(`/users/${memberId}/password`);
-    console.log(res.data);
+    try {
+      const res = await axios.patch(`/users/${2}/password`, { password: newPw });
+      console.log(res.data);
 
-    if (res.data === 'OK') {
-      alert(`비밀번호가 성공적으로 변경되었습니다.`);
-      setAlertMsg('');
-      setType('read');
+      if (res.data === 'OK') {
+        alert(`비밀번호가 성공적으로 변경되었습니다.`);
+        setAlertMsg('');
+        setType('read');
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
