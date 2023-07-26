@@ -98,7 +98,6 @@ public class MemberService {
     }
 
     public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) throws Exception {
-        System.out.println(memberId);
         Member member = memberRepo.findById(memberId)
                 .orElseThrow(()->new Exception("계정을 찾을 수 없습니다."));
 
@@ -108,7 +107,11 @@ public class MemberService {
         member.setGuGun(memberUpdateDto.getGuGun());
         member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
 
-//        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        List<Authority> list = member.getRoles();
+        int size = list.size();
+        for(int i=0;i<size;i++)
+            list.get(i).setName("ROLE_USER");
+        member.setRoles(list);
 
         memberRepo.save(member);
         return "OK";
