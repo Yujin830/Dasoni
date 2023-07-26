@@ -15,7 +15,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request) throws Exception {
+    public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request) {
         return new ResponseEntity<>(memberService.login(request), HttpStatus.OK);
     }
 
@@ -30,13 +30,12 @@ public class MemberController {
     }
     
     @DeleteMapping("/users/{memberId}")
-    public ResponseEntity<String> deleteMember(@PathVariable Long memberId) throws  Exception {
+    public ResponseEntity<String> deleteMember(@PathVariable Long memberId) {
         return new ResponseEntity<>(memberService.deleteUserInfo(memberId), HttpStatus.OK);
     }
 
     @PatchMapping("/users/{memberId}")
     public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) throws Exception{
-        System.out.println(memberId);
         return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto), HttpStatus.OK);
     }
 

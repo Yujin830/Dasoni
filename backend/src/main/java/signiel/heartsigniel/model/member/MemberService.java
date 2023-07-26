@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -74,7 +72,7 @@ public class MemberService {
     }
 
 
-    public String deleteUserInfo(Long memberId) throws Exception{
+    public String deleteUserInfo(Long memberId) {
         memberRepo.deleteById(memberId);
         return "OK";
     }
@@ -101,17 +99,18 @@ public class MemberService {
         Member member = memberRepo.findById(memberId)
                 .orElseThrow(()->new Exception("계정을 찾을 수 없습니다."));
 
+        if(member.getJob()==null){
+            List<Authority> list = member.getRoles();
+            for(Authority authority:list)
+                authority.setName("ROLE_USER");
+            member.setRoles(list);
+        }
+
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
         member.setSiDo(memberUpdateDto.getSiDo());
         member.setGuGun(memberUpdateDto.getGuGun());
         member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
-
-        List<Authority> list = member.getRoles();
-        int size = list.size();
-        for(int i=0;i<size;i++)
-            list.get(i).setName("ROLE_USER");
-        member.setRoles(list);
 
         memberRepo.save(member);
         return "OK";
