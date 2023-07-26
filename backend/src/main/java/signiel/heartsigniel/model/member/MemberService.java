@@ -6,7 +6,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
+import signiel.heartsigniel.model.life.Life;
+import signiel.heartsigniel.model.life.LifeRepo;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -16,6 +21,8 @@ public class MemberService {
     private final MemberRepo memberRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final LifeRepo lifeRepo;
 
     public SignResponse login(SignRequest request) {
         Member member = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(() ->
@@ -39,6 +46,7 @@ public class MemberService {
                 .siDo(member.getSiDo())
                 .guGun(member.getGuGun())
                 .roles(member.getRoles())
+                .remainLife(2)
                 .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
                 .build();
     }
@@ -66,9 +74,14 @@ public class MemberService {
     }
 
     public SignResponse getMember(Long memberId) throws Exception {
+        System.out.println(memberId);
         Member member = memberRepo.findById(memberId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
-        return new SignResponse(member);
+
+        System.out.println(LocalDate.now());
+        List<Life> lives = lifeRepo.findByMemberIdAndDate(memberId, LocalDate.now());
+        System.out.println(lives.size());
+        return new SignResponse(member, lives.size());
     }
 
 

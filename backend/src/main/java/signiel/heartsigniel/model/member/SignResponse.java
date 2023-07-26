@@ -44,7 +44,9 @@ public class SignResponse {
 
     private String token;
 
-    public SignResponse(Member member){
+    private int remainLife;
+
+    public SignResponse(Member member, int useLife){
         this.memberId = member.getMemberId();
         this.loginId = member.getLoginId();
         this.nickname = member.getNickname();
@@ -60,5 +62,7 @@ public class SignResponse {
         this.guGun = member.getGuGun();
 
         this.roles = member.getRoles();
+
+        this.remainLife = 2-useLife;
     }
 }

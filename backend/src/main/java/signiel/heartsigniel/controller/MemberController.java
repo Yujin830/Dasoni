@@ -26,6 +26,7 @@ public class MemberController {
 
     @GetMapping("/users/{memberId}")
     public ResponseEntity<SignResponse> getMember(@PathVariable Long memberId) throws Exception {
+        System.out.println("getMember============================");
         return new ResponseEntity<>(memberService.getMember(memberId), HttpStatus.OK);
     }
     
