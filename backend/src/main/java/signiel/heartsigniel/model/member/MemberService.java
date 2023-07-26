@@ -65,8 +65,8 @@ public class MemberService {
         return true;
     }
 
-    public SignResponse getMember(Long memberId) throws Exception {
-        Member member = memberRepo.findById(memberId)
+    public SignResponse getMember(String memberId) throws Exception {
+        Member member = memberRepo.findByLoginId(memberId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
         return new SignResponse(member);
     }
@@ -115,4 +115,8 @@ public class MemberService {
         memberRepo.save(member);
         return "OK";
     }
+
+//    public List<> recentMatch(Long memberId){
+//
+//    }
 }
