@@ -2,7 +2,6 @@ package signiel.heartsigniel.model.partymember;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.user.Member;
 
 import javax.persistence.*;

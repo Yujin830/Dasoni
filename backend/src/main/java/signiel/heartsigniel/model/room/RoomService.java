@@ -1,6 +1,18 @@
 package signiel.heartsigniel.model.room;
 
-import signiel.heartsigniel.model.party.Party;
+import org.springframework.stereotype.Service;
 
-public interface RoomService {
+@Service
+public class RoomService {
+    private final RoomRepository roomRepository;
+
+    public RoomService(RoomRepository roomRepository){
+        this.roomRepository = roomRepository;
+    }
+
+    public Room createRoom( ) {
+        Room room = new Room();
+        return room;
+    }
+
 }

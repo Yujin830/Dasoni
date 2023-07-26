@@ -2,7 +2,6 @@ package signiel.heartsigniel.model.room;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.question.Question;
 
 import javax.persistence.*;
@@ -25,6 +24,8 @@ public class Room {
     private String videoUrl;
     @Column
     private Long ratingLimit;
+    @Column
+    private String title;
 
     @Column
     private LocalDateTime startTime;
@@ -52,6 +53,10 @@ public class Room {
 
     public boolean isGameFinished() {
         return startTime.plusHours(5 / 6).isBefore(LocalDateTime.now());
+    }
+
+    public Long roomMemberCount() {
+        return (long) (maleParty.getMembers().size() + femaleParty.getMembers().size());
     }
 
 }

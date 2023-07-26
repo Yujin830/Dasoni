@@ -76,6 +76,7 @@ public class MemberService {
 
     public void deleteUserInfo(Long userId) throws Exception{
         memberRepo.deleteById(userId);
-
     }
+
+
 }
