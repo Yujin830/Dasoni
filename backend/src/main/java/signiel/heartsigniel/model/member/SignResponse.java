@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -22,7 +22,7 @@ public class SignResponse {
 
     private String gender;
 
-    private Date birth;
+    private LocalDate birth;
 
     private String phoneNumber;
 
@@ -44,7 +44,9 @@ public class SignResponse {
 
     private String token;
 
-    public SignResponse(Member member){
+    private int remainLife;
+
+    public SignResponse(Member member, int useLife){
         this.memberId = member.getMemberId();
         this.loginId = member.getLoginId();
         this.nickname = member.getNickname();
@@ -60,5 +62,7 @@ public class SignResponse {
         this.guGun = member.getGuGun();
 
         this.roles = member.getRoles();
+
+        this.remainLife = 2-useLife;
     }
 }
