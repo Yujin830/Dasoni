@@ -62,7 +62,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="box">
+    <div className="box" id="login">
       <div className="left-box">
         <img className="signal left" src={leftSignal} alt="시그널 아이콘" />
         <div className="left-box-content">

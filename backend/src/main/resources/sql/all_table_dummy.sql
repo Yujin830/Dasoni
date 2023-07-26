@@ -3,7 +3,6 @@ use mydb;
 {
     "loginId":"ssafy",
     "password":"ssafy1234!",
-    "nickname":"김싸피",
     "gender":"female",
     "birth":"1997-05-25",
     "phoneNumber":"010-2222-9999"
