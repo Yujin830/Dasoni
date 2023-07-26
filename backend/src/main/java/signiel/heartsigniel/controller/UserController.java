@@ -5,10 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import signiel.heartsigniel.model.user.*;
-import signiel.heartsigniel.model.user.dto.SignRequest;
-import signiel.heartsigniel.model.user.dto.SignResponse;
-
+import signiel.heartsigniel.model.member.MemberService;
+import signiel.heartsigniel.model.member.dto.SignRequest;
+import signiel.heartsigniel.model.member.dto.SignResponse;
 
 @RequiredArgsConstructor
 @RestController

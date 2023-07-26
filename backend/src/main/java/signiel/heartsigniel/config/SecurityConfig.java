@@ -18,7 +18,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import signiel.heartsigniel.jwt.JwtAuthenticationFilter;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -60,10 +59,11 @@ public class SecurityConfig {
                 .authorizeRequests()
                 // 회원가입과 로그인은 모두 승인
                 .antMatchers("/register", "/login").permitAll()
-                // /users 로 시작하는 요청은 GUEST(회원가입한 누구나) 권한이 있는 유저에게만 허용
-                .antMatchers("/users/**").hasRole("GUEST")
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
                 .antMatchers("/rooms/**").hasRole("USER")
+                .antMatchers("/party/**").hasRole("GUEST")
+                // /users 로 시작하는 요청은 GUEST(회원가입한 누구나) 권한이 있는 유저에게만 허용
+                .antMatchers("/users/**").hasAnyRole("GUEST","USER")
                 .anyRequest().denyAll()
                 .and()
                 // JWT 인증 필터 적용
@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .accessDeniedHandler(new AccessDeniedHandler() {
                     @Override
-                    public void handle(HttpServletRequest request, HttpServletResponse response, org.springframework.security.access.AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                    public void handle(HttpServletRequest request, HttpServletResponse response, org.springframework.security.access.AccessDeniedException accessDeniedException) throws IOException {
                         response.setStatus(403);
                         response.setCharacterEncoding("utf-8");
                         response.setContentType("text/html; charset=UTF-8");
@@ -81,7 +81,7 @@ public class SecurityConfig {
                 })
                 .authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
-                    public void commence(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) throws IOException, ServletException {
+                    public void commence(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) throws IOException {
                         response.setStatus(401);
                         response.setCharacterEncoding("utf-8");
                         response.setContentType("text/html; charset=UTF-8");

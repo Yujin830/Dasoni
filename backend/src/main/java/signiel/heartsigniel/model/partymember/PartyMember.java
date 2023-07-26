@@ -2,7 +2,9 @@ package signiel.heartsigniel.model.partymember;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import signiel.heartsigniel.model.user.Member;
+import signiel.heartsigniel.model.member.Member;
+import signiel.heartsigniel.model.party.Party;
+
 
 import javax.persistence.*;
 
@@ -25,7 +27,5 @@ public class PartyMember {
 
         private boolean isPartyLeader;
         private boolean isSpecialUser;
-
-
 
 }

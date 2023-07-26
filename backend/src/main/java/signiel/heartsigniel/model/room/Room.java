@@ -2,6 +2,7 @@ package signiel.heartsigniel.model.room;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.question.Question;
 
 import javax.persistence.*;
@@ -40,7 +41,7 @@ public class Room {
     @ManyToOne
     private Party femaleParty;
 
-    @OneToMany
+    @OneToMany(mappedBy = "room")
     private List<Question> questions = new ArrayList<>();
 
     public void setQuestions(List<Question> questions) {

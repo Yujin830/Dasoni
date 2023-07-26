@@ -1,20 +1,16 @@
-package signiel.heartsigniel.model.user.dto;
+package signiel.heartsigniel.model.member.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 public class SignRequest {
     private Long memberId;
 
     private String loginId;
 
     private String password;
-
-    private String nickname;
 
     private String gender;
 
