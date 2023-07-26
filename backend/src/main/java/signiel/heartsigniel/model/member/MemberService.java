@@ -6,7 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
+import signiel.heartsigniel.model.life.Life;
+import signiel.heartsigniel.model.life.LifeRepo;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -16,6 +19,8 @@ public class MemberService {
     private final MemberRepo memberRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final LifeRepo lifeRepo;
 
     public SignResponse login(SignRequest request) {
         Member member = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(() ->
@@ -39,13 +44,13 @@ public class MemberService {
                 .siDo(member.getSiDo())
                 .guGun(member.getGuGun())
                 .roles(member.getRoles())
+                .remainLife(2)
                 .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
                 .build();
     }
 
     public boolean register(SignRequest request) throws Exception {
         try {
-            System.out.println(request.getLoginId());
             Member member = Member.builder()
                     .loginId(request.getLoginId())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -56,21 +61,19 @@ public class MemberService {
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
 
-            System.out.println(request.getLoginId() + " " + member.getRoles());
             memberRepo.save(member);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new Exception("잘못된 요청입니다.");
         }
         return true;
     }
-
-    public SignResponse getMember(Long memberId) throws Exception {
-        Member member = memberRepo.findById(memberId)
+    public SignResponse getMember(String loginId) throws Exception {
+        Member member = memberRepo.findByLoginId(loginId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
-        return new SignResponse(member);
-    }
 
+        List<Life> lives = lifeRepo.findByMemberIdAndUseDate(member.getMemberId(), LocalDate.now());
+        return new SignResponse(member, lives.size());
+    }
 
     public String deleteUserInfo(Long memberId) {
         memberRepo.deleteById(memberId);

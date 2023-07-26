@@ -24,9 +24,9 @@ public class MemberController {
         return new ResponseEntity<>(memberService.register(request), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{memberId}")
-    public ResponseEntity<SignResponse> getMember(@PathVariable Long memberId) throws Exception {
-        return new ResponseEntity<>(memberService.getMember(memberId), HttpStatus.OK);
+    @GetMapping("/users/{loginId}")
+    public ResponseEntity<SignResponse> getMember(@PathVariable String loginId) throws Exception {
+        return new ResponseEntity<>(memberService.getMember(loginId), HttpStatus.OK);
     }
     
     @DeleteMapping("/users/{memberId}")
@@ -48,4 +48,9 @@ public class MemberController {
     public ResponseEntity<Boolean> checkMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
         return new ResponseEntity<>(memberService.checkMemberPW(memberId, request), HttpStatus.OK);
     }
+
+//    @GetMapping("/users/{memberId}/recent")
+//    public ResponseEntity<?> recentMatch(@PathVariable Long memberId){
+//        return new ResponseEntity<>(memberService.)
+//    }
 }
