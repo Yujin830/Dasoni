@@ -24,9 +24,9 @@ public class MemberController {
         return new ResponseEntity<>(memberService.register(request), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{loginId}")
-    public ResponseEntity<SignResponse> getMember(@PathVariable String loginId) throws Exception {
-        return new ResponseEntity<>(memberService.getMember(loginId), HttpStatus.OK);
+    @PostMapping("/register/{loginId}")
+    public ResponseEntity<String> getMember(@PathVariable String loginId) {
+        return new ResponseEntity<>(memberService.checkDuplicateId(loginId), HttpStatus.OK);
     }
     
     @DeleteMapping("/users/{memberId}")
@@ -35,17 +35,17 @@ public class MemberController {
     }
 
     @PatchMapping("/users/{memberId}")
-    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) throws Exception{
+    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) {
         return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto), HttpStatus.OK);
     }
 
     @PatchMapping("/users/{memberId}/password")
-    public ResponseEntity<String> patchMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
+    public ResponseEntity<String> patchMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) {
         return new ResponseEntity<>(memberService.patchMemberPW(memberId, request), HttpStatus.OK);
     }
 
     @PostMapping("/users/{memberId}/password")
-    public ResponseEntity<Boolean> checkMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) throws Exception {
+    public ResponseEntity<Boolean> checkMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) {
         return new ResponseEntity<>(memberService.checkMemberPW(memberId, request), HttpStatus.OK);
     }
 
