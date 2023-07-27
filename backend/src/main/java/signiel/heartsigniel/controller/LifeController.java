@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 public class LifeController {
     private final LifeService lifeService;
-    @PostMapping("/users/{memberId}")
+    @PostMapping("/life/{memberId}")
     public ResponseEntity<String> insert(@PathVariable Long memberId) throws Exception{
         return new ResponseEntity<>(lifeService.insert(memberId), HttpStatus.OK);
     }
