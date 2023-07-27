@@ -1,11 +1,16 @@
 package signiel.heartsigniel.model.room;
 
 import org.springframework.stereotype.Service;
+import signiel.heartsigniel.common.code.CommonCode;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.party.Party;
+import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
+import signiel.heartsigniel.model.room.dto.MatchingRoomCreated;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class MatchingRoomService {
@@ -31,8 +36,16 @@ public class MatchingRoomService {
         room.setTitle(room.getId() + "번 자동매칭방");
         room.setMegiAcceptable(true);
         room.setStartTime(LocalDateTime.now());
-        room.setQuestions(questionService.getRandomQuestions(3));
+        room.setQuestions(selectQuestionSet());
 
         return roomRepository.save(room);
+    }
+
+
+
+    public List<Question> selectQuestionSet(){
+        List<Question> questions = questionService.getRandomQuestions(3);
+
+        return questions;
     }
 }

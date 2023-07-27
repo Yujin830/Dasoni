@@ -24,11 +24,17 @@ public class RoomController {
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
-    public ResponseEntity<String> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId){
+    public ResponseEntity<Response> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId){
+        Response response = privateRoomService.joinRoom(memberId, roomId);
 
+        return ResponseEntity.ok(response);
+    }
 
+    @DeleteMapping("{roomId}/members/{memberId}")
+    public ResponseEntity<Response> quitRoom(@PathVariable Long roomId, @PathVariable Long memberId){
+        Response response = privateRoomService.quitRoom(roomId, memberId);
 
-        return ResponseEntity.ok("룸 참가에 성공했습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("")
