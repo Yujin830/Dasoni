@@ -33,6 +33,22 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
+    private static final String[] PERMIT_SWAGGER_URL_ARRAY = {
+            /* 로그인, 회원가입 */
+            "/users/login",
+            "/users/regist",
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/webjars/**",
+            "/swagger-ui.html",
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
@@ -61,6 +77,7 @@ public class SecurityConfig {
                 .and()
                 // 조건별로 요청 허용/제한 설정
                 .authorizeRequests()
+                .antMatchers(PERMIT_SWAGGER_URL_ARRAY).permitAll()
                 // 회원가입과 로그인은 모두 승인
                 .antMatchers("/register/**", "/login", "/guide", "/warn/**", "/life/**", "/users/**").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
