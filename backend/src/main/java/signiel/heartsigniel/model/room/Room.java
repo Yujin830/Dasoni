@@ -41,13 +41,6 @@ public class Room {
     @ManyToOne
     private Party femaleParty;
 
-    @OneToMany(mappedBy = "room")
-    private List<Question> questions = new ArrayList<>();
-
-    public void setQuestions(List<Question> questions) {
-        this.questions.clear();
-        this.questions.addAll(questions);
-    }
     public boolean isGameStarted() {
         return startTime.isBefore(LocalDateTime.now());
     }

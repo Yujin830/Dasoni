@@ -1,7 +1,6 @@
 package signiel.heartsigniel.model.room;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
@@ -110,8 +109,8 @@ public class PrivateRoomService {
     }
 
     public PrivateRoomInfo roomInfo(Long roomId){
-
-
+        Room roomEntity = findRoomById(roomId);
+        return new PrivateRoomInfo(roomEntity);
     }
 
     public Response quitRoom(Long memberId, Long roomId) {
@@ -158,7 +157,6 @@ public class PrivateRoomService {
     public Page<PrivateRoomList> getPrivateRooms(Pageable pageable) {
         Page roomPage = roomRepository.findAllByType("private", pageable);
         // 각 Room 엔티티를 PrivateRoomList DTO로 변환
-
         return roomPage;
     }
 
