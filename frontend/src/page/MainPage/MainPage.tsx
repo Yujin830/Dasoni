@@ -3,11 +3,14 @@ import Header from '../../components/Header/Header';
 import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
+import './MainPage.css';
 
+// 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 function MainPage() {
+  // 세션과 비디오 엘리먼트 관리하는 state
   const [mySessionId, setMySessionId] = useState('SessionA');
   const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState<any>(undefined);
@@ -16,16 +19,20 @@ function MainPage() {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<any>(null);
 
+  // OpenVidu 객체의 레퍼런스 생성
   const OV = useRef<OpenVidu>(new OpenVidu());
 
+  // sessionId 설정하는 핸들러
   const handleChangeSessionId = useCallback((e: any) => {
     setMySessionId(e.target.value);
   }, []);
 
+  // 사용자 이름 변경하는 핸들러
   const handleChangeUserName = useCallback((e: any) => {
     setMyUserName(e.target.value);
   }, []);
 
+  // 메인 비디오 스트림 설정 처리하는 핸들러
   const handleMainVideoStream = useCallback(
     (stream: any, event: React.MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault();
@@ -36,14 +43,21 @@ function MainPage() {
     [mainStreamManager],
   );
 
+  // 세션 참여하는 함수
   const joinSession = useCallback(() => {
+    // OpenVidu 세션 생성
     const mySession = OV.current.initSession();
 
+    // 스트림 생성 이벤트 구독
+    // 스트림 생성 시 subscriber 세팅
     mySession.on('streamCreated', (event) => {
+      console.log(event);
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
 
+    // 스트림 삭제 이벤트 구독
+    // 스트림 삭제시 subscriber 삭제
     mySession.on('streamDestroyed', (event) => {
       deleteSubscriber(event.stream.streamManager);
     });
@@ -55,19 +69,22 @@ function MainPage() {
     setSession(mySession);
   }, []);
 
+  // 세션에 연결 후 비디오 생성하고 발행하는 처리
   useEffect(() => {
     if (session) {
-      // Get a token from the OpenVidu deployment
+      // OpenVidu 배포에서 토큰 얻기
       getToken().then(async (token: any) => {
         try {
+          // 획득한 토큰으로 세션에 연결
           await session.connect(token, { clientData: myUserName });
 
+          // 발행할 비디오 생성
           const publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
             videoSource: undefined,
             publishAudio: true,
             publishVideo: true,
-            resolution: '640x480',
+            resolution: '320x240',
             frameRate: 30,
             insertMode: 'APPEND',
             mirror: false,
@@ -75,6 +92,7 @@ function MainPage() {
 
           session.publish(publisher);
 
+          // 사용 가능한 비디오 디바이스 얻고 현재 비디오 디바이스 설정
           const devices = await OV.current.getDevices();
           const videoDevices = devices.filter((device) => device.kind === 'videoinput');
           const currentVideoDeviceId = publisher.stream
@@ -95,13 +113,14 @@ function MainPage() {
     }
   }, [session, myUserName]);
 
+  // 세션 종료하기
   const leaveSession = useCallback(() => {
-    // Leave the session
+    // 세션이 있으면 연결 끊기
     if (session) {
       session.disconnect();
     }
 
-    // Reset all states and OpenVidu object
+    // 모든 state와 OpenVidu 객체 초기화
     OV.current = new OpenVidu();
     setSession(undefined);
     setSubscribers([]);
@@ -111,6 +130,7 @@ function MainPage() {
     setPublisher(undefined);
   }, [session]);
 
+  // 카메라 전환 처리
   const switchCamera = useCallback(async () => {
     try {
       const devices = await OV.current.getDevices();
@@ -143,6 +163,7 @@ function MainPage() {
     }
   }, [currentVideoDevice, session, mainStreamManager]);
 
+  // subscriber 삭제
   const deleteSubscriber = useCallback((streamManager: any) => {
     setSubscribers((prevSubscribers) => {
       const index = prevSubscribers.indexOf(streamManager);
@@ -167,10 +188,12 @@ function MainPage() {
     };
   }, [leaveSession]);
 
+  // 세션 연결을 위해 토큰 가져오는 함수
   const getToken = useCallback(async () => {
     return createSession(mySessionId).then((sessionId) => createToken(sessionId));
   }, [mySessionId]);
 
+  // 세션 생성
   const createSession = async (sessionId: any) => {
     const response = await axios.post(
       APPLICATION_SERVER_URL + 'api/sessions',
@@ -179,9 +202,10 @@ function MainPage() {
         headers: { 'Content-Type': 'application/json' },
       },
     );
-    return response.data; // The sessionId
+    return response.data; // sessionId 반환
   };
 
+  // 토큰 생성
   const createToken = async (sessionId: any) => {
     const response = await axios.post(
       APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections',
@@ -190,7 +214,7 @@ function MainPage() {
         headers: { 'Content-Type': 'application/json' },
       },
     );
-    return response.data; // The token
+    return response.data; // 토큰 반환
   };
 
   return (
@@ -264,11 +288,11 @@ function MainPage() {
                 />
               </div>
 
-              {mainStreamManager !== undefined ? (
+              {/* {mainStreamManager !== undefined ? (
                 <div id="main-video" className="col-md-6">
                   <UserVideo streamManager={mainStreamManager} />
                 </div>
-              ) : null}
+              ) : null} */}
               <div id="video-container" className="col-md-6">
                 {publisher !== undefined ? (
                   <a
