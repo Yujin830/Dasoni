@@ -2,8 +2,6 @@ package signiel.heartsigniel.model.party;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
-import signiel.heartsigniel.model.user.Member;
 
 import javax.persistence.*;
 

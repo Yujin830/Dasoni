@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import signiel.heartsigniel.jwt.CustomUserDetails;
-import signiel.heartsigniel.model.user.Member;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +16,9 @@ public class PartyService {
     public Party createNewParty(@AuthenticationPrincipal CustomUserDetails user,
                                 @RequestBody PartyRequest partyRequest){
         Party party = Party.from(partyRequest);
-        party.addManager(user.getUser().getMemberId());
+        party.addManager(user.getMember().getMemberId());
 
-        System.out.println("user info : "+user.getUser().getLoginId());
+//        System.out.println("user info : "+user.getUser().getLoginId());
         System.out.println("party info : "+partyRequest.getPartyId());
 
         return partyRepo.save(party);
