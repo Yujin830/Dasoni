@@ -42,9 +42,9 @@ public class SignResponse {
 
     private List<Authority> roles = new ArrayList<>();
 
-    private String token;
-
     private int remainLife;
+
+    private String token;
 
     public SignResponse(Member member, int useLife){
         this.memberId = member.getMemberId();

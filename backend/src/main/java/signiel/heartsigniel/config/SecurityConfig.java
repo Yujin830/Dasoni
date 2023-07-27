@@ -3,6 +3,9 @@ package signiel.heartsigniel.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -83,7 +86,15 @@ public class SecurityConfig {
                         response.setStatus(401);
                         response.setCharacterEncoding("utf-8");
                         response.setContentType("text/html; charset=UTF-8");
-                        response.getWriter().write("인증되지 않은 사용자입니다.");
+                        if(authException instanceof InternalAuthenticationServiceException){
+                            response.getWriter().write("회원 정보가 존재하지 않습니다.");
+                        } else if(authException instanceof BadCredentialsException){
+                            response.getWriter().write("비밀번호가 틀립니다.");
+                        } else if(authException instanceof LockedException){
+                            response.getWriter().write("블랙처리된 사용자입니다.");
+                        } else{
+                            response.getWriter().write("인증되지 않은 사용자입니다.");
+                        }
                     }
                 });
 

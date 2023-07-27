@@ -24,10 +24,10 @@ public class MemberController {
         return new ResponseEntity<>(memberService.register(request), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{loginId}")
-    public ResponseEntity<SignResponse> getMember(@PathVariable String loginId) throws Exception {
-        return new ResponseEntity<>(memberService.getMember(loginId), HttpStatus.OK);
-    }
+//    @GetMapping("/users/{loginId}")
+//    public ResponseEntity<SignResponse> getMember(@PathVariable String loginId) throws Exception {
+//        return new ResponseEntity<>(memberService.getMember(loginId), HttpStatus.OK);
+//    }
     
     @DeleteMapping("/users/{memberId}")
     public ResponseEntity<String> deleteMember(@PathVariable Long memberId) {
