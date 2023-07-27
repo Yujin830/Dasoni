@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -61,7 +62,7 @@ public class SecurityConfig {
                 // 조건별로 요청 허용/제한 설정
                 .authorizeRequests()
                 // 회원가입과 로그인은 모두 승인
-                .antMatchers("/register", "/login", "/guide", "/warn/**", "/life/**", "/users/**").permitAll()
+                .antMatchers("/register/**", "/login", "/guide", "/warn/**", "/life/**", "/users/**").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
                 .antMatchers("/rooms/**").hasRole("USER")
                 .antMatchers("/party/**").hasRole("GUEST")
@@ -86,12 +87,14 @@ public class SecurityConfig {
                         response.setStatus(401);
                         response.setCharacterEncoding("utf-8");
                         response.setContentType("text/html; charset=UTF-8");
-                        if(authException instanceof InternalAuthenticationServiceException){
+                        if(authException instanceof UsernameNotFoundException){
                             response.getWriter().write("회원 정보가 존재하지 않습니다.");
                         } else if(authException instanceof BadCredentialsException){
                             response.getWriter().write("비밀번호가 틀립니다.");
                         } else if(authException instanceof LockedException){
                             response.getWriter().write("블랙처리된 사용자입니다.");
+                        } else if(authException instanceof InternalAuthenticationServiceException){
+                            response.getWriter().write("사용 가능한 아이디입니다.");
                         } else{
                             response.getWriter().write("인증되지 않은 사용자입니다.");
                         }

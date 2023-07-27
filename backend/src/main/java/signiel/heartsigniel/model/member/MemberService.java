@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +27,12 @@ public class MemberService {
 
     public SignResponse login(SignRequest request) {
         Member member = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(() ->
-                new InternalAuthenticationServiceException("회원 정보가 없습니다."));
+                new UsernameNotFoundException("회원 정보가 없습니다."));
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("비밀번호가 틀렸습니다.");
         }
 
-        if(member.isBlack()==true)
+        if(member.isBlack())
             throw new LockedException("블랙처리된 사용자입니다.");
 
         List<Life> lives = lifeRepo.findByMemberIdAndUseDate(member.getMemberId(), LocalDate.now());
@@ -74,40 +75,39 @@ public class MemberService {
         }
         return true;
     }
-//    public SignResponse getMember(String loginId) throws Exception {
-//        Member member = memberRepo.findByLoginId(loginId)
-//                .orElseThrow(() -> new InternalAuthenticationServiceException("회원 정보가 없습니다."));
-//
-//        List<Life> lives = lifeRepo.findByMemberIdAndUseDate(member.getMemberId(), LocalDate.now());
-//        return new SignResponse(member, lives.size());
-//    }
+
+    public String checkDuplicateId(String loginId) {
+        memberRepo.findByLoginId(loginId).orElseThrow(() ->
+                new InternalAuthenticationServiceException("사용 가능한 아이디입니다."));
+        return "이미 존재하는 아이디입니다.";
+    }
 
     public String deleteUserInfo(Long memberId) {
         memberRepo.deleteById(memberId);
         return "OK";
     }
 
-    public String patchMemberPW(Long memberId, SignRequest request) throws Exception {
+    public String patchMemberPW(Long memberId, SignRequest request) {
         Member member = memberRepo.findById(memberId)
-                .orElseThrow(() -> new InternalAuthenticationServiceException("회원 정보가 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 없습니다."));
 
         member.setPassword(passwordEncoder.encode(request.getPassword()));
         memberRepo.save(member);
         return "OK";
     }
 
-    public boolean checkMemberPW(Long memberId, SignRequest request) throws Exception{
+    public boolean checkMemberPW(Long memberId, SignRequest request) {
         Member member = memberRepo.findById(memberId)
-                .orElseThrow(()-> new InternalAuthenticationServiceException("회원 정보가 없습니다."));
+                .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("비밀번호가 틀렸습니다.");
         }
         return true;
     }
 
-    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) throws Exception {
+    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) {
         Member member = memberRepo.findById(memberId)
-                .orElseThrow(()-> new InternalAuthenticationServiceException("회원 정보가 없습니다."));
+                .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
 
         if(member.getJob()==null){
             List<Authority> list = member.getRoles();
