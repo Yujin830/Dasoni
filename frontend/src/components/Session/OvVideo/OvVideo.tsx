@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { StreamManager } from 'openvidu-browser';
+import './OvVideo.css';
 
 type OvVideoProps = {
   streamManager: StreamManager;
@@ -15,7 +16,7 @@ function OvVideo({ streamManager }: OvVideoProps) {
   }, [streamManager]);
 
   return (
-    <video autoPlay={true} ref={videoRef}>
+    <video className="ov-video" autoPlay={true} ref={videoRef}>
       <track kind="captions"></track>
     </video>
   );
