@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `mydb` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
+CREATE DATABASE  IF NOT EXISTS `mydb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `mydb`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
@@ -18,6 +18,38 @@ USE `mydb`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `authority`
+--
+
+DROP TABLE IF EXISTS `authority`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `authority` (
+                             `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                             `name` varchar(255) DEFAULT NULL,
+                             `member` bigint(20) DEFAULT NULL,
+                             PRIMARY KEY (`id`),
+                             KEY `FKghs2pqki2va3n90061ftfgrbv` (`member`),
+                             CONSTRAINT `FKghs2pqki2va3n90061ftfgrbv` FOREIGN KEY (`member`) REFERENCES `member` (`member_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `guide`
+--
+
+DROP TABLE IF EXISTS `guide`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `guide` (
+                         `guide_id` bigint(20) NOT NULL,
+                         `content` varchar(400) NOT NULL,
+                         `visible_time` int(11) NOT NULL,
+                         PRIMARY KEY (`guide_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `life`
 --
 
@@ -25,11 +57,14 @@ DROP TABLE IF EXISTS `life`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `life` (
+                        `id` bigint(20) NOT NULL AUTO_INCREMENT,
                         `member_id` bigint(20) NOT NULL,
-                        `when` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                        UNIQUE KEY `member_id_UNIQUE` (`member_id`),
-                        CONSTRAINT `FK_MEMBER_TO_LIFE_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                        `use_date` date NOT NULL,
+                        PRIMARY KEY (`id`),
+                        UNIQUE KEY `id_UNIQUE` (`id`),
+                        KEY `member_id_idx` (`member_id`),
+                        CONSTRAINT `member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,9 +82,9 @@ CREATE TABLE `member` (
                           `birth` date NOT NULL,
                           `phone_number` varchar(20) NOT NULL,
                           `nickname` varchar(10) DEFAULT NULL,
-                          `isblack` tinyint(1) DEFAULT 0,
-                          `rank` int(11) DEFAULT 0,
-                          `meeting_cnt` int(11) DEFAULT 0,
+                          `isblack` tinyint(1) DEFAULT '0',
+                          `rank` int(11) DEFAULT '0',
+                          `meeting_cnt` int(11) DEFAULT '0',
                           `profile_image_src` varchar(200) DEFAULT NULL,
                           `job` varchar(20) DEFAULT NULL,
                           `si_do` int(11) DEFAULT NULL,
@@ -57,22 +92,7 @@ CREATE TABLE `member` (
                           PRIMARY KEY (`member_id`),
                           UNIQUE KEY `member_id_UNIQUE` (`member_id`),
                           UNIQUE KEY `login_id_UNIQUE` (`login_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `notice`
---
-
-DROP TABLE IF EXISTS `notice`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `notice` (
-                          `notice_id` bigint(20) NOT NULL AUTO_INCREMENT,
-                          `content` varchar(400) NOT NULL,
-                          `visible_time` int(11) NOT NULL,
-                          PRIMARY KEY (`notice_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,6 +106,7 @@ CREATE TABLE `party` (
                          `party_id` bigint(20) NOT NULL AUTO_INCREMENT,
                          `party_gender` varchar(10) NOT NULL,
                          `avg_rating` int(11) DEFAULT NULL,
+                         `party_type` varchar(20) DEFAULT NULL,
                          PRIMARY KEY (`party_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -137,7 +158,7 @@ CREATE TABLE `question` (
                             `question_id` bigint(20) NOT NULL AUTO_INCREMENT,
                             `content` varchar(400) NOT NULL,
                             PRIMARY KEY (`question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +195,7 @@ CREATE TABLE `room` (
                         `megi_setting` tinyint(1) NOT NULL,
                         `limit_rating` int(11) NOT NULL,
                         PRIMARY KEY (`room_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +231,6 @@ CREATE TABLE `room_signal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `warn`
 --
@@ -219,11 +239,14 @@ DROP TABLE IF EXISTS `warn`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `warn` (
+                        `id` bigint(11) NOT NULL AUTO_INCREMENT,
                         `member_id` bigint(20) NOT NULL,
-                        `when` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        `warn_date` date NOT NULL,
+                        PRIMARY KEY (`id`),
+                        UNIQUE KEY `id_UNIQUE` (`id`),
                         KEY `FK_MEMBER_TO_WARN_1` (`member_id`),
                         CONSTRAINT `FK_MEMBER_TO_WARN_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -235,4 +258,4 @@ CREATE TABLE `warn` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-24 16:54:24
+-- Dump completed on 2023-07-27 12:45:31
