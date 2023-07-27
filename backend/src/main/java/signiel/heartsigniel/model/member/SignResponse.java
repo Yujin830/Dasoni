@@ -45,24 +45,4 @@ public class SignResponse {
     private int remainLife;
 
     private String token;
-
-    public SignResponse(Member member, int useLife){
-        this.memberId = member.getMemberId();
-        this.loginId = member.getLoginId();
-        this.nickname = member.getNickname();
-        this.gender = member.getGender();
-        this.birth = member.getBirth();
-        this.phoneNumber = member.getPhoneNumber();
-        this.isBlack = member.isBlack();
-        this.rank = member.getRank();
-        this.meetingCount = member.getMeetingCount();
-        this.profileImageSrc = member.getProfileImageSrc();
-        this.job = member.getJob();
-        this.siDo = member.getSiDo();
-        this.guGun = member.getGuGun();
-
-        this.roles = member.getRoles();
-
-        this.remainLife = 2-useLife;
-    }
 }

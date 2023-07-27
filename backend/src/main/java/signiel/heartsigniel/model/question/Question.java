@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.question;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +16,9 @@ import javax.persistence.*;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int question_id;
+    @Column(name = "question_id")
+    @JsonIgnore
+    private Long questionId;
 
     private String content;
 }
