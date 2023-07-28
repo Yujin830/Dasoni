@@ -1,5 +1,6 @@
 .room-box {
-  min-width: 15rem;
+  width: 18rem;
+  min-width: 18rem;
   min-height: 8rem;
   padding: 0.5rem 1.5rem;
   border-radius: 0.625rem;
@@ -11,18 +12,18 @@
   background: #e7e7e7;
 }
 
-.room-box .header {
+.room-box .room-header {
   display: flex;
   justify-content: space-between;
 }
 
-.room-box .header .title-box {
+.room-box .room-header .title-box {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
 
-.room-box .header .title-box img {
+.room-box .room-header .title-box img {
   margin-right: 0.5rem;
 }
 

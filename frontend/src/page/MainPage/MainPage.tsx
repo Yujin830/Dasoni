@@ -7,6 +7,7 @@ import './MainPage.css';
 import Banner from '../../components/Banner/Banner';
 import IconButton from '../../components/Button/IconButton';
 import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
+import RoomBox, { RoomBoxProps } from '../../components/RoomBox/RoomBox';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
@@ -263,6 +264,42 @@ function MainPage() {
     // TODO : 검색 API 로직 개발
   };
 
+  // 미팅 대기방 리스트
+  // 테스트용 가짜 데이터
+  const fakeWaitingRoomList: RoomBoxProps[] = [
+    {
+      sessionId: '1',
+      title: '심심한데 놀 사람',
+      maleCnt: 3,
+      femaleCnt: 2,
+      maleAvgRank: 'A',
+      femaleAvgRank: 'A',
+      isMegiOpen: false,
+    },
+    {
+      sessionId: '2',
+      title: '서울 사는 사람만',
+      maleCnt: 3,
+      femaleCnt: 3,
+      maleAvgRank: 'A',
+      femaleAvgRank: 'S',
+      isMegiOpen: true,
+    },
+    {
+      sessionId: '3',
+      title: '재밌게 놀아요',
+      maleCnt: 2,
+      femaleCnt: 3,
+      maleAvgRank: 'A',
+      femaleAvgRank: 'B',
+      isMegiOpen: false,
+    },
+  ];
+  const [waitingRoomList, setWaitingRoomList] = useState<RoomBoxProps[]>(fakeWaitingRoomList);
+  useEffect(() => {
+    // TODO : 미팅 대기방 리스트 가져오는 로직 개발
+  }, []);
+
   return (
     <div id="main">
       <Header />
@@ -298,52 +335,64 @@ function MainPage() {
             </button>
           </div>
         </div>
-        <div className="container">
-          {session === undefined ? (
-            <div id="join">
-              <div id="img-div">
-                <img
-                  src="resources/images/openvidu_grey_bg_transp_cropped.png"
-                  alt="OpenVidu logo"
+        <div className="room-container">
+          {session === undefined
+            ? waitingRoomList.map((room) => (
+                <RoomBox
+                  key={room.sessionId}
+                  sessionId={room.sessionId}
+                  title={room.title}
+                  maleCnt={room.maleCnt}
+                  femaleCnt={room.femaleCnt}
+                  maleAvgRank={room.maleAvgRank}
+                  femaleAvgRank={room.femaleAvgRank}
+                  isMegiOpen={room.isMegiOpen}
                 />
-              </div>
-              <div id="join-dialog" className="jumbotron vertical-center">
-                <h1> Join a video session </h1>
-                <form className="form-group" onSubmit={joinSession}>
-                  <p>
-                    <label htmlFor="userName">Participant: </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="userName"
-                      value={myUserName}
-                      onChange={handleChangeUserName}
-                      required
-                    />
-                  </p>
-                  <p>
-                    <label htmlFor="sessionId"> Session: </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="sessionId"
-                      value={mySessionId}
-                      onChange={handleChangeSessionId}
-                      required
-                    />
-                  </p>
-                  <p className="text-center">
-                    <input
-                      className="btn btn-lg btn-success"
-                      name="commit"
-                      type="submit"
-                      value="JOIN"
-                    />
-                  </p>
-                </form>
-              </div>
-            </div>
-          ) : null}
+              ))
+            : // <div id="join">
+              //   <div id="img-div">
+              //     <img
+              //       src="resources/images/openvidu_grey_bg_transp_cropped.png"
+              //       alt="OpenVidu logo"
+              //     />
+              //   </div>
+              //   <div id="join-dialog" className="jumbotron vertical-center">
+              //     <h1> Join a video session </h1>
+              //     <form className="form-group" onSubmit={joinSession}>
+              //       <p>
+              //         <label htmlFor="userName">Participant: </label>
+              //         <input
+              //           className="form-control"
+              //           type="text"
+              //           id="userName"
+              //           value={myUserName}
+              //           onChange={handleChangeUserName}
+              //           required
+              //         />
+              //       </p>
+              //       <p>
+              //         <label htmlFor="sessionId"> Session: </label>
+              //         <input
+              //           className="form-control"
+              //           type="text"
+              //           id="sessionId"
+              //           value={mySessionId}
+              //           onChange={handleChangeSessionId}
+              //           required
+              //         />
+              //       </p>
+              //       <p className="text-center">
+              //         <input
+              //           className="btn btn-lg btn-success"
+              //           name="commit"
+              //           type="submit"
+              //           value="JOIN"
+              //         />
+              //       </p>
+              //     </form>
+              //   </div>
+              // </div>
+              null}
 
           {session !== undefined ? (
             <div id="session">
