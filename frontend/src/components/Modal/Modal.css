@@ -1,4 +1,9 @@
+/* HelpModal 스타일 */
 .modal {
+  position: fixed;
+  top: 50%; /* 화면 세로 중앙에 위치 */
+  left: 50%; /* 화면 가로 중앙에 위치 */
+  transform: translate(-50%, -50%); /* 세로와 가로로 50%만큼 이동하여 정확한 중앙 정렬 */
   width: 74.125rem;
   height: 42.75rem;
   flex-shrink: 0;
@@ -11,15 +16,15 @@
 }
 
 .modal .header {
-  width: 74.125rem;
+  width: 100%; /* 헤더의 너비를 100%로 설정하여 부모 요소에 맞춤 */
   height: 5.75rem;
   flex-shrink: 0;
   border-radius: 1rem 1rem 0rem 0rem;
   background: #ffd8e4;
   display: flex;
   flex-direction: row;
-  justify-content: sta;
-  /* align-items: center; */
+  justify-content: center; /* 가로 가운데 정렬 */
+  align-items: center; /* 세로 가운데 정렬 */
   margin-bottom: 20px;
   position: relative;
   color: #232323;
@@ -31,6 +36,7 @@
   line-height: 1.25rem; /* 62.5% */
   letter-spacing: 0.00625rem;
 }
+
 .modal .box {
   display: flex;
   flex-direction: column;

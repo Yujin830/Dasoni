@@ -48,13 +48,19 @@ function SideBar({ points, percent, match, setType }: SideBarProps) {
 function MyPage() {
   const [type, setType] = useState('read');
 
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleModalToggle = () => {
+    setModalVisible(!modalVisible);
+  };
+
   let content = null;
   if (type === 'read') content = <MyProfile setType={setType} />;
   else if (type === 'modify') content = <MyProfileModify setType={setType} />;
   else if (type === 'changePw') content = <MyProfileChangePw setType={setType} />;
   return (
     <div className="mypage">
-      <Header />
+      <Header onModalToggle={handleModalToggle} />
       <main>
         <SideBar percent={75} points={2750} match={109} setType={setType} />
         {content}

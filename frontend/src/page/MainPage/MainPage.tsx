@@ -4,6 +4,7 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MainPage.css';
+import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
@@ -217,9 +218,15 @@ function MainPage() {
     return response.data; // 토큰 반환
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleModalToggle = () => {
+    setModalVisible(!modalVisible);
+  };
+
   return (
     <div id="main">
-      <Header />
+      <Header onModalToggle={handleModalToggle} />
       <main>
         <div className="container">
           {session === undefined ? (
@@ -319,6 +326,10 @@ function MainPage() {
           ) : null}
         </div>
       </main>
+      {modalVisible && (
+        // 여기에 모달 컴포넌트를 렌더링합니다.
+        <HelpModal onClose={handleModalToggle} />
+      )}
     </div>
   );
 }

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from '../../assets/image/logo.png';
 import './Header.css';
 import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
+import HelpModal from '../Modal/HelpModal/HelpModal';
 
-function Header() {
+interface HeaderProps {
+  onModalToggle: () => void;
+}
+
+function Header({ onModalToggle }: HeaderProps) {
   return (
     <header className="header">
       <a className="logo" href="/">
@@ -15,9 +20,16 @@ function Header() {
             <span className="material-symbols-outlined filled">favorite</span>
             <span className="material-symbols-outlined filled">favorite</span>
           </li>
+
           <li className="help">
-            <span className="material-symbols-outlined">help</span>
+            <button
+              className="material-symbols-outlined"
+              onClick={onModalToggle} // MainPage의 handleModalToggle 함수를 호출
+            >
+              help
+            </button>
           </li>
+
           <li>
             <BasicAvartar src="default_profile.png" />
           </li>
