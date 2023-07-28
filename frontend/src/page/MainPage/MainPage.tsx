@@ -4,10 +4,32 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MainPage.css';
+import Banner from '../../components/Banner/Banner';
+import IconButton from '../../components/Button/IconButton';
+import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+
+const styles = {
+  iconBtn: {
+    width: '5rem',
+    height: '2.5rem',
+    borderRadius: '6.25rem',
+    background: 'rgba(238, 114, 165, 0.50)',
+  },
+  searchBar: {
+    width: '16rem',
+    height: '2.5rem',
+    borderRadius: '1.5rem',
+    background: '#FFE8EF',
+    color: '#555',
+    fontSize: '0.8rem',
+    border: 'none',
+    paddingLeft: '1rem',
+  },
+};
 
 function MainPage() {
   // 세션과 비디오 엘리먼트 관리하는 state
@@ -74,6 +96,7 @@ function MainPage() {
     if (session) {
       // OpenVidu 배포에서 토큰 얻기
       getToken().then(async (token: any) => {
+        console.log('token', token);
         try {
           // 획득한 토큰으로 세션에 연결
           await session.connect(token, { clientData: myUserName });
@@ -217,10 +240,64 @@ function MainPage() {
     return response.data; // 토큰 반환
   };
 
+  // 필터 버튼 토클
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggleFilter = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
+  // 검색창 입력값
+  const [searchInput, setSearchInput] = useState('');
+  const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
+
+  // 검색
+  const search = (searchInput: string) => {
+    if (searchInput === '') {
+      alert('검색어를 입력해주세요');
+      return;
+    }
+
+    console.log(searchInput);
+    // TODO : 검색 API 로직 개발
+  };
+
   return (
     <div id="main">
       <Header />
+      <Banner />
       <main>
+        <div id="main-top">
+          <div id="filter-box">
+            <IconButton
+              style={styles.iconBtn}
+              content="필터"
+              iconPosition="left"
+              icon="filter_list"
+              handleClick={handleToggleFilter}
+            />
+            <ul className={isOpen ? 'show' : ''}>
+              <li>남자만 입장 가능</li>
+              <li>여자만 입장 가능</li>
+            </ul>
+          </div>
+          <div id="search-box">
+            <NoLableInput
+              style={styles.searchBar}
+              type="text"
+              value={searchInput}
+              placeholer="검색어를 입력해주세요."
+              handleChange={handleSearchInput}
+            />
+            <button
+              className="material-symbols-outlined search-icon"
+              onClick={() => search(searchInput)}
+            >
+              search
+            </button>
+          </div>
+        </div>
         <div className="container">
           {session === undefined ? (
             <div id="join">

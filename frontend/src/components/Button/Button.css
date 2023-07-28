@@ -4,3 +4,13 @@
   font-family: 'Inter';
   line-height: 'normal';
 }
+
+.btn span.content-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn span.btn-icon {
+  margin-right: 0.5rem;
+}
