@@ -21,5 +21,5 @@ public class PartyRequest {
 
     private String partyType;
 
-    private int avgRating;
+    private Long avgRating;
 }

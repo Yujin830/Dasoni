@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 @Component
 @RequiredArgsConstructor
 public class PartyFormValidator implements Validator {
-    private final PartyRepo partyRepo;
+    private final PartyRepository partyRepo;
 
     // 어떤 타입의 객체 검증 시, 이 객체의 클래스가 validator가 검증할 수 있는 클래스인지 판단하는 메소드
     @Override

@@ -35,6 +35,7 @@ public class PartyController {
     @GetMapping("/party")
     public String newPartyForm(@AuthenticationPrincipal CustomUserDetails user,
                                @RequestBody PartyRequest partyRequest){
+
 //        System.out.println("loginId : "+user.getUser().getLoginId()+" "+"role : "+user.getAuthorities());
         System.out.println("partyRequest info : "+partyRequest.toString());
         return "PartyForm activated";
@@ -44,7 +45,9 @@ public class PartyController {
     @PostMapping("/party")
     public String newPartySubmit(@AuthenticationPrincipal CustomUserDetails user, @Valid @RequestBody PartyRequest partyRequest, Errors errors){
         System.out.println("PartyController : Before check errors");
+
 //        System.out.println(user.getUser().getLoginId());
+
         System.out.println(partyRequest.getPartyId());
         if(errors.hasErrors()){
             System.out.println("PartyController : 에러발생");

@@ -9,8 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
+
+import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
+import signiel.heartsigniel.model.member.dto.SignRequest;
+import signiel.heartsigniel.model.member.dto.SignResponse;
 import signiel.heartsigniel.model.life.Life;
 import signiel.heartsigniel.model.life.LifeRepo;
+
 
 import java.time.LocalDate;
 import java.util.*;
@@ -19,15 +24,16 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepo memberRepo;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     private final LifeRepo lifeRepo;
 
     public SignResponse login(SignRequest request) {
-        Member member = memberRepo.findByLoginId(request.getLoginId()).orElseThrow(() ->
-                new UsernameNotFoundException("회원 정보가 없습니다."));
+        Member member = memberRepository.findByLoginId(request.getLoginId()).orElseThrow(() ->
+                new BadCredentialsException("잘못된 계정 정보입니다."));
+
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("비밀번호가 틀렸습니다.");
         }
@@ -45,7 +51,7 @@ public class MemberService {
                 .birth(member.getBirth())
                 .phoneNumber(member.getPhoneNumber())
                 .isBlack(member.isBlack())
-                .rank(member.getRank())
+                .rating(member.getRating())
                 .meetingCount(member.getMeetingCount())
                 .profileImageSrc(member.getProfileImageSrc())
                 .job(member.getJob())
@@ -69,7 +75,9 @@ public class MemberService {
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
 
-            memberRepo.save(member);
+            System.out.println(request.getLoginId() + " " + member.getRoles());
+            memberRepository.save(member);
+
         } catch (Exception e) {
             throw new Exception("잘못된 요청입니다.");
         }
@@ -77,27 +85,28 @@ public class MemberService {
     }
 
     public String checkDuplicateId(String loginId) {
-        memberRepo.findByLoginId(loginId).orElseThrow(() ->
+        memberRepository.findByLoginId(loginId).orElseThrow(() ->
                 new InternalAuthenticationServiceException("사용 가능한 아이디입니다."));
         return "이미 존재하는 아이디입니다.";
     }
 
     public String deleteUserInfo(Long memberId) {
-        memberRepo.deleteById(memberId);
+        memberRepository.deleteById(memberId);
         return "OK";
     }
 
     public String patchMemberPW(Long memberId, SignRequest request) {
-        Member member = memberRepo.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 없습니다."));
 
         member.setPassword(passwordEncoder.encode(request.getPassword()));
-        memberRepo.save(member);
+        memberRepository.save(member);
         return "OK";
     }
 
+
     public boolean checkMemberPW(Long memberId, SignRequest request) {
-        Member member = memberRepo.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("비밀번호가 틀렸습니다.");
@@ -106,8 +115,9 @@ public class MemberService {
     }
 
     public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) {
-        Member member = memberRepo.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
+
 
         if(member.getJob()==null){
             List<Authority> list = member.getRoles();
@@ -122,7 +132,7 @@ public class MemberService {
         member.setGuGun(memberUpdateDto.getGuGun());
         member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
 
-        memberRepo.save(member);
+        memberRepository.save(member);
         return "OK";
     }
 }

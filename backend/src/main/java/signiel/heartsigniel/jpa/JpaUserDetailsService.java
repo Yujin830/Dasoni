@@ -7,16 +7,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.jwt.CustomUserDetails;
 import signiel.heartsigniel.model.member.Member;
-import signiel.heartsigniel.model.member.MemberRepo;
+import signiel.heartsigniel.model.member.MemberRepository;
 
 @Service
 @RequiredArgsConstructor
 public class JpaUserDetailsService implements UserDetailsService {
-    private final MemberRepo memberRepo;
+    private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        Member member = memberRepo.findByLoginId(loginId).orElseThrow(
+        Member member = memberRepository.findByLoginId(loginId).orElseThrow(
                 () -> new UsernameNotFoundException("Invaild authentication")
         );
         return new CustomUserDetails(member);

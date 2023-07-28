@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.model.member.*;
+import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
+import signiel.heartsigniel.model.member.dto.SignRequest;
+import signiel.heartsigniel.model.member.dto.SignResponse;
 
 
 @RequiredArgsConstructor
