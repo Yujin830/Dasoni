@@ -44,7 +44,7 @@ public class PrivateRoomService {
     public Response createRoom(PrivateRoomCreate privateRoomCreateRequest) {
 
         Room room = new Room();
-        room.setType("private");
+        room.setRoomType("private");
         room.setRatingLimit(privateRoomCreateRequest.getRatingLimit());
         room.setMegiAcceptable(privateRoomCreateRequest.isMegiAcceptable());
         room.setTitle(privateRoomCreateRequest.getTitle());
@@ -52,8 +52,10 @@ public class PrivateRoomService {
         // 파티측 비즈니스 로직으로 대체
         Party maleParty = new Party();
         maleParty.setPartyGender("male");
+        maleParty.setPartyType("private");
         Party femaleParty = new Party();
         femaleParty.setPartyGender("female");
+        femaleParty.setPartyType("private");
         partyRepository.save(maleParty);
         partyRepository.save(femaleParty);
 
@@ -63,14 +65,13 @@ public class PrivateRoomService {
 
         // 파티 멤버 비즈니스 로직으로 수정
         PartyMember partyMember = new PartyMember();
-        Member member = memberRepository.findById(privateRoomCreateRequest.getMemberId())
-                .orElseThrow(() -> new MemberNotFoundException("해당 유저를 찾을 수 없습니다."));
-
+        Member member = findMemberById(privateRoomCreateRequest.getMemberId());
         partyMember.setParty(member.getGender().equals("male") ? maleParty : femaleParty);
+        partyMember.setMember(member);
         partyMember.setPartyLeader(true);
         partyMemberRepository.save(partyMember);
-
         roomRepository.save(room);
+        System.out.println(room.getId());
         return Response.of(CommonCode.GOOD_REQUEST, PrivateRoomCreated.builder().createdRoomId(room.getId()).build());
     }
 
@@ -122,10 +123,18 @@ public class PrivateRoomService {
         Party partyEntity = findPartyByGender(roomEntity, memberEntity.getGender());
         PartyMember partyMemberEntity = partyService.findPartyMemberByMemberIdAndPartyId(memberId, partyEntity.getPartyId());
 
+
+        // 향후 로직 각 도메인별 서비스 계층 로직으로 수정
         if (roomEntity.roomMemberCount() == 1L) {
 
             partyMemberRepository.delete(partyMemberEntity);
-            partyRepository.delete(partyEntity);
+            if (partyEntity.getPartyGender() == "male"){
+                partyRepository.delete(roomEntity.getFemaleParty());
+                partyRepository.delete(partyEntity);
+            } else {
+                partyRepository.delete(roomEntity.getMaleParty());
+                partyRepository.delete(partyEntity);
+            }
             roomRepository.delete(roomEntity);
 
             return Response.of(RoomCode.USER_OUT_FROM_ROOM, null);
@@ -155,7 +164,7 @@ public class PrivateRoomService {
 
     // 사설방 리스트 조회
     public Page<PrivateRoomList> getPrivateRooms(Pageable pageable) {
-        Page roomPage = roomRepository.findAllByType("private", pageable);
+        Page roomPage = roomRepository.findAllByRoomType("private", pageable);
         // 각 Room 엔티티를 PrivateRoomList DTO로 변환
         return roomPage;
     }
@@ -179,9 +188,9 @@ public class PrivateRoomService {
     public Party findPartyByGender(Room targetRoom, String gender){
 
         Party party;
-        if (gender.equals("male")){
+        if (gender.equals("female")){
             party = targetRoom.getFemaleParty();
-        } else if (gender.equals("female")) {
+        } else if (gender.equals("male")) {
             party = targetRoom.getMaleParty();
         } else {
             throw new RuntimeException("잘못된 성별 정보입니다." + gender);

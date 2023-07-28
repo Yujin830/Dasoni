@@ -16,7 +16,6 @@ public class PartyMemberInfo {
         this.partyMemberId = partyMember.getId();
         this.isPartyLeader = partyMember.isPartyLeader();
         this.isSpecialUser = partyMember.isSpecialUser();
-        this.member = new MemberInfo(partyMember.getMember());
-    }
+        this.member = new MemberInfo(partyMember.getMember());}
 
 }

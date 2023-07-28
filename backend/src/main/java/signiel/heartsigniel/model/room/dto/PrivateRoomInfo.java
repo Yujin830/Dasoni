@@ -24,13 +24,12 @@ public class PrivateRoomInfo {
     private boolean megiAcceptable;
     private PartyInfo femaleParty;
     private PartyInfo maleParty;
-    private List<MatchingQuestionInfo> questions;
 
 
     public PrivateRoomInfo(Room roomEntity){
         this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
-        this.roomType = roomEntity.getType();
+        this.roomType = roomEntity.getRoomType();
         this.videoUrl = roomEntity.getVideoUrl();
         this.ratingLimit = roomEntity.getRatingLimit();
         this.startTime = roomEntity.getStartTime();

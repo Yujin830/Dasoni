@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.question;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,8 +8,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name="question")
+@Entity(name="question")
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

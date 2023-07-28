@@ -2,14 +2,22 @@ package signiel.heartsigniel.model.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
+
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
+import signiel.heartsigniel.model.life.Life;
+import signiel.heartsigniel.model.life.LifeRepo;
 
+
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -20,12 +28,20 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final LifeRepo lifeRepo;
+
     public SignResponse login(SignRequest request) {
         Member member = memberRepository.findByLoginId(request.getLoginId()).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정 정보입니다."));
+
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-            throw new BadCredentialsException("잘못된 계정정보입니다.");
+            throw new BadCredentialsException("비밀번호가 틀렸습니다.");
         }
+
+        if(member.isBlack())
+            throw new LockedException("블랙처리된 사용자입니다.");
+
+        List<Life> lives = lifeRepo.findByMemberIdAndUseDate(member.getMemberId(), LocalDate.now());
 
         return SignResponse.builder()
                 .memberId(member.getMemberId())
@@ -42,13 +58,13 @@ public class MemberService {
                 .siDo(member.getSiDo())
                 .guGun(member.getGuGun())
                 .roles(member.getRoles())
+                .remainLife(2- lives.size())
                 .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
                 .build();
     }
 
     public boolean register(SignRequest request) throws Exception {
         try {
-            System.out.println(request.getLoginId());
             Member member = Member.builder()
                     .loginId(request.getLoginId())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -61,46 +77,47 @@ public class MemberService {
 
             System.out.println(request.getLoginId() + " " + member.getRoles());
             memberRepository.save(member);
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new Exception("잘못된 요청입니다.");
         }
         return true;
     }
 
-    public SignResponse getMember(Long memberId) throws Exception {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
-        return new SignResponse(member);
+    public String checkDuplicateId(String loginId) {
+        memberRepository.findByLoginId(loginId).orElseThrow(() ->
+                new InternalAuthenticationServiceException("사용 가능한 아이디입니다."));
+        return "이미 존재하는 아이디입니다.";
     }
-
 
     public String deleteUserInfo(Long memberId) {
         memberRepository.deleteById(memberId);
         return "OK";
     }
 
-    public String patchMemberPW(Long memberId, SignRequest request) throws Exception {
+    public String patchMemberPW(Long memberId, SignRequest request) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 없습니다."));
 
         member.setPassword(passwordEncoder.encode(request.getPassword()));
         memberRepository.save(member);
         return "OK";
     }
 
-    public boolean checkMemberPW(Long memberId, SignRequest request) throws Exception{
+
+    public boolean checkMemberPW(Long memberId, SignRequest request) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()->new Exception("계정을 찾을 수 없습니다."));
+                .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-            throw new BadCredentialsException("잘못된 비밀번호입니다.");
+            throw new BadCredentialsException("비밀번호가 틀렸습니다.");
         }
         return true;
     }
 
-    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) throws Exception {
+    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()->new Exception("계정을 찾을 수 없습니다."));
+                .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
+
 
         if(member.getJob()==null){
             List<Authority> list = member.getRoles();

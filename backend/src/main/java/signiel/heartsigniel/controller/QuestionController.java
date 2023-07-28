@@ -1,28 +1,30 @@
 package signiel.heartsigniel.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionRepository;
 
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import signiel.heartsigniel.model.question.QuestionService;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/test")
+@Slf4j
 public class QuestionController {
-    @Autowired
-    private QuestionRepository questionRepo;
 
-    @PostMapping("/question")
-    public Question create(@RequestBody Question question){
-        return questionRepo.save(question);
-    }
+    private final QuestionService questionService;
 
-    @GetMapping("/question/{id}")
-    public String read(@PathVariable int id){
-        Optional<Question> questionOptional = questionRepo.findById(id);
-        questionOptional.ifPresent(System.out::println);
-
-        return "successfully executed";
+    @GetMapping("/question")
+    public ResponseEntity<List<Question>> pickRandomQuestion(){
+        return new ResponseEntity<>(questionService.pickRandomQuestion(), HttpStatus.OK);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import signiel.heartsigniel.jwt.CustomUserDetails;
+
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.party.exception.NoPartyLeaderException;
 import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
@@ -27,7 +28,9 @@ public class PartyService {
         Party party = Party.from(partyRequest);
         party.addManager(user.getMember().getMemberId());
 
-        System.out.println("user info : "+user.getMember().getLoginId());
+
+//        System.out.println("user info : "+user.getUser().getLoginId());
+
         System.out.println("party info : "+partyRequest.getPartyId());
 
         return partyRepository.save(party);

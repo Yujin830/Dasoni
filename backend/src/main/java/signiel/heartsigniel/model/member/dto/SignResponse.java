@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import signiel.heartsigniel.model.member.Authority;
 import signiel.heartsigniel.model.member.Member;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -25,7 +25,7 @@ public class SignResponse {
 
     private String gender;
 
-    private Date birth;
+    private LocalDate birth;
 
     private String phoneNumber;
 
@@ -44,6 +44,8 @@ public class SignResponse {
     private int guGun;
 
     private List<Authority> roles = new ArrayList<>();
+
+    private int remainLife;
 
     private String token;
 

@@ -3,16 +3,15 @@ package signiel.heartsigniel.model.room;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import signiel.heartsigniel.model.party.Party;
-import signiel.heartsigniel.model.question.Question;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Data
 @NoArgsConstructor
-@Entity
+@Entity(name = "room")
 public class Room {
 
     @Id
@@ -20,7 +19,7 @@ public class Room {
     private Long id;
 
     @Column
-    private String type;
+    private String roomType;
     @Column
     private String videoUrl;
     @Column
@@ -33,7 +32,6 @@ public class Room {
 
     @Column
     private boolean megiAcceptable;
-    // getters and setters
 
     @ManyToOne
     private Party maleParty;

@@ -1,8 +1,8 @@
 package signiel.heartsigniel.model.party;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import signiel.heartsigniel.model.partymember.PartyMember;
 
 import javax.persistence.*;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 파티 생성 엔티티 클래스
  */
-@Entity
+@Entity(name = "party")
 @NoArgsConstructor
 @Data
 public class Party {

@@ -15,11 +15,9 @@ import java.util.List;
 @Service
 public class MatchingRoomService {
 
-    private final QuestionService questionService;
     private final RoomRepository roomRepository;
 
-    public MatchingRoomService(QuestionService questionService, RoomRepository roomRepository){
-        this.questionService = questionService;
+    public MatchingRoomService(RoomRepository roomRepository){
         this.roomRepository = roomRepository;
     }
 
@@ -29,7 +27,7 @@ public class MatchingRoomService {
 
         room.setFemaleParty(femaleParty);
         room.setMaleParty(maleParty);
-        room.setType("matching");
+        room.setRoomType("matching");
         room = roomRepository.save(room);
 
         room.setRatingLimit(0L);
@@ -42,9 +40,4 @@ public class MatchingRoomService {
 
 
 
-    public List<Question> selectQuestionSet(){
-        List<Question> questions = questionService.getRandomQuestions(3);
-
-        return questions;
-    }
 }

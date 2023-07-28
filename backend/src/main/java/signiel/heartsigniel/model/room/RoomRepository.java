@@ -5,6 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
-    Page<Room> findAllByType(String type, Pageable pageable);
+    Page<Room> findAllByRoomType(String type, Pageable pageable);
 
 }

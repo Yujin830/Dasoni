@@ -3,7 +3,7 @@ package signiel.heartsigniel.model.member.dto;
 import lombok.Getter;
 import signiel.heartsigniel.model.member.Member;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 public class MemberInfo {
@@ -13,7 +13,7 @@ public class MemberInfo {
     private Long rating;
     private String gender;
     private String job;
-    private Date birth;
+    private LocalDate birth;
 
     public MemberInfo(Member member){
         this.memberId = member.getMemberId();

@@ -2,7 +2,7 @@ package signiel.heartsigniel.model.member.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class SignRequest {
@@ -14,7 +14,7 @@ public class SignRequest {
 
     private String gender;
 
-    private Date birth;
+    private LocalDate birth;
 
     private String phoneNumber;
 }

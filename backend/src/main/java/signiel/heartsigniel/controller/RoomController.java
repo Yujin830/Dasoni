@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.room;
+package signiel.heartsigniel.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.MemberRepository;
+import signiel.heartsigniel.model.room.MatchingRoomService;
+import signiel.heartsigniel.model.room.PrivateRoomService;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 
@@ -32,7 +34,7 @@ public class RoomController {
 
     @DeleteMapping("{roomId}/members/{memberId}")
     public ResponseEntity<Response> quitRoom(@PathVariable Long roomId, @PathVariable Long memberId){
-        Response response = privateRoomService.quitRoom(roomId, memberId);
+        Response response = privateRoomService.quitRoom(memberId, roomId);
 
         return ResponseEntity.ok(response);
     }
