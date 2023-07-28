@@ -47,7 +47,7 @@ public class RoomController {
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Response> getRoomByTitle(@RequestParam String searchKeyword)
+    public ResponseEntity<Response> getRoomByTitle(@PathVariable String searchKeyword)
     {
         Pageable pageable = PageRequest.of(0, 6);
         Page<PrivateRoomList> rooms = privateRoomService.getPrivateRoomsByTitle(searchKeyword, pageable);
