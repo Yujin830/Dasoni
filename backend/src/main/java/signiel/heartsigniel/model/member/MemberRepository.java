@@ -7,7 +7,7 @@ import java.util.Optional;
 
 
 @Transactional
-public interface MemberRepo extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByLoginId(String loginId);
 }
 

@@ -19,7 +19,7 @@ import java.util.List;
 @Entity(name = "member")
 public class Member {
 
-    @Id @Column(name = "`member_id`")
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
@@ -43,8 +43,8 @@ public class Member {
     @Column(name = "`isblack`")
     private boolean isBlack;
 
-    @Column(name = "`rank`")
-    private int rank;
+    @Column(name = "`rating`")
+    private Long rating;
 
     @Column(name = "`meeting_cnt`")
     private int meetingCount;

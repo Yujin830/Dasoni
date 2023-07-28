@@ -9,4 +9,3 @@ public class NotEnteredSettingInformationException extends RuntimeException{
         super(message);
     }
 }
-

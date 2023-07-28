@@ -1,16 +1,20 @@
 package signiel.heartsigniel.model.party;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import signiel.heartsigniel.model.partymember.PartyMember;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 파티 생성 엔티티 클래스
  */
-@Entity
+@Entity(name = "party")
 @NoArgsConstructor
-@Getter
+@Data
 public class Party {
     @Id
     @Column(name = "party_id")
@@ -21,10 +25,13 @@ public class Party {
     private String partyGender;
 
     @Column(name="avg_rating")
-    private int avgRating;
+    private Long avgRating;
 
     @Column(name = "party_type", length = 20)
     private String partyType;
+
+    @OneToMany(mappedBy = "party")
+    private List<PartyMember> members = new ArrayList<>();
 
     public static Party from(PartyRequest partyRequest){
         System.out.println("Party.java / 'from' activated");

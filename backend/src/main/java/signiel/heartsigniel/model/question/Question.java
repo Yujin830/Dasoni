@@ -6,19 +6,14 @@ import lombok.*;
 import javax.persistence.*;
 
 
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Getter
-@Setter
-@Entity
-@Table(name="question")
+@Data
+@Entity(name="question")
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_id")
-    @JsonIgnore
-    private Long questionId;
+    private Long question_id;
 
+    @Column
     private String content;
 }

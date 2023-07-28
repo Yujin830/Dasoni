@@ -23,4 +23,3 @@ public enum CommonCode implements ResponseCode{
         return this.message;
     }
 }
-

@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.member;
+package signiel.heartsigniel.model.member.dto;
 
 
 import lombok.*;

@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.model.member.Member;
-import signiel.heartsigniel.model.member.MemberRepo;
+import signiel.heartsigniel.model.member.MemberRepository;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WarnService {
     private final WarnRepo warnRepo;
-    private final MemberRepo memberRepo;
+    private final MemberRepository memberRepository;
 
     public int insertAndSelect(Long memberId) throws Exception{
         try{
@@ -34,10 +35,10 @@ public class WarnService {
         //누적 경고가 몇개인지
 
         if(size==3){
-            Member member = memberRepo.findById(memberId)
+            Member member = memberRepository.findById(memberId)
                     .orElseThrow(() -> new Exception("계정이 없습니다."));
             member.setBlack(true);
-            memberRepo.save(member);
+            memberRepository.save(member);
         }
         //만약 3번 경고면 isBlack=true 처리
 

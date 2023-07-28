@@ -81,3 +81,4 @@ SELECT question_id, 1
 FROM question
 ORDER BY RAND()
     LIMIT 3;
+
