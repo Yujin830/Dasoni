@@ -8,6 +8,7 @@ import Banner from '../../components/Banner/Banner';
 import IconButton from '../../components/Button/IconButton';
 import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
 import RoomBox, { RoomBoxProps } from '../../components/RoomBox/RoomBox';
+import FilledButton from '../../components/Button/FilledButton';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
@@ -29,6 +30,32 @@ const styles = {
     fontSize: '0.8rem',
     border: 'none',
     paddingLeft: '1rem',
+  },
+  createRoomBtn: {
+    width: '8rem',
+    height: '3rem',
+    borderRadius: '0.5rem',
+    background: '#ECC835',
+    color: '#fff',
+    fontSize: '1.2rem',
+    fontWeight: '600',
+  },
+  fastMatchBtn: {
+    width: '8rem',
+    height: '3rem',
+    borderRadius: '0.5rem',
+    background: '#EC5E98',
+    color: '#fff',
+    fontSize: '1.2rem',
+    fontWeight: '600',
+  },
+  pagenationBtn: {
+    width: '5.5rem',
+    height: '2.5rem',
+    borderRadius: '6.25rem',
+    background: '#FFE8EF',
+    color: '#555',
+    fontSize: '1rem',
   },
 };
 
@@ -300,6 +327,16 @@ function MainPage() {
     // TODO : 미팅 대기방 리스트 가져오는 로직 개발
   }, []);
 
+  // 방 만들기 모달 open
+  const createRoom = () => {
+    alert('방 만들기');
+  };
+
+  // 빠른 매칭 모달 open
+  const matchFast = () => {
+    alert('빠른 매칭 진행 중');
+  };
+
   return (
     <div id="main">
       <Header />
@@ -443,6 +480,32 @@ function MainPage() {
               </div>
             </div>
           ) : null}
+        </div>
+        <div id="room-footer">
+          <div id="btn-box">
+            <FilledButton
+              content="방 만들기"
+              style={styles.createRoomBtn}
+              handleClick={createRoom}
+            />
+            <FilledButton content="빠른 매칭" style={styles.fastMatchBtn} handleClick={matchFast} />
+          </div>
+          <div id="pagenationBtn-box">
+            <IconButton
+              style={styles.pagenationBtn}
+              content="이전"
+              iconPosition="left"
+              handleClick={createRoom}
+              icon="chevron_left"
+            />
+            <IconButton
+              style={styles.pagenationBtn}
+              content="다음"
+              iconPosition="right"
+              handleClick={createRoom}
+              icon="chevron_right"
+            />
+          </div>
         </div>
       </main>
     </div>

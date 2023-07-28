@@ -14,10 +14,10 @@ function IconButton({ style, content, iconPosition, icon, handleClick }: IconBut
     <button className="btn" style={style} onClick={handleClick}>
       {iconPosition === 'left' ? (
         <span className="content-box">
-          <span className="material-symbols-outlined btn-icon">{icon}</span> {content}
+          <span className="material-symbols-outlined">{icon}</span> {content}
         </span>
       ) : (
-        <span>
+        <span className="content-box">
           {content} <span className="material-symbols-outlined">{icon}</span>
         </span>
       )}
