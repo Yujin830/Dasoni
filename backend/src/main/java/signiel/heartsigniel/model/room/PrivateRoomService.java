@@ -163,10 +163,16 @@ public class PrivateRoomService {
 
 
     // 사설방 리스트 조회
-    public Page<PrivateRoomList> getPrivateRooms(Pageable pageable) {
-        Page roomPage = roomRepository.findAllByRoomType("private", pageable);
+    public Page<PrivateRoomList> getPrivateRoomsByTitle(String searchKeyword, Pageable pageable) {
+        Page<Room> searchedRoom = roomRepository.findRoomByTitleContaining(searchKeyword, pageable);
         // 각 Room 엔티티를 PrivateRoomList DTO로 변환
-        return roomPage;
+        return searchedRoom.map(room-> new PrivateRoomList(room));
+    }
+
+    public Page<PrivateRoomList> getPrivateRooms(Pageable pageable){
+        Page<Room> roomList = roomRepository.findAllByRoomType("private", pageable);
+        return roomList.map(room -> new PrivateRoomList(room));
+
     }
 
     // 유저 엔티티 조회
