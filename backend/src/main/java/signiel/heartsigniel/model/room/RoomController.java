@@ -37,13 +37,13 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("")
-    public ResponseEntity<Response> getRoomList()
+//    @GetMapping("")
+//    public ResponseEntity<Response> getRoomList()
 
     @PostMapping("")
     public ResponseEntity<Response> createRoom(@RequestBody PrivateRoomCreate privateRoomCreateRequest) {
-        privateRoomService.createRoom(privateRoomCreateRequest);
-        return ResponseEntity.ok(Response.of(CommonCode.GOOD_REQUEST, privateRoomService.))
+        Response response = privateRoomService.createRoom(privateRoomCreateRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{roomId}")
@@ -51,5 +51,4 @@ public class RoomController {
         PrivateRoomInfo privateRoomInfo = new PrivateRoomInfo(privateRoomService.findRoomById(roomId));
         return ResponseEntity.ok(Response.of(CommonCode.GOOD_REQUEST, privateRoomInfo));
     }
-
 }

@@ -35,7 +35,7 @@ public class MemberService {
                 .birth(member.getBirth())
                 .phoneNumber(member.getPhoneNumber())
                 .isBlack(member.isBlack())
-                .rating(member.getRank())
+                .rating(member.getRating())
                 .meetingCount(member.getMeetingCount())
                 .profileImageSrc(member.getProfileImageSrc())
                 .job(member.getJob())

@@ -18,11 +18,9 @@ public class PartyMember {
         private Long id;
 
         @ManyToOne
-        @JoinColumn(name = "party_id")
         private Party party;
 
         @ManyToOne
-        @JoinColumn(name = "member_id")
         private Member member;
 
         private boolean isPartyLeader;

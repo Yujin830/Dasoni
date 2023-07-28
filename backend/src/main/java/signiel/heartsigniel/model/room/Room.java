@@ -20,7 +20,7 @@ public class Room {
     private Long id;
 
     @Column
-    private String roomType;
+    private String type;
     @Column
     private String videoUrl;
     @Column

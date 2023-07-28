@@ -30,7 +30,7 @@ public class PrivateRoomInfo {
     public PrivateRoomInfo(Room roomEntity){
         this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
-        this.roomType = roomEntity.getRoomType();
+        this.roomType = roomEntity.getType();
         this.videoUrl = roomEntity.getVideoUrl();
         this.ratingLimit = roomEntity.getRatingLimit();
         this.startTime = roomEntity.getStartTime();

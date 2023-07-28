@@ -34,7 +34,7 @@ public class PartyService {
     }
 
     public PartyMember findPartyMemberByMemberIdAndPartyId(Long memberId, Long partyId) {
-        return partyMemberRepository.findByMember_IdAndParty_Id(memberId, partyId)
+        return partyMemberRepository.findByMember_MemberIdAndParty_PartyId(memberId, partyId)
                 .orElseThrow(() -> new NoPartyMemberException("파티멤버가 존재하지 않습니다."));
     }
 

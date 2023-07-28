@@ -44,7 +44,7 @@ public class PrivateRoomService {
     public Response createRoom(PrivateRoomCreate privateRoomCreateRequest) {
 
         Room room = new Room();
-        room.setRoomType("private");
+        room.setType("private");
         room.setRatingLimit(privateRoomCreateRequest.getRatingLimit());
         room.setMegiAcceptable(privateRoomCreateRequest.isMegiAcceptable());
         room.setTitle(privateRoomCreateRequest.getTitle());

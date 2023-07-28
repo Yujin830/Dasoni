@@ -29,14 +29,13 @@ public class MatchingRoomService {
 
         room.setFemaleParty(femaleParty);
         room.setMaleParty(maleParty);
-        room.setRoomType("matching");
+        room.setType("matching");
         room = roomRepository.save(room);
 
         room.setRatingLimit(0L);
         room.setTitle(room.getId() + "번 자동매칭방");
         room.setMegiAcceptable(true);
         room.setStartTime(LocalDateTime.now());
-        room.setQuestions(selectQuestionSet());
 
         return roomRepository.save(room);
     }

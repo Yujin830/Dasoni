@@ -19,7 +19,7 @@ import java.util.List;
 @Entity(name = "member")
 public class Member {
 
-    @Id @Column(name = "`member_id`")
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
