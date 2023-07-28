@@ -53,4 +53,5 @@ public class PartyService {
         throw new NoPartyLeaderException("파티장이 없는 파티입니다.");
     }
 
+
 }

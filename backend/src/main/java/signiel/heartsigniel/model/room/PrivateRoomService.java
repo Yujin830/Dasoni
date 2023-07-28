@@ -175,6 +175,10 @@ public class PrivateRoomService {
 
     }
 
+    public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable){
+        Page<Room> searchedRoom = roomRepository.find
+    }
+
     // 유저 엔티티 조회
     public Member findMemberById(Long targetMemberId) {
 
@@ -214,6 +218,11 @@ public class PrivateRoomService {
                 .maleParty(maleParty)
                 .femaleParty(femaleParty)
                 .build();
+    }
+
+    //입장 가능한 방 찾기
+    public List<Room> findRoomByGender(String Gender){
+        List<Room> list = find
     }
 
     // 방 + 유저 찾기
