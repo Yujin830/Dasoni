@@ -164,9 +164,9 @@ public class PrivateRoomService {
 
     // 사설방 리스트 조회
     public Page<PrivateRoomList> getPrivateRoomsByTitle(String searchKeyword, Pageable pageable) {
-        Page<Room> searchedRoom = roomRepository.findRoomByTitleContaining(searchKeyword, pageable);
+        Page<Room> roomList = roomRepository.findRoomByTitleContaining(searchKeyword, pageable);
         // 각 Room 엔티티를 PrivateRoomList DTO로 변환
-        return searchedRoom.map(room-> new PrivateRoomList(room));
+        return roomList.map(room-> new PrivateRoomList(room));
     }
 
     public Page<PrivateRoomList> getPrivateRooms(Pageable pageable){
@@ -176,7 +176,15 @@ public class PrivateRoomService {
     }
 
     public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable){
-        Page<Room> searchedRoom = roomRepository.find
+        if(gender == "male"){
+            Page<Room> roomList = roomRepository.findAllByRoomTypeAndFemalePartyMemberCountLessThanEqual("private", 3L, pageable);
+            return roomList.map(room -> new PrivateRoomList(room));
+        } else {
+            Page<Room> roomList = roomRepository.findAllByRoomTypeAndMalePartyMemberCountLessThanEqual("private", 3L, pageable);
+            return roomList.map(room-> new PrivateRoomList(room));
+        }
+
+
     }
 
     // 유저 엔티티 조회
@@ -218,11 +226,6 @@ public class PrivateRoomService {
                 .maleParty(maleParty)
                 .femaleParty(femaleParty)
                 .build();
-    }
-
-    //입장 가능한 방 찾기
-    public List<Room> findRoomByGender(String Gender){
-        List<Room> list = find
     }
 
     // 방 + 유저 찾기
