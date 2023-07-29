@@ -55,7 +55,6 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-
     @GetMapping
     public ResponseEntity<Response> getRoomList() {
 
@@ -70,6 +69,17 @@ public class RoomController {
     public ResponseEntity<Response> createRoom(@RequestBody PrivateRoomCreate privateRoomCreateRequest) {
         Response response = privateRoomService.createRoom(privateRoomCreateRequest);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{gender}")
+    public ResponseEntity<Response> filterRoomByGender(@PathVariable String gender){
+        Pageable pageable = PageRequest.of(0 ,6);
+        Page<PrivateRoomList> roomList = privateRoomService.filterRoomByGender(gender, pageable);
+        Response response = Response.of(CommonCode.GOOD_REQUEST, roomList);
+
+        return ResponseEntity.ok(response);
+
+
     }
 
     @GetMapping("/{roomId}")
