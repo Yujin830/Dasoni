@@ -43,6 +43,19 @@ public class Party {
         return party;
     }
 
+
+
+    public void calculateAndSetAvgRating() {
+        if (members.isEmpty()) {
+            this.avgRating = 0L;
+        } else {
+            long sum = 0;
+            for (PartyMember member : members) {
+                sum += member.getMember().getRating(); // Assuming PartyMember has a 'getRating' method
+            }
+            this.avgRating = sum / members.size();
+        }
+    }
     public void addManager(Long memberId){
         System.out.println("Party.java / 'addManager' activated");
     }

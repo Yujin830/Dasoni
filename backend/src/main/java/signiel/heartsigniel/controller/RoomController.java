@@ -78,13 +78,11 @@ public class RoomController {
         Response response = Response.of(CommonCode.GOOD_REQUEST, roomList);
 
         return ResponseEntity.ok(response);
-
-
     }
 
     @GetMapping("/{roomId}")
     public ResponseEntity<Response> getRoomInfo(@PathVariable Long roomId){
-        PrivateRoomInfo privateRoomInfo = new PrivateRoomInfo(privateRoomService.findRoomById(roomId));
-        return ResponseEntity.ok(Response.of(CommonCode.GOOD_REQUEST, privateRoomInfo));
+        Response response = privateRoomService.roomInfo(roomId);
+        return ResponseEntity.ok(response);
     }
 }
