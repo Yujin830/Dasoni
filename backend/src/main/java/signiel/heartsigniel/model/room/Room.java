@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.room;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import signiel.heartsigniel.model.party.Party;

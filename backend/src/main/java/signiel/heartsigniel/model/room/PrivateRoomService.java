@@ -31,7 +31,6 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final PartyService partyService;
 
-
     public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
@@ -43,23 +42,26 @@ public class PrivateRoomService {
     // 방 생성
     public Response createRoom(PrivateRoomCreate privateRoomCreateRequest) {
 
+        // 방 생성
         Room room = new Room();
         room.setRoomType("private");
         room.setRatingLimit(privateRoomCreateRequest.getRatingLimit());
         room.setMegiAcceptable(privateRoomCreateRequest.isMegiAcceptable());
         room.setTitle(privateRoomCreateRequest.getTitle());
 
-        // 파티측 비즈니스 로직으로 대체
+        // 파티 생성, 파티측 비즈니스 로직으로 대체(파티 가입 로직)
         Party maleParty = new Party();
         maleParty.setPartyGender("male");
         maleParty.setPartyType("private");
+
         Party femaleParty = new Party();
         femaleParty.setPartyGender("female");
         femaleParty.setPartyType("private");
+
         partyRepository.save(maleParty);
         partyRepository.save(femaleParty);
 
-        // 리팩터링 필요(이해하기 쉽게 메서드로 처리)
+        // 리팩토링 필요(이해하기 쉽게 메서드로 처리)
         room.setMaleParty(maleParty);
         room.setFemaleParty(femaleParty);
 
@@ -67,11 +69,15 @@ public class PrivateRoomService {
         PartyMember partyMember = new PartyMember();
         Member member = findMemberById(privateRoomCreateRequest.getMemberId());
         partyMember.setParty(member.getGender().equals("male") ? maleParty : femaleParty);
+
         partyMember.setMember(member);
         partyMember.setPartyLeader(true);
+
+        partyService.CalculatePartyRating(femaleParty);
+        partyService.CalculatePartyRating(maleParty);
+
         partyMemberRepository.save(partyMember);
         roomRepository.save(room);
-        System.out.println(room.getId());
         return Response.of(CommonCode.GOOD_REQUEST, PrivateRoomCreated.builder().createdRoomId(room.getId()).build());
     }
 
@@ -81,9 +87,7 @@ public class PrivateRoomService {
         MemberAndRoomOfService memberAndRoomEntity = findEntityById(memberId, roomId);
 
         Room roomEntity = memberAndRoomEntity.getRoom();
-
         Member memberEntity = memberAndRoomEntity.getMember();
-
 
         // 방 인원 초과시
         if (roomEntity.roomMemberCount() >= 6) {
@@ -104,14 +108,16 @@ public class PrivateRoomService {
         partyMember.setSpecialUser(false);
         partyMember.setParty(party);
         partyMember.setPartyLeader(party.getMembers().isEmpty());
+        partyService.CalculatePartyRating(party);
         partyMemberRepository.save(partyMember);
 
         return Response.of(RoomCode.SUCCESS_PARTICIPATE_ROOM, null);
     }
 
-    public PrivateRoomInfo roomInfo(Long roomId){
+    public Response roomInfo(Long roomId){
         Room roomEntity = findRoomById(roomId);
-        return new PrivateRoomInfo(roomEntity);
+        PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
+        return Response.of(CommonCode.GOOD_REQUEST, privateRoomInfo);
     }
 
     public Response quitRoom(Long memberId, Long roomId) {
@@ -122,7 +128,6 @@ public class PrivateRoomService {
 
         Party partyEntity = findPartyByGender(roomEntity, memberEntity.getGender());
         PartyMember partyMemberEntity = partyService.findPartyMemberByMemberIdAndPartyId(memberId, partyEntity.getPartyId());
-
 
         // 향후 로직 각 도메인별 서비스 계층 로직으로 수정
         if (roomEntity.roomMemberCount() == 1L) {
@@ -144,15 +149,23 @@ public class PrivateRoomService {
             if (partyEntity.getMembers().size() >= 2) {
                 // 내가 파티장인 경우
                 if (memberEntity == partyService.findPartyLeaderByParty(partyEntity)) {
+
+                    //파티멤버 삭제
                     partyMemberRepository.delete(partyMemberEntity);
+
+                    //파티장 위임
+
                     List<PartyMember> partyMembers = partyEntity.getMembers();
                     PartyMember newLeader = partyMembers.get(0);
                     newLeader.setPartyLeader(true);
+                    partyMemberRepository.save(newLeader);
+                    partyService.CalculatePartyRating(partyEntity);
 
                     return Response.of(RoomCode.USER_OUT_FROM_ROOM, null);
                 }
 
                 partyMemberRepository.delete(partyMemberEntity);
+                partyService.CalculatePartyRating(partyEntity);
                 return Response.of(RoomCode.USER_OUT_FROM_ROOM, null);
             }
 
@@ -160,7 +173,6 @@ public class PrivateRoomService {
         }
 
         }
-
 
     // 사설방 리스트 조회
     public Page<PrivateRoomList> getPrivateRoomsByTitle(String searchKeyword, Pageable pageable) {
@@ -183,8 +195,6 @@ public class PrivateRoomService {
             Page<Room> roomList = roomRepository.findAllByRoomTypeAndMalePartyMemberCountLessThanEqual("private", 3L, pageable);
             return roomList.map(room-> new PrivateRoomList(room));
         }
-
-
     }
 
     // 유저 엔티티 조회

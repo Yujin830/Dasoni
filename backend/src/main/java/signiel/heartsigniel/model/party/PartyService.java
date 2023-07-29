@@ -12,6 +12,7 @@ import signiel.heartsigniel.model.party.exception.NoPartyLeaderException;
 import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
 import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.partymember.PartyMemberRepository;
+import signiel.heartsigniel.model.room.Room;
 
 import java.util.List;
 
@@ -53,5 +54,10 @@ public class PartyService {
         throw new NoPartyLeaderException("파티장이 없는 파티입니다.");
     }
 
+    // 파티의 레이팅을 계산
+    public void CalculatePartyRating(Party party){
+        party.calculateAndSetAvgRating();
+        partyRepository.save(party);
+    }
 
 }
