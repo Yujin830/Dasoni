@@ -71,6 +71,7 @@ public class MemberService {
                     .gender(request.getGender())
                     .birth(request.getBirth())
                     .phoneNumber(request.getPhoneNumber())
+                    .rating(1000L)
                     .build();
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
