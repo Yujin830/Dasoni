@@ -16,6 +16,9 @@ repositories {
 }
 
 dependencies {
+	//WebScoketJsg
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.mysql:mysql-connector-j'
