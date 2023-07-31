@@ -5,19 +5,20 @@ import femaleIcon from '../../assets/image/female_icon.png';
 import FilledButton from '../Button/FilledButton';
 import './RoomBox.css';
 
-type RoomBoxProps = {
+export type RoomBoxProps = {
+  roomId: number; // room을 구분하는 id
   title: string; // 방 제목
-  maleCnt: number; // 현재 남자 참가인원
-  femaleCnt: number; // 현재 여자 참가인원
-  maleAvgRank: string; // 참가한 남자 평균 랭크
-  femaleAvgRank: string; // 참가한 여자 평균 랭크
-  isMegiOpen: boolean; // 메기 입장 가능 여부
+  malePartyMemberCount: number; // 현재 남자 참가인원
+  femalePartyMemberCount: number; // 현재 여자 참가인원
+  malePartyAvgRating: number; // 참가한 남자 평균 레이팅
+  femalePartyAvgRating: number; // 참가한 여자 평균 레이팅
+  megiAcceptable: boolean; // 메기 입장 가능 여부
 };
 
 type GenderInfoProps = {
   genderIcon: string; // 성별 아이콘
   genderCount: number; // 성별  참여 인원
-  genderAvgRank: string; // 성별 평균 등급
+  genderAvgRank: number; // 성별 평균 등급
   fullCount: number; // 최대 참여 가능 인원수
 };
 
@@ -27,6 +28,17 @@ const styles = {
     height: '2rem',
     borderRadius: '6rem',
     background: '#EC5E98',
+    color: '#FFF',
+    textAlign: 'center',
+    fontWize: '0.5rem',
+    fontWeight: 500,
+    padding: '0.5rem 0.8rem',
+  },
+  //Filledbutton 컴포넌트 메기 입장 style
+  megi: {
+    height: '2rem',
+    borderRadius: '6rem',
+    background: '#ECC835',
     color: '#FFF',
     textAlign: 'center',
     fontWize: '0.5rem',
@@ -63,12 +75,13 @@ function GenderInfo({ genderIcon, genderCount, genderAvgRank, fullCount }: Gende
 }
 
 function RoomBox({
+  roomId,
   title,
-  maleCnt,
-  femaleCnt,
-  maleAvgRank,
-  femaleAvgRank,
-  isMegiOpen,
+  malePartyMemberCount,
+  femalePartyMemberCount,
+  malePartyAvgRating,
+  femalePartyAvgRating,
+  megiAcceptable,
 }: RoomBoxProps) {
   const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
   // TODO : isFull 확인하는 로직
@@ -82,29 +95,39 @@ function RoomBox({
 
   return (
     <div className={isFull ? 'room-box disabled' : 'room-box'}>
-      <div className="header">
+      <div className="room-header">
         <div className="title-box">
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
-        <FilledButton
-          style={isFull ? styles.disabled : styles.basic}
-          content="입장하기"
-          handleClick={handleEnter}
-        />
+        {megiAcceptable && femalePartyMemberCount + malePartyAvgRating === 2 * FULL_COUNT ? (
+          <FilledButton
+            style={isFull ? styles.disabled : styles.megi}
+            content="메기 입장하기"
+            handleClick={handleEnter}
+          />
+        ) : null}
+
+        {!megiAcceptable && femalePartyMemberCount + malePartyMemberCount < 2 * FULL_COUNT ? (
+          <FilledButton
+            style={isFull ? styles.disabled : styles.basic}
+            content="입장하기"
+            handleClick={handleEnter}
+          />
+        ) : null}
       </div>
       <div className="content">
         <GenderInfo
           genderIcon={maleIcon}
-          genderCount={maleCnt}
-          genderAvgRank={maleAvgRank}
-          fullCount={isMegiOpen ? MEGI_FULL_COUNT : FULL_COUNT}
+          genderCount={malePartyMemberCount}
+          genderAvgRank={malePartyAvgRating}
+          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
         <GenderInfo
           genderIcon={femaleIcon}
-          genderCount={femaleCnt}
-          genderAvgRank={femaleAvgRank}
-          fullCount={isMegiOpen ? MEGI_FULL_COUNT : FULL_COUNT}
+          genderCount={femalePartyMemberCount}
+          genderAvgRank={femalePartyAvgRating}
+          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
       </div>
     </div>

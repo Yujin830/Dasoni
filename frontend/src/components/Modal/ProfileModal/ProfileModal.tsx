@@ -4,7 +4,7 @@ import './ProfileModal.css';
 import Input from '../../Input/BasicInput/BasicInput';
 import Button from '../../Button/FilledButton';
 import { useAppDispatch } from '../../../app/hooks';
-import { setUserAsync } from '../../../app/modules/user';
+import { setUserAsync } from '../../../app/slices/user';
 const styles = {
   button: {
     width: '10rem',
@@ -62,7 +62,6 @@ function ProfileModal() {
       nickname: nickname,
     };
 
-    // 회원가입을 위한 비동기 액션을 dispatch하도록 액션 함수 작성
     dispatch(setUserAsync(data));
     console.log('addprofile');
     console.log(data);

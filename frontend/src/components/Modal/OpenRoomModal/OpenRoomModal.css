@@ -1,11 +1,10 @@
-/* HelpModal 스타일 */
 .modal {
   position: fixed;
   top: 50%; /* 화면 세로 중앙에 위치 */
   left: 50%; /* 화면 가로 중앙에 위치 */
   transform: translate(-50%, -50%); /* 세로와 가로로 50%만큼 이동하여 정확한 중앙 정렬 */
-  width: 74.125rem;
-  height: 42.75rem;
+  width: 48.8125rem;
+  height: 34.3125rem;
   flex-shrink: 0;
   border-radius: 1rem;
   background: #fff;
@@ -13,12 +12,11 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  z-index: 10;
 }
 
 .modal .header {
   width: 100%; /* 헤더의 너비를 100%로 설정하여 부모 요소에 맞춤 */
-  height: 5.75rem;
+  height: 5.4375rem;
   flex-shrink: 0;
   border-radius: 1rem 1rem 0rem 0rem;
   background: #ffd8e4;
@@ -38,31 +36,36 @@
   letter-spacing: 0.00625rem;
 }
 
-.modal .box {
+.box-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
-  height: 100%;
-  position: relative;
+  /* align-items: center; */
 }
 
-.modal .box .content {
-  width: 59.75rem;
-  height: 21.8125rem;
-  flex-shrink: 0;
-  background: #d9d9d9;
-  box-sizing: border-box;
+.h1 {
+  color: #898989;
+  font-family: Inter;
+  font-size: 1.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.megi {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  position: relative;
-  margin-top: 20px;
-  margin-bottom: 40px;
+  margin: 20px;
 }
 
-.close-button {
-  display: flex;
-  margin-left: auto;
+/* 새로운 체크박스 스타일 */
+.megi input[type='checkbox'] {
+  position: relative;
+  opacity: 0;
+  /* visibility: hidden; */
+}
+
+.megi label {
+  cursor: pointer;
 }

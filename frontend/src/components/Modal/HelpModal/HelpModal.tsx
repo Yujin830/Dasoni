@@ -2,10 +2,19 @@ import React, { useRef, useState } from 'react';
 import '../Modal.css';
 import './HelpModal.css';
 
-function HelpModal() {
+interface HelpModalProps {
+  onClose: () => void;
+}
+
+function HelpModal({ onClose }: HelpModalProps) {
   return (
     <div className="modal">
-      <div className="header">도움말</div>
+      <div className="header">
+        도움말
+        <div className="close-button">
+          <button onClick={onClose}>Close</button>
+        </div>
+      </div>
       <div className="box">
         <h1>1. 메기 입장하기</h1>
         <div className="explain">
@@ -29,6 +38,7 @@ function HelpModal() {
           <circle cx="139.5" cy="7.5" r="7.5" fill="#FFE8EF" />
         </svg>
       </div>
+      <div className="modal-background" />
     </div>
   );
 }

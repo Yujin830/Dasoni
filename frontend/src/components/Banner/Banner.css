@@ -1,0 +1,40 @@
+#banner {
+  width: 100%;
+  height: 15rem;
+  background-color: #ffd8e4;
+  color: #ec5e98;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#banner .highlight {
+  color: #ff257e;
+}
+
+#banner h2 {
+  font-size: 3rem;
+}
+
+#banner h2 span {
+  font-size: 4rem;
+}
+
+#banner h3 {
+  font-size: 2rem;
+}
+
+#banner h3 span {
+  font-size: 3rem;
+  position: relative;
+}
+
+#banner h3 span img {
+  position: absolute;
+  position: absolute;
+  top: -45%;
+  left: 50%;
+  width: 8rem;
+  transform: translateX(-50%);
+}
