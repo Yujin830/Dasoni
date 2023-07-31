@@ -10,6 +10,14 @@ import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
 import RoomBox, { RoomBoxProps } from '../../components/RoomBox/RoomBox';
 import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import {
+  setMaster,
+  setMegiAcceptable,
+  setRatingLimit,
+  setRoomTitle,
+  setWaitingRoomId,
+} from '../../app/slices/waitingSlice';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
@@ -330,9 +338,29 @@ function MainPage() {
 
   // 방 만들기 모달 open
   const navigate = useNavigate();
-  const createRoom = () => {
+  const dispatch = useDispatch();
+  const createRoom = async () => {
     // TODO : 클릭 시 모달 띄우기
-    if (confirm('방 만들기')) {
+    console.log('방 만들기');
+    const fakeData = {
+      memberId: 1,
+      title: '함께 놀아요',
+      ratingLimit: 300,
+      megiAcceptable: false,
+    };
+    const res = await axios.post('/rooms', fakeData);
+    console.log(res);
+    if (res.data.status.code === 5000) {
+      // 리덕스에 생성한 대기방 정보 저장
+      dispatch(setWaitingRoomId(res.data.content.createdRoomId));
+      dispatch(setRoomTitle(fakeData.title));
+      dispatch(setMaster(false));
+      dispatch(setRatingLimit(fakeData.ratingLimit));
+      dispatch(setMegiAcceptable(fakeData.megiAcceptable));
+
+      // TODO : 모달 닫기
+
+      // 대기방으로 이동
       navigate('/waiting-room');
     }
   };
