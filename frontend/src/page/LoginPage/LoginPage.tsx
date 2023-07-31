@@ -7,7 +7,7 @@ import main from '../../assets/image/main_img.jpg';
 import leftSignal from '../../assets/image/left_signal.png';
 import rightSignal from '../../assets/image/right_signal.png';
 import { useAppDispatch } from '../../app/hooks';
-import { setUserAsync, getUserInfo } from '../../app/modules/user';
+import { setUserAsync, getUserInfo } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 
 const styles = {
