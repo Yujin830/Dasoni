@@ -7,11 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import signiel.heartsigniel.model.guide.Guide;
-import signiel.heartsigniel.model.guide.GuideService;
 import signiel.heartsigniel.model.life.LifeService;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

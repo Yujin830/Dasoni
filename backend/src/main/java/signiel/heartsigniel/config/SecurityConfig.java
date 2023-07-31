@@ -35,8 +35,8 @@ public class SecurityConfig {
 
     private static final String[] PERMIT_SWAGGER_URL_ARRAY = {
             /* 로그인, 회원가입 */
-            "/users/login",
-            "/users/regist",
+            "/login",
+            "/register",
             /* swagger v2 */
             "/v2/api-docs",
             "/swagger-resources",
