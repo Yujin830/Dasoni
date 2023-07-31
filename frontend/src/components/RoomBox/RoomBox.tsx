@@ -5,7 +5,8 @@ import femaleIcon from '../../assets/image/female_icon.png';
 import FilledButton from '../Button/FilledButton';
 import './RoomBox.css';
 
-type RoomBoxProps = {
+export type RoomBoxProps = {
+  sessionId: string; // room을 구분하는 id
   title: string; // 방 제목
   maleCnt: number; // 현재 남자 참가인원
   femaleCnt: number; // 현재 여자 참가인원
@@ -27,6 +28,17 @@ const styles = {
     height: '2rem',
     borderRadius: '6rem',
     background: '#EC5E98',
+    color: '#FFF',
+    textAlign: 'center',
+    fontWize: '0.5rem',
+    fontWeight: 500,
+    padding: '0.5rem 0.8rem',
+  },
+  //Filledbutton 컴포넌트 메기 입장 style
+  megi: {
+    height: '2rem',
+    borderRadius: '6rem',
+    background: '#ECC835',
     color: '#FFF',
     textAlign: 'center',
     fontWize: '0.5rem',
@@ -63,6 +75,7 @@ function GenderInfo({ genderIcon, genderCount, genderAvgRank, fullCount }: Gende
 }
 
 function RoomBox({
+  sessionId,
   title,
   maleCnt,
   femaleCnt,
@@ -82,16 +95,26 @@ function RoomBox({
 
   return (
     <div className={isFull ? 'room-box disabled' : 'room-box'}>
-      <div className="header">
+      <div className="room-header">
         <div className="title-box">
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
-        <FilledButton
-          style={isFull ? styles.disabled : styles.basic}
-          content="입장하기"
-          handleClick={handleEnter}
-        />
+        {isMegiOpen && femaleCnt + maleCnt === 2 * FULL_COUNT ? (
+          <FilledButton
+            style={isFull ? styles.disabled : styles.megi}
+            content="메기 입장하기"
+            handleClick={handleEnter}
+          />
+        ) : null}
+
+        {!isMegiOpen && femaleCnt + maleCnt < 2 * FULL_COUNT ? (
+          <FilledButton
+            style={isFull ? styles.disabled : styles.basic}
+            content="입장하기"
+            handleClick={handleEnter}
+          />
+        ) : null}
       </div>
       <div className="content">
         <GenderInfo

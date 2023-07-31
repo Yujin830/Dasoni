@@ -4,10 +4,61 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MainPage.css';
+import Banner from '../../components/Banner/Banner';
+import IconButton from '../../components/Button/IconButton';
+import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
+import RoomBox, { RoomBoxProps } from '../../components/RoomBox/RoomBox';
+import FilledButton from '../../components/Button/FilledButton';
+import { useNavigate } from 'react-router';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+
+const styles = {
+  iconBtn: {
+    width: '5rem',
+    height: '2.5rem',
+    borderRadius: '6.25rem',
+    background: 'rgba(238, 114, 165, 0.50)',
+  },
+  searchBar: {
+    width: '16rem',
+    height: '2.5rem',
+    borderRadius: '1.5rem',
+    background: '#FFE8EF',
+    color: '#555',
+    fontSize: '0.8rem',
+    border: 'none',
+    paddingLeft: '1rem',
+  },
+  createRoomBtn: {
+    width: '8rem',
+    height: '3rem',
+    borderRadius: '0.5rem',
+    background: '#ECC835',
+    color: '#fff',
+    fontSize: '1.2rem',
+    fontWeight: '600',
+  },
+  fastMatchBtn: {
+    width: '8rem',
+    height: '3rem',
+    borderRadius: '0.5rem',
+    background: '#EC5E98',
+    color: '#fff',
+    fontSize: '1.2rem',
+    fontWeight: '600',
+  },
+  pagenationBtn: {
+    width: '5.5rem',
+    height: '2.5rem',
+    borderRadius: '6.25rem',
+    background: '#FFE8EF',
+    color: '#555',
+    fontSize: '1rem',
+  },
+};
 
 function MainPage() {
   // 세션과 비디오 엘리먼트 관리하는 state
@@ -74,6 +125,7 @@ function MainPage() {
     if (session) {
       // OpenVidu 배포에서 토큰 얻기
       getToken().then(async (token: any) => {
+        console.log('token', token);
         try {
           // 획득한 토큰으로 세션에 연결
           await session.connect(token, { clientData: myUserName });
@@ -217,56 +269,172 @@ function MainPage() {
     return response.data; // 토큰 반환
   };
 
+  // 필터 버튼 토클
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggleFilter = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
+  // 검색창 입력값
+  const [searchInput, setSearchInput] = useState('');
+  const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
+
+  // 검색
+  const search = (searchInput: string) => {
+    if (searchInput === '') {
+      alert('검색어를 입력해주세요');
+      return;
+    }
+
+    console.log(searchInput);
+    // TODO : 검색 API 로직 개발
+  };
+
+  // 미팅 대기방 리스트
+  // 테스트용 가짜 데이터
+  const fakeWaitingRoomList: RoomBoxProps[] = [
+    {
+      sessionId: '1',
+      title: '심심한데 놀 사람',
+      maleCnt: 3,
+      femaleCnt: 2,
+      maleAvgRank: 'A',
+      femaleAvgRank: 'A',
+      isMegiOpen: false,
+    },
+    {
+      sessionId: '2',
+      title: '서울 사는 사람만',
+      maleCnt: 3,
+      femaleCnt: 3,
+      maleAvgRank: 'A',
+      femaleAvgRank: 'S',
+      isMegiOpen: true,
+    },
+    {
+      sessionId: '3',
+      title: '재밌게 놀아요',
+      maleCnt: 2,
+      femaleCnt: 3,
+      maleAvgRank: 'A',
+      femaleAvgRank: 'B',
+      isMegiOpen: false,
+    },
+  ];
+  const [waitingRoomList, setWaitingRoomList] = useState<RoomBoxProps[]>(fakeWaitingRoomList);
+  useEffect(() => {
+    // TODO : 미팅 대기방 리스트 가져오는 로직 개발
+  }, []);
+
+  // 방 만들기 모달 open
+  const navigate = useNavigate();
+  const createRoom = () => {
+    // TODO : 클릭 시 모달 띄우기
+    if (confirm('방 만들기')) {
+      navigate('/waiting-room');
+    }
+  };
+
+  // 빠른 매칭 모달 open
+  const matchFast = () => {
+    alert('빠른 매칭 진행 중');
+  };
+
   return (
     <div id="main">
       <Header />
+      <Banner />
       <main>
-        <div className="container">
-          {session === undefined ? (
-            <div id="join">
-              <div id="img-div">
-                <img
-                  src="resources/images/openvidu_grey_bg_transp_cropped.png"
-                  alt="OpenVidu logo"
+        <div id="main-top">
+          <div id="filter-box">
+            <IconButton
+              style={styles.iconBtn}
+              content="필터"
+              iconPosition="left"
+              icon="filter_list"
+              handleClick={handleToggleFilter}
+            />
+            <ul className={isOpen ? 'show' : ''}>
+              <li>남자만 입장 가능</li>
+              <li>여자만 입장 가능</li>
+            </ul>
+          </div>
+          <div id="search-box">
+            <NoLableInput
+              style={styles.searchBar}
+              type="text"
+              value={searchInput}
+              placeholer="검색어를 입력해주세요."
+              handleChange={handleSearchInput}
+            />
+            <button
+              className="material-symbols-outlined search-icon"
+              onClick={() => search(searchInput)}
+            >
+              search
+            </button>
+          </div>
+        </div>
+        <div className="room-container">
+          {session === undefined
+            ? waitingRoomList.map((room) => (
+                <RoomBox
+                  key={room.sessionId}
+                  sessionId={room.sessionId}
+                  title={room.title}
+                  maleCnt={room.maleCnt}
+                  femaleCnt={room.femaleCnt}
+                  maleAvgRank={room.maleAvgRank}
+                  femaleAvgRank={room.femaleAvgRank}
+                  isMegiOpen={room.isMegiOpen}
                 />
-              </div>
-              <div id="join-dialog" className="jumbotron vertical-center">
-                <h1> Join a video session </h1>
-                <form className="form-group" onSubmit={joinSession}>
-                  <p>
-                    <label htmlFor="userName">Participant: </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="userName"
-                      value={myUserName}
-                      onChange={handleChangeUserName}
-                      required
-                    />
-                  </p>
-                  <p>
-                    <label htmlFor="sessionId"> Session: </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="sessionId"
-                      value={mySessionId}
-                      onChange={handleChangeSessionId}
-                      required
-                    />
-                  </p>
-                  <p className="text-center">
-                    <input
-                      className="btn btn-lg btn-success"
-                      name="commit"
-                      type="submit"
-                      value="JOIN"
-                    />
-                  </p>
-                </form>
-              </div>
-            </div>
-          ) : null}
+              ))
+            : // <div id="join">
+              //   <div id="img-div">
+              //     <img
+              //       src="resources/images/openvidu_grey_bg_transp_cropped.png"
+              //       alt="OpenVidu logo"
+              //     />
+              //   </div>
+              //   <div id="join-dialog" className="jumbotron vertical-center">
+              //     <h1> Join a video session </h1>
+              //     <form className="form-group" onSubmit={joinSession}>
+              //       <p>
+              //         <label htmlFor="userName">Participant: </label>
+              //         <input
+              //           className="form-control"
+              //           type="text"
+              //           id="userName"
+              //           value={myUserName}
+              //           onChange={handleChangeUserName}
+              //           required
+              //         />
+              //       </p>
+              //       <p>
+              //         <label htmlFor="sessionId"> Session: </label>
+              //         <input
+              //           className="form-control"
+              //           type="text"
+              //           id="sessionId"
+              //           value={mySessionId}
+              //           onChange={handleChangeSessionId}
+              //           required
+              //         />
+              //       </p>
+              //       <p className="text-center">
+              //         <input
+              //           className="btn btn-lg btn-success"
+              //           name="commit"
+              //           type="submit"
+              //           value="JOIN"
+              //         />
+              //       </p>
+              //     </form>
+              //   </div>
+              // </div>
+              null}
 
           {session !== undefined ? (
             <div id="session">
@@ -317,6 +485,32 @@ function MainPage() {
               </div>
             </div>
           ) : null}
+        </div>
+        <div id="room-footer">
+          <div id="btn-box">
+            <FilledButton
+              content="방 만들기"
+              style={styles.createRoomBtn}
+              handleClick={createRoom}
+            />
+            <FilledButton content="빠른 매칭" style={styles.fastMatchBtn} handleClick={matchFast} />
+          </div>
+          <div id="pagenationBtn-box">
+            <IconButton
+              style={styles.pagenationBtn}
+              content="이전"
+              iconPosition="left"
+              handleClick={createRoom}
+              icon="chevron_left"
+            />
+            <IconButton
+              style={styles.pagenationBtn}
+              content="다음"
+              iconPosition="right"
+              handleClick={createRoom}
+              icon="chevron_right"
+            />
+          </div>
         </div>
       </main>
     </div>

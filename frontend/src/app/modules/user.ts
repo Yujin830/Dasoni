@@ -13,6 +13,10 @@ export type User = {
   job?: string;
   sido?: number;
   gugun?: number;
+  gender?: string;
+  profileImg?: string;
+  point?: number;
+  matchCnt?: number;
 };
 
 // 초기상태를 선언
