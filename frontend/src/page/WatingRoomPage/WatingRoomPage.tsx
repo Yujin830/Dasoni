@@ -6,6 +6,8 @@ import WaitingMemberBox from '../../components/WatingMember/WaitingMember';
 import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
 import './WaitingRoomPage.css';
+import axios from 'axios';
+import { useAppSelector } from '../../app/hooks';
 
 const watingMember: WaitingMember[] = [
   {
@@ -82,6 +84,7 @@ const styles = {
 function WaitingRoomPage() {
   const [memberList, setMemberList] = useState<WaitingMember[]>(watingMember);
   const navigate = useNavigate();
+  const waitingRoom = useAppSelector((state) => state.waitingRoom);
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
@@ -90,9 +93,18 @@ function WaitingRoomPage() {
     }, 3000);
   };
 
-  const handleExitBtn = () => {
-    alert('방 나가기');
-    navigate('/main');
+  const handleExitBtn = async () => {
+    console.log('방 나가기');
+    try {
+      const res = await axios.delete(`/rooms/${waitingRoom.roomId}/members/1`);
+      console.log(res);
+
+      if (res.status === 200) {
+        navigate('/main', { replace: true });
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
