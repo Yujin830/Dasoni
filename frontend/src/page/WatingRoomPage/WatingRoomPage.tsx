@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Header from '../../components/Header/Header';
 import titleLogo from '../../assets/image/title_img.png';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
@@ -106,10 +106,16 @@ function WaitingRoomPage() {
       console.error(err);
     }
   };
+  // 모달 띄우기
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleModalToggle = useCallback(() => {
+    setModalVisible((prev) => !prev);
+  }, []);
 
   return (
     <div id="waiting-page">
-      <Header />
+      <Header onModalToggle={handleModalToggle} />{' '}
       <main id="waiting-room-box">
         <div id="waiting-room-top">
           <div className="title">

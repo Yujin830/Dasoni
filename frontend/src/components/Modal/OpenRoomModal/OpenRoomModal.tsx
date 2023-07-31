@@ -71,7 +71,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   };
 
   return (
-    <div className="modal">
+    <div className="openroom-modal">
       <div className="header">
         방만들기
         <div className="close-button">

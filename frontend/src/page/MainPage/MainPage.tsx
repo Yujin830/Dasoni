@@ -20,6 +20,7 @@ import {
 } from '../../app/slices/waitingSlice';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
+import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
@@ -278,12 +279,12 @@ function MainPage() {
     );
     return response.data; // 토큰 반환
   };
-  //모달 띄우는 코드
+  //모달 띄우기
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleModalToggle = useCallback(() => {
-    setModalVisible((prev) => !prev);
-  }, []);
+  const handleModalToggle = () => {
+    setModalVisible(!modalVisible); // Function to toggle modal visibility
+  };
 
   // 필터 버튼 토클
   const [isOpen, setIsOpen] = useState(false);
@@ -349,6 +350,8 @@ function MainPage() {
   const dispatch = useDispatch();
   const createRoom = async () => {
     // TODO : 클릭 시 모달 띄우기
+    setModalVisible(true); // Set modalVisible to true to display the modal
+
     console.log('방 만들기');
     const fakeData = {
       memberId: 1,
@@ -367,7 +370,7 @@ function MainPage() {
       dispatch(setMegiAcceptable(fakeData.megiAcceptable));
 
       // TODO : 모달 닫기
-
+      setModalVisible(false); // Set modalVisible to false to close the modal
       // 대기방으로 이동
       navigate('/waiting-room');
     }
@@ -547,7 +550,8 @@ function MainPage() {
         </div>
       </main>
       {/* HelpModal을 렌더링하는 부분은 이전과 동일 */}
-      {modalVisible && <HelpModal onClose={handleModalToggle} />}
+      {/* {modalVisible && <HelpModal onClose={handleModalToggle} />} */}
+      {modalVisible && <OpenRoomModal onClose={handleModalToggle} />}{' '}
     </div>
   );
 }
