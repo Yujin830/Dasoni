@@ -4,6 +4,9 @@ import maleIcon from '../../assets/image/male_icon.png';
 import femaleIcon from '../../assets/image/female_icon.png';
 import FilledButton from '../Button/FilledButton';
 import './RoomBox.css';
+import axios from 'axios';
+import { useAppSelector } from '../../app/hooks';
+import { useNavigate } from 'react-router';
 
 export type RoomBoxProps = {
   roomId: number; // room을 구분하는 id
@@ -86,11 +89,30 @@ function RoomBox({
   const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
   // TODO : isFull 확인하는 로직
 
-  // 입장하기 버튼 클릭 시 동작하는 함수
-  const handleEnter = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const member = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  // 입장하기
+  const onClickEnter = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (isFull) alert('더 이상 입장 할 수 없습니다.');
-    else console.log('입장하기');
+    if (isFull) {
+      alert('더 이상 입장 할 수 없습니다.');
+      return;
+    } else {
+      console.log('입장하기');
+      try {
+        // TODO : user state에 있는 memberId로 바꾸기
+        const res = await axios.post(`/rooms/${roomId}/members/1`);
+        console.log(res);
+
+        if (res.status === 200) {
+          console.log('입장 성공');
+          navigate(`/waiting-room/${roomId}`);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   return (
@@ -104,7 +126,7 @@ function RoomBox({
           <FilledButton
             style={isFull ? styles.disabled : styles.megi}
             content="메기 입장하기"
-            handleClick={handleEnter}
+            handleClick={onClickEnter}
           />
         ) : null}
 
@@ -112,7 +134,7 @@ function RoomBox({
           <FilledButton
             style={isFull ? styles.disabled : styles.basic}
             content="입장하기"
-            handleClick={handleEnter}
+            handleClick={onClickEnter}
           />
         ) : null}
       </div>

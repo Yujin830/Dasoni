@@ -351,7 +351,7 @@ function MainPage() {
       // TODO : 모달 닫기
 
       // 대기방으로 이동
-      navigate('/waiting-room');
+      navigate(`/waiting-room/${res.data.content.createdRoomId}`);
     }
   };
 

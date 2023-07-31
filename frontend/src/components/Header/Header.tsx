@@ -5,7 +5,7 @@ import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
 import HelpModal from '../Modal/HelpModal/HelpModal';
 
 interface HeaderProps {
-  onModalToggle: () => void;
+  onModalToggle?: () => void;
 }
 
 function Header({ onModalToggle }: HeaderProps) {
