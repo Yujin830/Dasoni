@@ -7,7 +7,6 @@
 
 #waiting-page #waiting-room-box {
   width: calc(100vw - 4rem);
-  height: calc(100vh - 30rem);
   border-radius: 0.5rem;
   background: #d9d9d9;
   display: flex;
@@ -52,11 +51,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
-  margin: auto 2rem;
+  margin: 2rem 2rem 1.5rem;
 }
 
 #waiting-page #waiting-room-footer {
-  margin: 0 2rem 3rem;
+  margin: 0 2rem 2rem;
   display: flex;
   justify-content: space-between;
 }
