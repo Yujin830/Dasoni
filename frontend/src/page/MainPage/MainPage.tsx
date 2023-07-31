@@ -332,7 +332,7 @@ function MainPage() {
     };
     const res = await axios.post('/rooms', fakeData);
     console.log(res);
-    if (res.data.status.code === 5000) {
+    if (res.status === 200) {
       // 리덕스에 생성한 대기방 정보 저장
       dispatch(setWaitingRoomId(res.data.content.createdRoomId));
       dispatch(setRoomTitle(fakeData.title));
