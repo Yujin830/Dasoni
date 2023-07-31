@@ -184,7 +184,6 @@ public class PrivateRoomService {
     public Page<PrivateRoomList> getPrivateRooms(Pageable pageable){
         Page<Room> roomList = roomRepository.findAllByRoomType("private", pageable);
         return roomList.map(room -> new PrivateRoomList(room));
-
     }
 
     public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable){
