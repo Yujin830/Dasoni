@@ -3,9 +3,12 @@ package signiel.heartsigniel.model.room;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.party.Party;
+import signiel.heartsigniel.model.party.dto.PartyMatchResult;
 import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
+import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.MatchingRoomCreated;
 
 import javax.transaction.Transactional;
@@ -22,8 +25,11 @@ public class MatchingRoomService {
     }
 
     @Transactional
-    public Room createRoom(Party maleParty, Party femaleParty) {
+    public Room createRoom(PartyMatchResult partyMatchResult) {
         Room room = new Room();
+
+        Party femaleParty = partyMatchResult.getFemaleParty();
+        Party maleParty = partyMatchResult.getMaleParty();
 
         room.setFemaleParty(femaleParty);
         room.setMaleParty(maleParty);
@@ -35,7 +41,7 @@ public class MatchingRoomService {
         room.setMegiAcceptable(true);
         room.setStartTime(LocalDateTime.now());
 
-        return roomRepository.save(room);
+        return room;
     }
 
 

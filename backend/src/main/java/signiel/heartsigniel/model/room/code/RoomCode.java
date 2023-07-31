@@ -20,6 +20,7 @@ public enum RoomCode implements ResponseCode {
     NO_PERMISSION(1217, "해당 기능을 수행할 권한이 없습니다."),
     NOT_MODIFY_PARTICIPANT_COUNT(1218, "현재 인원 수보다 작은 인원으로 설정할 수 없습니다.");
 
+
     private final int code;
     private final String message;
 

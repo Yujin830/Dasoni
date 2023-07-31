@@ -1,11 +1,16 @@
 package signiel.heartsigniel.model.party;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
+import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.partymember.PartyMember;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +18,8 @@ import java.util.List;
  * 파티 생성 엔티티 클래스
  */
 @Entity(name = "party")
-@NoArgsConstructor
 @Data
+@RequiredArgsConstructor
 public class Party {
     @Id
     @Column(name = "party_id")
@@ -33,17 +38,20 @@ public class Party {
     @OneToMany(mappedBy = "party")
     private List<PartyMember> members = new ArrayList<>();
 
-    public static Party from(PartyRequest partyRequest){
-        System.out.println("Party.java / 'from' activated");
-        Party party = new Party();
-        party.partyId = partyRequest.getPartyId();
-        party.partyType = partyRequest.getPartyType();
-        party.partyGender = partyRequest.getPartyGender();
-        party.avgRating = partyRequest.getAvgRating();
-        return party;
+    @Column(name="matching_time")
+    private LocalDateTime matchingTime;
+
+    @Builder
+    public Party(String partyGender, Long avgRating, String partyType, List<PartyMember> members){
+        this.partyGender = partyGender;
+        this.avgRating = avgRating;
+        this.partyType = partyType;
+        this.members = members;
     }
 
-
+    public void setMatchingTime() {
+        this.matchingTime = LocalDateTime.now();
+    }
 
     public void calculateAndSetAvgRating() {
         if (members.isEmpty()) {
