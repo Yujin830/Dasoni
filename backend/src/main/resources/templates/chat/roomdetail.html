@@ -80,6 +80,8 @@
     ws.connect({}, function(frame) {
       ws.subscribe("/topic/chat/room/"+vm.$data.roomId, function(message) {
         var recv = JSON.parse(message.body);
+        console.log('message');
+        console.log('recv' , recv);
         vm.recvMessage(recv);
       });
       ws.send("/app/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, sender:vm.$data.sender}));

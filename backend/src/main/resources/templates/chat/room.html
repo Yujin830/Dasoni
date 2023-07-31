@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
+
     <title>Websocket Chat</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -12,6 +13,7 @@
         }
     </style>
 </head>
+
 <body>
 <div class="container" id="app" v-cloak>
     <div class="row">
@@ -37,7 +39,21 @@
 <!-- JavaScript -->
 <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    var token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTIzNCIsInJvbGVzIjpbeyJuYW1lIjoiUk9MRV9HVUVTVCJ9XSwiaWF0IjoxNjkwNzc0MDYzLCJleHAiOjE2OTA4NjA0NjN9.Jes0kb6MRo7nrt-BcmU4qCqfzZyX4-pkeAX4ZWWseHQ';
+
+
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+
+    axios.get('http://localhost:8080/chat/room')
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
     var vm = new Vue({
         el: '#app',
         data: {

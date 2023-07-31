@@ -20,8 +20,6 @@ import signiel.heartsigniel.model.chat.StompHandler;
  */
 public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final StompHandler stompHandler;
-
 
     /**
      * 소켓 연결과 관련된 설정
@@ -34,15 +32,6 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         
         registry.addEndpoint("/ws/chat").setAllowedOriginPatterns("*").withSockJS();
-    }
-
-    /**
-     *  WebSocket 클라이언트로부터 들어오는 메시지를 처리
-     *
-     */
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(stompHandler);
     }
 
 
@@ -60,6 +49,6 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/queue", "/topic");
-        registry.setApplicationDestinationPrefixes("/pub");
+        registry.setApplicationDestinationPrefixes("/app");
     }
 }
