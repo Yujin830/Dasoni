@@ -5,13 +5,12 @@
 
 .rank-avartar .profile {
   border-radius: 50%;
-  width: 15rem;
-  height: 15rem;
+  width: 100%;
 }
 
 .rank-avartar .rank {
-  width: 4rem;
+  width: 40%;
   position: absolute;
-  bottom: 0rem;
-  right: 1rem;
+  bottom: -30%;
+  right: 5%;
 }
