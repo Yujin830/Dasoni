@@ -22,10 +22,6 @@ import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 
-// 서버 주소를 환경에 따라 설정
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
-
 const styles = {
   iconBtn: {
     width: '5rem',
@@ -132,49 +128,49 @@ function MainPage() {
   }, []);
 
   // 세션에 연결 후 비디오 생성하고 발행하는 처리
-  useEffect(() => {
-    if (session) {
-      // OpenVidu 배포에서 토큰 얻기
-      getToken().then(async (token: any) => {
-        console.log('token', token);
-        try {
-          // 획득한 토큰으로 세션에 연결
-          await session.connect(token, { clientData: myUserName });
+  // useEffect(() => {
+  //   if (session) {
+  //     // OpenVidu 배포에서 토큰 얻기
+  //     getToken().then(async (token: any) => {
+  //       console.log('token', token);
+  //       try {
+  //         // 획득한 토큰으로 세션에 연결
+  //         await session.connect(token, { clientData: myUserName });
 
-          // 발행할 비디오 생성
-          const publisher = await OV.current.initPublisherAsync(undefined, {
-            audioSource: undefined,
-            videoSource: undefined,
-            publishAudio: true,
-            publishVideo: true,
-            resolution: '320x240',
-            frameRate: 30,
-            insertMode: 'APPEND',
-            mirror: false,
-          });
+  //         // 발행할 비디오 생성
+  //         const publisher = await OV.current.initPublisherAsync(undefined, {
+  //           audioSource: undefined,
+  //           videoSource: undefined,
+  //           publishAudio: true,
+  //           publishVideo: true,
+  //           resolution: '320x240',
+  //           frameRate: 30,
+  //           insertMode: 'APPEND',
+  //           mirror: false,
+  //         });
 
-          session.publish(publisher);
+  //         session.publish(publisher);
 
-          // 사용 가능한 비디오 디바이스 얻고 현재 비디오 디바이스 설정
-          const devices = await OV.current.getDevices();
-          const videoDevices = devices.filter((device) => device.kind === 'videoinput');
-          const currentVideoDeviceId = publisher.stream
-            .getMediaStream()
-            .getVideoTracks()[0]
-            .getSettings().deviceId;
-          const currentVideoDevice = videoDevices.find(
-            (device) => device.deviceId === currentVideoDeviceId,
-          );
+  //         // 사용 가능한 비디오 디바이스 얻고 현재 비디오 디바이스 설정
+  //         const devices = await OV.current.getDevices();
+  //         const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+  //         const currentVideoDeviceId = publisher.stream
+  //           .getMediaStream()
+  //           .getVideoTracks()[0]
+  //           .getSettings().deviceId;
+  //         const currentVideoDevice = videoDevices.find(
+  //           (device) => device.deviceId === currentVideoDeviceId,
+  //         );
 
-          setMainStreamManager(publisher);
-          setPublisher(publisher);
-          setCurrentVideoDevice(currentVideoDevice);
-        } catch (error: any) {
-          console.log('There was an error connecting to the session:', error.code, error.message);
-        }
-      });
-    }
-  }, [session, myUserName]);
+  //         setMainStreamManager(publisher);
+  //         setPublisher(publisher);
+  //         setCurrentVideoDevice(currentVideoDevice);
+  //       } catch (error: any) {
+  //         console.log('There was an error connecting to the session:', error.code, error.message);
+  //       }
+  //     });
+  //   }
+  // }, [session, myUserName]);
 
   // 세션 종료하기
   const leaveSession = useCallback(() => {
@@ -251,34 +247,6 @@ function MainPage() {
     };
   }, [leaveSession]);
 
-  // 세션 연결을 위해 토큰 가져오는 함수
-  const getToken = useCallback(async () => {
-    return createSession(mySessionId).then((sessionId) => createToken(sessionId));
-  }, [mySessionId]);
-
-  // 세션 생성
-  const createSession = async (sessionId: any) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions',
-      { customSessionId: sessionId },
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-    return response.data; // sessionId 반환
-  };
-
-  // 토큰 생성
-  const createToken = async (sessionId: any) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections',
-      {},
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-    return response.data; // 토큰 반환
-  };
   //모달 띄우는 코드
   const [modalVisible, setModalVisible] = useState(false);
 
