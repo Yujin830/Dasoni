@@ -15,13 +15,13 @@ public class MatchingController {
         this.matchingService = matchingService;
     }
 
-    @PostMapping("/partymembers/{memberId}")
+    @PostMapping("/members/{memberId}")
     public ResponseEntity<Response> quickMatch(@PathVariable Long memberId){
             Response response = matchingService.quickFindMatch(memberId);
             return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/members/{partyMemberId}")
+    @DeleteMapping("/partymembers/{partyMemberId}")
     public ResponseEntity<Response> cancelQuickMatch(@PathVariable Long partyMemberId){
             Response response = matchingService.cancelFindMatch(partyMemberId);
             return ResponseEntity.ok(response);

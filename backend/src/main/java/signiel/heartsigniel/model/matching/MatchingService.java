@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.matching.code.MatchingCode;
+import signiel.heartsigniel.model.matching.dto.QuickFindResult;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -48,6 +49,12 @@ public class MatchingService {
 
         Party party = partyService.findSuitableParties(memberEntity);
         partyService.joinParty(party, memberEntity);
+        Long partyMemberId = findPartyMemberIdByRoomIdAndMemberId(party.getPartyId(), memberId);
+
+        // 매칭 안됐을 경우 파티 멤버 번호 응답하기위한 DTO 객체 생성
+        QuickFindResult quickFindResult = QuickFindResult.builder()
+                .partyMemberId(partyMemberId)
+                .build();
 
         // 파티 인원이 세명일 경우의 로직
         if (partyService.isPartyFull(party)){
@@ -63,11 +70,10 @@ public class MatchingService {
             }
 
             // 매칭이 안된 경우 - 매칭 대기 메시지 등을 전달
-            return Response.of(MatchingCode.MATCHING_PENDING, null);
+            return Response.of(MatchingCode.MATCHING_PENDING, quickFindResult);
         }
-
         // 파티 인원이 세명이 아닐 경우
-        return Response.of(MatchingCode.MATCHING_STARTED, null);
+        return Response.of(MatchingCode.MATCHING_STARTED, quickFindResult);
     }
 
     public Response cancelFindMatch(Long partyMemberId){
@@ -95,5 +101,11 @@ public class MatchingService {
                 .orElseThrow(() -> new NoPartyMemberException("파티 멤버를 찾지 못했습니다."));
 
         return partyMemberEntity;
+    }
+
+    // 파티멤버 Id를 가져오는 서비스
+    public Long findPartyMemberIdByRoomIdAndMemberId(Long partyId, Long memberId){
+        Long targetPartyMemberId = partyService.findPartyMemberByMemberIdAndPartyId(partyId, memberId).getId();
+        return targetPartyMemberId;
     }
 }
