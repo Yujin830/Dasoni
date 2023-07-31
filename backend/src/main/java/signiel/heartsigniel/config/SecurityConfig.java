@@ -81,8 +81,7 @@ public class SecurityConfig {
                 // 회원가입과 로그인은 모두 승인
                 .antMatchers("/register/**", "/login", "/guide", "/warn/**", "/life/**", "/users/**", "/question").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
-                .antMatchers("/rooms/**").hasRole("USER")
-                .antMatchers("/party/**").hasRole("GUEST")
+                .antMatchers("/rooms/**", "/match/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
                 // JWT 인증 필터 적용
