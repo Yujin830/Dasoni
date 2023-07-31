@@ -7,7 +7,7 @@ import logo from '../../assets/image/logo.png';
 import leftSignal from '../../assets/image/left_signal.png';
 
 import { useAppDispatch } from '../../app/hooks';
-import { setUserAsync } from '../../app/modules/user';
+import { setUserAsync } from '../../app/slices/user';
 
 const styles = {
   button: {

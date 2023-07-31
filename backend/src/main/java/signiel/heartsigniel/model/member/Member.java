@@ -44,7 +44,7 @@ public class Member {
     private boolean isBlack;
 
     @Column(name = "`rating`")
-    private int rating;
+    private Long rating;
 
     @Column(name = "`meeting_cnt`")
     private int meetingCount;

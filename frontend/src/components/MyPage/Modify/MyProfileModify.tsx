@@ -4,7 +4,7 @@ import './MyProfileModify.css';
 import BasicInput from '../../Input/BasicInput/BasicInput';
 import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
-import { modifyUserAsync } from '../../../app/modules/user';
+import { modifyUserAsync } from '../../../app/slices/user';
 
 const input = {
   width: '26rem',
