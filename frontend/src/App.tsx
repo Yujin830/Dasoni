@@ -24,7 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />}></Route>
           <Route path="/main" element={<MainPage />}></Route>
-          <Route path="/waiting-room" element={<WaitingRoomPage />}></Route>
+          <Route path="/waiting-room/:roomId" element={<WaitingRoomPage />}></Route>
           <Route path="/signup" element={<SignUpPage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/test" element={<OpenRoomModal onClose={handleCloseModal} />} />{' '}
