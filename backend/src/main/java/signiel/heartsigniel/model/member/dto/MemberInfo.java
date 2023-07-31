@@ -10,7 +10,7 @@ public class MemberInfo {
 
     private Long memberId;
     private String nickname;
-    private Long rating;
+    private int rating;
     private String gender;
     private String job;
     private LocalDate birth;

@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 @Data
 public class SignRequest {
-    private Long memberId;
 
     private String loginId;
 

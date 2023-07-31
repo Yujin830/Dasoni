@@ -83,7 +83,7 @@ CREATE TABLE `member` (
                           `phone_number` varchar(20) NOT NULL,
                           `nickname` varchar(10) DEFAULT NULL,
                           `isblack` tinyint(1) DEFAULT '0',
-                          `rank` int(11) DEFAULT '0',
+                          `rating` int(20) DEFAULT '0',
                           `meeting_cnt` int(11) DEFAULT '0',
                           `profile_image_src` varchar(200) DEFAULT NULL,
                           `job` varchar(20) DEFAULT NULL,
