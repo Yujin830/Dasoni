@@ -30,7 +30,7 @@ public class SignResponse {
 
     private boolean isBlack;
 
-    private int rating;
+    private Long rating;
 
     private int meetingCount;
 
