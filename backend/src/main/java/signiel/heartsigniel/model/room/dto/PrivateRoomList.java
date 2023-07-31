@@ -8,6 +8,7 @@ import signiel.heartsigniel.model.room.Room;
 @Getter
 public class PrivateRoomList {
 
+    private Long roomId;
     private String title;
     private Long femalePartyMemberCount;
     private Long malePartyMemberCount;
@@ -17,6 +18,7 @@ public class PrivateRoomList {
 
     @Builder
     public PrivateRoomList(Room roomEntity){
+        this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
         this.femalePartyMemberCount = roomEntity.femaleMemberCount();
         this.malePartyMemberCount = roomEntity.maleMemberCount();

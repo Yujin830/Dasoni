@@ -6,19 +6,19 @@ import FilledButton from '../Button/FilledButton';
 import './RoomBox.css';
 
 export type RoomBoxProps = {
-  sessionId: string; // room을 구분하는 id
+  roomId: number; // room을 구분하는 id
   title: string; // 방 제목
-  maleCnt: number; // 현재 남자 참가인원
-  femaleCnt: number; // 현재 여자 참가인원
-  maleAvgRank: string; // 참가한 남자 평균 랭크
-  femaleAvgRank: string; // 참가한 여자 평균 랭크
-  isMegiOpen: boolean; // 메기 입장 가능 여부
+  malePartyMemberCount: number; // 현재 남자 참가인원
+  femalePartyMemberCount: number; // 현재 여자 참가인원
+  malePartyAvgRating: number; // 참가한 남자 평균 레이팅
+  femalePartyAvgRating: number; // 참가한 여자 평균 레이팅
+  megiAcceptable: boolean; // 메기 입장 가능 여부
 };
 
 type GenderInfoProps = {
   genderIcon: string; // 성별 아이콘
   genderCount: number; // 성별  참여 인원
-  genderAvgRank: string; // 성별 평균 등급
+  genderAvgRank: number; // 성별 평균 등급
   fullCount: number; // 최대 참여 가능 인원수
 };
 
@@ -75,13 +75,13 @@ function GenderInfo({ genderIcon, genderCount, genderAvgRank, fullCount }: Gende
 }
 
 function RoomBox({
-  sessionId,
+  roomId,
   title,
-  maleCnt,
-  femaleCnt,
-  maleAvgRank,
-  femaleAvgRank,
-  isMegiOpen,
+  malePartyMemberCount,
+  femalePartyMemberCount,
+  malePartyAvgRating,
+  femalePartyAvgRating,
+  megiAcceptable,
 }: RoomBoxProps) {
   const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
   // TODO : isFull 확인하는 로직
@@ -100,7 +100,7 @@ function RoomBox({
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
-        {isMegiOpen && femaleCnt + maleCnt === 2 * FULL_COUNT ? (
+        {megiAcceptable && femalePartyMemberCount + malePartyAvgRating === 2 * FULL_COUNT ? (
           <FilledButton
             style={isFull ? styles.disabled : styles.megi}
             content="메기 입장하기"
@@ -108,7 +108,7 @@ function RoomBox({
           />
         ) : null}
 
-        {!isMegiOpen && femaleCnt + maleCnt < 2 * FULL_COUNT ? (
+        {!megiAcceptable && femalePartyMemberCount + malePartyMemberCount < 2 * FULL_COUNT ? (
           <FilledButton
             style={isFull ? styles.disabled : styles.basic}
             content="입장하기"
@@ -119,15 +119,15 @@ function RoomBox({
       <div className="content">
         <GenderInfo
           genderIcon={maleIcon}
-          genderCount={maleCnt}
-          genderAvgRank={maleAvgRank}
-          fullCount={isMegiOpen ? MEGI_FULL_COUNT : FULL_COUNT}
+          genderCount={malePartyMemberCount}
+          genderAvgRank={malePartyAvgRating}
+          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
         <GenderInfo
           genderIcon={femaleIcon}
-          genderCount={femaleCnt}
-          genderAvgRank={femaleAvgRank}
-          fullCount={isMegiOpen ? MEGI_FULL_COUNT : FULL_COUNT}
+          genderCount={femalePartyMemberCount}
+          genderAvgRank={femalePartyAvgRating}
+          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
       </div>
     </div>
