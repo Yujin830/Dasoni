@@ -62,7 +62,6 @@ function ProfileModal() {
       nickname: nickname,
     };
 
-    // 회원가입을 위한 비동기 액션을 dispatch하도록 액션 함수 작성
     dispatch(setUserAsync(data));
     console.log('addprofile');
     console.log(data);

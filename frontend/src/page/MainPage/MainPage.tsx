@@ -19,6 +19,8 @@ import {
   setWaitingRoomId,
 } from '../../app/slices/waitingSlice';
 
+import HelpModal from '../../components/Modal/HelpModal/HelpModal';
+
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
@@ -276,6 +278,12 @@ function MainPage() {
     );
     return response.data; // 토큰 반환
   };
+  //모달 띄우는 코드
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleModalToggle = useCallback(() => {
+    setModalVisible((prev) => !prev);
+  }, []);
 
   // 필터 버튼 토클
   const [isOpen, setIsOpen] = useState(false);
@@ -371,8 +379,8 @@ function MainPage() {
   };
 
   return (
-    <div id="main">
-      <Header />
+    <div id="main" className={modalVisible ? 'modal-visible' : ''}>
+      <Header onModalToggle={handleModalToggle} />
       <Banner />
       <main>
         <div id="main-top">
@@ -419,10 +427,7 @@ function MainPage() {
                   isMegiOpen={room.isMegiOpen}
                 />
               ))
-            : // <div id="join">
-              //   <div id="img-div">
-              //     <img
-              //       src="resources/images/openvidu_grey_bg_transp_cropped.png"
+            : //       src="resources/images/openvidu_grey_bg_transp_cropped.png"
               //       alt="OpenVidu logo"
               //     />
               //   </div>
@@ -541,6 +546,8 @@ function MainPage() {
           </div>
         </div>
       </main>
+      {/* HelpModal을 렌더링하는 부분은 이전과 동일 */}
+      {modalVisible && <HelpModal onClose={handleModalToggle} />}
     </div>
   );
 }
