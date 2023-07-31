@@ -67,6 +67,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       ratingLimit: ratingLimit,
     };
     // 백엔드로 data 디스패치 하는 API 호출
+
     console.log(data);
   };
 

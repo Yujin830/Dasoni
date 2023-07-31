@@ -10,13 +10,16 @@ import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
 import RoomBox, { RoomBoxProps } from '../../components/RoomBox/RoomBox';
 import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
 import {
   setMaster,
   setMegiAcceptable,
   setRatingLimit,
   setRoomTitle,
   setWaitingRoomId,
+  setHelpModalVisible,
+  setOpenRoomModalVisible,
 } from '../../app/slices/waitingSlice';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
@@ -279,11 +282,19 @@ function MainPage() {
     );
     return response.data; // 토큰 반환
   };
-  //모달 띄우기
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const handleModalToggle = () => {
-    setModalVisible(!modalVisible); // Function to toggle modal visibility
+  //모달 띄우기
+  const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
+  const openRoomModalVisible = useSelector(
+    (state: RootState) => state.waitingRoom.openRoomModalVisible,
+  );
+  // Toggle HelpModal visibility
+  const handleHelpModalToggle = () => {
+    dispatch(setHelpModalVisible(!helpModalVisible));
+  };
+  // Toggle OpenRoomModal visibility
+  const handleOpenRoomModalToggle = () => {
+    dispatch(setOpenRoomModalVisible(!openRoomModalVisible));
   };
 
   // 필터 버튼 토클
@@ -350,30 +361,30 @@ function MainPage() {
   const dispatch = useDispatch();
   const createRoom = async () => {
     // TODO : 클릭 시 모달 띄우기
-    setModalVisible(true); // Set modalVisible to true to display the modal
+    setOpenRoomModalVisible(true); // Set modalVisible to true to display the modal
 
-    console.log('방 만들기');
-    const fakeData = {
-      memberId: 1,
-      title: '함께 놀아요',
-      ratingLimit: 300,
-      megiAcceptable: false,
-    };
-    const res = await axios.post('/rooms', fakeData);
-    console.log(res);
-    if (res.data.status.code === 5000) {
-      // 리덕스에 생성한 대기방 정보 저장
-      dispatch(setWaitingRoomId(res.data.content.createdRoomId));
-      dispatch(setRoomTitle(fakeData.title));
-      dispatch(setMaster(false));
-      dispatch(setRatingLimit(fakeData.ratingLimit));
-      dispatch(setMegiAcceptable(fakeData.megiAcceptable));
+    // console.log('방 만들기');
+    // const fakeData = {
+    //   memberId: 1,
+    //   title: '함께 놀아요',
+    //   ratingLimit: 300,
+    //   megiAcceptable: false,
+    // };
+    // const res = await axios.post('/rooms', fakeData);
+    // console.log(res);
+    // if (res.data.status.code === 5000) {
+    //   // 리덕스에 생성한 대기방 정보 저장
+    //   dispatch(setWaitingRoomId(res.data.content.createdRoomId));
+    //   dispatch(setRoomTitle(fakeData.title));
+    //   dispatch(setMaster(false));
+    //   dispatch(setRatingLimit(fakeData.ratingLimit));
+    //   dispatch(setMegiAcceptable(fakeData.megiAcceptable));
 
-      // TODO : 모달 닫기
-      setModalVisible(false); // Set modalVisible to false to close the modal
-      // 대기방으로 이동
-      navigate('/waiting-room');
-    }
+    //   // TODO : 모달 닫기
+    //   setOpenRoomModalVisible(false); // Set modalVisible to false to close the modal
+    //   // 대기방으로 이동
+    //   navigate('/waiting-room');
+    // }
   };
 
   // 빠른 매칭 모달 open
@@ -382,8 +393,11 @@ function MainPage() {
   };
 
   return (
-    <div id="main" className={modalVisible ? 'modal-visible' : ''}>
-      <Header onModalToggle={handleModalToggle} />
+    <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
+      <Header
+        onModalToggle={handleHelpModalToggle}
+        // onOpenRoomModalToggle={handleOpenRoomModalToggle}
+      />
       <Banner />
       <main>
         <div id="main-top">
@@ -549,9 +563,10 @@ function MainPage() {
           </div>
         </div>
       </main>
-      {/* HelpModal을 렌더링하는 부분은 이전과 동일 */}
-      {/* {modalVisible && <HelpModal onClose={handleModalToggle} />} */}
-      {modalVisible && <OpenRoomModal onClose={handleModalToggle} />}{' '}
+      {/* HelpModal rendering */}
+      {helpModalVisible && <HelpModal onClose={handleHelpModalToggle} />}
+      {/* OpenRoomModal rendering */}
+      {openRoomModalVisible && <OpenRoomModal onClose={handleOpenRoomModalToggle} />}
     </div>
   );
 }
