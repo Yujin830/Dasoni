@@ -217,17 +217,17 @@ function MainPage() {
     );
     return response.data; // 토큰 반환
   };
-
+  //모달 띄우는 코드
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleModalToggle = () => {
-    setModalVisible(!modalVisible);
-  };
+  const handleModalToggle = useCallback(() => {
+    setModalVisible((prev) => !prev);
+  }, []);
 
   return (
-    <div id="main">
+    <div id="main" className={modalVisible ? 'modal-visible' : ''}>
       <Header onModalToggle={handleModalToggle} />
-      <main>
+      <main className="main">
         <div className="container">
           {session === undefined ? (
             <div id="join">
@@ -326,10 +326,8 @@ function MainPage() {
           ) : null}
         </div>
       </main>
-      {modalVisible && (
-        // 여기에 모달 컴포넌트를 렌더링합니다.
-        <HelpModal onClose={handleModalToggle} />
-      )}
+      {/* HelpModal을 렌더링하는 부분은 이전과 동일 */}
+      {modalVisible && <HelpModal onClose={handleModalToggle} />}
     </div>
   );
 }

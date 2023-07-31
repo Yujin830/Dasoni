@@ -15,7 +15,6 @@ function HelpModal({ onClose }: HelpModalProps) {
           <button onClick={onClose}>Close</button>
         </div>
       </div>
-
       <div className="box">
         <h1>1. 메기 입장하기</h1>
         <div className="explain">
@@ -39,6 +38,7 @@ function HelpModal({ onClose }: HelpModalProps) {
           <circle cx="139.5" cy="7.5" r="7.5" fill="#FFE8EF" />
         </svg>
       </div>
+      <div className="modal-background" />
     </div>
   );
 }

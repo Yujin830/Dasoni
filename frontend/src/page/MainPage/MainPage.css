@@ -3,3 +3,11 @@
   align-items: center;
   width: 100%;
 }
+
+/* HelpModal이 나타날 때 MainPage 내용이 어두워지는 새로운 CSS 규칙 */
+.modal-visible .main {
+  opacity: 0.3; /* 혹은 원하는 어두움 정도를 조절 */
+  background-color: rgba(0, 0, 0, 0.5); /* 여기서 불투명도 값을 조절 (0~1) */
+
+  pointer-events: none; /* HelpModal 아래에 있는 요소들에 대한 이벤트를 차단합니다. */
+}
