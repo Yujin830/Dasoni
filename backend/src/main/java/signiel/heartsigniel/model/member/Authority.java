@@ -1,15 +1,13 @@
-package signiel.heartsigniel.model.user;
+package signiel.heartsigniel.model.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -24,9 +22,9 @@ public class Authority {
     @JoinColumn(name = "member")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private Member user;
+    private Member member;
 
-    public void setUser(Member user) {
-        this.user = user;
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

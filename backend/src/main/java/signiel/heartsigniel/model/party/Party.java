@@ -2,17 +2,19 @@ package signiel.heartsigniel.model.party;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import signiel.heartsigniel.model.user.Member;
+import signiel.heartsigniel.model.member.Member;
 
 import javax.persistence.*;
 
 /**
  * 파티 생성 엔티티 클래스
  */
-@Entity
+@Entity(name="party")
 @NoArgsConstructor
 @Getter
+@Setter
 public class Party {
     @Id
     @Column(name = "party_id")

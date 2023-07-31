@@ -13,6 +13,8 @@
     "@types/react-dom": "^18.2.6",
     "axios": "^1.4.0",
     "firebase": "^10.1.0",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.1",
@@ -59,5 +61,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslit": "^6.0.0",
     "prettier": "^3.0.0"
-  }
+  },
+  "proxy": "http://localhost:8080/"
 }

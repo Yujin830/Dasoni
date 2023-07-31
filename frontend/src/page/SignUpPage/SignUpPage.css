@@ -7,7 +7,7 @@
   gap: 0.5rem;
 }
 
-.header {
+.signupbox .header {
   width: 81.5rem;
   height: 13.5625rem;
   flex-shrink: 0;
@@ -19,10 +19,11 @@
   align-items: center;
   position: relative;
 }
-.signal {
+.signup-signal {
   width: 9.8125rem;
   height: 1.9375rem;
   flex-shrink: 0;
+  align-items: center;
 }
 
 .signup-box {
@@ -70,14 +71,43 @@
   align-items: center;
 }
 
+.id-availability-message {
+  margin-left: 200px;
+  display: inline-block;
+  color: green;
+}
+
+.password-match-message {
+  margin-left: 200px;
+  display: inline-block;
+  color: green;
+}
 .signup-phone {
   display: flex;
   align-items: center;
 }
 
+.signup-birthdate {
+  display: flex;
+  align-items: center;
+}
+
+.birthdate-container {
+  display: inline-block;
+  margin-right: 10px; /* 원하는 간격을 지정합니다. */
+}
+
+.birth-calendar {
+  width: 100%;
+}
+
 .signup-gender {
   display: flex;
   align-items: center;
+}
+
+.signup-gender input {
+  display: flex;
 }
 
 .button-multicheck {
@@ -132,4 +162,11 @@
   background: #dedede;
   border-top-right-radius: 0.5rem; /* 추가 */
   border-bottom-right-radius: 0.5rem; /* 추가 */
+}
+
+/* styles.css (또는 원하는 CSS 파일) */
+.gender-man.selected,
+.gender-woman.selected {
+  background-color: #ec5e98; /* 원하는 선택된 버튼의 배경색을 설정합니다. */
+  color: #fff; /* 원하는 선택된 버튼의 텍스트 색상을 설정합니다. */
 }

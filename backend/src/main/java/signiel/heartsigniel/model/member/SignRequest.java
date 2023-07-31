@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.user;
+package signiel.heartsigniel.model.member;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +13,6 @@ public class SignRequest {
     private String loginId;
 
     private String password;
-
-    private String nickname;
 
     private String gender;
 
