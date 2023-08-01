@@ -3,6 +3,7 @@ package signiel.heartsigniel.model.matching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.alarm.AlarmService;
 import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.matching.dto.QuickFindResult;
 import signiel.heartsigniel.model.member.Member;
@@ -32,14 +33,16 @@ public class MatchingService {
 
     private final PartyRepository partyRepository;
     private final PartyMemberRepository partyMemberRepository;
+    private final AlarmService alarmService;
 
 
-    public MatchingService(MemberRepository memberRepository, MatchingRoomService matchingRoomService, PartyService partyService, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository){
+    public MatchingService(MemberRepository memberRepository, MatchingRoomService matchingRoomService, PartyService partyService, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, AlarmService alarmService){
         this.memberRepository = memberRepository;
         this.matchingRoomService = matchingRoomService;
         this.partyService = partyService;
         this.partyRepository = partyRepository;
         this.partyMemberRepository = partyMemberRepository;
+        this.alarmService = alarmService;
     }
 
     public Response quickFindMatch(Long memberId){
@@ -48,12 +51,11 @@ public class MatchingService {
         // 이미 참가중일 경우 거절메세지 추가
 
         Party party = partyService.findSuitableParties(memberEntity);
-        partyService.joinParty(party, memberEntity);
-        Long partyMemberId = findPartyMemberIdByRoomIdAndMemberId(party.getPartyId(), memberId);
+        PartyMember partyMember = partyService.joinParty(party, memberEntity);
 
         // 매칭 안됐을 경우 파티 멤버 번호 응답하기위한 DTO 객체 생성
         QuickFindResult quickFindResult = QuickFindResult.builder()
-                .partyMemberId(partyMemberId)
+                .partyMemberId(partyMember.getId())
                 .build();
 
         // 파티 인원이 세명일 경우의 로직
@@ -65,7 +67,10 @@ public class MatchingService {
             // 매칭 된 경우
             if (partyMatchResult.isPresent()){
                 Room matchingRoom = matchingRoomService.createRoom(partyMatchResult.get());
-                // 매칭된 파티의 유저들에게 화상채팅방 url 전송(웹소켓 필요)
+
+                // 매칭 완료 메시지 전송
+                alarmService.sendMatchCompleteMessage(matchingRoom);
+                // 매칭된 파티의 유저들에게 화상채팅방 url 전송
                 return Response.of(MatchingCode.MATCHING_SUCCESS, PrivateRoomInfo.of(matchingRoom));
             }
 
