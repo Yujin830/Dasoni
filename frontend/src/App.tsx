@@ -4,13 +4,11 @@ import LoginPage from './page/LoginPage/LoginPage';
 import SignUpPage from './page/SignUpPage/SignUpPage';
 import MyPage from './page/MyPage/MyPage';
 
-import HelpModal from './components/Modal/HelpModal/HelpModal';
-import ProfileModal from './components/Modal/ProfileModal/ProfileModal';
 import MainPage from './page/MainPage/MainPage';
 import WaitingRoomPage from './page/WatingRoomPage/WatingRoomPage';
 
-import OpenRoomModal from './components/Modal/OpenRoomModal/OpenRoomModal';
 import MeetingPage from './page/MeetingPage/MeetingPage';
+import RatingModal from './components/Modal/RatingModal/RatingModal';
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -29,7 +27,7 @@ function App() {
           <Route path="/meeting/:roomId" element={<MeetingPage />}></Route>
           <Route path="/signup" element={<SignUpPage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
-          <Route path="/test" element={<OpenRoomModal onClose={handleCloseModal} />} />{' '}
+          <Route path="/test" element={<RatingModal onClose={handleCloseModal} />} />{' '}
         </Routes>
       </BrowserRouter>
     </div>
@@ -37,3 +35,4 @@ function App() {
 }
 
 export default App;
+3;

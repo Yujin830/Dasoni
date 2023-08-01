@@ -7,7 +7,7 @@ import logo from '../../assets/image/logo.png';
 import leftSignal from '../../assets/image/left_signal.png';
 
 import { useAppDispatch } from '../../app/hooks';
-import { setUserAsync } from '../../app/slices/user';
+import { signupAsync } from '../../app/slices/user';
 
 const styles = {
   button: {
@@ -61,7 +61,7 @@ const styles = {
 };
 
 function SignupPage() {
-  const [id, setId] = useState('');
+  const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -71,7 +71,7 @@ function SignupPage() {
   const [passwordMatchMessage, setPasswordMatchMessage] = useState('');
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setId(event.target.value);
+    setloginId(event.target.value);
     setIsIdAvailable(false); // 아이디 입력 시 중복 체크 결과를 초기화
   };
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,22 +102,25 @@ function SignupPage() {
 
   const dispatch = useAppDispatch();
 
-  const Signup = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const Signup = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     const data = {
-      id: id,
+      loginId: loginId,
       password: password,
       confirmPassword: confirmPassword,
       birth: birthdate,
       gender: gender,
-      phone: phone,
+      phoneNumber: phone,
     };
-
-    // 회원가입을 위한 비동기 액션을 dispatch하도록 액션 함수 작성
-    dispatch(setUserAsync(data));
-    console.log('signup');
     console.log(data);
+    try {
+      const response = await dispatch(signupAsync(data)); // 회원가입 요청, 서버 응답 처리를 기다립니다.
+      console.log('회원가입 성공!');
+      console.log('회원 정보:', response.payload); // 회원가입 후 서버로부터 받은 응답 데이터를 출력합니다.
+    } catch (error) {
+      console.log('회원가입 실패:', error);
+    }
   };
 
   //중복체크 버튼 기능
@@ -148,7 +151,7 @@ function SignupPage() {
             <Input
               style={styles.input}
               type="text"
-              value={id}
+              value={loginId}
               handleChange={handleChangeId}
               placeholer="사용하실 아이디를 입력해주세요."
             />
@@ -214,14 +217,14 @@ function SignupPage() {
             <label htmlFor="label gender">성별</label>
             <div className="gender-container">
               <button
-                className={gender === '남' ? 'gender-man selected' : 'gender-man'}
-                onClick={() => handleGenderSelection('남')}
+                className={gender === 'male' ? 'gender-man selected' : 'gender-man'}
+                onClick={() => handleGenderSelection('male')}
               >
                 남
               </button>
               <button
-                className={gender === '여' ? 'gender-woman selected' : 'gender-woman'}
-                onClick={() => handleGenderSelection('여')}
+                className={gender === 'female' ? 'gender-woman selected' : 'gender-woman'}
+                onClick={() => handleGenderSelection('female')}
               >
                 여
               </button>

@@ -6,10 +6,11 @@ import setAuthorizationToken from '../../utils/setAuthorizationToken';
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export type User = {
   memberId?: number;
-  id?: string;
+  loginId?: string;
   password?: string;
   nickname?: string;
   birth?: string;
+  phoneNumber?: string;
   job?: string;
   sido?: number;
   gugun?: number;
@@ -22,10 +23,11 @@ export type User = {
 // 초기상태를 선언
 const initialState: User = {
   memberId: 0,
-  id: '',
+  loginId: '',
   password: '',
   nickname: '',
   birth: '',
+  phoneNumber: '',
   job: '',
   sido: 0,
   gugun: 0,
@@ -38,22 +40,66 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(setUserAsync.fulfilled, (state, action) => {
-        if (action.type === 'user/SET_USER_LOGIN') {
-          // 로그인 응답 처리 코드
-          const { nickname } = action.payload; // 예시로 받아온 데이터 중 닉네임 정보를 가져옴
-          return { ...state, nickname };
-        } else if (action.type === 'user/SET_USER_SIGNUP') {
-          // 회원가입 응답 처리 코드
-          // 회원가입 후, 필요한 정보를 state에 반영
-          return state;
-        }
-        return state; // 기존 상태를 그대로 반환
+      .addCase(loginAsync.fulfilled, (state, action) => {
+        // 로그인 응답 처리 코드
+        const { nickname } = action.payload; // 예시로 받아온 데이터 중 닉네임 정보를 가져옴
+        return { ...state, nickname };
+      })
+      .addCase(signupAsync.fulfilled, (state, action) => {
+        // 회원가입 응답 처리 코드(회원가입 후, 필요한 정보를 state에 반영)
+        const { id } = action.payload;
+        return { ...state, id };
       })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
         return { ...state, ...action.payload };
       });
   },
+});
+
+// 회원가입시 필요한 함수
+export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) => {
+  // 서버로 전달할 회원가입 데이터
+  const requestData = {
+    loginId: user.loginId,
+    password: user.password,
+    nickname: user.nickname,
+    gender: user.gender,
+    birth: user.birth,
+    phoneNumber: user.phoneNumber,
+    // 기타 회원가입에 필요한 데이터들을 추가로 넣어주세요
+  };
+
+  // 서버에 POST 요청 보내기
+  const response = await axios.post('register/', requestData);
+
+  // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
+  const data = response.data;
+  console.log('from 서버');
+  console.log(data);
+
+  // 서버에서 받은 토큰을 localstorage에 저장
+  localStorage.setItem('jwtToken', data.token);
+  // axios 호출시마다 토큰을 header에 포함하도록 설정
+  setAuthorizationToken(data.token);
+
+  // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
+  return {
+    memberId: data.memberId,
+    id: data.loginId,
+    nickname: data.nickname,
+    gender: data.gender,
+    birth: data.birth,
+    phoneNumber: data.phoneNumber,
+    rank: data.rank,
+    meetingCount: data.meetingCount,
+    profileImageSrc: data.profileImageSrc,
+    job: data.job,
+    siDo: data.siDo,
+    guGun: data.guGun,
+    roles: data.roles,
+    remainLife: data.remainLife,
+    black: data.black,
+  };
 });
 
 // 유저 정보 업데이트
@@ -67,13 +113,11 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
 });
 
 // 로그인 시 필요한 함수
-export const setUserAsync = createAsyncThunk('SET_USER', async (user: User) => {
-  // 스프링 부트 백엔드 서버의 로그인 API 엔드포인트 URL
+export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
   // const loginApiUrl = 'http://localhost:8080/login';
 
-  // 서버로 전달할 데이터 (여기서는 id와 password만 보내는 예시)
   const requestData = {
-    loginId: user.id,
+    loginId: user.loginId,
     password: user.password,
   };
 
@@ -92,10 +136,23 @@ export const setUserAsync = createAsyncThunk('SET_USER', async (user: User) => {
   setAuthorizationToken(data.token);
 
   // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
-  // 예시로 받아온 데이터 중 닉네임 정보를 업데이트하도록 함
   return {
-    ...user,
+    memberId: data.memberId,
+    id: data.loginId,
     nickname: data.nickname,
+    gender: data.gender,
+    birth: data.birth,
+    phoneNumber: data.phoneNumber,
+    rank: data.rank,
+    meetingCount: data.meetingCount,
+    profileImageSrc: data.profileImageSrc,
+    job: data.job,
+    siDo: data.siDo,
+    guGun: data.guGun,
+    roles: data.roles,
+    remainLife: data.remainLife,
+    // token: data.token,
+    black: data.black,
   };
 });
 
