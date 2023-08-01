@@ -4,7 +4,7 @@ import './ProfileModal.css';
 import Input from '../../Input/BasicInput/BasicInput';
 import Button from '../../Button/FilledButton';
 import { useAppDispatch } from '../../../app/hooks';
-import { setUserAsync } from '../../../app/slices/user';
+import { modifyUserAsync } from '../../../app/slices/user';
 const styles = {
   button: {
     width: '10rem',
@@ -62,7 +62,7 @@ function ProfileModal() {
       nickname: nickname,
     };
 
-    dispatch(setUserAsync(data));
+    dispatch(modifyUserAsync(data));
     console.log('addprofile');
     console.log(data);
   };

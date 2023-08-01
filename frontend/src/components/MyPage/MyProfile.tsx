@@ -3,7 +3,7 @@ import { useAppSelector } from '../../app/hooks';
 import RecentMatchAvartar from '../../components/Avarta/RecentMatchAvartar/RecentMatchAvartar';
 
 function MyProfile({ setType }: any) {
-  const { id, nickname, job, birth, sido, gugun } = useAppSelector((state) => state.user);
+  const { loginId, nickname, job, birth, sido, gugun } = useAppSelector((state) => state.user);
 
   // TODO : 최근 매칭된 다소니 리스트 조회 recentUserList로 state 변경
   const recentUserList = useState([]);
@@ -38,7 +38,7 @@ function MyProfile({ setType }: any) {
     <div className="content">
       <p id="user">
         <span id="name">
-          {nickname}({id})
+          {nickname}({loginId})
         </span>
         님의 개인정보
       </p>
