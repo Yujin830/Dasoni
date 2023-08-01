@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { RootState } from '../../app/store';
+import { useSelector } from 'react-redux';
 import Button from '../../components/Button/FilledButton';
 import Input from '../../components/Input/NoLabelInput/NoLabelInput';
 import './LoginPage.css';
@@ -7,7 +9,7 @@ import main from '../../assets/image/main_img.jpg';
 import leftSignal from '../../assets/image/left_signal.png';
 import rightSignal from '../../assets/image/right_signal.png';
 import { useAppDispatch } from '../../app/hooks';
-import { setUserAsync, getUserInfo } from '../../app/slices/user';
+import { loginAsync, getUserInfo } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 
 const styles = {
@@ -38,11 +40,12 @@ const styles = {
 };
 
 function LoginPage() {
-  const [id, setId] = useState('');
+  const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
+  const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setId(event.target.value);
+    setloginId(event.target.value);
   };
 
   const handleChangeIdPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,15 +53,21 @@ function LoginPage() {
   };
 
   const dispatch = useAppDispatch();
-  const Login = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
     const data = {
-      id: id,
+      loginId: loginId,
       password: password,
     };
     console.log('login');
-    dispatch(setUserAsync(data));
-    console.log(data);
+    try {
+      await dispatch(loginAsync(data));
+      console.log('로그인 성공!');
+      console.log('로그인된 사용자 닉네임:', nickname);
+    } catch (error) {
+      console.log('로그인 실패:', error);
+    }
   };
 
   return (
@@ -81,7 +90,7 @@ function LoginPage() {
             <Input
               style={styles.input}
               type="text"
-              value={id}
+              value={loginId}
               handleChange={handleChangeId}
               placeholer="아이디를 입력해주세요."
             />
@@ -92,7 +101,7 @@ function LoginPage() {
               handleChange={handleChangeIdPassword}
               placeholer="비밀번호를 입력해주세요."
             />
-            <Button style={styles.button} content="로그인" handleClick={Login} />
+            <Button style={styles.button} content="로그인" handleClick={handleLogin} />
           </form>
           <p>
             아직 회원이 아니신가요?{' '}

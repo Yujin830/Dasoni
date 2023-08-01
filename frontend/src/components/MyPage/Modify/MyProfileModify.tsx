@@ -20,7 +20,7 @@ const input = {
 };
 
 function MyProfileModify({ setType }: any) {
-  const { id, nickname, job, memberId } = useAppSelector((state) => state.user);
+  const { loginId, nickname, job, memberId } = useAppSelector((state) => state.user);
 
   const cancleModify = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ function MyProfileModify({ setType }: any) {
     <div className="content">
       <p id="user">
         <span id="name">
-          {nickname}({id})
+          {nickname}({loginId})
         </span>
         님의 개인정보
       </p>
