@@ -20,18 +20,27 @@ public class PartyMember {
         private Long id;
 
         @ManyToOne
+        @JoinColumn(name = "party_id")
         private Party party;
 
         @ManyToOne
+        @JoinColumn(name = "member_id")
         private Member member;
 
+        @Column(name = "is_party_leader")
         private boolean isPartyLeader;
+
+        @Column(name = "is_special_user")
         private boolean isSpecialUser;
 
-        @Builder PartyMember(boolean isPartyLeader, boolean isSpecialUser, Member member){
+        @Column(name = "is_room_leader")
+        private boolean isRoomLeader;
+
+        @Builder PartyMember(boolean isPartyLeader, boolean isSpecialUser, boolean isRoomLeader, Member member){
                 this.isPartyLeader = isPartyLeader;
                 this.member = member;
                 this.isSpecialUser = isSpecialUser;
+                this.isRoomLeader = isRoomLeader;
         }
 
 }
