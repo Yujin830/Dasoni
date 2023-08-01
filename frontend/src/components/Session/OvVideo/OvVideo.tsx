@@ -1,24 +1,20 @@
-import React, { useRef, useEffect } from 'react';
-import { StreamManager } from 'openvidu-browser';
+import React from 'react';
 import './OvVideo.css';
 
-type OvVideoProps = {
-  streamManager: StreamManager;
-};
+interface OvVideoProps {
+  nickname: string;
+  // speaking: boolean;
+  // micStatus: boolean;
+  // videoStatus: boolean;
+  children: React.ReactNode;
+}
 
-function OvVideo({ streamManager }: OvVideoProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (streamManager && videoRef.current) {
-      streamManager.addVideoElement(videoRef.current);
-    }
-  }, [streamManager]);
-
+function OvVideo({ nickname, children }: OvVideoProps) {
   return (
-    <video className="ov-video" autoPlay={true} ref={videoRef}>
-      <track kind="captions"></track>
-    </video>
+    <div className="video-box">
+      {children}
+      <p className="video-name">{nickname}</p>
+    </div>
   );
 }
 
