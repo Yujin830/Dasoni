@@ -24,12 +24,12 @@ public class RoomController {
 
     private final PrivateRoomService privateRoomService;
     private final MatchingRoomService matchingRoomService;
-    private final ChatService chatService;
 
-    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService, ChatService chatService){
+
+    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService){
         this.privateRoomService = privateRoomService;
         this.matchingRoomService = matchingRoomService;
-        this.chatService = chatService;
+
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
