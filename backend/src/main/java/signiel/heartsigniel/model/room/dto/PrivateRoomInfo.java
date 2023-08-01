@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class PrivateRoomInfo {
 
     private Long roomId;
+    private Long roomLeaderId;
     private String title;
     private String roomType;
     private String videoUrl;
@@ -37,6 +38,7 @@ public class PrivateRoomInfo {
         this.femaleParty = new PartyInfo(roomEntity.getFemaleParty());
         this.maleParty = new PartyInfo(roomEntity.getMaleParty());
     }
+
 
     @Builder
     public static PrivateRoomInfo of(Room roomEntity) {
