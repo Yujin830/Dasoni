@@ -68,4 +68,9 @@ public class Party {
         System.out.println("Party.java / 'addManager' activated");
     }
 
+    public void removePartyMember(PartyMember partyMember) {
+        this.members.remove(partyMember);
+        partyMember.setParty(null);
+    }
+
 }

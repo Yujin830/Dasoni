@@ -19,13 +19,13 @@ public class PartyMemberService {
     public PartyMember createPartyMember(Member member, boolean isPartyLeader){
         PartyMember partyMember = PartyMember.builder()
                 .isPartyLeader(isPartyLeader)
+                .isRoomLeader(false)
                 .isSpecialUser(false)
                 .member(member)
                 .build();
 
         return partyMemberRepository.save(partyMember);
     }
-
 
     public void deletePartyMember(PartyMember partyMember){
         partyMemberRepository.delete(partyMember);
@@ -47,4 +47,10 @@ public class PartyMemberService {
         partyMember.setPartyLeader(true);
         partyMemberRepository.save(partyMember);
     }
+
+    public void assignRoomLeader(PartyMember partyMember){
+        partyMember.setRoomLeader(true);
+        partyMemberRepository.save(partyMember);
+    }
+
 }

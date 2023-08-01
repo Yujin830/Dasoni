@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.party.dto.PartyMatchResult;
+import signiel.heartsigniel.model.party.exception.FullPartyException;
 import signiel.heartsigniel.model.party.exception.NoPartyLeaderException;
 import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
 import signiel.heartsigniel.model.partymember.PartyMember;
@@ -42,21 +43,25 @@ public class PartyService {
         return party;
     }
 
-    public void joinParty(Party party, Member member){
+    public PartyMember joinParty(Party party, Member member){
 
         if (party.getMembers() == null) {
             party.setMembers(new ArrayList<>());
+        }
+        if (party.getMembers().size() == 3){
+            throw new FullPartyException("인원이 가득 찼습니다.");
         }
         boolean isPartyLeader = party.getMembers().isEmpty();
         PartyMember partyMember = partyMemberService.createPartyMember(member, isPartyLeader);
 
         party.getMembers().add(partyMember);
         partyMember.setParty(party);
-        if (isPartyFull(party)){
+        if (isPartyFull(party) | getPartyType(party,  "match")){
             party.setMatchingTime();
         }
 
         CalculatePartyRating(party);
+        return partyMember;
     }
 
     public void quitParty(PartyMember partyMember){
@@ -67,12 +72,14 @@ public class PartyService {
             // 파티원이 한명인 경우
             if(targetPartyMemberList.size() == 1){
                 partyMemberService.deletePartyMember(partyMember);
+                partyEntity.removePartyMember(partyMember);
                 deleteParty(partyEntity);
             }
             // 파티원이 두명 이상인 경우
             else if(targetPartyMemberList.size() >= 2){
                 partyMemberService.deletePartyMember(partyMember);
-                PartyMember newPartyLeader = targetPartyMemberList.get(1); // 0번쨰는 탈퇴한 멤버일 것이므로 1번째 멤버를 새로운 파티장으로 지정
+                partyEntity.removePartyMember(partyMember);
+                PartyMember newPartyLeader = targetPartyMemberList.get(0); // 0번쨰는 탈퇴한 멤버일 것이므로 1번째 멤버를 새로운 파티장으로 지정
                 partyMemberService.delegatePartyLeader(newPartyLeader);
                 CalculatePartyRating(partyEntity);// 새로운 파티장 지정
                 if(targetPartyMemberList.size() == 3){
@@ -84,6 +91,7 @@ public class PartyService {
         // 파티장이 아닌 경우
         else {
             partyMemberService.deletePartyMember(partyMember);
+            partyEntity.removePartyMember(partyMember);
             if(targetPartyMemberList.size() == 3){
                 partyEntity.setMatchingTime(null);
                 CalculatePartyRating(partyEntity);
@@ -113,12 +121,12 @@ public class PartyService {
                 .orElseThrow(() -> new NoPartyMemberException("파티멤버가 존재하지 않습니다."));
     }
 
-    public Member findPartyLeaderByParty(Party targetParty){
+    public PartyMember findPartyLeaderByParty(Party targetParty){
         List<PartyMember> partyMembers = targetParty.getMembers();
 
         for (PartyMember partyMember : partyMembers) {
             if(partyMember.isPartyLeader()){
-                return partyMember.getMember();
+                return partyMember;
             }
         }
 
@@ -158,4 +166,12 @@ public class PartyService {
     public void deleteParty(Party party){
         partyRepository.delete(party);
     }
+
+    public boolean getPartyType(Party party, String partyType){
+        if (party.getPartyType() == partyType){
+            return true;
+        }
+        return false;
+    }
+
 }
