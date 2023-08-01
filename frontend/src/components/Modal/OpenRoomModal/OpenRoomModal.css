@@ -1,4 +1,4 @@
-.modal {
+.openroom-modal {
   position: fixed;
   top: 50%; /* 화면 세로 중앙에 위치 */
   left: 50%; /* 화면 가로 중앙에 위치 */
@@ -14,7 +14,7 @@
   flex-direction: column;
 }
 
-.modal .header {
+.openroom-modal .header {
   width: 100%; /* 헤더의 너비를 100%로 설정하여 부모 요소에 맞춤 */
   height: 5.4375rem;
   flex-shrink: 0;
@@ -36,7 +36,16 @@
   letter-spacing: 0.00625rem;
 }
 
-.box-content {
+.openroom-modal .box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+}
+
+.openroom-modal .box-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -56,16 +65,36 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 20px;
+  justify-content: space-evenly;
+  margin-top: 30px;
+}
+
+.megi-allowed label,
+.megi-banned label {
+  display: flex;
+  flex-direction: row;
+  width: 15rem;
 }
 
 /* 새로운 체크박스 스타일 */
 .megi input[type='checkbox'] {
   position: relative;
   opacity: 0;
-  /* visibility: hidden; */
+  visibility: hidden;
 }
 
-.megi label {
-  cursor: pointer;
+.rank-content {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+.select-rank {
+  width: 10rem;
+  height: 2.375rem;
+  margin-right: 20px;
+  margin-left: 30px;
+}
+
+.openroom-button {
+  margin-bottom: 30px;
 }
