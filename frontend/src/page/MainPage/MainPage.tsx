@@ -288,6 +288,7 @@ function MainPage() {
   const openRoomModalVisible = useSelector(
     (state: RootState) => state.waitingRoom.openRoomModalVisible,
   );
+
   // Toggle HelpModal visibility
   const handleHelpModalToggle = () => {
     dispatch(setHelpModalVisible(!helpModalVisible));
@@ -359,11 +360,11 @@ function MainPage() {
   // 방 만들기 모달 open
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const createRoom = async () => {
+  const createRoom = () => {
     // TODO : 클릭 시 모달 띄우기
-    setOpenRoomModalVisible(true); // Set modalVisible to true to display the modal
+    // setOpenRoomModalVisible(true);
+    console.log('방 만들기');
 
-    // console.log('방 만들기');
     // const fakeData = {
     //   memberId: 1,
     //   title: '함께 놀아요',
@@ -384,7 +385,6 @@ function MainPage() {
     //   setOpenRoomModalVisible(false); // Set modalVisible to false to close the modal
     //   // 대기방으로 이동
     //   navigate('/waiting-room');
-    // }
   };
 
   // 빠른 매칭 모달 open
@@ -541,7 +541,7 @@ function MainPage() {
             <FilledButton
               content="방 만들기"
               style={styles.createRoomBtn}
-              handleClick={createRoom}
+              handleClick={handleOpenRoomModalToggle}
             />
             <FilledButton content="빠른 매칭" style={styles.fastMatchBtn} handleClick={matchFast} />
           </div>
@@ -563,9 +563,10 @@ function MainPage() {
           </div>
         </div>
       </main>
-      {/* HelpModal rendering */}
+      {/* HelpModal 컴포넌트를 렌더링합니다. */}
       {helpModalVisible && <HelpModal onClose={handleHelpModalToggle} />}
-      {/* OpenRoomModal rendering */}
+
+      {/* OpenRoomModal 컴포넌트를 렌더링합니다. */}
       {openRoomModalVisible && <OpenRoomModal onClose={handleOpenRoomModalToggle} />}
     </div>
   );

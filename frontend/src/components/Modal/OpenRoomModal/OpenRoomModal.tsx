@@ -1,10 +1,19 @@
 import React, { useRef, useState } from 'react';
+import Select from 'react-select';
 // import '../Modal.css';
 import './OpenRoomModal.css';
 import NoLabelInput from '../../Input/NoLabelInput/NoLabelInput';
 import Button from '../../Button/FilledButton';
-import { useAppDispatch } from '../../../app/hooks';
-// import { setUserAsync } from '../../../app/modules/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import axios from 'axios';
+import {
+  setMaster,
+  setMegiAcceptable,
+  setRatingLimit,
+  setRoomTitle,
+  setWaitingRoomId,
+} from '../../../app/slices/waitingSlice';
 
 interface OpenRoomModalProps {
   onClose: () => void;
@@ -43,22 +52,23 @@ const styles = {
 };
 
 function OpenRoomModal({ onClose }: OpenRoomModalProps) {
-  const [roomTitle, setRoomTitle] = useState('');
-  const [megiAcceptable, setMegiAcceptable] = useState(false);
-  const [ratingLimit, setRatingLimit] = useState<string>('');
+  const [roomTitle, setOpenRoomTitle] = useState('');
+  const [megiAcceptable, setOpenMegiAcceptable] = useState(false);
+  const [ratingLimit, setOpenRatingLimit] = useState<string>('');
 
   const handleChangeRoomTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setRoomTitle(event.target.value);
+    setOpenRoomTitle(event.target.value);
 
   const handleChangeMegiAcceptable = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setMegiAcceptable(event.target.checked);
+    setOpenMegiAcceptable(event.target.checked);
 
   const handleChangeRatingLimit = (event: React.ChangeEvent<HTMLSelectElement>) =>
-    setRatingLimit(event.target.value);
+    setOpenRatingLimit(event.target.value);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const OpenRoom = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const OpenRoom = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     const data = {
@@ -69,8 +79,22 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     // 백엔드로 data 디스패치 하는 API 호출
 
     console.log(data);
-  };
+    const res = await axios.post('/rooms', data);
+    console.log(res);
+    if (res.data.status.code === 5000) {
+      // 리덕스에 생성한 대기방 정보 저장
+      dispatch(setWaitingRoomId(res.data.content.createdRoomId));
+      dispatch(setRoomTitle(data.roomTitle));
+      dispatch(setMaster(false));
+      dispatch(setRatingLimit(data.ratingLimit));
+      dispatch(setMegiAcceptable(data.megiAcceptable));
 
+      // TODO : 모달 닫기
+      onClose();
+      // 대기방으로 이동
+      navigate('/waiting-room');
+    }
+  };
   return (
     <div className="openroom-modal">
       <div className="header">
@@ -90,12 +114,14 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
           />
           <h1>메기 설정</h1>
           <div className="megi">
-            <div>
+            <div className="megi-allowed">
               <label
                 htmlFor="megiAcceptableCheckbox"
                 style={{ display: 'flex', alignItems: 'center' }}
               >
-                <span style={{ marginLeft: '8px' }}>메기 입장 가능</span>
+                <div className="allowed" style={{ marginRight: '8px' }}>
+                  메기 입장 가능
+                </div>
                 {megiAcceptable ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -135,12 +161,14 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
                 onChange={handleChangeMegiAcceptable}
               />
             </div>
-            <div>
+            <div className="megi-banned">
               <label
                 htmlFor="megiUnacceptableCheckbox"
                 style={{ display: 'flex', alignItems: 'center' }}
               >
-                <span style={{ marginLeft: '8px' }}>메기 입장 불가</span>
+                <div className="banned" style={{ marginRight: '8px' }}>
+                  메기 입장 불가
+                </div>
                 {!megiAcceptable ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -177,22 +205,24 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
                 type="checkbox"
                 id="megiUnacceptableCheckbox"
                 checked={!megiAcceptable}
-                onChange={() => setMegiAcceptable(!megiAcceptable)}
+                onChange={() => setOpenMegiAcceptable(!megiAcceptable)}
               />
             </div>
           </div>
           <h1>랭크 제한 설정</h1>
-          <select value={ratingLimit} onChange={handleChangeRatingLimit}>
-            <option value="">랭크를 선택하세요.</option>
-            <option value="노랑">하얀</option>
-            <option value="노랑">노랑</option>
-            <option value="초록">초록</option>
-            <option value="보라">보라</option>
-            <option value="파랑">파랑</option>
-            <option value="빨강">빨강</option>
-            <option value="무지개">무지개</option>
-          </select>
-          {ratingLimit && <p>{`해당 랭크 이상만 입장 가능: ${ratingLimit}`}</p>}
+          <div className="rank-content">
+            <select className="select-rank" value={ratingLimit} onChange={handleChangeRatingLimit}>
+              <option value="">랭크를 선택하세요.</option>
+              <option value="노랑">하얀</option>
+              <option value="노랑">노랑</option>
+              <option value="초록">초록</option>
+              <option value="보라">보라</option>
+              <option value="파랑">파랑</option>
+              <option value="빨강">빨강</option>
+              <option value="무지개">무지개</option>
+            </select>
+            {ratingLimit && <p>{`${ratingLimit}하트 이상만 만나기`}</p>}
+          </div>
           <div className="modal-background" />
         </div>
         <div className="openroom-button">

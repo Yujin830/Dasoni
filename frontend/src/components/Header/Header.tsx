@@ -6,6 +6,7 @@ import HelpModal from '../Modal/HelpModal/HelpModal';
 
 interface HeaderProps {
   onModalToggle: () => void;
+  // onOpenRoomModalToggle: () => void;
 }
 
 function Header({ onModalToggle }: HeaderProps) {
