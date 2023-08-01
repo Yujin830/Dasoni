@@ -88,7 +88,7 @@ function WaitingRoomPage() {
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
     setTimeout(() => {
-      navigate('/meeting');
+      navigate(`/meeting/${roomId}`);
     }, 3000);
   };
 
