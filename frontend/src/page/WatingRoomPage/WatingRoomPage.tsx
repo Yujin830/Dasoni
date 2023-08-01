@@ -8,6 +8,8 @@ import { useNavigate, useParams } from 'react-router';
 import './WaitingRoomPage.css';
 import axios from 'axios';
 import { useWebSocket } from '../../hooks/useWebSocket';
+import { useAppSelector } from '../../app/hooks';
+import convertScoreToName from '../../utils/convertScoreToName';
 
 const watingMember: WaitingMember[] = [
   {
@@ -85,6 +87,7 @@ function WaitingRoomPage() {
   const [memberList, setMemberList] = useState<WaitingMember[]>(watingMember);
   const navigate = useNavigate();
   const { roomId } = useParams();
+  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
 
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
   useWebSocket({
@@ -139,11 +142,14 @@ function WaitingRoomPage() {
         <div id="waiting-room-top">
           <div className="title">
             <img src={titleLogo} alt="하트 이미지" />
-            재밌게 놀아요
+            {waitingRoomInfo.roomTitle}
           </div>
           <div className="info">
-            <span>메기 : No</span>
-            <span>Rank : Yellow</span>
+            <span>메기 : {waitingRoomInfo.megiAcceptable ? 'Yes' : 'No'}</span>
+            <span>
+              Rank :
+              {convertScoreToName(waitingRoomInfo.ratingLimit ? waitingRoomInfo.ratingLimit : 0)}
+            </span>
           </div>
         </div>
         <div id="waiting-room-content">
