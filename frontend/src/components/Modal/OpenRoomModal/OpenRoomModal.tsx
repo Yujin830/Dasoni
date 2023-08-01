@@ -5,7 +5,7 @@ import './OpenRoomModal.css';
 import NoLabelInput from '../../Input/NoLabelInput/NoLabelInput';
 import Button from '../../Button/FilledButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import axios from 'axios';
 import {
   setMaster,
@@ -14,6 +14,7 @@ import {
   setRoomTitle,
   setWaitingRoomId,
 } from '../../../app/slices/waitingSlice';
+import convertScoreToName from '../../../utils/convertScoreToName';
 
 interface OpenRoomModalProps {
   onClose: () => void;
@@ -54,7 +55,8 @@ const styles = {
 function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   const [roomTitle, setOpenRoomTitle] = useState('');
   const [megiAcceptable, setOpenMegiAcceptable] = useState(false);
-  const [ratingLimit, setOpenRatingLimit] = useState<string>('');
+  const [ratingLimit, setOpenRatingLimit] = useState<number>(0);
+  const { roomId } = useParams();
 
   const handleChangeRoomTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
     setOpenRoomTitle(event.target.value);
@@ -63,7 +65,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     setOpenMegiAcceptable(event.target.checked);
 
   const handleChangeRatingLimit = (event: React.ChangeEvent<HTMLSelectElement>) =>
-    setOpenRatingLimit(event.target.value);
+    setOpenRatingLimit(Number(event.target.value));
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,7 +74,8 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     event.preventDefault();
 
     const data = {
-      roomTitle: roomTitle,
+      memberId: 1, // TODO : 로그인한 memberId를 store에서 가져와서 변경
+      title: roomTitle,
       megiAcceptable: megiAcceptable,
       ratingLimit: ratingLimit,
     };
@@ -81,10 +84,10 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     console.log(data);
     const res = await axios.post('/rooms', data);
     console.log(res);
-    if (res.data.status.code === 5000) {
+    if (res.status === 200) {
       // 리덕스에 생성한 대기방 정보 저장
       dispatch(setWaitingRoomId(res.data.content.createdRoomId));
-      dispatch(setRoomTitle(data.roomTitle));
+      dispatch(setRoomTitle(data.title));
       dispatch(setMaster(false));
       dispatch(setRatingLimit(data.ratingLimit));
       dispatch(setMegiAcceptable(data.megiAcceptable));
@@ -92,7 +95,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       // TODO : 모달 닫기
       onClose();
       // 대기방으로 이동
-      navigate('/waiting-room');
+      navigate(`/waiting-room/${res.data.content.createdRoomId}`);
     }
   };
   return (
@@ -213,15 +216,15 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
           <div className="rank-content">
             <select className="select-rank" value={ratingLimit} onChange={handleChangeRatingLimit}>
               <option value="">랭크를 선택하세요.</option>
-              <option value="노랑">하얀</option>
-              <option value="노랑">노랑</option>
-              <option value="초록">초록</option>
-              <option value="보라">보라</option>
-              <option value="파랑">파랑</option>
-              <option value="빨강">빨강</option>
-              <option value="무지개">무지개</option>
+              <option value="0">하얀</option>
+              <option value="300">노랑</option>
+              <option value="500">초록</option>
+              <option value="1000">보라</option>
+              <option value="1500">파랑</option>
+              <option value="2000">빨강</option>
+              <option value="2500">무지개</option>
             </select>
-            {ratingLimit && <p>{`${ratingLimit}하트 이상만 만나기`}</p>}
+            <p>{`${convertScoreToName(ratingLimit)}하트 이상만 만나기`}</p>
           </div>
           <div className="modal-background" />
         </div>
