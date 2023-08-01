@@ -2,28 +2,23 @@ import React from 'react';
 import OvVideo from '../OvVideo/OvVideo';
 import { StreamManager } from 'openvidu-browser';
 import './UserVideo.css';
+import { useStream } from '../../../hooks/useStrem';
 
-type UserVideoProps = {
+interface UserVideoProps {
   streamManager: StreamManager;
-};
+  nickname: string;
+}
 
 // 유저의 화상 화면을 보여주는 컴포넌트
-function UserVideo({ streamManager }: UserVideoProps) {
-  const getNicknameTag = () => {
-    return JSON.parse(streamManager.stream.connection.data).clientData;
-  };
+function UserVideo({ streamManager, nickname }: UserVideoProps) {
+  const { videoRef } = useStream(streamManager);
 
   return (
-    <div className="user-video">
-      {streamManager !== undefined ? (
-        <div>
-          <OvVideo streamManager={streamManager} />
-          <div>
-            <p>{getNicknameTag()}</p>
-          </div>
-        </div>
-      ) : null}
-    </div>
+    <OvVideo nickname={nickname}>
+      <video className="stream-video" ref={videoRef}>
+        <track kind="captions"></track>
+      </video>
+    </OvVideo>
   );
 }
 

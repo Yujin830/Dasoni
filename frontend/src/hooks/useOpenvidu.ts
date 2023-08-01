@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { OpenVidu } from 'openvidu-browser';
+import { Device, OpenVidu } from 'openvidu-browser';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // 서버 주소를 환경에 따라 설정
@@ -34,11 +34,12 @@ export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
     });
 
     // 스트림 삭제 이벤트 구독
-    // 스트림 삭제시 subscriber 삭제
+    // 스트림 삭제시 subscriber 삭제 >> 세션 참여자가 세션에 미디어 게시 멈출 때 발생
     session.on('streamDestroyed', (event) => {
       deleteSubscriber(event.stream.streamManager);
     });
 
+    // 에러 발생시 이벤트 발생
     session.on('exception', (exception) => {
       console.warn(exception);
     });
@@ -50,22 +51,25 @@ export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
           console.log(token);
           // 획득한 토큰으로 세션에 연결
           await session.connect(token, JSON.stringify({ memberId }));
-          await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-          const devices = await openVidu.getDevices();
-          const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+          // await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          const devices: Device[] = await openVidu.getDevices(); // 사용 가능한 미디어 입력 장치 대한 정보 가져오기
+          const videoDevices = devices.filter((device) => device.kind === 'videoinput'); // device.kind : device 종류 videoinput | audioinput
+
+          // 새로운 publisher 리턴
           const publisher = openVidu.initPublisher('', {
-            audioSource: undefined,
+            audioSource: undefined, // 소리 장치를 어떤 장치로 할지 설정 >> default :: 기본 마이크
             videoSource: videoDevices[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            resolution: '640x480',
-            frameRate: 30,
-            insertMode: 'APPEND',
-            mirror: true,
+            publishAudio: true, // 세션에 처음 게시할 때 오디오 음소거 / 음소거 해제 설정
+            publishVideo: true, // 세션에 처음 게시할 때 비디오 켜기 / 끄기 설정
+            resolution: '640x480', // 비디오 해상도 :: "320x240(low)", "640x480(medium)", "1280x720(high)"
+            frameRate: 30, // 초당 프레임 수 설정
+            insertMode: 'APPEND', // DOM에 publisher video element 삽입하는 방법
+            mirror: true, // 거울모드 설정
           });
 
+          console.log('publisher ' + publisher);
           setPublisher(publisher);
-          session.publish(publisher);
+          session.publish(publisher); // 세션에 publisher 객체 게시, 세션의 streamCreated 이벤트 발생
         } catch (err: any) {
           console.log('There was an error connecting to the session:', err.code, err.message);
         }
