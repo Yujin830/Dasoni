@@ -10,6 +10,7 @@ import MainPage from './page/MainPage/MainPage';
 import WaitingRoomPage from './page/WatingRoomPage/WatingRoomPage';
 
 import OpenRoomModal from './components/Modal/OpenRoomModal/OpenRoomModal';
+import MeetingPage from './page/MeetingPage/MeetingPage';
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<LoginPage />}></Route>
           <Route path="/main" element={<MainPage />}></Route>
           <Route path="/waiting-room/:roomId" element={<WaitingRoomPage />}></Route>
+          <Route path="/meeting/:roomId" element={<MeetingPage />}></Route>
           <Route path="/signup" element={<SignUpPage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/test" element={<OpenRoomModal onClose={handleCloseModal} />} />{' '}
