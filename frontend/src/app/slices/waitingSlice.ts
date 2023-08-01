@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface WaitingState {
   roomId: number | undefined;
@@ -6,6 +6,8 @@ export interface WaitingState {
   isMaster: boolean | undefined;
   megiAcceptable: boolean | undefined;
   ratingLimit: number | undefined;
+  helpModalVisible: boolean;
+  openRoomModalVisible: boolean;
 }
 
 const initialState: WaitingState = {
@@ -14,6 +16,8 @@ const initialState: WaitingState = {
   isMaster: undefined,
   megiAcceptable: undefined,
   ratingLimit: undefined,
+  helpModalVisible: false,
+  openRoomModalVisible: false,
 };
 
 const waitingSlice = createSlice({
@@ -35,10 +39,23 @@ const waitingSlice = createSlice({
     setRatingLimit(state, action) {
       state.ratingLimit = action.payload;
     },
+    setHelpModalVisible(state, action: PayloadAction<boolean>) {
+      state.helpModalVisible = action.payload;
+    },
+    setOpenRoomModalVisible(state, action: PayloadAction<boolean>) {
+      state.openRoomModalVisible = action.payload;
+    },
   },
 });
 
-export const { setWaitingRoomId, setRoomTitle, setRatingLimit, setMaster, setMegiAcceptable } =
-  waitingSlice.actions;
+export const {
+  setWaitingRoomId,
+  setRoomTitle,
+  setRatingLimit,
+  setMaster,
+  setMegiAcceptable,
+  setHelpModalVisible,
+  setOpenRoomModalVisible,
+} = waitingSlice.actions;
 
 export default waitingSlice.reducer;
