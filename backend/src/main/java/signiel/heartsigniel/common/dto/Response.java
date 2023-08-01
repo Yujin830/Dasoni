@@ -3,6 +3,9 @@ package signiel.heartsigniel.common.dto;
 import lombok.Getter;
 import lombok.Setter;
 import signiel.heartsigniel.common.code.ResponseCode;
+import signiel.heartsigniel.model.chat.WebSocketInfo;
+import signiel.heartsigniel.model.member.Member;
+import signiel.heartsigniel.model.member.dto.MeetingRoomMemberReq;
 
 @Setter
 @Getter
@@ -10,12 +13,22 @@ public class Response<T> {
     private Status status;
 
     private T content;
+    private WebSocketInfo webSocketInfo;
+    private Member member;
 
     @Getter
     @Setter
     private static class Status {
         private int code;
         private String message;
+    }
+
+    public void setWebSocketInfo(WebSocketInfo webSocketInfo){
+        this.webSocketInfo = webSocketInfo;
+    }
+
+    public WebSocketInfo getWebSocketInfo(){
+        return this.webSocketInfo;
     }
 
     /**
