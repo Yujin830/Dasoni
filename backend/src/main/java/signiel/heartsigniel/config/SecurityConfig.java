@@ -79,7 +79,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(PERMIT_SWAGGER_URL_ARRAY).permitAll()
                 // 회원가입과 로그인은 모두 승인
-                .antMatchers("/register/**", "/login", "/guide", "/warn/**", "/life/**", "/users/**", "/question").permitAll()
+                .antMatchers("/app/**","/topic/**","/ws/**","/chat/**","/register/**", "/login", "/guide", "/warn/**", "/life/**", "/users/**", "/question").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
                 .antMatchers("/rooms/**", "/match/**").hasRole("USER")
                 .anyRequest().denyAll()
@@ -109,7 +109,7 @@ public class SecurityConfig {
                             response.getWriter().write("비밀번호가 틀립니다.");
                         } else if(authException instanceof LockedException){
                             response.getWriter().write("블랙처리된 사용자입니다.");
-                        } else if(authException instanceof InternalAuthenticationServiceException){
+                        } else if(authException instanceof InternalAuthenticationServiceException) {
                             response.getWriter().write("사용 가능한 아이디입니다.");
                         } else{
                             response.getWriter().write("인증되지 않은 사용자입니다.");
