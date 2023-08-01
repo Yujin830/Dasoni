@@ -73,7 +73,9 @@ public class PartyService {
             if(targetPartyMemberList.size() == 1){
                 partyMemberService.deletePartyMember(partyMember);
                 partyEntity.removePartyMember(partyMember);
-                deleteParty(partyEntity);
+                if(partyEntity.getPartyType().equals("match")){
+                    deleteParty(partyEntity);
+                }
             }
             // 파티원이 두명 이상인 경우
             else if(targetPartyMemberList.size() >= 2){
@@ -100,14 +102,14 @@ public class PartyService {
     }
 
     public Optional<PartyMatchResult> matchParty(Party party){
-        Optional<Party> optionalMatchedParty = partyRepository.findOldestMatchPartyByOppositeGenderAndAvgRatingAndMembersCount(party.getPartyGender(), party.getAvgRating());
+        List<Party> optionalMatchedParty = partyRepository.findOldestMatchPartyByOppositeGenderAndAvgRatingAndMembersCount(party.getPartyGender(), party.getAvgRating());
 
-        if (optionalMatchedParty.isPresent()) {
+        if (!optionalMatchedParty.isEmpty()) {
             // 매칭된 파티가 있을 경우
             if (party.getPartyGender().equals("female")){
-                return Optional.of(new PartyMatchResult(party, optionalMatchedParty.get()));
+                return Optional.of(new PartyMatchResult(party, optionalMatchedParty.get(0)));
             }
-            return Optional.of(new PartyMatchResult(optionalMatchedParty.get(), party));
+            return Optional.of(new PartyMatchResult(optionalMatchedParty.get(0), party));
 
         } else {
             // 매칭된 파티가 없을 경우
@@ -123,7 +125,7 @@ public class PartyService {
 
     public PartyMember findPartyLeaderByParty(Party targetParty){
         List<PartyMember> partyMembers = targetParty.getMembers();
-
+        System.out.println("기모링"+ partyMembers.size());
         for (PartyMember partyMember : partyMembers) {
             if(partyMember.isPartyLeader()){
                 return partyMember;

@@ -19,7 +19,7 @@ public interface PartyRepository extends JpaRepository<Party, Long> {
             "SIZE(p.members) = 3 AND " +
             "p.partyType = 'match' " +
             "ORDER BY p.matchingTime ASC")
-    Optional<Party> findOldestMatchPartyByOppositeGenderAndAvgRatingAndMembersCount(
+    List<Party> findOldestMatchPartyByOppositeGenderAndAvgRatingAndMembersCount(
             @Param("partyGender") String partyGender,
             @Param("avgRating") Long avgRating
     );
