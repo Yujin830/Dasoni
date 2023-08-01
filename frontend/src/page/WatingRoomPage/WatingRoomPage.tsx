@@ -4,10 +4,9 @@ import titleLogo from '../../assets/image/title_img.png';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
 import WaitingMemberBox from '../../components/WatingMember/WaitingMember';
 import FilledButton from '../../components/Button/FilledButton';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import './WaitingRoomPage.css';
 import axios from 'axios';
-import { useAppSelector } from '../../app/hooks';
 
 const watingMember: WaitingMember[] = [
   {
@@ -84,19 +83,20 @@ const styles = {
 function WaitingRoomPage() {
   const [memberList, setMemberList] = useState<WaitingMember[]>(watingMember);
   const navigate = useNavigate();
-  const waitingRoom = useAppSelector((state) => state.waitingRoom);
+  const { roomId } = useParams();
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
     setTimeout(() => {
-      navigate('/meeting');
+      navigate(`/meeting/${roomId}`);
     }, 3000);
   };
 
   const handleExitBtn = async () => {
     console.log('방 나가기');
     try {
-      const res = await axios.delete(`/rooms/${waitingRoom.roomId}/members/1`);
+      console.log('roomID ', roomId);
+      const res = await axios.delete(`/rooms/${roomId}/members/1`);
       console.log(res);
 
       if (res.status === 200) {

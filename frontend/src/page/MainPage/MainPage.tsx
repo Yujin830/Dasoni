@@ -7,7 +7,7 @@ import './MainPage.css';
 import Banner from '../../components/Banner/Banner';
 import IconButton from '../../components/Button/IconButton';
 import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
-import RoomBox, { RoomBoxProps } from '../../components/RoomBox/RoomBox';
+import RoomBox from '../../components/RoomBox/RoomBox';
 import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,13 +21,10 @@ import {
   setHelpModalVisible,
   setOpenRoomModalVisible,
 } from '../../app/slices/waitingSlice';
+import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
-
-// 서버 주소를 환경에 따라 설정
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const styles = {
   iconBtn: {
@@ -322,39 +319,20 @@ function MainPage() {
   };
 
   // 미팅 대기방 리스트
-  // 테스트용 가짜 데이터
-  const fakeWaitingRoomList: RoomBoxProps[] = [
-    {
-      sessionId: '1',
-      title: '심심한데 놀 사람',
-      maleCnt: 3,
-      femaleCnt: 2,
-      maleAvgRank: 'A',
-      femaleAvgRank: 'A',
-      isMegiOpen: false,
-    },
-    {
-      sessionId: '2',
-      title: '서울 사는 사람만',
-      maleCnt: 3,
-      femaleCnt: 3,
-      maleAvgRank: 'A',
-      femaleAvgRank: 'S',
-      isMegiOpen: true,
-    },
-    {
-      sessionId: '3',
-      title: '재밌게 놀아요',
-      maleCnt: 2,
-      femaleCnt: 3,
-      maleAvgRank: 'A',
-      femaleAvgRank: 'B',
-      isMegiOpen: false,
-    },
-  ];
-  const [waitingRoomList, setWaitingRoomList] = useState<RoomBoxProps[]>(fakeWaitingRoomList);
+  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+  const getWaitingRoomList = async () => {
+    try {
+      const res = await axios.get('/rooms');
+      console.log(res);
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   useEffect(() => {
-    // TODO : 미팅 대기방 리스트 가져오는 로직 개발
+    getWaitingRoomList();
   }, []);
 
   // 방 만들기 모달 open
@@ -392,6 +370,12 @@ function MainPage() {
     alert('빠른 매칭 진행 중');
   };
 
+  // 새로고침 버튼 클릭
+  const onClickRefreshBtn = () => {
+    console.log('새로고침');
+    getWaitingRoomList();
+  };
+
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
       <Header
@@ -401,6 +385,9 @@ function MainPage() {
       <Banner />
       <main>
         <div id="main-top">
+          <button className="refresh" onClick={onClickRefreshBtn}>
+            <span className="material-symbols-outlined">refresh</span>
+          </button>
           <div id="filter-box">
             <IconButton
               style={styles.iconBtn}
@@ -431,17 +418,17 @@ function MainPage() {
           </div>
         </div>
         <div className="room-container">
-          {session === undefined
+          {waitingRoomList.length > 0
             ? waitingRoomList.map((room) => (
                 <RoomBox
-                  key={room.sessionId}
-                  sessionId={room.sessionId}
+                  key={room.roomId}
+                  roomId={room.roomId}
                   title={room.title}
-                  maleCnt={room.maleCnt}
-                  femaleCnt={room.femaleCnt}
-                  maleAvgRank={room.maleAvgRank}
-                  femaleAvgRank={room.femaleAvgRank}
-                  isMegiOpen={room.isMegiOpen}
+                  malePartyMemberCount={room.malePartyMemberCount}
+                  femalePartyMemberCount={room.femalePartyMemberCount}
+                  malePartyAvgRating={room.malePartyAvgRating}
+                  femalePartyAvgRating={room.femalePartyAvgRating}
+                  megiAcceptable={room.megiAcceptable}
                 />
               ))
             : //       src="resources/images/openvidu_grey_bg_transp_cropped.png"
@@ -486,7 +473,7 @@ function MainPage() {
               // </div>
               null}
 
-          {session !== undefined ? (
+          {/* {session !== undefined ? (
             <div id="session">
               <div id="session-header">
                 <h1 id="session-title">{mySessionId}</h1>
@@ -506,11 +493,11 @@ function MainPage() {
                 />
               </div>
 
-              {/* {mainStreamManager !== undefined ? (
+              {mainStreamManager !== undefined ? (
                 <div id="main-video" className="col-md-6">
                   <UserVideo streamManager={mainStreamManager} />
                 </div>
-              ) : null} */}
+              ) : null}
               <div id="video-container" className="col-md-6">
                 {publisher !== undefined ? (
                   <a
@@ -534,7 +521,7 @@ function MainPage() {
                 ))}
               </div>
             </div>
-          ) : null}
+          ) : null} */}
         </div>
         <div id="room-footer">
           <div id="btn-box">

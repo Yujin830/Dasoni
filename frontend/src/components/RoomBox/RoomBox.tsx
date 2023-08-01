@@ -4,21 +4,24 @@ import maleIcon from '../../assets/image/male_icon.png';
 import femaleIcon from '../../assets/image/female_icon.png';
 import FilledButton from '../Button/FilledButton';
 import './RoomBox.css';
+import axios from 'axios';
+import { useAppSelector } from '../../app/hooks';
+import { useNavigate } from 'react-router';
 
 export type RoomBoxProps = {
-  sessionId: string; // room을 구분하는 id
+  roomId: number; // room을 구분하는 id
   title: string; // 방 제목
-  maleCnt: number; // 현재 남자 참가인원
-  femaleCnt: number; // 현재 여자 참가인원
-  maleAvgRank: string; // 참가한 남자 평균 랭크
-  femaleAvgRank: string; // 참가한 여자 평균 랭크
-  isMegiOpen: boolean; // 메기 입장 가능 여부
+  malePartyMemberCount: number; // 현재 남자 참가인원
+  femalePartyMemberCount: number; // 현재 여자 참가인원
+  malePartyAvgRating: number; // 참가한 남자 평균 레이팅
+  femalePartyAvgRating: number; // 참가한 여자 평균 레이팅
+  megiAcceptable: boolean; // 메기 입장 가능 여부
 };
 
 type GenderInfoProps = {
   genderIcon: string; // 성별 아이콘
   genderCount: number; // 성별  참여 인원
-  genderAvgRank: string; // 성별 평균 등급
+  genderAvgRank: number; // 성별 평균 등급
   fullCount: number; // 최대 참여 가능 인원수
 };
 
@@ -75,22 +78,41 @@ function GenderInfo({ genderIcon, genderCount, genderAvgRank, fullCount }: Gende
 }
 
 function RoomBox({
-  sessionId,
+  roomId,
   title,
-  maleCnt,
-  femaleCnt,
-  maleAvgRank,
-  femaleAvgRank,
-  isMegiOpen,
+  malePartyMemberCount,
+  femalePartyMemberCount,
+  malePartyAvgRating,
+  femalePartyAvgRating,
+  megiAcceptable,
 }: RoomBoxProps) {
   const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
   // TODO : isFull 확인하는 로직
 
-  // 입장하기 버튼 클릭 시 동작하는 함수
-  const handleEnter = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const member = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  // 입장하기
+  const onClickEnter = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (isFull) alert('더 이상 입장 할 수 없습니다.');
-    else console.log('입장하기');
+    if (isFull) {
+      alert('더 이상 입장 할 수 없습니다.');
+      return;
+    } else {
+      console.log('입장하기');
+      try {
+        // TODO : user state에 있는 memberId로 바꾸기
+        const res = await axios.post(`/rooms/${roomId}/members/1`);
+        console.log(res);
+
+        if (res.status === 200) {
+          console.log('입장 성공');
+          navigate(`/waiting-room/${roomId}`);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   return (
@@ -100,34 +122,34 @@ function RoomBox({
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
-        {isMegiOpen && femaleCnt + maleCnt === 2 * FULL_COUNT ? (
+        {megiAcceptable && femalePartyMemberCount + malePartyAvgRating === 2 * FULL_COUNT ? (
           <FilledButton
             style={isFull ? styles.disabled : styles.megi}
             content="메기 입장하기"
-            handleClick={handleEnter}
+            handleClick={onClickEnter}
           />
         ) : null}
 
-        {!isMegiOpen && femaleCnt + maleCnt < 2 * FULL_COUNT ? (
+        {!megiAcceptable && femalePartyMemberCount + malePartyMemberCount < 2 * FULL_COUNT ? (
           <FilledButton
             style={isFull ? styles.disabled : styles.basic}
             content="입장하기"
-            handleClick={handleEnter}
+            handleClick={onClickEnter}
           />
         ) : null}
       </div>
       <div className="content">
         <GenderInfo
           genderIcon={maleIcon}
-          genderCount={maleCnt}
-          genderAvgRank={maleAvgRank}
-          fullCount={isMegiOpen ? MEGI_FULL_COUNT : FULL_COUNT}
+          genderCount={malePartyMemberCount}
+          genderAvgRank={malePartyAvgRating}
+          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
         <GenderInfo
           genderIcon={femaleIcon}
-          genderCount={femaleCnt}
-          genderAvgRank={femaleAvgRank}
-          fullCount={isMegiOpen ? MEGI_FULL_COUNT : FULL_COUNT}
+          genderCount={femalePartyMemberCount}
+          genderAvgRank={femalePartyAvgRating}
+          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
       </div>
     </div>
