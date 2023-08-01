@@ -7,6 +7,7 @@ import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate, useParams } from 'react-router';
 import './WaitingRoomPage.css';
 import axios from 'axios';
+import { useWebSocket } from '../../hooks/useWebSocket';
 
 const watingMember: WaitingMember[] = [
   {
@@ -84,6 +85,24 @@ function WaitingRoomPage() {
   const [memberList, setMemberList] = useState<WaitingMember[]>(watingMember);
   const navigate = useNavigate();
   const { roomId } = useParams();
+
+  // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
+  useWebSocket({
+    onConnect: (frame, client) => {
+      console.log(frame);
+      client.subscribe(`/topic/room/${roomId}`, (res) => {
+        console.log(res);
+        const result = JSON.parse(res.body);
+        setMemberList(result.members);
+      });
+      client.publish({ destination: `/app/chat/message` });
+    },
+    beforeDisconnected: (frame, client) => {
+      console.log(frame);
+      console.log(client);
+      setMemberList([]);
+    },
+  });
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
