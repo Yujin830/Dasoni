@@ -13,8 +13,7 @@ public class Response<T> {
     private Status status;
 
     private T content;
-    private WebSocketInfo webSocketInfo;
-    private Member member;
+
 
     @Getter
     @Setter
@@ -23,13 +22,6 @@ public class Response<T> {
         private String message;
     }
 
-    public void setWebSocketInfo(WebSocketInfo webSocketInfo){
-        this.webSocketInfo = webSocketInfo;
-    }
-
-    public WebSocketInfo getWebSocketInfo(){
-        return this.webSocketInfo;
-    }
 
     /**
      * 응답 코드와 내용으로 응답 객체를 생성한다.

@@ -15,6 +15,6 @@ public class WebSocketController {
 
     @MessageMapping("/message")
     public void sendMessageToRoom(Long roomId, ChatMessage message){
-        template.convertAndSend("/topic/room/" + roomId, message);
+        template.convertAndSend("/topic/rooms/" + roomId, message);
     }
 }

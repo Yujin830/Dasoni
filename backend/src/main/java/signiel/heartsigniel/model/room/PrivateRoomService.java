@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.chat.ChatService;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -32,14 +33,15 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
-
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService) {
+    private final ChatService chatService;
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, ChatService chatService) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
+        this.chatService = chatService;
     }
 
     // 방 생성
@@ -66,6 +68,8 @@ public class PrivateRoomService {
         PartyMember partyMember = partyService.joinParty(getMemberGender(member).equals("male") ? maleParty : femaleParty, member);
         partyMemberService.assignRoomLeader(partyMember);
 
+        roomRepository.save(room);
+        room.setChatUrl(chatService.createChattingRoomUrl(room.getId()));
         roomRepository.save(room);
         return Response.of(CommonCode.GOOD_REQUEST, PrivateRoomCreated.builder().createdRoomId(room.getId()).build());
     }

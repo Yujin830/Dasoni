@@ -12,6 +12,4 @@ public class WebSocketInfo {
     private String url;
     private Long roomId;
 
-
-
 }

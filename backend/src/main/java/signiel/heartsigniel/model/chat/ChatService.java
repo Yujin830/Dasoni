@@ -6,21 +6,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import signiel.heartsigniel.common.code.CommonCode;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.chat.dto.ChatRoom;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.dto.MeetingRoomMemberReq;
+import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ChatService {
 
     private final MemberRepository memberRepository;
 
+    public ChatService(MemberRepository memberRepository){
+        this.memberRepository = memberRepository;
+    }
     private Map<String, ChatRoom> chatRooms;
 
     //의존관계 주입시 자동실행
@@ -49,6 +54,9 @@ public class ChatService {
         return result;
     }
 
+    public String createChattingRoomUrl(Long roomId){
+        return "/ws/chat/" + roomId;
+    }
 
     //채팅방 한개 불러오기
 

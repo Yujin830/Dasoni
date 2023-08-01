@@ -35,14 +35,7 @@ public class RoomController {
     @PostMapping("/{roomId}/members/{memberId}")
     public ResponseEntity<Response> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId){
         Response response = privateRoomService.joinRoom(memberId, roomId);
-        response.setWebSocketInfo(new WebSocketInfo("/ws/chat", roomId));
 
-
-        Member loggedInMember = chatService.getLoggedInMember();
-
-        if(loggedInMember != null){
-            response.setMember(loggedInMember);
-        }
         return ResponseEntity.ok(response);
     }
 
