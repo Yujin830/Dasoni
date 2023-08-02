@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { setHelpModalVisible, setOpenRoomModalVisible } from '../../app/slices/waitingSlice';
+import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
@@ -108,9 +109,7 @@ function MainPage() {
   // 방 만들기 모달 open
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const createRoom = async () => {
-    // TODO : 클릭 시 모달 띄우기
-    // setOpenRoomModalVisible(true);
+  const createRoom = () => {
     console.log('방 만들기');
   };
 
@@ -157,7 +156,22 @@ function MainPage() {
             </button>
           </div>
         </div>
-
+        <div className="room-container">
+          {waitingRoomList.length > 0
+            ? waitingRoomList.map((room) => (
+                <RoomBox
+                  key={room.roomId}
+                  roomId={room.roomId}
+                  title={room.title}
+                  malePartyMemberCount={room.malePartyMemberCount}
+                  femalePartyMemberCount={room.femalePartyMemberCount}
+                  malePartyAvgRating={room.malePartyAvgRating}
+                  femalePartyAvgRating={room.femalePartyAvgRating}
+                  megiAcceptable={room.megiAcceptable}
+                />
+              ))
+            : null}
+        </div>
         <div id="room-footer">
           <div id="btn-box">
             <FilledButton

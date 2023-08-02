@@ -9,4 +9,9 @@
   font-weight: 500;
   line-height: 1.25rem; /* 111.111% */
   letter-spacing: 0.00625rem;
+  margin-top: 20px;
+}
+
+.pagenation {
+  margin-bottom: 20px;
 }

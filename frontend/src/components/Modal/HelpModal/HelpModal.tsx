@@ -25,6 +25,7 @@ function HelpModal({ onClose }: HelpModalProps) {
         </div>
         <div className="content">메기 입장 보여주는 GIF</div>
         <svg
+          className="pagenation"
           xmlns="http://www.w3.org/2000/svg"
           width="147"
           height="15"
