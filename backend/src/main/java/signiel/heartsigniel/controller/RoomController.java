@@ -9,17 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.rating.RatingService;
 import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
+
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
-import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
-import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")

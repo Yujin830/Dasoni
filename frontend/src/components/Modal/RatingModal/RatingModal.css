@@ -1,0 +1,13 @@
+.modal .box .rating-content {
+  width: 59.75rem;
+  height: 21.8125rem;
+  flex-shrink: 0;
+  background: #fff;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-top: 20px;
+}
