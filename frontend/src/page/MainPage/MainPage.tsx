@@ -7,7 +7,7 @@ import './MainPage.css';
 import Banner from '../../components/Banner/Banner';
 import IconButton from '../../components/Button/IconButton';
 import NoLableInput from '../../components/Input/NoLabelInput/NoLabelInput';
-import RoomBox from '../../components/RoomBox/RoomBox';
+import RoomBox, { RoomBoxProps } from '../../components/RoomBox/RoomBox';
 import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,10 @@ import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
+
+// 서버 주소를 환경에 따라 설정
+const APPLICATION_SERVER_URL =
+  process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const styles = {
   iconBtn: {
@@ -102,23 +106,6 @@ function MainPage() {
     // TODO : 검색 API 로직 개발
   };
 
-  // 미팅 대기방 리스트
-  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
-  const getWaitingRoomList = async () => {
-    try {
-      const res = await axios.get('/rooms');
-      console.log(res);
-      if (res.status === 200) {
-        setWaitingRoomList(res.data.content.content);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    getWaitingRoomList();
-  }, []);
-
   // 방 만들기 모달 open
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -131,12 +118,6 @@ function MainPage() {
     alert('빠른 매칭 진행 중');
   };
 
-  // 새로고침 버튼 클릭
-  const onClickRefreshBtn = () => {
-    console.log('새로고침');
-    getWaitingRoomList();
-  };
-
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
       <Header
@@ -146,9 +127,6 @@ function MainPage() {
       <Banner />
       <main>
         <div id="main-top">
-          <button className="refresh" onClick={onClickRefreshBtn}>
-            <span className="material-symbols-outlined">refresh</span>
-          </button>
           <div id="filter-box">
             <IconButton
               style={styles.iconBtn}

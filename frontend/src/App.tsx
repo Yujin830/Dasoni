@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './page/LoginPage/LoginPage';
 import SignUpPage from './page/SignUpPage/SignUpPage';
 import MyPage from './page/MyPage/MyPage';
+
 import MainPage from './page/MainPage/MainPage';
 import WaitingRoomPage from './page/WatingRoomPage/WatingRoomPage';
 
-import OpenRoomModal from './components/Modal/OpenRoomModal/OpenRoomModal';
-import RatingModal from './components/Modal/RatingModal/RatingModal';
 import MeetingPage from './page/MeetingPage/MeetingPage';
+import RatingModal from './components/Modal/RatingModal/RatingModal';
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -35,3 +35,4 @@ function App() {
 }
 
 export default App;
+3;

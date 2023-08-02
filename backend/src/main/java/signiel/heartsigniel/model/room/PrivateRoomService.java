@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -32,14 +33,16 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
+    private final LifeService lifeService;
 
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService) {
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, LifeService lifeService) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
+        this.lifeService = lifeService;
     }
 
     // 방 생성
@@ -54,7 +57,7 @@ public class PrivateRoomService {
 
         // 파티 생성, 파티측 비즈니스 로직으로 대체(파티 가입 로직)
         Party maleParty = partyService.createParty("private", "male");
-        Party femaleParty = partyService.createParty("private", "male");
+        Party femaleParty = partyService.createParty("private", "female");
 
         // 리팩토링 필요(이해하기 쉽게 메서드로 처리)
         room.setMaleParty(maleParty);
@@ -106,7 +109,7 @@ public class PrivateRoomService {
         Party partyEntity = findPartyByGender(roomEntity, memberEntity.getGender());
         PartyMember partyMemberEntity = partyService.findPartyMemberByMemberIdAndPartyId(memberId, partyEntity.getPartyId());
 
-        // 향후 로직 각 도메인별 서비스 계층 로직으로 수정
+        // 나 혼자 있는 경우
         if (roomEntity.roomMemberCount() == 1L) {
 
             partyService.quitParty(partyMemberEntity);
@@ -116,19 +119,31 @@ public class PrivateRoomService {
             return response;
 
         } else {
-            //파티원이 남아있는 경우
-            if (partyEntity.getMembers().size() >= 2){
+            // 내가 방장인 경우
+            if (partyMemberEntity.isRoomLeader()){
                 partyService.quitParty(partyMemberEntity);
-                PartyMember newRoomLeader = partyService.findPartyLeaderByParty(partyEntity);
-                partyMemberService.assignRoomLeader(newRoomLeader);
-            } else {
+
+                // 파티원이 있는 경우
+                if(partyEntity.getMembers().size() >= 1){
+                    System.out.println("지금 몇명이다~~~" + partyEntity.getMembers().size());
+                    PartyMember newRoomLeader = partyService.findPartyLeaderByParty(partyEntity);
+                    System.out.println("지금 몇명이다~~~" + partyEntity.getMembers().size());
+                    partyMemberService.assignRoomLeader(newRoomLeader);
+                }
+                // 파티원이 없는 경우
+                else {
+                    System.out.println("지금 몇명이다~~~" + partyEntity.getMembers().size());
+                    Party oppositeParty = findOppositePartyByGender(roomEntity, partyEntity.getPartyGender());
+                    PartyMember newRoomLeader = partyService.findPartyLeaderByParty(oppositeParty);
+                    partyMemberService.assignRoomLeader(newRoomLeader);
+                }
+            }
+            // 내가 방장이 아닌 경우
+            else {
                 partyService.quitParty(partyMemberEntity);
-                Party oppositeParty = findOppositePartyByGender(roomEntity, partyEntity.getPartyGender());
-                PartyMember newRoomLeader = partyService.findPartyLeaderByParty(oppositeParty);
-                partyMemberService.assignRoomLeader(newRoomLeader);
             }
 
-            Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
+            Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, null);
             return response;
         }
     }
@@ -227,6 +242,10 @@ public class PrivateRoomService {
         partyRepository.delete(roomEntity.getMaleParty());
         partyRepository.delete(roomEntity.getFemaleParty());
         roomRepository.delete(roomEntity);
+    }
+
+    public void useLIfe(Member member){
+        lifeService.useLife(member);
     }
 
 }
