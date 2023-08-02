@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import '../Modal.css';
 import './RatingModal.css';
+import heartRating from '../../../assets/image/heart/heart_rating.png';
 
 interface RatingModalProps {
   onClose: () => void;
@@ -16,15 +17,20 @@ function RatingModal({ onClose }: RatingModalProps) {
         </div>
       </div>
       <div className="box">
-        <h1>1. 메기 입장하기</h1>
         <div className="explain">
-          메기는 느슨한 미팅 씬에 긴장을 주는 플레이어입니다. 메기는 미팅 시작 20분 후부터 입장이
-          가능합니다. 늦게 참여한만큼 불리하기도 하겠지만 모두의 관심과 이목을 한 번에 받을 수
-          있으며 메기로 참여해 시그널을 받을 경우 더 높은 가중치의 레이팅 점수를 받게 됩니다! 이
-          점을 잘 이용하여 메기로 이성들의 시그널을 받으세요!
+          <br />
+          <br />
+          <h1>하트 등급</h1>
+          <br />
+          <br />
+          다소니는 하트의 색으로 등급을 나타냅니다. 시그널 점수를 올려 마음에 드는 이성을
+          찾아보세요!{' '}
         </div>
-        <div className="content">메기 입장 보여주는 GIF</div>
+        <div className="rating-content">
+          <img className="heart-rating" src={heartRating} alt="하트 등급" />
+        </div>
         <svg
+          className="pagenation"
           xmlns="http://www.w3.org/2000/svg"
           width="147"
           height="15"
