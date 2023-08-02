@@ -3,6 +3,9 @@ package signiel.heartsigniel.common.dto;
 import lombok.Getter;
 import lombok.Setter;
 import signiel.heartsigniel.common.code.ResponseCode;
+import signiel.heartsigniel.model.chat.WebSocketInfo;
+import signiel.heartsigniel.model.member.Member;
+import signiel.heartsigniel.model.member.dto.MeetingRoomMemberReq;
 
 @Setter
 @Getter
@@ -11,12 +14,14 @@ public class Response<T> {
 
     private T content;
 
+
     @Getter
     @Setter
     private static class Status {
         private int code;
         private String message;
     }
+
 
     /**
      * 응답 코드와 내용으로 응답 객체를 생성한다.

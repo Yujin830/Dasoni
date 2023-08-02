@@ -2,10 +2,10 @@ package signiel.heartsigniel.model.room;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -21,6 +21,8 @@ import signiel.heartsigniel.model.room.dto.*;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -35,14 +37,13 @@ public class PrivateRoomService {
     private final PartyMemberService partyMemberService;
     private final LifeService lifeService;
 
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, LifeService lifeService) {
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
-        this.lifeService = lifeService;
     }
 
     // 방 생성
@@ -54,6 +55,8 @@ public class PrivateRoomService {
         room.setRatingLimit(privateRoomCreateRequest.getRatingLimit());
         room.setMegiAcceptable(privateRoomCreateRequest.isMegiAcceptable());
         room.setTitle(privateRoomCreateRequest.getTitle());
+
+
 
         // 파티 생성, 파티측 비즈니스 로직으로 대체(파티 가입 로직)
         Party maleParty = partyService.createParty("private", "male");
@@ -70,6 +73,8 @@ public class PrivateRoomService {
         partyMemberService.assignRoomLeader(partyMember);
 
         roomRepository.save(room);
+
+
         return Response.of(CommonCode.GOOD_REQUEST, PrivateRoomCreated.builder().createdRoomId(room.getId()).build());
     }
 
@@ -97,6 +102,18 @@ public class PrivateRoomService {
         // 파티 참가 및 저장(향후 partyService측 비즈니스로직으로 수정)
         partyService.joinParty(party, memberEntity);
         Response response = Response.of(RoomCode.SUCCESS_PARTICIPATE_ROOM, PrivateRoomInfo.of(roomEntity));
+
+
+
+        //멤버가 성공적으로 참가한 후, 업데이트 목록을 브로드캐스팅.
+        //1. 방에 있는 멤버 불러오기.
+
+        List<Member> membersInRoom = getMemberInRoom(roomId);
+        // 입장메시지때문에.
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSenderNickname(memberEntity.getNickname());
+        chatMessage.setContent("님이 입장하셨습니다.");
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
         return response;
     }
 
@@ -143,9 +160,29 @@ public class PrivateRoomService {
                 partyService.quitParty(partyMemberEntity);
             }
 
-            Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, null);
+            Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
             return response;
         }
+    }
+
+    /*
+    실시간 갱신을 위해 방 안에 있는 멤버 정보 모두 반환 해주는 메서드.
+     */
+    public List<Member> getMemberInRoom(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundRoomException(roomId + " ID를 가진 방을 찾을 수 없습니다."));
+
+        List<Party> parties = Arrays.asList(room.getMaleParty(), room.getFemaleParty());
+
+        List<Member> membersInRoom = new ArrayList<>();
+        for (Party party : parties) {
+            List<PartyMember> partyMembers = partyMemberRepository.findByParty_PartyId(party.getPartyId());
+            for (PartyMember partyMember : partyMembers) {
+                membersInRoom.add(partyMember.getMember());
+            }
+        }
+
+        return membersInRoom;
     }
 
     public Response roomInfo(Long roomId){
@@ -242,10 +279,6 @@ public class PrivateRoomService {
         partyRepository.delete(roomEntity.getMaleParty());
         partyRepository.delete(roomEntity.getFemaleParty());
         roomRepository.delete(roomEntity);
-    }
-
-    public void useLIfe(Member member){
-        lifeService.useLife(member);
     }
 
 }

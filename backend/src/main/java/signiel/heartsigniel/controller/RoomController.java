@@ -9,15 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.member.MemberRepository;
+import signiel.heartsigniel.model.chat.ChatService;
+import signiel.heartsigniel.model.chat.WebSocketInfo;
+import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
-import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
-import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
@@ -27,9 +25,11 @@ public class RoomController {
     private final PrivateRoomService privateRoomService;
     private final MatchingRoomService matchingRoomService;
 
+
     public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService){
         this.privateRoomService = privateRoomService;
         this.matchingRoomService = matchingRoomService;
+
     }
 
     @PostMapping("/{roomId}/members/{memberId}")

@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Header from '../../components/Header/Header';
-import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
-import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MainPage.css';
 import Banner from '../../components/Banner/Banner';
 import IconButton from '../../components/Button/IconButton';
