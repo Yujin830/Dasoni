@@ -1,0 +1,14 @@
+#meeting {
+  width: 100%;
+  height: 100vh;
+  background: #555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#meeting #meeting-video-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  margin: 0 1.2rem;
+}

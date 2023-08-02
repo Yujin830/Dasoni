@@ -1,0 +1,50 @@
+.pass-button {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+  width: 12rem;
+  height: 4rem;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  background: #e490b3;
+  color: #fff;
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.inputbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.inputbox label {
+  margin-right: -100px;
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.complete-button {
+  display: flex;
+  align-self: flex-end;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+  height: 4rem;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  background: #ec5e98;
+  color: #fff;
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 700;
+}
