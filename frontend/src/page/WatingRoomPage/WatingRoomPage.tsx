@@ -92,7 +92,7 @@ function WaitingRoomPage() {
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
   useWebSocket({
     subscribe: (client) => {
-      client.subscribe(`/topic/room/${roomId}`, (res) => {
+      client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         console.log(res);
         console.log(JSON.parse(res.body));
         // const result = JSON.parse(res.body);
@@ -105,7 +105,8 @@ function WaitingRoomPage() {
         sender: 'username', // sender는 실제 사용자의 이름이어야 합니다.
         content: 'Hello, world!', // content는 실제 메시지 내용이어야 합니다.
       };
-      client.publish({ destination: `/app/room/${roomId}`, body: JSON.stringify(chatMessage) });
+      // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
+      client.send(`/app/room/${roomId}`, {}, JSON.stringify(chatMessage));
     },
     beforeDisconnected: (client) => {
       console.log(client);

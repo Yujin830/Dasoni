@@ -1,65 +1,43 @@
 import SockJS from 'sockjs-client';
-import { Client, CompatClient, Frame, Stomp } from '@stomp/stompjs';
-import { useEffect, useRef, useState } from 'react';
-import { WS_BASE_URL } from '../apis/url';
+import { CompatClient, Stomp } from '@stomp/stompjs';
+import { useEffect } from 'react';
 
 interface Param {
-  subscribe: (clinet: Client) => void;
+  subscribe: (clinet: CompatClient) => void;
   beforeDisconnected: (client: CompatClient) => void;
   reconnectDelay?: number;
 }
 
 export const useWebSocket = ({ subscribe, beforeDisconnected, reconnectDelay }: Param) => {
-  const [connected, setConnected] = useState(false);
-
-  // const client = useRef<CompatClient>();
+  // WebSocket 엔드포인트 URL을 여기에 입력합니다.
+  const webSocketUrl = '/ws/chat';
 
   useEffect(() => {
-    const client = new Client();
-    client.brokerURL = WS_BASE_URL;
-    // client.brokerURL = 'ws://localhost:8080/ws/chat';
-    console.log(client.brokerURL);
+    const socket = new SockJS(webSocketUrl);
+    const stompClient = Stomp.over(socket);
 
-    client.onConnect = function (frame: Frame) {
-      console.log('연결 설정');
-      subscribe(client);
+    const onConnected = () => {
+      console.log('WebSocket에 연결되었습니다.');
+      // 원하는 토픽이나 큐에 stompClient.subscribe()를 사용하여 구독할 수 있습니다.
+      // 예시: stompClient.subscribe('/topic/someTopic', onMessageReceived);
+      subscribe(stompClient);
     };
 
-    client.activate();
+    const onDisconnected = () => {
+      console.log('WebSocket 연결이 끊어졌습니다.');
+      beforeDisconnected(stompClient);
+    };
 
+    const onError = (error: any) => {
+      console.error('WebSocket 오류:', error);
+    };
+
+    // WebSocket 연결을 수립합니다.
+    stompClient.connect({}, onConnected, onError);
+
+    // 컴포넌트가 언마운트될 때 연결을 정리합니다.
     return () => {
-      client.deactivate();
+      stompClient.disconnect(onDisconnected);
     };
-  }, []);
-
-  // useEffect(() => {
-  //   client.current = Stomp.over(() => {
-  //     const sock = new SockJS('/ws/chat');
-  //     return sock;
-  //   });
-  //   console.log('client ', client.current);
-  //   client.current.connect({}, () => {
-  //     console.log('연결 성공');
-  //     setConnected(true);
-
-  //     subscribe(client.current!);
-  //   });
-  //   // client.current!.onConnect(frame: Frame ) = function {
-  //   //   console.log('연결 성공');
-  //   //   setConnected(true);
-
-  //   //   // 웹 소켓 연결 성공 시 구독할 함수
-  //   //   // subscribe(client.current!);
-  //   // });
-  // }, []);
-
-  // client.current.disconnect(() => {
-  //   console.log('연결 해제');
-  //   setConnected(false);
-
-  //   // 웹 소켓 연결 해제 시 실행할 함수
-  //   beforeDisconnected(client.current!);
-  // });
-
-  return connected;
+  }, [webSocketUrl]);
 };
