@@ -1,48 +1,37 @@
-import { Client, Frame } from '@stomp/stompjs';
-import { useEffect, useState } from 'react';
+import SockJS from 'sockjs-client';
+import { CompatClient, Stomp } from '@stomp/stompjs';
+import { useRef, useState } from 'react';
 
 interface Param {
-  onConnect: (frame: Frame, client: Client) => void;
-  beforeDisconnected: (frame: Frame, client: Client) => void;
+  subscribe: (clinet: CompatClient) => void;
+  beforeDisconnected: (client: CompatClient) => void;
   reconnectDelay?: number;
 }
 
-export const useWebSocket = ({ onConnect, beforeDisconnected, reconnectDelay }: Param) => {
+export const useWebSocket = ({ subscribe, beforeDisconnected, reconnectDelay }: Param) => {
   const [connected, setConnected] = useState(false);
 
-  useEffect(() => {
-    const stompClient = new Client({
-      brokerURL: `ws://localhost:8080/ws/chat`,
-      // connectHeaders: {
-      //   Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-      // },
-      logRawCommunication: false,
-    });
+  const client = useRef<CompatClient>();
+  client.current = Stomp.over(() => {
+    const sock = new SockJS('/ws/chat');
+    return sock;
+  });
 
-    stompClient.onConnect = (frame) => {
-      console.log('소켓 연결 성공', frame);
-      setConnected(true);
-      onConnect(frame, stompClient!);
-    };
+  client.current.connect({}, () => {
+    console.log('연결 성공');
+    setConnected(true);
 
-    stompClient.onDisconnect = (frame) => {
-      console.log('소켓 연결 끊음', frame);
-      setConnected(false);
-      beforeDisconnected(frame, stompClient!);
-    };
+    // 웹 소켓 연결 성공 시 구독할 함수
+    // subscribe(client.current!);
+  });
 
-    stompClient.onStompError = (frame) => {
-      console.log(frame);
-      console.log('Broker reported error: ' + frame.headers['message']);
-      console.log('Additional details: ' + frame.body);
-    };
+  // client.current.disconnect(() => {
+  //   console.log('연결 해제');
+  //   setConnected(false);
 
-    stompClient.activate();
-
-    return () => {
-      stompClient?.deactivate();
-    };
-  }, []);
+  //   // 웹 소켓 연결 해제 시 실행할 함수
+  //   beforeDisconnected(client.current!);
+  // });
 
   return connected;
 };
