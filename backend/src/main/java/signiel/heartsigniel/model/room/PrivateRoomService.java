@@ -111,10 +111,13 @@ public class PrivateRoomService {
         //1. 방에 있는 멤버 불러오기.
 
         List<Member> membersInRoom = getMemberInRoom(roomId);
+        System.out.println("membersInRoom.get(1).toString() = " + membersInRoom.get(1).toString());
         // 입장메시지때문에.
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSenderNickname(memberEntity.getNickname());
         chatMessage.setContent("님이 입장하셨습니다.");
+        System.out.println("chatMessage.getSenderNickname() = " + chatMessage.getSenderNickname());
+        System.out.println("chatMessage.getNickname() = " + chatMessage.getContent());
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
         return response;
     }

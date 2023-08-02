@@ -92,24 +92,46 @@ function WaitingRoomPage() {
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
   useWebSocket({
     subscribe: (client) => {
-      // 정의한 주소로 서버로부터 메세지 구독 :: 해당 주소로 서버에서 메세지가 전송되면
-      // 클라이언트에서 해당 메세지 받아와 처리
-      // 구독할 주소 : 백엔드에 정의된 주소
       client.subscribe(`/topic/room/${roomId}`, (res) => {
-        console.log(res); // 서버에서 보내온 메세지
-        const result = JSON.parse(res.body);
-        setMemberList(result.members);
+        console.log(res);
+        console.log(JSON.parse(res.body));
+        // const result = JSON.parse(res.body);
+        // setMemberList(result.members);
       });
 
-      // 정의한 주소로 메세지를 서버로 전송,
-      // 서버에서 해당 주소를 구독한 클라이언트들이 메세지 수신함
-      client.send(`/app/room/${roomId}/chat`);
+      // 이 부분을 수정하였습니다. 두 번째 인자로 ChatMessage 객체가 필요합니다.
+      // 단, 실제 사용 시에는 적절한 필드값을 설정해야 합니다.
+      const chatMessage = {
+        sender: 'username', // sender는 실제 사용자의 이름이어야 합니다.
+        content: 'Hello, world!', // content는 실제 메시지 내용이어야 합니다.
+      };
+      client.send(`/app/room/${roomId}`, chatMessage);
     },
     beforeDisconnected: (client) => {
       console.log(client);
       setMemberList([]);
     },
   });
+  // useWebSocket({
+  //   subscribe: (client) => {
+  //     // 정의한 주소로 서버로부터 메세지 구독 :: 해당 주소로 서버에서 메세지가 전송되면
+  //     // 클라이언트에서 해당 메세지 받아와 처리
+  //     // 구독할 주소 : 백엔드에 정의된 주소
+  //     client.subscribe(`/topic/room/${roomId}`, (res) => {
+  //       console.log('res', res); // 서버에서 보내온 메세지
+  //       const result = JSON.parse(res.body);
+  //       setMemberList(result.members);
+  //     });
+
+  //     // 정의한 주소로 메세지를 서버로 전송,
+  //     // 서버에서 해당 주소를 구독한 클라이언트들이 메세지 수신함
+  //     client.send(`/app/room/${roomId}`);
+  //   },
+  //   beforeDisconnected: (client) => {
+  //     console.log(client);
+  //     setMemberList([]);
+  //   },
+  // });
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
