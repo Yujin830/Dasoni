@@ -5,16 +5,18 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
-
+import setAuthorizationToken from './utils/setAuthorizationToken';
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+
+setAuthorizationToken(localStorage.getItem('jwtToken'));
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

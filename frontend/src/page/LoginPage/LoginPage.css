@@ -1,0 +1,99 @@
+#login.box {
+  display: flex;
+  padding: 2rem 4rem;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+#login .signal {
+  position: absolute;
+  top: 3rem;
+  width: 13rem;
+}
+
+#login .signal.left {
+  right: -1rem;
+}
+
+#login .signal.right {
+  left: 0;
+}
+
+#login .left-box {
+  width: 30rem;
+  height: 40rem;
+  flex-shrink: 0;
+  border-radius: 1rem;
+  border: 5px solid #ffd8e4;
+  background: #ffd8e4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.left-box-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ec5e98;
+  width: 26rem;
+}
+
+.left-box-content .title {
+  margin-right: auto;
+}
+
+.left-box-content h2 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.left-box-content h3 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.left-box-content img {
+  margin-top: 1rem;
+  width: 90%;
+}
+
+.right-box {
+  width: 30rem;
+  height: 40rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-radius: 1rem;
+  border: 5px solid #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.right-box-content,
+.right-box form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.right-box-content img {
+  margin-bottom: 1rem;
+}
+
+.right-box-content p {
+  color: #232323;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+.right-box-content #regist {
+  color: #ec5e98;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+}

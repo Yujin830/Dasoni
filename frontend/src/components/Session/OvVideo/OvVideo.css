@@ -1,0 +1,13 @@
+.video-box {
+  position: relative;
+}
+
+.video-box .video-name {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  background: #fff;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+  box-sizing: border-box;
+}
