@@ -157,7 +157,7 @@ function MainPage() {
           </div>
         </div>
         <div className="room-container">
-          {waitingRoomList.length > 0
+          {/* {waitingRoomList.length > 0
             ? waitingRoomList.map((room) => (
                 <RoomBox
                   key={room.roomId}
@@ -170,7 +170,7 @@ function MainPage() {
                   megiAcceptable={room.megiAcceptable}
                 />
               ))
-            : null}
+            : null} */}
         </div>
         <div id="room-footer">
           <div id="btn-box">

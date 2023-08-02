@@ -7,6 +7,7 @@ import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate, useParams } from 'react-router';
 import './WaitingRoomPage.css';
 import axios from 'axios';
+import ChatRoom from '../../components/ChatRoom/ChatRoom';
 
 const watingMember: WaitingMember[] = [
   {
@@ -127,10 +128,13 @@ function WaitingRoomPage() {
             <span>Rank : Yellow</span>
           </div>
         </div>
-        <div id="waiting-room-content">
-          {memberList.map((member) => (
-            <WaitingMemberBox key={member.memberId} />
-          ))}
+        <div id="waiting-room-body">
+          <div id="waiting-room-content">
+            {memberList.map((member) => (
+              <WaitingMemberBox key={member.memberId} />
+            ))}
+          </div>
+          <ChatRoom />
         </div>
         <div id="waiting-room-footer">
           <FilledButton content="시작하기" style={styles.startBtn} handleClick={handleStartBtn} />
