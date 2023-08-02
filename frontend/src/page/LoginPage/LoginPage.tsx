@@ -11,6 +11,7 @@ import rightSignal from '../../assets/image/right_signal.png';
 import { useAppDispatch } from '../../app/hooks';
 import { loginAsync, getUserInfo } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
+import ProfileModal from '../../components/Modal/ProfileModal/ProfileModal';
 
 const styles = {
   button: {
@@ -42,6 +43,7 @@ const styles = {
 function LoginPage() {
   const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
+  const [isModalOpen, setModalOpen] = useState(false);
   const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +67,7 @@ function LoginPage() {
       await dispatch(loginAsync(data));
       console.log('로그인 성공!');
       console.log('로그인된 사용자 닉네임:', nickname);
+      setModalOpen(true); // 로그인에 성공하면 모달 열기
     } catch (error) {
       console.log('로그인 실패:', error);
     }
@@ -102,6 +105,8 @@ function LoginPage() {
               placeholer="비밀번호를 입력해주세요."
             />
             <Button style={styles.button} content="로그인" handleClick={handleLogin} />
+            {/* isModalOpen 변수에 따라 ProfileModal 컴포넌트를 조건부 렌더링합니다 */}
+            {isModalOpen && <ProfileModal onClose={() => setModalOpen(false)} />}
           </form>
           <p>
             아직 회원이 아니신가요?{' '}
