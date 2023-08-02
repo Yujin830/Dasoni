@@ -79,10 +79,6 @@ public class PrivateRoomService {
         roomRepository.save(room);
 
 
-
-
-
-
         return Response.of(CommonCode.GOOD_REQUEST, PrivateRoomCreated.builder().createdRoomId(room.getId()).build());
     }
 
@@ -179,7 +175,7 @@ public class PrivateRoomService {
 
         List<Member> membersInRoom = new ArrayList<>();
         for (Party party : parties) {
-            List<PartyMember> partyMembers = partyMemberRepository.findByPartyId(party.getPartyId());
+            List<PartyMember> partyMembers = partyMemberRepository.findByParty_PartyId(party.getPartyId());
             for (PartyMember partyMember : partyMembers) {
                 membersInRoom.add(partyMember.getMember());
             }

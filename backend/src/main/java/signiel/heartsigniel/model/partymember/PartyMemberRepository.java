@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface PartyMemberRepository extends JpaRepository<PartyMember, Long> {
     Optional<PartyMember> findByMember_MemberIdAndParty_PartyId(Long memberId, Long partyId);
 
-    List<PartyMember> findByPartyId(Long partyId);
+    List<PartyMember> findByParty_PartyId(Long partyId);
 }
