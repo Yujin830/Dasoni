@@ -17,8 +17,12 @@ function RatingModal({ onClose }: RatingModalProps) {
         </div>
       </div>
       <div className="box">
-        <h1>하트 등급</h1>
         <div className="explain">
+          <br />
+          <br />
+          <h1>하트 등급</h1>
+          <br />
+          <br />
           다소니는 하트의 색으로 등급을 나타냅니다. 시그널 점수를 올려 마음에 드는 이성을
           찾아보세요!{' '}
         </div>
@@ -26,6 +30,7 @@ function RatingModal({ onClose }: RatingModalProps) {
           <img className="heart-rating" src={heartRating} alt="하트 등급" />
         </div>
         <svg
+          className="pagenation"
           xmlns="http://www.w3.org/2000/svg"
           width="147"
           height="15"
