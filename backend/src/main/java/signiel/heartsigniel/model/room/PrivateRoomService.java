@@ -6,6 +6,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -35,15 +36,16 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
-    private final LifeService lifeService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService) {
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessagingTemplate simpMessagingTemplate) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     // 방 생성
