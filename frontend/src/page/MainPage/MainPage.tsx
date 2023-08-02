@@ -104,6 +104,23 @@ function MainPage() {
     // TODO : 검색 API 로직 개발
   };
 
+  // 미팅 대기방 리스트
+  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+  const getWaitingRoomList = async () => {
+    try {
+      const res = await axios.get('/rooms');
+      console.log(res);
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    getWaitingRoomList();
+  }, []);
+
   // 방 만들기 모달 open
   const navigate = useNavigate();
   const dispatch = useDispatch();
