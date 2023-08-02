@@ -89,23 +89,44 @@ function WaitingRoomPage() {
   const { roomId } = useParams();
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
 
+  //webSocket 연결 테스트
+  const testSocket = new WebSocket('ws://localhost:8080/ws/chat');
+  testSocket.onopen = function (e) {
+    console.log('socket 연결 완료');
+    testSocket.send('My name is Bora');
+  };
+
+  testSocket.onmessage = function (event) {
+    alert(`[message] 서버로부터 전송받은 데이터: ${event.data}`);
+  };
+
+  testSocket.onerror = function (err) {
+    console.log('에러 발생');
+    console.log(err);
+  };
+
+  testSocket.onclose = function (e) {
+    console.log('커넥션 종료');
+    console.log(e);
+  };
+
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
-  useWebSocket({
-    onConnect: (frame, client) => {
-      console.log(frame);
-      client.subscribe(`/topic/room/${roomId}`, (res) => {
-        console.log(res);
-        const result = JSON.parse(res.body);
-        setMemberList(result.members);
-      });
-      client.publish({ destination: `/app/chat/message` });
-    },
-    beforeDisconnected: (frame, client) => {
-      console.log(frame);
-      console.log(client);
-      setMemberList([]);
-    },
-  });
+  // useWebSocket({
+  //   onConnect: (frame, client) => {
+  //     console.log(frame);
+  //     client.subscribe(`/topic/room/${roomId}`, (res) => {
+  //       console.log(res);
+  //       const result = JSON.parse(res.body);
+  //       setMemberList(result.members);
+  //     });
+  //     client.publish({ destination: `/app/room/chat/${roomId}` });
+  //   },
+  //   beforeDisconnected: (frame, client) => {
+  //     console.log(frame);
+  //     console.log(client);
+  //     setMemberList([]);
+  //   },
+  // });
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
