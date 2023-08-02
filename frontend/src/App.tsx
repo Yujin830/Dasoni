@@ -3,13 +3,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './page/LoginPage/LoginPage';
 import SignUpPage from './page/SignUpPage/SignUpPage';
 import MyPage from './page/MyPage/MyPage';
-
-import HelpModal from './components/Modal/HelpModal/HelpModal';
-import ProfileModal from './components/Modal/ProfileModal/ProfileModal';
 import MainPage from './page/MainPage/MainPage';
 import WaitingRoomPage from './page/WatingRoomPage/WatingRoomPage';
 
 import OpenRoomModal from './components/Modal/OpenRoomModal/OpenRoomModal';
+import RatingModal from './components/Modal/RatingModal/RatingModal';
 import MeetingPage from './page/MeetingPage/MeetingPage';
 
 function App() {
@@ -29,7 +27,7 @@ function App() {
           <Route path="/meeting/:roomId" element={<MeetingPage />}></Route>
           <Route path="/signup" element={<SignUpPage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
-          <Route path="/test" element={<OpenRoomModal onClose={handleCloseModal} />} />{' '}
+          <Route path="/test" element={<RatingModal onClose={handleCloseModal} />} />{' '}
         </Routes>
       </BrowserRouter>
     </div>
