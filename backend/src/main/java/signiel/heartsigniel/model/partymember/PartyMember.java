@@ -27,6 +27,9 @@ public class PartyMember {
         @JoinColumn(name = "member_id")
         private Member member;
 
+        @Column(columnDefinition = "int default 0")
+        private int score;
+
         @Column(name = "is_party_leader")
         private boolean isPartyLeader;
 
