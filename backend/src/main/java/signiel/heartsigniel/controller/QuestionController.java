@@ -3,6 +3,7 @@ package signiel.heartsigniel.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionRepository;
 
@@ -24,7 +25,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/question")
-    public ResponseEntity<List<Question>> pickRandomQuestion(){
-        return new ResponseEntity<>(questionService.pickRandomQuestion(), HttpStatus.OK);
+    public ResponseEntity<Response> pickRandomQuestion(){
+        return ResponseEntity.ok(questionService.pickRandomQuestion());
     }
 }

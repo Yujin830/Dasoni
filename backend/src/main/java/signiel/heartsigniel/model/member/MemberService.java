@@ -10,11 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
+import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
 import signiel.heartsigniel.model.life.Life;
-import signiel.heartsigniel.model.life.LifeRepo;
+import signiel.heartsigniel.model.life.LifeRepository;
 
 
 import java.time.LocalDate;
@@ -22,13 +23,19 @@ import java.util.*;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final LifeService lifeService;
 
-    private final LifeRepo lifeRepo;
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, LifeService lifeService){
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.lifeService = lifeService;
+    }
+
 
     public SignResponse login(SignRequest request) {
         Member member = memberRepository.findByLoginId(request.getLoginId()).orElseThrow(() ->
@@ -41,7 +48,7 @@ public class MemberService {
         if(member.isBlack())
             throw new LockedException("블랙처리된 사용자입니다.");
 
-        List<Life> lives = lifeRepo.findByMemberIdAndUseDate(member.getMemberId(), LocalDate.now());
+        Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
         return SignResponse.builder()
                 .memberId(member.getMemberId())
@@ -58,7 +65,7 @@ public class MemberService {
                 .siDo(member.getSiDo())
                 .guGun(member.getGuGun())
                 .roles(member.getRoles())
-                .remainLife(2- lives.size())
+                .remainLife(remainLives)
                 .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
                 .build();
     }
