@@ -9,15 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.member.MemberRepository;
+import signiel.heartsigniel.model.rating.RatingService;
+import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
+
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
-import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
-import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
@@ -26,10 +24,12 @@ public class RoomController {
 
     private final PrivateRoomService privateRoomService;
     private final MatchingRoomService matchingRoomService;
+    private final RatingService ratingService;
 
-    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService){
+    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService, RatingService ratingService){
         this.privateRoomService = privateRoomService;
         this.matchingRoomService = matchingRoomService;
+        this.ratingService = ratingService;
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
@@ -85,4 +85,11 @@ public class RoomController {
         Response response = privateRoomService.roomInfo(roomId);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/rooms/{roomId}/result")
+    public ResponseEntity<Response> getMeetingResult(TotalResultRequest totalResultRequest){
+        Response response = ratingService.calculateTotalResult(totalResultRequest);
+        return ResponseEntity.ok(response);
+    }
+
 }

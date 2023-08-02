@@ -35,11 +35,11 @@ public class LifeService {
     }
 
     public Long countRemainingLives(Long memberId){
-        return 2L - lifeRepository.findByMemberIdAndUseDate(memberId, LocalDate.now()).size();
+        return 2L - lifeRepository.findByMember_MemberIdAndUseDate(memberId, LocalDate.now()).size();
     }
 
     public void deleteExpirationTimeStamp(Long memberId) {
-        List<Life> expirationList = lifeRepository.findByMemberIdAndUseDateBefore(memberId, LocalDate.now());
+        List<Life> expirationList = lifeRepository.findByMember_MemberIdAndUseDateBefore(memberId, LocalDate.now());
 
         if (!expirationList.isEmpty()) {
             lifeRepository.deleteAll(expirationList);

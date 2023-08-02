@@ -9,6 +9,10 @@ import './WaitingRoomPage.css';
 import axios from 'axios';
 import ChatRoom from '../../components/ChatRoom/ChatRoom';
 
+import { useWebSocket } from '../../hooks/useWebSocket';
+import { useAppSelector } from '../../app/hooks';
+import convertScoreToName from '../../utils/convertScoreToName';
+
 const watingMember: WaitingMember[] = [
   {
     memberId: 1,
@@ -85,6 +89,29 @@ function WaitingRoomPage() {
   const [memberList, setMemberList] = useState<WaitingMember[]>(watingMember);
   const navigate = useNavigate();
   const { roomId } = useParams();
+  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
+
+  // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
+  useWebSocket({
+    subscribe: (client) => {
+      // 정의한 주소로 서버로부터 메세지 구독 :: 해당 주소로 서버에서 메세지가 전송되면
+      // 클라이언트에서 해당 메세지 받아와 처리
+      // 구독할 주소 : 백엔드에 정의된 주소
+      client.subscribe(`/topic/room/${roomId}`, (res) => {
+        console.log(res); // 서버에서 보내온 메세지
+        const result = JSON.parse(res.body);
+        setMemberList(result.members);
+      });
+
+      // 정의한 주소로 메세지를 서버로 전송,
+      // 서버에서 해당 주소를 구독한 클라이언트들이 메세지 수신함
+      client.send(`/app/room/${roomId}/chat`);
+    },
+    beforeDisconnected: (client) => {
+      console.log(client);
+      setMemberList([]);
+    },
+  });
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
@@ -121,11 +148,14 @@ function WaitingRoomPage() {
         <div id="waiting-room-top">
           <div className="title">
             <img src={titleLogo} alt="하트 이미지" />
-            재밌게 놀아요
+            {waitingRoomInfo.roomTitle}
           </div>
           <div className="info">
-            <span>메기 : No</span>
-            <span>Rank : Yellow</span>
+            <span>메기 : {waitingRoomInfo.megiAcceptable ? 'Yes' : 'No'}</span>
+            <span>
+              Rank :
+              {convertScoreToName(waitingRoomInfo.ratingLimit ? waitingRoomInfo.ratingLimit : 0)}
+            </span>
           </div>
         </div>
         <div id="waiting-room-body">

@@ -10,6 +10,6 @@ import java.util.List;
 
 @Transactional
 public interface LifeRepository extends JpaRepository<Life, Long> {
-    List<Life> findByMemberIdAndUseDate(Long memberId, LocalDate useDate);
-    List<Life> findByMemberIdAndUseDateBefore(Long memberId, LocalDate date);
+    List<Life> findByMember_MemberIdAndUseDate(Long memberId, LocalDate useDate);
+    List<Life> findByMember_MemberIdAndUseDateBefore(Long memberId, LocalDate date);
 }
