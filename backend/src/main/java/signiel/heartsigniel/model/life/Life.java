@@ -24,7 +24,6 @@ public class Life {
     @JsonIgnore
     private Long id;
 
-    @Column(name="member_id")
     @ManyToOne
     private Member member;
 
