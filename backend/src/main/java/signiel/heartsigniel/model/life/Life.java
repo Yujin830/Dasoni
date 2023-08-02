@@ -2,6 +2,7 @@ package signiel.heartsigniel.model.life;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import signiel.heartsigniel.model.member.Member;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,8 +25,10 @@ public class Life {
     private Long id;
 
     @Column(name="member_id")
-    private Long memberId;
+    @ManyToOne
+    private Member member;
 
     @Column(name="use_date")
     private LocalDate useDate;
+
 }

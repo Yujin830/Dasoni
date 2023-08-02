@@ -44,7 +44,7 @@ public class SignResponse {
 
     private List<Authority> roles = new ArrayList<>();
 
-    private int remainLife;
+    private Long remainLife;
 
     private String token;
 }
