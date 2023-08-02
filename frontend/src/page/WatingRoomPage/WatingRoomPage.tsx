@@ -105,7 +105,7 @@ function WaitingRoomPage() {
         sender: 'username', // sender는 실제 사용자의 이름이어야 합니다.
         content: 'Hello, world!', // content는 실제 메시지 내용이어야 합니다.
       };
-      client.send(`/app/room/${roomId}`, chatMessage);
+      client.publish({ destination: `/app/room/${roomId}`, body: JSON.stringify(chatMessage) });
     },
     beforeDisconnected: (client) => {
       console.log(client);
