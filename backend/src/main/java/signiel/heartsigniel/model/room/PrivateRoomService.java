@@ -98,7 +98,7 @@ public class PrivateRoomService {
 
         // 파티 인원 꽉 찼는지 확인하기(추후에 오류코드 수정)
         if (party.getMembers().size() >= 3) {
-            throw new FullPartyException("해당 방에 더 이상 참가할 수 없습니다. 인원이 초과되었습니다.");
+            return Response.of(RoomCode.FULL_ROOM, null);
         }
 
         // 파티 참가 및 저장(향후 partyService측 비즈니스로직으로 수정)
@@ -144,14 +144,11 @@ public class PrivateRoomService {
 
                 // 파티원이 있는 경우
                 if(partyEntity.getMembers().size() >= 1){
-                    System.out.println("지금 몇명이다~~~" + partyEntity.getMembers().size());
                     PartyMember newRoomLeader = partyService.findPartyLeaderByParty(partyEntity);
-                    System.out.println("지금 몇명이다~~~" + partyEntity.getMembers().size());
                     partyMemberService.assignRoomLeader(newRoomLeader);
                 }
                 // 파티원이 없는 경우
                 else {
-                    System.out.println("지금 몇명이다~~~" + partyEntity.getMembers().size());
                     Party oppositeParty = findOppositePartyByGender(roomEntity, partyEntity.getPartyGender());
                     PartyMember newRoomLeader = partyService.findPartyLeaderByParty(oppositeParty);
                     partyMemberService.assignRoomLeader(newRoomLeader);
@@ -208,10 +205,10 @@ public class PrivateRoomService {
     public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable){
         if(gender == "male"){
             Page<Room> roomList = roomRepository.findAllByRoomTypeAndFemalePartyMemberCountLessThanEqual("private", 3L, pageable);
-            return roomList.map(room -> new PrivateRoomList(room));
+            return roomList.map(room -> PrivateRoomList.of(room));
         } else {
             Page<Room> roomList = roomRepository.findAllByRoomTypeAndMalePartyMemberCountLessThanEqual("private", 3L, pageable);
-            return roomList.map(room-> new PrivateRoomList(room));
+            return roomList.map(room-> PrivateRoomList.of(room));
         }
     }
 

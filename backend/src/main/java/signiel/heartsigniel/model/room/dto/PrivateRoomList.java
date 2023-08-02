@@ -16,7 +16,6 @@ public class PrivateRoomList {
     private Long malePartyAvgRating;
     private Long ratingLimit;
 
-    @Builder
     public PrivateRoomList(Room roomEntity){
         this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
@@ -25,5 +24,9 @@ public class PrivateRoomList {
         this.ratingLimit = roomEntity.getRatingLimit();
         this.femalePartyAvgRating = roomEntity.getFemaleParty().getAvgRating();
         this.malePartyAvgRating = roomEntity.getMaleParty().getAvgRating();
+    }
+
+    public static PrivateRoomList of(Room roomEntity){
+        return new PrivateRoomList(roomEntity);
     }
 }

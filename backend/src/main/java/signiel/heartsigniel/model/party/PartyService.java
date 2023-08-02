@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.party.dto.PartyMatchResult;
+import signiel.heartsigniel.model.party.exception.AlreadyJoinedException;
 import signiel.heartsigniel.model.party.exception.FullPartyException;
 import signiel.heartsigniel.model.party.exception.NoPartyLeaderException;
 import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
@@ -48,6 +49,14 @@ public class PartyService {
         if (party.getMembers() == null) {
             party.setMembers(new ArrayList<>());
         }
+
+        // 이미 참가한 유저인지 확인
+        for (PartyMember existingMember : party.getMembers()) {
+            if (existingMember.getMember().equals(member)) {
+                throw new AlreadyJoinedException("이미 참가하셨습니다.");
+            }
+        }
+
         if (party.getMembers().size() == 3){
             throw new FullPartyException("인원이 가득 찼습니다.");
         }
