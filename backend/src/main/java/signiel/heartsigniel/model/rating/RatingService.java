@@ -59,18 +59,26 @@ public class RatingService {
     }
 
     public Long calculateRatingChange(Long myRating, Long avgRating, int rank, int kFactor) {
+        // 순위에 따른 기본 점수 변동 배열 (인덱스 0은 사용하지 않음)
+        int[] baseScoreChanges = {0, 47, 30, 15, -15, -30, -47};
 
-        // 등수에 따른 승리 또는 패배 판별
-        boolean isWin = rank <= 3; // 1~3등은 승리, 나머지는 패배로 판단
+        // 순위에 맞는 기본 점수 변동 값을 가져옴
+        // 만약 순위가 범위 밖이라면 0을 반환
+        int baseScoreChange = rank >= 1 && rank <= 6 ? baseScoreChanges[rank] : 0;
 
+        // Elo 점수계산
         double expectedWinProbability = 1.0 / (1.0 + Math.pow(10, (avgRating - myRating) / 400.0));
+        Long eloChange = Math.round(kFactor * (1 - expectedWinProbability));
 
-        if (isWin) {
-            return Math.round(kFactor * (1 - expectedWinProbability));
-        } else {
-            return Math.round(kFactor * (0 - expectedWinProbability));
-        }
+        // Elo 점수 변동을 -10에서 +10 사이로 제한
+        eloChange = Math.max(-10, Math.min(eloChange, 10));
+
+        // 최종 레이팅 변동 = Elo 점수 변동 + 기본 점수 변동
+        Long ratingChange = eloChange + baseScoreChange;
+
+        return ratingChange;
     }
+
 
     public Long calculateAvgRatingOfRoom(Room targetRoom){
         return (targetRoom.getMaleParty().getAvgRating() + targetRoom.getFemaleParty().getAvgRating())/2;
@@ -91,7 +99,7 @@ public class RatingService {
         int[] scoreBoard = calculatePersonalScore(totalResult.getSignalResults());
         for (int i = 0; i < 6; i++) {
             PartyMember partyMember = partyMembers.get(i);
-            savePartyMemberRank(partyMember, scoreBoard[i]); // PartyMember 객체에 점수 설정
+            savePartyMemberScore(partyMember, scoreBoard[i]); // PartyMember 객체에 점수 설정
         }
 
         partyMembers.sort(Comparator.comparingInt(PartyMember::getScore).reversed()); // 점수를 기준으로 내림차순 정렬
@@ -161,7 +169,7 @@ public class RatingService {
         return roomEntity;
     }
 
-    public PartyMember savePartyMemberRank(PartyMember partyMember, int score){
+    public PartyMember savePartyMemberScore(PartyMember partyMember, int score){
         partyMember.setScore(score);
         return partyMemberRepository.save(partyMember);
     }
