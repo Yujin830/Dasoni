@@ -50,7 +50,7 @@ function WaitingRoomPage() {
         setMemberList(JSON.parse(res.body));
       });
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
-      client.send(`/app/room/${roomId}`, {}, `memberId:${member.memberId}`);
+      client.send(`/app/room/${roomId}`, {}, `${member.memberId}`);
       // client.send(`/app/room/${roomId}`, {}, JSON.stringify(chatMessage));
     },
     beforeDisconnected: (client) => {
