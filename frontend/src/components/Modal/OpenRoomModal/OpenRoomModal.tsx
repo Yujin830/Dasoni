@@ -15,6 +15,7 @@ import {
   setWaitingRoomId,
 } from '../../../app/slices/waitingSlice';
 import convertScoreToName from '../../../utils/convertScoreToName';
+import { useAppSelector } from '../../../app/hooks';
 
 interface OpenRoomModalProps {
   onClose: () => void;
@@ -57,6 +58,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   const [megiAcceptable, setOpenMegiAcceptable] = useState(false);
   const [ratingLimit, setOpenRatingLimit] = useState<number>(0);
   const { roomId } = useParams();
+  const { memberId } = useAppSelector((state) => state.user);
 
   const handleChangeRoomTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
     setOpenRoomTitle(event.target.value);
@@ -74,7 +76,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     event.preventDefault();
 
     const data = {
-      memberId: 1, // TODO : 로그인한 memberId를 store에서 가져와서 변경
+      memberId: memberId,
       title: roomTitle,
       megiAcceptable: megiAcceptable,
       ratingLimit: ratingLimit,
