@@ -133,6 +133,12 @@ function MainPage() {
     alert('빠른 매칭 진행 중');
   };
 
+  // 새로고침 버튼 클릭
+  const onClickRefreshBtn = () => {
+    console.log('새로고침');
+    getWaitingRoomList();
+  };
+
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
       <Header
@@ -142,6 +148,9 @@ function MainPage() {
       <Banner />
       <main>
         <div id="main-top">
+          <button className="refresh" onClick={onClickRefreshBtn}>
+            <span className="material-symbols-outlined">refresh</span>
+          </button>
           <div id="filter-box">
             <IconButton
               style={styles.iconBtn}
