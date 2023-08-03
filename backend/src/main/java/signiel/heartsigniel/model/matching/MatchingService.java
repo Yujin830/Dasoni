@@ -19,6 +19,7 @@ import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.partymember.PartyMemberRepository;
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.Room;
+import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 
 import java.util.Optional;
@@ -30,7 +31,6 @@ public class MatchingService {
     private final MemberRepository memberRepository;
     private final MatchingRoomService matchingRoomService;
     private final PartyService partyService;
-
     private final PartyRepository partyRepository;
     private final PartyMemberRepository partyMemberRepository;
     private final AlarmService alarmService;
@@ -49,6 +49,9 @@ public class MatchingService {
         Member memberEntity = findMemberById(memberId);
 
         // 이미 참가중일 경우 거절메세지 추가
+        if (isMemberInAnotherParty(memberEntity)) {
+            return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE, null);
+        }
 
         Party party = partyService.findSuitableParties(memberEntity);
         PartyMember partyMember = partyService.joinParty(party, memberEntity);
@@ -108,9 +111,9 @@ public class MatchingService {
         return partyMemberEntity;
     }
 
-    // 파티멤버 Id를 가져오는 서비스
-    public Long findPartyMemberIdByRoomIdAndMemberId(Long partyId, Long memberId){
-        Long targetPartyMemberId = partyService.findPartyMemberByMemberIdAndPartyId(partyId, memberId).getId();
-        return targetPartyMemberId;
+    public boolean isMemberInAnotherParty(Member member) {
+        return partyMemberRepository.findPartyMemberByMember(member).isPresent();
     }
+
+
 }

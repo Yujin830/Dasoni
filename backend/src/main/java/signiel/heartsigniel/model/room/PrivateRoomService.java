@@ -13,7 +13,6 @@ import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
 import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.party.PartyRepository;
 import signiel.heartsigniel.model.party.PartyService;
-import signiel.heartsigniel.model.party.exception.FullPartyException;
 import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.partymember.PartyMemberRepository;
 import signiel.heartsigniel.model.partymember.PartyMemberService;
@@ -25,6 +24,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,32 +51,18 @@ public class PrivateRoomService {
     // 방 생성
     public Response createRoom(PrivateRoomCreate privateRoomCreateRequest) {
 
-        // 방 생성
-        Room room = new Room();
-        room.setRoomType("private");
-        room.setRatingLimit(privateRoomCreateRequest.getRatingLimit());
-        room.setMegiAcceptable(privateRoomCreateRequest.isMegiAcceptable());
-        room.setTitle(privateRoomCreateRequest.getTitle());
-
-
-
-        // 파티 생성, 파티측 비즈니스 로직으로 대체(파티 가입 로직)
-        Party maleParty = partyService.createParty("private", "male");
-        Party femaleParty = partyService.createParty("private", "female");
-
-        // 리팩토링 필요(이해하기 쉽게 메서드로 처리)
-        room.setMaleParty(maleParty);
-        room.setFemaleParty(femaleParty);
-
-        // 파티 멤버 비즈니스 로직으로 수정
-
         Member member = findMemberById(privateRoomCreateRequest.getMemberId());
-        PartyMember partyMember = partyService.joinParty(getMemberGender(member).equals("male") ? maleParty : femaleParty, member);
+
+        if (isMemberInAnotherRoom(member)) {
+            return Response.of(RoomCode.ALREADY_IN_OTHER_ROOM, null);
+        }
+
+        Room room = createPrivateRoomObject(privateRoomCreateRequest);
+
+        PartyMember partyMember = partyService.joinParty(getMemberGender(member).equals("male") ? room.getMaleParty() : room.getFemaleParty(), member);
         partyMemberService.assignRoomLeader(partyMember);
 
         roomRepository.save(room);
-
-
         return Response.of(CommonCode.GOOD_REQUEST, PrivateRoomCreated.builder().createdRoomId(room.getId()).build());
     }
 
@@ -88,24 +74,22 @@ public class PrivateRoomService {
         Room roomEntity = memberAndRoomEntity.getRoom();
         Member memberEntity = memberAndRoomEntity.getMember();
 
-        // 방 인원 초과시
-        if (roomEntity.roomMemberCount() >= 6) {
-            return Response.of(RoomCode.FULL_ROOM, null);
+        if (isMemberInAnotherRoom(memberEntity)) {
+            return Response.of(RoomCode.ALREADY_IN_OTHER_ROOM, null);
         }
 
-        // 성별에 맞는 파티 찾기
         Party party = findPartyByGender(roomEntity, memberEntity.getGender());
 
-        // 파티 인원 꽉 찼는지 확인하기(추후에 오류코드 수정)
         if (party.getMembers().size() >= 3) {
             return Response.of(RoomCode.FULL_ROOM, null);
         }
 
-        // 파티 참가 및 저장(향후 partyService측 비즈니스로직으로 수정)
+        if (memberEntity.getRating() < roomEntity.getRatingLimit()){
+            return Response.of(RoomCode.RATING_TOO_LOW, null);
+        }
+
         partyService.joinParty(party, memberEntity);
         Response response = Response.of(RoomCode.SUCCESS_PARTICIPATE_ROOM, PrivateRoomInfo.of(roomEntity));
-
-
 
         //멤버가 성공적으로 참가한 후, 업데이트 목록을 브로드캐스팅.
         //1. 방에 있는 멤버 불러오기.
@@ -128,20 +112,14 @@ public class PrivateRoomService {
         Party partyEntity = findPartyByGender(roomEntity, memberEntity.getGender());
         PartyMember partyMemberEntity = partyService.findPartyMemberByMemberIdAndPartyId(memberId, partyEntity.getPartyId());
 
+        partyService.quitParty(partyMemberEntity);
         // 나 혼자 있는 경우
         if (roomEntity.roomMemberCount() == 1L) {
-
-            partyService.quitParty(partyMemberEntity);
-            roomBoom(roomEntity);
-
-            Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
-            return response;
-
-        } else {
+            deleteRoomAndParties(roomEntity);
+        }
+        else {
             // 내가 방장인 경우
             if (partyMemberEntity.isRoomLeader()){
-                partyService.quitParty(partyMemberEntity);
-
                 // 파티원이 있는 경우
                 if(partyEntity.getMembers().size() >= 1){
                     PartyMember newRoomLeader = partyService.findPartyLeaderByParty(partyEntity);
@@ -154,14 +132,9 @@ public class PrivateRoomService {
                     partyMemberService.assignRoomLeader(newRoomLeader);
                 }
             }
-            // 내가 방장이 아닌 경우
-            else {
-                partyService.quitParty(partyMemberEntity);
-            }
-
-            Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
-            return response;
         }
+        Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
+        return response;
     }
 
     /*
@@ -203,7 +176,7 @@ public class PrivateRoomService {
     }
 
     public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable){
-        if(gender == "male"){
+        if(gender.equals("male")){
             Page<Room> roomList = roomRepository.findAllByRoomTypeAndFemalePartyMemberCountLessThanEqual("private", 3L, pageable);
             return roomList.map(room -> PrivateRoomList.of(room));
         } else {
@@ -274,10 +247,28 @@ public class PrivateRoomService {
         return member.getGender();
     }
 
-    public void roomBoom(Room roomEntity){
-        partyRepository.delete(roomEntity.getMaleParty());
-        partyRepository.delete(roomEntity.getFemaleParty());
+    public void deleteRoomAndParties(Room roomEntity){
         roomRepository.delete(roomEntity);
+    }
+
+    public boolean isMemberInAnotherRoom(Member member) {
+        return partyMemberRepository.findPartyMemberByMember(member).isPresent();
+    }
+
+    private Room createPrivateRoomObject(PrivateRoomCreate privateRoomCreateRequest) {
+        Room room = new Room();
+        room.setRoomType("private");
+        room.setRatingLimit(privateRoomCreateRequest.getRatingLimit());
+        room.setMegiAcceptable(privateRoomCreateRequest.isMegiAcceptable());
+        room.setTitle(privateRoomCreateRequest.getTitle());
+
+        Party maleParty = partyService.createParty("private", "male");
+        Party femaleParty = partyService.createParty("private", "female");
+
+        room.setMaleParty(maleParty);
+        room.setFemaleParty(femaleParty);
+
+        return room;
     }
 
 }
