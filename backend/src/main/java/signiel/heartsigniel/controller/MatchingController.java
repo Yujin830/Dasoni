@@ -9,7 +9,7 @@ import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
 
 @RestController
-@RequestMapping("/match")
+@RequestMapping("/api/match")
 public class MatchingController {
 
     private final MatchingService matchingService;

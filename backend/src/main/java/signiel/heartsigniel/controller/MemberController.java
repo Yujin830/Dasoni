@@ -13,6 +13,7 @@ import signiel.heartsigniel.model.member.dto.SignResponse;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
