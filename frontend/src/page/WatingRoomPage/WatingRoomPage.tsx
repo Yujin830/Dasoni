@@ -46,7 +46,6 @@ function WaitingRoomPage() {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         console.log(res);
         console.log(JSON.parse(res.body));
-        // const result = JSON.parse(res.body);
         setMemberList(JSON.parse(res.body));
       });
 

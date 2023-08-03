@@ -1,12 +1,11 @@
 import React from 'react';
-import { useAppSelector } from '../../app/hooks';
 import maleIcon from '../../assets/image/male_icon.png';
 import femaleIcon from '../../assets/image/female_icon.png';
 import RankAvartar from '../Avarta/RankAvartar/RackAvartar';
 import './WaitingMember.css';
 import { User } from '../../app/slices/user';
 
-function WaitingMember({ memberId, nickname, point, matchCnt, gender }: User) {
+function WaitingMember({ nickname, point, matchCnt, gender }: User) {
   return (
     <div id="waiting-member">
       <div id="waiting-member-top">
@@ -16,16 +15,16 @@ function WaitingMember({ memberId, nickname, point, matchCnt, gender }: User) {
       <div id="waiting-member-contents">
         <div id="profile">
           {/* TODO : store에 저장된 member 정보로 바꾸기 */}
-          <RankAvartar point={1800} src={'rank_profile.png'} />
+          <RankAvartar point={point !== undefined ? point : 1000} src={'rank_profile.png'} />
         </div>
         <div id="info-box">
           <div id="signal">
             <span className="name">Signal</span>
-            <span className="info">{point === undefined ? 1800 : point}</span>
+            <span className="info">{point}</span>
           </div>
           <div id="match">
             <span className="name">Match</span>
-            <span className="info">{matchCnt === undefined ? 56 : matchCnt}</span>
+            <span className="info">{matchCnt}</span>
           </div>
         </div>
       </div>
