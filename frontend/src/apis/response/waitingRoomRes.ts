@@ -13,7 +13,7 @@ export interface WaitingMember {
   memberId: number;
   nickname: string;
   gender: string;
-  profileSrc: string;
-  points: number;
-  matchCnt: number;
+  profileImageSrc: string;
+  rating: number;
+  meetingCount: number;
 }
