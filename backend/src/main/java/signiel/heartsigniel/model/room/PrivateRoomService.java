@@ -2,7 +2,7 @@ package signiel.heartsigniel.model.room;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
@@ -36,16 +36,17 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessageSendingOperations operations;
 
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessagingTemplate simpMessagingTemplate) {
+
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessageSendingOperations operations) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
-        this.simpMessagingTemplate = simpMessagingTemplate;
+        this.operations = operations;
     }
 
     // 방 생성
@@ -111,11 +112,15 @@ public class PrivateRoomService {
         //1. 방에 있는 멤버 불러오기.
 
         List<Member> membersInRoom = getMemberInRoom(roomId);
+        System.out.println("membersInRoom.get(1).toString() = " + membersInRoom.get(1).toString());
         // 입장메시지때문에.
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSenderNickname(memberEntity.getNickname());
         chatMessage.setContent("님이 입장하셨습니다.");
-        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
+        System.out.println("roomId " + roomId);
+        System.out.println("chatMessage.getSenderNickname() = " + chatMessage.getSenderNickname());
+        System.out.println("chatMessage.getNickname() = " + chatMessage.getContent());
+        operations.convertAndSend("/topic/room/" + roomId, membersInRoom);
         return response;
     }
 

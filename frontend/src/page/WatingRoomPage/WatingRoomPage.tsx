@@ -11,57 +11,6 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
 
-const watingMember: WaitingMember[] = [
-  {
-    memberId: 1,
-    nickname: 'strong',
-    profileSrc: 'rank_profile.png',
-    gender: 'male',
-    matchCnt: 56,
-    points: 1800,
-  },
-  {
-    memberId: 2,
-    nickname: 'strong2',
-    profileSrc: 'rank_profile.png',
-    gender: 'male',
-    matchCnt: 56,
-    points: 1800,
-  },
-  {
-    memberId: 3,
-    nickname: 'strong3',
-    profileSrc: 'rank_profile.png',
-    gender: 'male',
-    matchCnt: 56,
-    points: 1800,
-  },
-  {
-    memberId: 4,
-    nickname: 'strong',
-    profileSrc: 'rank_profile.png',
-    gender: 'female',
-    matchCnt: 56,
-    points: 1800,
-  },
-  {
-    memberId: 5,
-    nickname: 'strong',
-    profileSrc: 'rank_profile.png',
-    gender: 'female',
-    matchCnt: 56,
-    points: 1800,
-  },
-  {
-    memberId: 6,
-    nickname: 'strong',
-    profileSrc: 'rank_profile.png',
-    gender: 'female',
-    matchCnt: 56,
-    points: 1800,
-  },
-];
-
 const styles = {
   startBtn: {
     width: '10rem',
@@ -84,7 +33,7 @@ const styles = {
 };
 
 function WaitingRoomPage() {
-  const [memberList, setMemberList] = useState<WaitingMember[]>(watingMember);
+  const [memberList, setMemberList] = useState<WaitingMember[]>([]);
   const navigate = useNavigate();
   const { roomId } = useParams();
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
@@ -92,18 +41,21 @@ function WaitingRoomPage() {
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
   useWebSocket({
     subscribe: (client) => {
-      // 정의한 주소로 서버로부터 메세지 구독 :: 해당 주소로 서버에서 메세지가 전송되면
-      // 클라이언트에서 해당 메세지 받아와 처리
-      // 구독할 주소 : 백엔드에 정의된 주소
-      client.subscribe(`/topic/room/${roomId}`, (res) => {
-        console.log(res); // 서버에서 보내온 메세지
-        const result = JSON.parse(res.body);
-        setMemberList(result.members);
+      client.subscribe(`/topic/room/${roomId}`, (res: any) => {
+        console.log(res);
+        console.log(JSON.parse(res.body));
+        // const result = JSON.parse(res.body);
+        setMemberList(JSON.parse(res.body));
       });
 
-      // 정의한 주소로 메세지를 서버로 전송,
-      // 서버에서 해당 주소를 구독한 클라이언트들이 메세지 수신함
-      client.send(`/app/room/${roomId}/chat`);
+      // 이 부분을 수정하였습니다. 두 번째 인자로 ChatMessage 객체가 필요합니다.
+      // 단, 실제 사용 시에는 적절한 필드값을 설정해야 합니다.
+      const chatMessage = {
+        sender: 'username', // sender는 실제 사용자의 이름이어야 합니다.
+        content: 'Hello, world!', // content는 실제 메시지 내용이어야 합니다.
+      };
+      // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
+      client.send(`/app/room/${roomId}`, {}, JSON.stringify(chatMessage));
     },
     beforeDisconnected: (client) => {
       console.log(client);

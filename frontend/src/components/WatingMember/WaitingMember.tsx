@@ -4,18 +4,14 @@ import maleIcon from '../../assets/image/male_icon.png';
 import femaleIcon from '../../assets/image/female_icon.png';
 import RankAvartar from '../Avarta/RankAvartar/RackAvartar';
 import './WaitingMember.css';
+import { User } from '../../app/slices/user';
 
-function WaitingMember() {
-  const member = useAppSelector((state) => state.user);
+function WaitingMember({ memberId, nickname, point, matchCnt, gender }: User) {
   return (
     <div id="waiting-member">
       <div id="waiting-member-top">
-        <img
-          className="item"
-          src={member.gender === 'male' ? maleIcon : femaleIcon}
-          alt="성별 아이콘"
-        />
-        <p>{member.nickname === '' ? 'sunny' : member.nickname}</p>
+        <img className="item" src={gender === 'male' ? maleIcon : femaleIcon} alt="성별 아이콘" />
+        <p>{nickname}</p>
       </div>
       <div id="waiting-member-contents">
         <div id="profile">
@@ -25,11 +21,11 @@ function WaitingMember() {
         <div id="info-box">
           <div id="signal">
             <span className="name">Signal</span>
-            <span className="info">{member.point === undefined ? 1800 : member.point}</span>
+            <span className="info">{point === undefined ? 1800 : point}</span>
           </div>
           <div id="match">
             <span className="name">Match</span>
-            <span className="info">{member.matchCnt === undefined ? 56 : member.matchCnt}</span>
+            <span className="info">{matchCnt === undefined ? 56 : matchCnt}</span>
           </div>
         </div>
       </div>

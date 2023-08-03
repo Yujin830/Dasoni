@@ -2,16 +2,18 @@ package signiel.heartsigniel.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
+import signiel.heartsigniel.model.Token.RefreshToken;
 import signiel.heartsigniel.model.member.Authority;
+import signiel.heartsigniel.model.Token.Dto.Token;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,17 +44,41 @@ public class JwtTokenProvider {
 
     // 토큰 생성
 //    public String createToken(String account, List<Authority> roles) {
-        public String createToken(String loginId, List<Authority> roles) {
+    public Token createToken(String loginId, List<Authority> roles) {
 //         Claims claims = Jwts.claims().setSubject(account);
-         Claims claims = Jwts.claims().setSubject(loginId);
+        Claims claims = Jwts.claims().setSubject(loginId);
         claims.put("roles", roles);
         Date now = new Date();
-        return Jwts.builder()
+
+        //AccessToken time = 1시간
+        long accessTokenValidTime = exp / 24;
+
+        //RefreshToken time = 7일
+        long refreshTokenValidTime = exp * 7;
+
+        // Create Access Token
+        String accessToken = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + exp))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(now.getTime() + accessTokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+
+
+        // Create Refresh Token
+        String refreshToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+
+        return Token.builder().
+                accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .key(loginId).
+                build();
     }
 
     // 권한정보 획득
@@ -87,4 +114,47 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
+    public String validateRefreshToken(RefreshToken refreshTokenObj) {
+
+        String refreshToken = refreshTokenObj.getRefreshToken();
+
+
+        try {
+
+
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(refreshToken);
+
+            if (!claims.getBody().getExpiration().before(new Date())) {
+                return recreationAccessToken(claims.getBody().get("sub").toString(), claims.getBody().get("roles"));
+            }
+        } catch (Exception e) {
+
+            return e.getMessage();
+        }
+
+        return null;
+
+    }
+
+    public String recreationAccessToken(String loginId, Object roles) {
+
+        Claims claims = Jwts.claims().setSubject(loginId);
+        claims.put("roles", roles);
+        Date date = new Date();
+
+        //Access Token
+        String accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(date)
+                .setExpiration(new Date(date.getTime() + (exp / 24)))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+
+        return accessToken;
+
+
+    }
+
 }
