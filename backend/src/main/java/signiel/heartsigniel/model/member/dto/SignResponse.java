@@ -42,6 +42,7 @@ public class SignResponse {
 
     private int guGun;
 
+    @Builder.Default
     private List<Authority> roles = new ArrayList<>();
 
     private Long remainLife;
