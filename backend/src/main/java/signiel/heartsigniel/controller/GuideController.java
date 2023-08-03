@@ -17,7 +17,7 @@ import java.util.List;
 public class GuideController {
     private final GuideService guideService;
 
-    @GetMapping("/guide")
+    @GetMapping("/api/guide")
     public ResponseEntity<List<Guide>> selectAll(){
         return new ResponseEntity<>(guideService.selectAll(), HttpStatus.OK);
     }
