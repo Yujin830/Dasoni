@@ -1,6 +1,6 @@
 import SockJS from 'sockjs-client';
 import { CompatClient, Stomp } from '@stomp/stompjs';
-import { useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 interface Param {
   subscribe: (clinet: CompatClient) => void;
@@ -9,29 +9,35 @@ interface Param {
 }
 
 export const useWebSocket = ({ subscribe, beforeDisconnected, reconnectDelay }: Param) => {
-  const [connected, setConnected] = useState(false);
+  // WebSocket 엔드포인트 URL을 여기에 입력합니다.
+  const webSocketUrl = '/ws/chat';
 
-  const client = useRef<CompatClient>();
-  client.current = Stomp.over(() => {
-    const sock = new SockJS('/ws/chat');
-    return sock;
-  });
+  useEffect(() => {
+    const socket = new SockJS(webSocketUrl);
+    const stompClient = Stomp.over(socket);
 
-  client.current.connect({}, () => {
-    console.log('연결 성공');
-    setConnected(true);
+    const onConnected = () => {
+      console.log('WebSocket에 연결되었습니다.');
+      // 원하는 토픽이나 큐에 stompClient.subscribe()를 사용하여 구독할 수 있습니다.
+      // 예시: stompClient.subscribe('/topic/someTopic', onMessageReceived);
+      subscribe(stompClient);
+    };
 
-    // 웹 소켓 연결 성공 시 구독할 함수
-    // subscribe(client.current!);
-  });
+    const onDisconnected = () => {
+      console.log('WebSocket 연결이 끊어졌습니다.');
+      beforeDisconnected(stompClient);
+    };
 
-  // client.current.disconnect(() => {
-  //   console.log('연결 해제');
-  //   setConnected(false);
+    const onError = (error: any) => {
+      console.error('WebSocket 오류:', error);
+    };
 
-  //   // 웹 소켓 연결 해제 시 실행할 함수
-  //   beforeDisconnected(client.current!);
-  // });
+    // WebSocket 연결을 수립합니다.
+    stompClient.connect({}, onConnected, onError);
 
-  return connected;
+    // 컴포넌트가 언마운트될 때 연결을 정리합니다.
+    return () => {
+      stompClient.disconnect(onDisconnected);
+    };
+  }, [webSocketUrl]);
 };
