@@ -35,10 +35,10 @@ public class Room {
     @Column
     private boolean megiAcceptable;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Party maleParty;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Party femaleParty;
 
     public boolean isGameStarted() {

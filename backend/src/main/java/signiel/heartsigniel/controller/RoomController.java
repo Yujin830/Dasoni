@@ -86,8 +86,8 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/rooms/{roomId}/result")
-    public ResponseEntity<Response> getMeetingResult(TotalResultRequest totalResultRequest){
+    @PostMapping("/{roomId}/result")
+    public ResponseEntity<Response> getMeetingResult(@RequestBody TotalResultRequest totalResultRequest){
         Response response = ratingService.calculateTotalResult(totalResultRequest);
         return ResponseEntity.ok(response);
     }
