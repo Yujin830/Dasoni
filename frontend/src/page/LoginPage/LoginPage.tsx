@@ -5,7 +5,7 @@ import Button from '../../components/Button/FilledButton';
 import Input from '../../components/Input/NoLabelInput/NoLabelInput';
 import './LoginPage.css';
 import logo from '../../assets/image/logo.png';
-import main from '../../assets/image/main_img.jpg';
+import main from '../../assets/image/main_img.png';
 import leftSignal from '../../assets/image/left_signal.png';
 import rightSignal from '../../assets/image/right_signal.png';
 import { useAppDispatch } from '../../app/hooks';
