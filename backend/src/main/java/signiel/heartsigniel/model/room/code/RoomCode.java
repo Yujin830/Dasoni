@@ -18,7 +18,9 @@ public enum RoomCode implements ResponseCode {
     PARTICIPATING_ROOM(1214, "이미 참여하고 있는 방입니다."),
     DEFAULT_ROOM_IMAGE(1216, "해당 방 이미지가 기본 값으로 설정되어있습니다."),
     NO_PERMISSION(1217, "해당 기능을 수행할 권한이 없습니다."),
-    NOT_MODIFY_PARTICIPANT_COUNT(1218, "현재 인원 수보다 작은 인원으로 설정할 수 없습니다.");
+    NOT_MODIFY_PARTICIPANT_COUNT(1218, "현재 인원 수보다 작은 인원으로 설정할 수 없습니다."),
+    ALREADY_IN_OTHER_ROOM(1219, "이미 다른 방에 참가중입니다."),
+    RATING_TOO_LOW(1220, "레이팅이 낮아 방에 참여할 수 없습니다.");
 
 
     private final int code;

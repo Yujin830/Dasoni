@@ -21,7 +21,6 @@ public class PrivateRoomInfo {
     private String title;
     private String roomType;
     private String videoUrl;
-    private String chatUrl;
     private Long ratingLimit;
     private LocalDateTime startTime;
     private boolean megiAcceptable;
@@ -33,15 +32,12 @@ public class PrivateRoomInfo {
         this.title = roomEntity.getTitle();
         this.roomType = roomEntity.getRoomType();
         this.videoUrl = roomEntity.getVideoUrl();
-        this.chatUrl = roomEntity.getChatUrl();
         this.ratingLimit = roomEntity.getRatingLimit();
         this.startTime = roomEntity.getStartTime();
         this.megiAcceptable = roomEntity.isMegiAcceptable();
         this.femaleParty = new PartyInfo(roomEntity.getFemaleParty());
         this.maleParty = new PartyInfo(roomEntity.getMaleParty());
     }
-
-
     @Builder
     public static PrivateRoomInfo of(Room roomEntity) {
         return new PrivateRoomInfo(roomEntity);
