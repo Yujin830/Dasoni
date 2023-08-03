@@ -4,7 +4,7 @@ import { RootState } from '../store';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
-export type User = {
+export interface User {
   memberId?: number;
   loginId?: string;
   password?: string;
@@ -18,7 +18,7 @@ export type User = {
   profileImg?: string;
   point?: number;
   matchCnt?: number;
-};
+}
 
 // 초기상태를 선언
 const initialState: User = {

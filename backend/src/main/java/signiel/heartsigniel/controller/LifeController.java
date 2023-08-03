@@ -17,6 +17,6 @@
 //    private final LifeService lifeService;
 //    @PostMapping("/life/{memberId}")
 //    public ResponseEntity<String> insert(@PathVariable Long memberId) throws Exception{
-//        return new ResponseEntity<>(lifeService.useLife(memberId);, HttpStatus.OK);
+//        return new ResponseEntity<>(lifeService.useLife(memberId), HttpStatus.OK);
 //    }
 //}

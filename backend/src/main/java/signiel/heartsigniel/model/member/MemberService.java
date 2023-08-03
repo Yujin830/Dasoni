@@ -1,5 +1,8 @@
 package signiel.heartsigniel.model.member;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
+import signiel.heartsigniel.model.Token.RefreshToken;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
@@ -143,4 +147,7 @@ public class MemberService {
         memberRepository.save(member);
         return "OK";
     }
+
+
+
 }
