@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.model.member.*;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
-import signiel.heartsigniel.model.member.dto.SignResponse;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @RequiredArgsConstructor
@@ -18,8 +19,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request) {
-        return new ResponseEntity<>(memberService.login(request), HttpStatus.OK);
+    public ResponseEntity<?> signin(@RequestBody SignRequest request, HttpServletResponse response) {
+        ResponseEntity<?> tResponseEntity = new ResponseEntity<>(memberService.login(request, response), HttpStatus.OK);
+        return tResponseEntity;
     }
 
     @PostMapping("/register")

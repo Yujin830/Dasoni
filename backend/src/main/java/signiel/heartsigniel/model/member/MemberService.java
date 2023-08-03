@@ -1,9 +1,6 @@
 package signiel.heartsigniel.model.member;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
@@ -16,12 +13,13 @@ import signiel.heartsigniel.jwt.JwtTokenProvider;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
-import signiel.heartsigniel.model.member.dto.SignResponse;
-import signiel.heartsigniel.model.life.Life;
-import signiel.heartsigniel.model.life.LifeRepository;
+import signiel.heartsigniel.token.RefreshTokenRepository;
+import signiel.heartsigniel.token.dto.RefreshToken;
+import signiel.heartsigniel.token.dto.TokenDto;
+import signiel.heartsigniel.token.response.GlobalResDto;
 
 
-import java.time.LocalDate;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
@@ -31,16 +29,18 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final LifeService lifeService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, LifeService lifeService){
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, LifeService lifeService, RefreshTokenRepository refreshTokenRepository){
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.lifeService = lifeService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
 
-    public SignResponse login(SignRequest request) {
+    public GlobalResDto login(SignRequest request, HttpServletResponse response) {
         Member member = memberRepository.findByLoginId(request.getLoginId()).orElseThrow(() ->
                 new BadCredentialsException("잘못된 계정 정보입니다."));
 
@@ -50,27 +50,22 @@ public class MemberService {
 
         if(member.isBlack())
             throw new LockedException("블랙처리된 사용자입니다.");
-
+        TokenDto tokenDto = jwtTokenProvider.createAllToken(request.getLoginId());
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByLoginId(request.getLoginId());
         Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
-        return SignResponse.builder()
-                .memberId(member.getMemberId())
-                .loginId(member.getLoginId())
-                .nickname(member.getNickname())
-                .gender(member.getGender())
-                .birth(member.getBirth())
-                .phoneNumber(member.getPhoneNumber())
-                .isBlack(member.isBlack())
-                .rating(member.getRating())
-                .meetingCount(member.getMeetingCount())
-                .profileImageSrc(member.getProfileImageSrc())
-                .job(member.getJob())
-                .siDo(member.getSiDo())
-                .guGun(member.getGuGun())
-                .roles(member.getRoles())
-                .remainLife(remainLives)
-                .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
-                .build();
+        if(refreshToken.isPresent()) {
+            refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
+        }else {
+            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), request.getLoginId());
+            refreshTokenRepository.save(newToken);
+        }
+
+        // response 헤더에 Access Token / Refresh Token 넣음
+        response.addHeader(jwtTokenProvider.ACCESS_TOKEN, tokenDto.getAccessToken());
+        response.addHeader(jwtTokenProvider.REFRESH_TOKEN, tokenDto.getRefreshToken());
+
+        return new GlobalResDto("Success Login", HttpStatus.OK.value());
     }
 
     public boolean register(SignRequest request) throws Exception {
