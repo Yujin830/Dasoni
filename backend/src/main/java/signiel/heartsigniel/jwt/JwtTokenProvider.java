@@ -44,41 +44,17 @@ public class JwtTokenProvider {
 
     // 토큰 생성
 //    public String createToken(String account, List<Authority> roles) {
-    public Token createToken(String loginId, List<Authority> roles) {
+    public String createToken(String loginId, List<Authority> roles) {
 //         Claims claims = Jwts.claims().setSubject(account);
         Claims claims = Jwts.claims().setSubject(loginId);
         claims.put("roles", roles);
         Date now = new Date();
-
-        //AccessToken time = 1시간
-        long accessTokenValidTime = exp / 24;
-
-        //RefreshToken time = 7일
-        long refreshTokenValidTime = exp * 7;
-
-        // Create Access Token
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setExpiration(new Date(now.getTime() + exp))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
-
-
-        // Create Refresh Token
-        String refreshToken = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-
-
-        return Token.builder().
-                accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .key(loginId).
-                build();
     }
 
     // 권한정보 획득
