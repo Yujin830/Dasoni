@@ -5,16 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessage {
-    public enum MessageType{
-        ENTER, TALK, LEAVE
-    }
 
-    private MessageType type;
-    private Long roomId;
+    @NotNull
     private String senderNickname;
+    @NotNull
     private String content;
 }
