@@ -115,9 +115,9 @@ public class JwtTokenProvider {
         }
     }
 
-    public String validateRefreshToken(RefreshToken refreshTokenObj){
+    public String validateRefreshToken(RefreshToken refreshTokenObj) {
 
-        String refreshToken =  refreshTokenObj.getRefreshToken();
+        String refreshToken = refreshTokenObj.getRefreshToken();
 
 
         try {
@@ -128,7 +128,7 @@ public class JwtTokenProvider {
             if (!claims.getBody().getExpiration().before(new Date())) {
                 return recreationAccessToken(claims.getBody().get("sub").toString(), claims.getBody().get("roles"));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
             return e.getMessage();
         }
@@ -137,7 +137,7 @@ public class JwtTokenProvider {
 
     }
 
-    public String recreationAccessToken(String loginId, Object roles){
+    public String recreationAccessToken(String loginId, Object roles) {
 
         Claims claims = Jwts.claims().setSubject(loginId);
         claims.put("roles", roles);
@@ -147,7 +147,12 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(date)
-                .setExpiration(new Date(date.getTime()))
+                .setExpiration(new Date(date.getTime() + (exp / 24)))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+
+        return accessToken;
 
 
     }
