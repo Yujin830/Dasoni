@@ -28,8 +28,6 @@ public class Room {
     @Column
     private String title;
     @Column
-    private String chatUrl;
-    @Column
     private LocalDateTime startTime;
 
     @Column
