@@ -18,7 +18,7 @@ import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
 
 @RestController
-@RequestMapping("/rooms")
+@RequestMapping("/api/rooms")
 @Slf4j
 public class RoomController {
 
@@ -86,8 +86,8 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/rooms/{roomId}/result")
-    public ResponseEntity<Response> getMeetingResult(TotalResultRequest totalResultRequest){
+    @PostMapping("/{roomId}/result")
+    public ResponseEntity<Response> getMeetingResult(@RequestBody TotalResultRequest totalResultRequest){
         Response response = ratingService.calculateTotalResult(totalResultRequest);
         return ResponseEntity.ok(response);
     }

@@ -35,7 +35,7 @@ public class Party {
     @Column(name = "party_type", length = 20)
     private String partyType;
 
-    @OneToMany(mappedBy = "party")
+    @OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
     private List<PartyMember> members = new ArrayList<>();
 
     @Column(name="matching_time")

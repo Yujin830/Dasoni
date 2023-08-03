@@ -39,6 +39,7 @@ function WaitingRoomPage() {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
+  const member = useAppSelector((state) => state.user);
 
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
   useWebSocket({
@@ -48,15 +49,9 @@ function WaitingRoomPage() {
         console.log(JSON.parse(res.body));
         setMemberList(JSON.parse(res.body));
       });
-
-      // 이 부분을 수정하였습니다. 두 번째 인자로 ChatMessage 객체가 필요합니다.
-      // 단, 실제 사용 시에는 적절한 필드값을 설정해야 합니다.
-      const chatMessage = {
-        sender: 'username', // sender는 실제 사용자의 이름이어야 합니다.
-        content: 'Hello, world!', // content는 실제 메시지 내용이어야 합니다.
-      };
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
-      client.send(`/app/room/${roomId}`, {}, JSON.stringify(chatMessage));
+      client.send(`/app/room/${roomId}`, {}, `memberId:${member.memberId}`);
+      // client.send(`/app/room/${roomId}`, {}, JSON.stringify(chatMessage));
     },
     beforeDisconnected: (client) => {
       console.log(client);
@@ -112,7 +107,14 @@ function WaitingRoomPage() {
         <div id="waiting-room-body">
           <div id="waiting-room-content">
             {memberList.map((member) => (
-              <WaitingMemberBox key={member.memberId} />
+              <WaitingMemberBox
+                key={member.memberId}
+                nickname={member.nickname}
+                point={member.rating}
+                matchCnt={member.meetingCount}
+                gender={member.gender}
+                profileImg={member.profileImageSrc}
+              />
             ))}
           </div>
           <ChatRoom />
