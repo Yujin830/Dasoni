@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../Modal.css';
 import './ProfileModal.css';
 import Input from '../../Input/BasicInput/BasicInput';
 import Button from '../../Button/FilledButton';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { modifyUserAsync } from '../../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
+import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
 const styles = {
   button: {
@@ -38,15 +39,16 @@ interface ProfileModalProps {
 }
 
 function ProfileModal({ onClose }: ProfileModalProps) {
-  const [job, setJob] = useState('');
-  const [address, setAddress] = useState('');
   const [nickname, setNickname] = useState('');
+  const [job, setJob] = useState('');
+  const [modifySido, setModifySido] = useState(11); // "서울특별시"의 sidoCode인 "11"을 설정
+  const [modifyGugun, setModifyGugun] = useState(0); // 초기값은 빈 문자열
+  const { memberId } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
 
   const handleChangeJob = (event: React.ChangeEvent<HTMLInputElement>) =>
     setJob(event.target.value);
-  const handleChangeAddress = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setAddress(event.target.value);
+
   const handleChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) =>
     setNickname(event.target.value);
   const handleSkip = () => {
@@ -60,13 +62,16 @@ function ProfileModal({ onClose }: ProfileModalProps) {
     event.preventDefault();
 
     const data = {
+      memberId: memberId,
+      sido: modifySido,
+      gugun: modifyGugun,
       job: job,
-      address: address,
       nickname: nickname,
     };
     try {
       await dispatch(modifyUserAsync(data));
       console.log('프로필 정보 추가');
+      console.log(data);
       onClose();
       navigate('/main');
     } catch (error) {
@@ -85,20 +90,6 @@ function ProfileModal({ onClose }: ProfileModalProps) {
       <div className="box">
         <h3>이성에게 어필할 수 있는 나의 정보를 더 작성해주세요!</h3>
         <div className="inputbox">
-          <div className="input job">
-            <label htmlFor="label job">직업</label>
-            <Input style={styles.input} type="text" value={job} handleChange={handleChangeJob} />
-          </div>
-
-          <div className="input address">
-            <label htmlFor="label address">사는곳</label>
-            <Input
-              style={styles.input}
-              type="text"
-              value={address}
-              handleChange={handleChangeAddress}
-            />
-          </div>
           <div className="input nickname">
             <label htmlFor="label nickname">닉네임</label>
             <Input
@@ -107,6 +98,19 @@ function ProfileModal({ onClose }: ProfileModalProps) {
               value={nickname}
               handleChange={handleChangeNickname}
             />
+          </div>
+          <div className="input job">
+            <label htmlFor="label job">직업</label>
+            <Input style={styles.input} type="text" value={job} handleChange={handleChangeJob} />
+          </div>
+
+          <div className="input address">
+            <AddressSelecter
+              modifySido={modifySido}
+              modifyGugun={modifyGugun}
+              setModifySido={setModifySido}
+              setModifyGugun={setModifyGugun}
+            />{' '}
           </div>
         </div>
         <div className="complete-button">
