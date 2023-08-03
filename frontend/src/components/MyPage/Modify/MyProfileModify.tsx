@@ -28,8 +28,8 @@ function MyProfileModify({ setType }: any) {
   };
 
   const [modifyNickname, setModifyNickname] = useState(nickname);
-  const [modifySido, setModifySido] = useState('11');
-  const [modifyGugun, setModifyGugun] = useState('');
+  const [modifySido, setModifySido] = useState(11);
+  const [modifyGugun, setModifyGugun] = useState(0);
   const [modifyJob, setModifyJob] = useState(job);
   const [modifyProfileSrc, setModifyProfileSrc] = useState('');
 
