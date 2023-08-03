@@ -12,10 +12,10 @@ export type User = {
   birth?: string;
   phoneNumber?: string;
   job?: string;
-  sido?: number;
-  gugun?: number;
+  siDo?: number;
+  guGun?: number;
   gender?: string;
-  profileImg?: string;
+  profileImageSrc?: string;
   point?: number;
   matchCnt?: number;
 };
@@ -29,8 +29,9 @@ const initialState: User = {
   birth: '',
   phoneNumber: '',
   job: '',
-  sido: 0,
-  gugun: 0,
+  siDo: 0,
+  guGun: 0,
+  profileImageSrc: '',
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
@@ -42,13 +43,12 @@ const userSlice = createSlice({
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
-        const { nickname } = action.payload; // 예시로 받아온 데이터 중 닉네임 정보를 가져옴
-        return { ...state, nickname };
+        console.log(action.payload);
+        return { ...state, ...action.payload };
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
         // 회원가입 응답 처리 코드(회원가입 후, 필요한 정보를 state에 반영)
-        const { id } = action.payload;
-        return { ...state, id };
+        return { ...state, ...action.payload };
       })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
         return { ...state, ...action.payload };
@@ -105,19 +105,21 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
 // 유저 정보 업데이트
 export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser: User) => {
   const requestData = {
-    sido: modifyUser.sido,
-    gugun: modifyUser.gugun,
+    siDo: modifyUser.siDo,
+    guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
+    profileImageSrc: modifyUser.profileImageSrc,
   };
+  console.log('here', modifyUser);
   const response = await axios.patch(`/users/${modifyUser.memberId}`, requestData);
   const data = response.data;
   console.log('from 서버');
   console.log(data);
 
   return {
-    sido: data.sido,
-    gugun: data.gugun,
+    siDo: data.siDo,
+    guGun: data.guGun,
     job: data.job,
     nickname: data.nickname,
   };
@@ -125,46 +127,48 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
 
 // 로그인 시 필요한 함수
 export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
-  // const loginApiUrl = 'http://localhost:8080/login';
-
   const requestData = {
     loginId: user.loginId,
     password: user.password,
   };
 
-  // 서버에 POST 요청 보내기
-  console.log('cors 테스트');
-  const response = await axios.post('/login', requestData);
+  try {
+    // 서버에 POST 요청 보내기
+    const response = await axios.post('/login', requestData);
 
-  // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
-  const data = response.data;
-  console.log('from 서버');
-  console.log(data);
+    // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
+    const data = response.data;
+    console.log('from 서버');
+    console.log(data);
 
-  // 서버에서 받은 토큰을 localstorage에 저장
-  localStorage.setItem('jwtToken', data.token);
-  // axios 호출시마다 토큰을 header에 포함하도록 설정
-  setAuthorizationToken(data.token);
+    // 서버에서 받은 토큰을 localstorage에 저장
+    localStorage.setItem('jwtToken', data.token);
+    // axios 호출시마다 토큰을 header에 포함하도록 설정
+    setAuthorizationToken(data.token);
 
-  // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
-  return {
-    memberId: data.memberId,
-    id: data.loginId,
-    nickname: data.nickname,
-    gender: data.gender,
-    birth: data.birth,
-    phoneNumber: data.phoneNumber,
-    rank: data.rank,
-    meetingCount: data.meetingCount,
-    profileImageSrc: data.profileImageSrc,
-    job: data.job,
-    siDo: data.siDo,
-    guGun: data.guGun,
-    roles: data.roles,
-    remainLife: data.remainLife,
-    // token: data.token,
-    black: data.black,
-  };
+    // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
+    return {
+      memberId: data.memberId,
+      id: data.loginId,
+      nickname: data.nickname,
+      gender: data.gender,
+      birth: data.birth,
+      phoneNumber: data.phoneNumber,
+      rank: data.rank,
+      meetingCount: data.meetingCount,
+      profileImageSrc: data.profileImageSrc,
+      job: data.job,
+      siDo: data.siDo,
+      guGun: data.guGun,
+      roles: data.roles,
+      remainLife: data.remainLife,
+      // token: data.token,
+      black: data.black,
+    };
+  } catch (error) {
+    // 로그인에 실패한 경우 에러를 던집니다.
+    throw new Error('인증 정보가 올바르지 않습니다.');
+  }
 });
 
 // 리덕스에 저장된 user 상태값을 export

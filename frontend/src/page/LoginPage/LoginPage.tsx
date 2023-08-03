@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RootState } from '../../app/store';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/hooks';
 import Button from '../../components/Button/FilledButton';
 import Input from '../../components/Input/NoLabelInput/NoLabelInput';
 import './LoginPage.css';
@@ -44,7 +44,6 @@ function LoginPage() {
   const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
-  const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setloginId(event.target.value);
@@ -55,6 +54,7 @@ function LoginPage() {
   };
 
   const dispatch = useAppDispatch();
+
   const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
@@ -62,14 +62,22 @@ function LoginPage() {
       loginId: loginId,
       password: password,
     };
-    console.log('login');
+
     try {
-      await dispatch(loginAsync(data));
-      console.log('로그인 성공!');
-      console.log('로그인된 사용자 닉네임:', nickname);
-      setModalOpen(true); // 로그인에 성공하면 모달 열기
+      const response = await dispatch(loginAsync(data));
+
+      if (response.payload) {
+        console.log('로그인 성공!');
+        // alert('로그인되었습니다.');
+        setModalOpen(true);
+      } else {
+        console.log('로그인 실패');
+        alert('올바르지 않은 아이디 혹은 비밀번호입니다.');
+        setModalOpen(false); // 로그인에 실패하면 모달 닫기
+      }
     } catch (error) {
       console.log('로그인 실패:', error);
+      setModalOpen(false);
     }
   };
 
