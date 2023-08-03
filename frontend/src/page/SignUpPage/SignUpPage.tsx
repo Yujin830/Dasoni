@@ -8,6 +8,7 @@ import leftSignal from '../../assets/image/left_signal.png';
 
 import { useAppDispatch } from '../../app/hooks';
 import { signupAsync } from '../../app/slices/user';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   button: {
@@ -69,6 +70,7 @@ function SignupPage() {
   const [phone, setPhone] = useState('');
   const [isIdAvailable, setIsIdAvailable] = useState(false); // 중복 체크 결과를 나타내는 상태 변수
   const [passwordMatchMessage, setPasswordMatchMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setloginId(event.target.value);
@@ -118,6 +120,7 @@ function SignupPage() {
       const response = await dispatch(signupAsync(data)); // 회원가입 요청, 서버 응답 처리를 기다립니다.
       console.log('회원가입 성공!');
       console.log('회원 정보:', response.payload); // 회원가입 후 서버로부터 받은 응답 데이터를 출력합니다.
+      navigate('/');
     } catch (error) {
       console.log('회원가입 실패:', error);
     }
