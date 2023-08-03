@@ -11,3 +11,6 @@ logging:
     org.hibernate.sql: debug
     org.hibernate.type: trace
 
+servers:
+  - url: http://i9a307.p.ssafy.io/
+    description: Production server
