@@ -134,7 +134,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
 
   // 서버에 POST 요청 보내기
   console.log('cors 테스트');
-  const response = await axios.post('/login', requestData);
+  const response = await axios.post('/api/login', requestData);
 
   // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
   const data = response.data;
