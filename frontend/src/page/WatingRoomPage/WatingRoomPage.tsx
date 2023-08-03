@@ -7,6 +7,8 @@ import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate, useParams } from 'react-router';
 import './WaitingRoomPage.css';
 import axios from 'axios';
+import ChatRoom from '../../components/ChatRoom/ChatRoom';
+
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
@@ -108,10 +110,13 @@ function WaitingRoomPage() {
             </span>
           </div>
         </div>
-        <div id="waiting-room-content">
-          {memberList.map((member) => (
-            <WaitingMemberBox key={member.memberId} />
-          ))}
+        <div id="waiting-room-body">
+          <div id="waiting-room-content">
+            {memberList.map((member) => (
+              <WaitingMemberBox key={member.memberId} />
+            ))}
+          </div>
+          <ChatRoom />
         </div>
         <div id="waiting-room-footer">
           <FilledButton content="시작하기" style={styles.startBtn} handleClick={handleStartBtn} />
