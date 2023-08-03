@@ -79,9 +79,9 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(PERMIT_SWAGGER_URL_ARRAY).permitAll()
                 // 회원가입과 로그인은 모두 승인
-                .antMatchers("/app/**","/topic/**","/ws/**","/chat/**","/register/**", "/login", "/guide", "/warn/**", "/life/**", "/users/**", "/question").permitAll()
+                .antMatchers("/app/**","/topic/**","/ws/**","/chat/**","/api/register/**", "/api/login", "/guide", "/warn/**", "/life/**", "/api/users/**", "/question").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
-                .antMatchers("/rooms/**", "/match/**", "/alarm/**").hasRole("USER")
+                .antMatchers("/api/rooms/**", "/api/match/**", "/api/alarm/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
                 // JWT 인증 필터 적용
