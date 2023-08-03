@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.alarm.AlarmService;
 import signiel.heartsigniel.model.matching.MatchingService;
+import signiel.heartsigniel.model.matching.code.MatchingCode;
+import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
 
 @RestController
 @RequestMapping("/match")
@@ -31,4 +33,5 @@ public class MatchingController {
             Response response = matchingService.cancelFindMatch(partyMemberId);
             return ResponseEntity.ok(response);
     }
+
 }
