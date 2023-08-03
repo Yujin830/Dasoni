@@ -113,7 +113,7 @@ function WaitingRoomPage() {
                 point={member.rating}
                 matchCnt={member.meetingCount}
                 gender={member.gender}
-                profileImg={member.profileImageSrc}
+                profileImageSrc={member.profileImageSrc}
               />
             ))}
           </div>
