@@ -5,7 +5,7 @@ import RankAvartar from '../Avarta/RankAvartar/RackAvartar';
 import './WaitingMember.css';
 import { User } from '../../app/slices/user';
 
-function WaitingMember({ nickname, point, matchCnt, gender }: User) {
+function WaitingMember({ nickname, point, matchCnt, gender, profileImg }: User) {
   return (
     <div id="waiting-member">
       <div id="waiting-member-top">
@@ -14,8 +14,10 @@ function WaitingMember({ nickname, point, matchCnt, gender }: User) {
       </div>
       <div id="waiting-member-contents">
         <div id="profile">
-          {/* TODO : store에 저장된 member 정보로 바꾸기 */}
-          <RankAvartar point={point !== undefined ? point : 1000} src={'rank_profile.png'} />
+          <RankAvartar
+            point={point !== undefined ? point : 1000}
+            src={profileImg !== undefined ? profileImg : 'rank_profile.png'}
+          />
         </div>
         <div id="info-box">
           <div id="signal">
