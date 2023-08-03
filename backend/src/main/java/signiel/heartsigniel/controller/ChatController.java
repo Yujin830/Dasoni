@@ -23,8 +23,8 @@ public class ChatController {
     private final PrivateRoomService privateRoomService;
 
     @MessageMapping("/room/{roomId}")
-    public void send(@DestinationVariable Long roomId, String msg){
-        privateRoomService.joinRoom(1L, roomId);
+    public void send(@DestinationVariable Long roomId,String msg){
+        privateRoomService.renewMemberList(roomId, msg);
         System.out.println("send arrive");
         System.out.println("msg " + msg);
         System.out.println("roomId " + roomId);
