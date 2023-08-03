@@ -24,7 +24,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
-    @GetMapping("/api/question")
+    @GetMapping("/question")
     public ResponseEntity<Response> pickRandomQuestion(){
         return ResponseEntity.ok(questionService.pickRandomQuestion());
     }

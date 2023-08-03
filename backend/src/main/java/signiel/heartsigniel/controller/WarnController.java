@@ -15,7 +15,7 @@ import signiel.heartsigniel.model.warn.WarnService;
 public class WarnController {
     private final WarnService warnService;
 
-    @PostMapping("/api/warn/{memberId}")
+    @PostMapping("/warn/{memberId}")
     public ResponseEntity<Integer> insertAndSelect(@PathVariable Long memberId) throws Exception{
         return new ResponseEntity<>(warnService.insertAndSelect(memberId), HttpStatus.OK);
     }
