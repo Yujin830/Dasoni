@@ -9,6 +9,13 @@ import setAuthorizationToken from './utils/setAuthorizationToken';
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
+import axios from 'axios';
+axios.defaults.baseURL =
+  process.env.REACT_APP_ENV === 'development' ? 'http://i9a307.p.ssafy.io/' : '/';
+
+console.log(`axios.defaults.baseURL ${axios.defaults.baseURL}`);
+console.log(`process.env.REACT_APP_ENV ${process.env.REACT_APP_ENV}`);
+
 setAuthorizationToken(localStorage.getItem('jwtToken'));
 
 root.render(
