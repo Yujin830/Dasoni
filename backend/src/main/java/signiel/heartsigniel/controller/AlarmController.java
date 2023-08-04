@@ -7,7 +7,7 @@ import signiel.heartsigniel.model.alarm.AlarmService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/alarm")
+@RequestMapping("/api/alarm")
 public class AlarmController {
 
     private final AlarmService alarmService;
