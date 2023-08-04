@@ -1,12 +1,14 @@
 import React, { useRef, useState } from 'react';
 import './ResultModal.css';
 import RightSignal from '../../../assets/image/right_signal.png';
+import { useAppSelector } from '../../../app/hooks';
 
 interface ResultModalProps {
   onClose: () => void;
 }
 
 function ResultModal({ onClose }: ResultModalProps) {
+  const Result = '성공';
   return (
     <div className="result-modal">
       <div className="result-header">
@@ -15,7 +17,7 @@ function ResultModal({ onClose }: ResultModalProps) {
       <div className="result-content">
         <h1 className="matching-result">매칭결과</h1>
         <label id="label-result" htmlFor="label-result">
-          매칭에 {} 했습니다.
+          매칭에 {Result} 했습니다.
         </label>
       </div>
       <div className="content">{/* <ProfileImg> */}</div>

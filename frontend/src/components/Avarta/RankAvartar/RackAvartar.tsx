@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './RankAvartar.css';
+import { useAppSelector } from '../../../app/hooks';
 
 type RankAvartarProps = {
   src: string;
@@ -7,6 +8,7 @@ type RankAvartarProps = {
 };
 
 function RankAvartar({ src, point }: RankAvartarProps) {
+  const { profileImageSrc } = useAppSelector((state) => state.user);
   const [profileImg, setProfileImg] = useState('');
   const [rankImg, setRankImg] = useState('');
 
@@ -41,7 +43,7 @@ function RankAvartar({ src, point }: RankAvartarProps) {
 
   return (
     <span className="rank-avartar">
-      <img className="profile" src={profileImg} alt="아바타 이미지" />
+      <img className="profile" src={profileImageSrc} alt="아바타 이미지" />
       <img className="rank" src={rankImg} alt="랭크 하트 이미지" />
     </span>
   );

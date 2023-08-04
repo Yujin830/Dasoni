@@ -20,7 +20,9 @@ const input = {
 };
 
 function MyProfileModify({ setType }: any) {
-  const { loginId, nickname, job, memberId } = useAppSelector((state) => state.user);
+  const { loginId, nickname, job, memberId, profileImageSrc } = useAppSelector(
+    (state) => state.user,
+  );
 
   const cancleModify = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ function MyProfileModify({ setType }: any) {
   const [modifySido, setModifySido] = useState(11);
   const [modifyGugun, setModifyGugun] = useState(0);
   const [modifyJob, setModifyJob] = useState(job);
-  const [modifyProfileSrc, setModifyProfileSrc] = useState('');
+  const [modifyProfileSrc, setModifyProfileSrc] = useState(profileImageSrc);
 
   const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setModifyNickname(e.target.value);

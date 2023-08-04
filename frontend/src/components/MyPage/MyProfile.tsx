@@ -3,7 +3,9 @@ import { useAppSelector } from '../../app/hooks';
 import RecentMatchAvartar from '../../components/Avarta/RecentMatchAvartar/RecentMatchAvartar';
 
 function MyProfile({ setType }: any) {
-  const { loginId, nickname, job, birth, siDo, guGun } = useAppSelector((state) => state.user);
+  const { loginId, nickname, job, birth, siDo, guGun, profileImageSrc } = useAppSelector(
+    (state) => state.user,
+  );
 
   // TODO : 최근 매칭된 다소니 리스트 조회 recentUserList로 state 변경
   const recentUserList = useState([]);
