@@ -77,11 +77,6 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
   console.log('from 서버');
   console.log(data);
 
-  // 서버에서 받은 토큰을 localstorage에 저장
-  localStorage.setItem('jwtToken', data.token);
-  // axios 호출시마다 토큰을 header에 포함하도록 설정
-  setAuthorizationToken(data.token);
-
   // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
   return {
     memberId: data.memberId,
