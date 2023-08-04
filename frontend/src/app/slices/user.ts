@@ -43,7 +43,7 @@ const userSlice = createSlice({
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
-        console.log(action.payload);
+        console.log('저장할 정보', action.payload);
         return { ...state, ...action.payload };
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
@@ -165,6 +165,16 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
     throw new Error('인증 정보가 올바르지 않습니다.');
   }
 });
+// 로그아웃 시 필요한 함수
+export const logout = () => {
+  // 로컬 스토리지에서 토큰 삭제
+  localStorage.removeItem('jwtToken');
+  // Axios 헤더에서 인증 토큰 제거
+  setAuthorizationToken(null); // Axios 헤더에서 토큰을 null로 설정하는 함수를 가정합니다.
+  console.log('로그아웃 성공?', localStorage);
+  // 필요에 따라 Redux 상태를 초기화하는 액션을 디스패치할 수도 있습니다.
+  // dispatch(resetUserState());
+};
 
 // 리덕스에 저장된 user 상태값을 export
 export const getUserInfo = (state: RootState) => state.user;
