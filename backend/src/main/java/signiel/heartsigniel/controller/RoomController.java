@@ -14,8 +14,10 @@ import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
 
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
+import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
+import signiel.heartsigniel.model.room.dto.StartRoomRequest;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -86,10 +88,26 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{roomId}/result")
-    public ResponseEntity<Response> getMeetingResult(@RequestBody TotalResultRequest totalResultRequest){
-        Response response = ratingService.calculateTotalResult(totalResultRequest);
+    @PatchMapping("/{roomId}")
+    public ResponseEntity<Response> startMeetingRoom(@PathVariable Long roomId, @RequestBody StartRoomRequest startRoomRequest){
+        Long roomLeaderPartyMemberId = startRoomRequest.getRoomLeaderPartyMemberId();
+        Response response = privateRoomService.startRoom(roomId, roomLeaderPartyMemberId);
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<Response> endMeetingRoom(@RequestBody TotalResultRequest totalResultRequest){
+
+        Response response;
+
+            if (totalResultRequest.getRoomType().equals("match")){
+            response = matchingRoomService.endRoom(totalResultRequest);
+        } else if (totalResultRequest.getRoomType().equals("private")) {
+            response = privateRoomService.endRoom(totalResultRequest);
+        } else{
+            response = Response.of(RoomCode.NOT_PARTICIPATE_ROOM, null);
+        }
+
+        return ResponseEntity.ok(response);
+    }
 }
