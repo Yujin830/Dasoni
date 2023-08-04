@@ -14,6 +14,7 @@ import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
 
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
+import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
 
@@ -36,7 +37,10 @@ public class RoomController {
     public ResponseEntity<Response> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId){
         Response response = privateRoomService.joinRoom(memberId, roomId);
 
+
+        if(response.getContent().equals(RoomCode.SUCCESS_PARTICIPATE_ROOM.getCode()))
         return ResponseEntity.ok(response);
+        return null;
     }
 
     @DeleteMapping("/{roomId}/members/{memberId}")
