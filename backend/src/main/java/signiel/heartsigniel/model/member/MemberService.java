@@ -41,13 +41,15 @@ public class MemberService {
 
 
     public SignResponse login(SignRequest request) {
+        System.out.println("-----------------------------------------------------");
         Member member = memberRepository.findByLoginId(request.getLoginId()).orElseThrow(() ->
-                new BadCredentialsException("잘못된 계정 정보입니다."));
+                new UsernameNotFoundException("잘못된 계정 정보입니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("비밀번호가 틀렸습니다.");
         }
 
+        System.out.println("===========================================");
         if(member.isBlack())
             throw new LockedException("블랙처리된 사용자입니다.");
 

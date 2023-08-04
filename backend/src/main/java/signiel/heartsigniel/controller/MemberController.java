@@ -19,6 +19,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request) {
+        System.out.println(request.getLoginId());
         return new ResponseEntity<>(memberService.login(request), HttpStatus.OK);
     }
 
