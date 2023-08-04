@@ -61,6 +61,10 @@ public class Member {
     @Column(name = "gu_gun")
     private int guGun;
 
+    @Column(name = "is_first")
+    private int isFirst;
+
+
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Builder.Default

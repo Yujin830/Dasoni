@@ -52,6 +52,10 @@ public class MemberService {
 
         Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
+        if(member.getIsFirst() == 0){
+            member.setIsFirst(1);
+        }
+
         return SignResponse.builder()
                 .memberId(member.getMemberId())
                 .loginId(member.getLoginId())
@@ -69,6 +73,7 @@ public class MemberService {
                 .roles(member.getRoles())
                 .remainLife(remainLives)
                 .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
+                .isFirst(member.getIsFirst())
                 .build();
     }
 
@@ -81,6 +86,7 @@ public class MemberService {
                     .birth(request.getBirth())
                     .phoneNumber(request.getPhoneNumber())
                     .rating(1000L)
+                    .isFirst(0)
                     .build();
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
