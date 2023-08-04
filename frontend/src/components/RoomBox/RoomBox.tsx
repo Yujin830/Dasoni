@@ -102,7 +102,7 @@ function RoomBox({
       console.log('입장하기');
       try {
         // TODO : user state에 있는 memberId로 바꾸기
-        const res = await axios.post(`/rooms/${roomId}/members/${member.memberId}`);
+        const res = await axios.post(`/api/rooms/${roomId}/members/${member.memberId}`);
         console.log(res);
 
         if (res.status === 200) {

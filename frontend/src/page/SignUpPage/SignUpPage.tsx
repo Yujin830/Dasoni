@@ -144,7 +144,7 @@ function SignupPage() {
 
     try {
       // 서버로 로그인 아이디 중복 체크 요청을 보냄
-      const response = await axios.post(`/register/${loginId}`);
+      const response = await axios.post(`/api/register/${loginId}`);
 
       console.log('중복체크 성공');
       console.log(response.status);
