@@ -150,6 +150,14 @@ public class PrivateRoomService {
 
         return membersInRoom;
     }
+    /*
+    Sending START Message Method
+     */
+
+    public void sendMessage(Long roomId){
+        String startMessage = "Start";
+        template.convertAndSend("/topic/room/"+roomId+"/start",startMessage);
+    }
 
     /*
     유저 목록 브로드캐스팅
