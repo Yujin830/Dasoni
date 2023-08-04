@@ -6,9 +6,17 @@ interface Param {
   subscribe: (clinet: CompatClient) => void;
   beforeDisconnected: (client: CompatClient) => void;
   reconnectDelay?: number;
+  disconnectMessage?: string;
+  disconnectEndPoint?: string;
 }
 
-export const useWebSocket = ({ subscribe, beforeDisconnected, reconnectDelay }: Param) => {
+export const useWebSocket = ({
+  subscribe,
+  beforeDisconnected,
+  reconnectDelay,
+  disconnectMessage,
+  disconnectEndPoint,
+}: Param) => {
   // WebSocket 엔드포인트 URL을 여기에 입력합니다.
   const webSocketUrl = '/ws/chat';
 
@@ -25,6 +33,10 @@ export const useWebSocket = ({ subscribe, beforeDisconnected, reconnectDelay }: 
 
     const onDisconnected = () => {
       console.log('WebSocket 연결이 끊어졌습니다.');
+      console.log('disconnectMessage ', disconnectMessage);
+      if (disconnectMessage) {
+        stompClient.send(`/app/${disconnectEndPoint}`, {}, disconnectMessage);
+      }
       beforeDisconnected(stompClient);
     };
 
