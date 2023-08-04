@@ -42,6 +42,8 @@ public class SignResponse {
 
     private int guGun;
 
+    private int isFirst;
+
     @Builder.Default
     private List<Authority> roles = new ArrayList<>();
 
