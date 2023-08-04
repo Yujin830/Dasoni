@@ -173,7 +173,7 @@ function SignupPage() {
     <div className="signupbox">
       <div className="header">
         <img className="signup-signal" src={leftSignal} alt="시그널 아이콘" />
-        <img className="logo" src={logo} alt="다소니 로고 이미지" />
+        <img className="signup-logo" src={logo} alt="다소니 로고 이미지" />
       </div>
       <div className="signup-box">
         <div className="signup-content">
@@ -217,12 +217,11 @@ function SignupPage() {
               handleChange={handleChangeConfirmPassword}
               placeholer="비밀번호를 다시한번 입력해주세요"
             />
-            {/* 비밀번호 일치 여부 메시지 출력 */}
-            {passwordMatchMessage && (
-              <div className="password-match-message">{passwordMatchMessage}</div>
-            )}
           </div>
-
+          {/* 비밀번호 일치 여부 메시지 출력 */}
+          {passwordMatchMessage && (
+            <div className="password-match-message">{passwordMatchMessage}</div>
+          )}
           <div className="signup-birthdate">
             <div className="birthdate-container">
               <IconLabelInput
