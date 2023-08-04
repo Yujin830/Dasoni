@@ -340,6 +340,6 @@ public class PrivateRoomService {
     }
 
     public boolean doesMemberHaveEnoughLife(Member member){
-        return lifeService.countRemainingLives(member.getMemberId()) <= 0;
+        return lifeService.countRemainingLives(member.getMemberId()) > 0;
     }
 }
