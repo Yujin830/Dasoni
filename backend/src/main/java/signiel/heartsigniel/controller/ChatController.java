@@ -24,7 +24,7 @@ import java.util.List;
 public class ChatController {
 
     private final SimpMessageSendingOperations operations;
-    private final PrivateRoomService privateRoomService;]
+    private final PrivateRoomService privateRoomService;
 
 
 //    @MessageMapping("/room/{roomId}")
@@ -40,7 +40,7 @@ public class ChatController {
 
     @MessageMapping("room/{roomId}/join")
     public void joinRoom(@DestinationVariable Long roomId, @RequestBody Member member){
-        Response response = privateRoomService.joinRoom(member.)
+//        Response response = privateRoomService.joinRoom(member.)
 
     }
 

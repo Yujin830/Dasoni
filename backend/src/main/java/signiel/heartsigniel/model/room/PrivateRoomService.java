@@ -4,10 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -37,17 +37,17 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
-    private final SimpMessageSendingOperations operations;
+    private final SimpMessagingTemplate template;
 
 
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessageSendingOperations operations) {
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessagingTemplate template) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
-        this.operations = operations;
+        this.template = template;
     }
 
     // 방 생성
@@ -157,7 +157,9 @@ public class PrivateRoomService {
 
     public void broadcastMemberList(Long roomId){
         List<Member> membersInRoom = getMemberInRoom(roomId);
-        operations.convertAndSend("/topic/room/" + roomId, membersInRoom);
+        log.info("roomid = " + roomId);
+        log.info("Call the broadcastMethod");
+        template.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
     public Response roomInfo(Long roomId) {
