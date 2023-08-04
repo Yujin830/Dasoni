@@ -16,6 +16,7 @@ import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
+import signiel.heartsigniel.model.room.dto.StartRoomRequest;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -89,6 +90,13 @@ public class RoomController {
     @PostMapping("/{roomId}/result")
     public ResponseEntity<Response> getMeetingResult(@RequestBody TotalResultRequest totalResultRequest){
         Response response = ratingService.calculateTotalResult(totalResultRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{roomId}/start")
+    public ResponseEntity<Response> startMeetingRoom(@PathVariable Long roomId, @RequestBody StartRoomRequest startRoomRequest){
+        Long roomLeaderPartyMemberId = startRoomRequest.getRoomLeaderPartyMemberId();
+        Response response = privateRoomService.startRoom(roomId, roomLeaderPartyMemberId);
         return ResponseEntity.ok(response);
     }
 

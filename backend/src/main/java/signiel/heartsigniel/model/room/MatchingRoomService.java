@@ -1,19 +1,11 @@
 package signiel.heartsigniel.model.room;
 
 import org.springframework.stereotype.Service;
-import signiel.heartsigniel.common.code.CommonCode;
-import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.party.dto.PartyMatchResult;
-import signiel.heartsigniel.model.question.Question;
-import signiel.heartsigniel.model.question.QuestionService;
-import signiel.heartsigniel.model.room.code.RoomCode;
-import signiel.heartsigniel.model.room.dto.MatchingRoomCreated;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class MatchingRoomService {

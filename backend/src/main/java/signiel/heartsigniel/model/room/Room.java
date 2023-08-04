@@ -18,11 +18,8 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column
     private String roomType;
-    @Column
-    private String videoUrl;
     @Column
     private Long ratingLimit;
     @Column

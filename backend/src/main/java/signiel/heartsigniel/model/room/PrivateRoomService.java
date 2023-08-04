@@ -2,6 +2,7 @@ package signiel.heartsigniel.model.room;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
@@ -13,14 +14,18 @@ import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
 import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.party.PartyRepository;
 import signiel.heartsigniel.model.party.PartyService;
+import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
 import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.partymember.PartyMemberRepository;
 import signiel.heartsigniel.model.partymember.PartyMemberService;
+import signiel.heartsigniel.model.partymember.code.PartyMemberCode;
 import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.*;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -139,6 +144,21 @@ public class PrivateRoomService {
             }
         }
         Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
+        return response;
+    }
+
+    public Response startRoom(Long roomId, Long roomLeaderPartyMemberId){
+        PartyMember roomLeader = findPartyMemberById(roomLeaderPartyMemberId);
+        Room roomEntity = findRoomById(roomId);
+
+        if (!roomLeader.isRoomLeader()){
+            return Response.of(PartyMemberCode.NOT_ROOM_LEADER, null);
+        }
+
+        roomEntity.setStartTime(LocalDateTime.now());
+        roomRepository.save(roomEntity);
+
+        Response response = Response.of(RoomCode.START_MEETING_SUCCESSFUL, null);
         return response;
     }
 
@@ -276,4 +296,22 @@ public class PrivateRoomService {
         return room;
     }
 
+    public PartyMember findPartyMemberById(Long targetPartyMemberId){
+
+        PartyMember partyMemberEntity = partyMemberRepository.findById(targetPartyMemberId)
+                .orElseThrow(() -> new NoPartyMemberException("해당 파티멤버가 존재하지 않습니다."));
+        return partyMemberEntity;
+    }
+
+    public void incrementMeetingCountForMembers(Room room){
+        List<PartyMember> roomMemberList = new ArrayList<>();
+        roomMemberList.addAll(room.getFemaleParty().getMembers());
+        roomMemberList.addAll(room.getMaleParty().getMembers());
+        for (PartyMember partyMember : roomMemberList){
+            Member member = partyMember.getMember();
+            member.setMeetingCount(member.getMeetingCount() + 1);
+            memberRepository.save(member);
+        }
+
+    }
 }
