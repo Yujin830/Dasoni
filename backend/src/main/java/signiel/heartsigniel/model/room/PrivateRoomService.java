@@ -155,10 +155,16 @@ public class PrivateRoomService {
     유저 목록 브로드캐스팅
      */
 
-    public void broadcastMemberList(Long roomId){
+    public void broadcastJoinMemberList(Long roomId){
         List<Member> membersInRoom = getMemberInRoom(roomId);
         log.info("roomid = " + roomId);
-        log.info("Call the broadcastMethod");
+        log.info("JoinMember!!!");
+        template.convertAndSend("/topic/room/" + roomId, membersInRoom);
+    }
+    public void broadcastQuitMemberList(Long roomId){
+        List<Member> membersInRoom = getMemberInRoom(roomId);
+        log.info("roomid = " + roomId);
+        log.info("Quit member!!!");
         template.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
