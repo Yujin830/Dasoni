@@ -113,10 +113,10 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   console.log(data);
 
   return {
-    siDo: data.siDo,
-    guGun: data.guGun,
-    job: data.job,
-    nickname: data.nickname,
+    siDo: modifyUser.siDo,
+    guGun: modifyUser.guGun,
+    job: modifyUser.job,
+    nickname: modifyUser.nickname,
   };
 });
 
@@ -157,6 +157,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
       guGun: data.guGun,
       roles: data.roles,
       remainLife: data.remainLife,
+      rating: data.rating,
       // token: data.token,
       black: data.black,
     };

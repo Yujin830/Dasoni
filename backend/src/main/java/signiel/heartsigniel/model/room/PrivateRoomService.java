@@ -4,12 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.chat.dto.ChatMessage;
-import signiel.heartsigniel.model.life.LifeService;
-import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -46,7 +44,7 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
-    private final SimpMessageSendingOperations operations;
+    private final SimpMessagingTemplate template;
 
 
     public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessageSendingOperations operations, RatingService ratingService, LifeService lifeService) {
@@ -101,7 +99,7 @@ public class PrivateRoomService {
             return Response.of(RoomCode.FULL_ROOM, null);
         }
 
-        if (memberEntity.getRating() < roomEntity.getRatingLimit()){
+        if (memberEntity.getRating() < roomEntity.getRatingLimit()) {
             return Response.of(RoomCode.RATING_TOO_LOW, null);
         }
 
@@ -124,12 +122,11 @@ public class PrivateRoomService {
         // 나 혼자 있는 경우
         if (roomEntity.roomMemberCount() == 1L) {
             deleteRoomAndParties(roomEntity);
-        }
-        else {
+        } else {
             // 내가 방장인 경우
-            if (partyMemberEntity.isRoomLeader()){
+            if (partyMemberEntity.isRoomLeader()) {
                 // 파티원이 있는 경우
-                if(partyEntity.getMembers().size() >= 1){
+                if (partyEntity.getMembers().size() >= 1) {
                     PartyMember newRoomLeader = partyService.findPartyLeaderByParty(partyEntity);
                     partyMemberService.assignRoomLeader(newRoomLeader);
                 }
@@ -142,7 +139,6 @@ public class PrivateRoomService {
             }
         }
 
-        renewMemberList(roomId, memberEntity.getLoginId());
 
         Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
         return response;
@@ -189,24 +185,33 @@ public class PrivateRoomService {
         }
         return membersInRoom;
     }
+    /*
+    Sending START Message Method
+     */
 
-    public void renewMemberList(Long roomId, String loginId){
-        //멤버가 성공적으로 참가한 후, 업데이트 목록을 브로드캐스팅.
-        //1. 방에 있는 멤버 불러오기.
-        Member member = memberRepository.findByLoginId(loginId).get();
-        List<Member> membersInRoom = getMemberInRoom(roomId);
-        System.out.println("membersInRoom.get(1).toString() = " + membersInRoom.get(1).toString());
-        // 입장메시지때문에.
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSenderNickname(member.getNickname());
-        chatMessage.setContent("님이 입장하셨습니다.");
-        log.info("roomId " + roomId);
-        log.info("chatMessage.getSenderNickname() = " + chatMessage.getSenderNickname());
-        log.info("chatMessage.getNickname() = " + chatMessage.getContent());
-        operations.convertAndSend("/topic/room/" + roomId, membersInRoom);
+    public void sendMessage(Long roomId){
+        String startMessage = "Start";
+        template.convertAndSend("/topic/room/"+roomId+"/start",startMessage);
     }
 
-    public Response roomInfo(Long roomId){
+    /*
+    유저 목록 브로드캐스팅
+     */
+
+    public void broadcastJoinMemberList(Long roomId){
+        List<Member> membersInRoom = getMemberInRoom(roomId);
+        log.info("roomid = " + roomId);
+        log.info("JoinMember!!!");
+        template.convertAndSend("/topic/room/" + roomId, membersInRoom);
+    }
+    public void broadcastQuitMemberList(Long roomId){
+        List<Member> membersInRoom = getMemberInRoom(roomId);
+        log.info("roomid = " + roomId);
+        log.info("Quit member!!!");
+        template.convertAndSend("/topic/room/" + roomId, membersInRoom);
+    }
+
+    public Response roomInfo(Long roomId) {
         Room roomEntity = findRoomById(roomId);
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
         return Response.of(CommonCode.GOOD_REQUEST, privateRoomInfo);
@@ -216,7 +221,7 @@ public class PrivateRoomService {
     public Page<PrivateRoomList> getPrivateRoomsByTitle(String searchKeyword, Pageable pageable) {
         Page<Room> roomList = roomRepository.findRoomByTitleContainingAndStartTimeIsNull(searchKeyword, pageable);
         // 각 Room 엔티티를 PrivateRoomList DTO로 변환
-        return roomList.map(room-> new PrivateRoomList(room));
+        return roomList.map(room -> new PrivateRoomList(room));
     }
 
     public Page<PrivateRoomList> getPrivateRooms(Pageable pageable){
@@ -224,13 +229,13 @@ public class PrivateRoomService {
         return roomList.map(room -> new PrivateRoomList(room));
     }
 
-    public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable){
-        if(gender.equals("male")){
+    public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable) {
+        if (gender.equals("male")) {
             Page<Room> roomList = roomRepository.findAllByRoomTypeAndFemalePartyMemberCountLessThanEqual("private", 3L, pageable);
             return roomList.map(room -> PrivateRoomList.of(room));
         } else {
             Page<Room> roomList = roomRepository.findAllByRoomTypeAndMalePartyMemberCountLessThanEqual("private", 3L, pageable);
-            return roomList.map(room-> PrivateRoomList.of(room));
+            return roomList.map(room -> PrivateRoomList.of(room));
         }
     }
 
@@ -250,10 +255,10 @@ public class PrivateRoomService {
     }
 
     // 성별에 맞는 파티 찾기
-    public Party findPartyByGender(Room targetRoom, String gender){
+    public Party findPartyByGender(Room targetRoom, String gender) {
 
         Party party;
-        if (gender.equals("female")){
+        if (gender.equals("female")) {
             party = targetRoom.getFemaleParty();
         } else if (gender.equals("male")) {
             party = targetRoom.getMaleParty();
@@ -265,7 +270,7 @@ public class PrivateRoomService {
     }
 
     // 방 + 유저 찾기
-    public MemberAndRoomOfService findEntityById(Long memberId, Long roomId){
+    public MemberAndRoomOfService findEntityById(Long memberId, Long roomId) {
 
         Member memberEntity = findMemberById(memberId);
         Room roomEntity = findRoomById(roomId);
@@ -277,10 +282,10 @@ public class PrivateRoomService {
     }
 
     // 방에 속한 파티 찾기
-    public Party findOppositePartyByGender(Room targetRoom, String gender){
+    public Party findOppositePartyByGender(Room targetRoom, String gender) {
 
         Party party;
-        if (gender.equals("male")){
+        if (gender.equals("male")) {
             party = targetRoom.getFemaleParty();
         } else if (gender.equals("female")) {
             party = targetRoom.getMaleParty();
@@ -292,11 +297,11 @@ public class PrivateRoomService {
     }
 
     // 유저 성별 추출
-    public String getMemberGender(Member member){
+    public String getMemberGender(Member member) {
         return member.getGender();
     }
 
-    public void deleteRoomAndParties(Room roomEntity){
+    public void deleteRoomAndParties(Room roomEntity) {
         roomRepository.delete(roomEntity);
     }
 

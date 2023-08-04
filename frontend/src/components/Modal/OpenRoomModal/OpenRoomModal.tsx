@@ -13,6 +13,7 @@ import {
   setRatingLimit,
   setRoomTitle,
   setWaitingRoomId,
+  setWaitingMemberList,
 } from '../../../app/slices/waitingSlice';
 import convertScoreToName from '../../../utils/convertScoreToName';
 import { useAppSelector } from '../../../app/hooks';
@@ -58,7 +59,8 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   const [megiAcceptable, setOpenMegiAcceptable] = useState(false);
   const [ratingLimit, setOpenRatingLimit] = useState<number>(0);
   const { roomId } = useParams();
-  const { memberId } = useAppSelector((state) => state.user);
+  // const { memberId } = useAppSelector((state) => state.user);
+  const member = useAppSelector((state) => state.user);
 
   const handleChangeRoomTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
     setOpenRoomTitle(event.target.value);
@@ -76,7 +78,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     event.preventDefault();
 
     const data = {
-      memberId: memberId,
+      memberId: member.memberId,
       title: roomTitle,
       megiAcceptable: megiAcceptable,
       ratingLimit: ratingLimit,
@@ -93,6 +95,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       dispatch(setMaster(false));
       dispatch(setRatingLimit(data.ratingLimit));
       dispatch(setMegiAcceptable(data.megiAcceptable));
+      dispatch(setWaitingMemberList([member]));
 
       // TODO : 모달 닫기
       onClose();

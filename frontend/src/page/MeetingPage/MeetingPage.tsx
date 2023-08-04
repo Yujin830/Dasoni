@@ -3,11 +3,14 @@ import { useOpenvidu } from '../../hooks/useOpenvidu';
 import { useParams } from 'react-router';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MeetingPage.css';
+import { useAppSelector } from '../../app/hooks';
 
 function MeetingPage() {
   const { roomId } = useParams();
+  const { memberId, nickname } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
-    1, // TODO : 로그인한 멤버의 memberId로 store에서 가져오기
+    memberId !== undefined ? memberId : 0,
+    nickname !== undefined ? nickname : '',
     roomId !== undefined ? roomId : '1',
   );
   console.log(publisher);
@@ -20,7 +23,11 @@ function MeetingPage() {
         {publisher &&
           memberList.map((stream, index) => (
             // TODO : 로그인한 멤버의 nickname store에서 가져와서 보여주기
-            <UserVideo streamManager={stream.streamManager} nickname="sunsunny" key={index} />
+            <UserVideo
+              streamManager={stream.streamManager}
+              nickname={stream.nickname}
+              key={index}
+            />
           ))}
       </div>
     </div>
