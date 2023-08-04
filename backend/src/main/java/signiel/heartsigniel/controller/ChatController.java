@@ -18,12 +18,13 @@ import signiel.heartsigniel.model.room.PrivateRoomService;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final SimpMessageSendingOperations operations;
+//    private final SimpMessageSendingOperations operations;
     private final PrivateRoomService privateRoomService;
 
 
@@ -33,14 +34,20 @@ public class ChatController {
 //        System.out.println("send arrive");
 //        System.out.println("msg " + msg);
 //        System.out.println("roomId " + roomId);
-//        HashMap<String, Object> map = new HashMap<>();
+//
 //        map.put("result", "success");
 ////        operations.convertAndSend("/topic/room/"+roomId, map);
 //    }
 
-    @MessageMapping("room/{roomId}/join")
-    public void joinRoom(@DestinationVariable Long roomId, @RequestBody Member member){
-//        Response response = privateRoomService.joinRoom(member.)
+    @MessageMapping("room/{roomId}")
+    public void joinAndQuitRoom(@DestinationVariable Long roomId, String msg){
+        if (msg.equals("quit")) {
+            privateRoomService.broadcastQuitMemberList(roomId);;
+        }else{
+            privateRoomService.broadcastJoinMemberList(roomId);
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("result","sucess");
 
     }
 

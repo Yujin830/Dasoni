@@ -37,9 +37,7 @@ public class RoomController {
     @PostMapping("/{roomId}/members/{memberId}")
     public ResponseEntity<Response> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId) {
         Response response = privateRoomService.joinRoom(memberId, roomId);
-        if (response.getStatus().getCode() == 1209) {
-            privateRoomService.broadcastMemberList(roomId);
-        }
+
         return ResponseEntity.ok(response);
 
     }
@@ -47,7 +45,7 @@ public class RoomController {
     @DeleteMapping("/{roomId}/members/{memberId}")
     public ResponseEntity<Response> quitRoom(@PathVariable Long roomId, @PathVariable Long memberId) {
         Response response = privateRoomService.quitRoom(memberId, roomId);
-        privateRoomService.broadcastMemberList(roomId);
+//        privateRoomService.broadcastMemberList(roomId);
         return ResponseEntity.ok(response);
     }
 
