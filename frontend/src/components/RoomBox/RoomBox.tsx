@@ -7,6 +7,8 @@ import './RoomBox.css';
 import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { setWaitingMemberList } from '../../app/slices/waitingSlice';
 
 export type RoomBoxProps = {
   roomId: number; // room을 구분하는 id
@@ -91,6 +93,7 @@ function RoomBox({
 
   const member = useAppSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // 입장하기
   const onClickEnter = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -101,12 +104,12 @@ function RoomBox({
     } else {
       console.log('입장하기');
       try {
-        // TODO : user state에 있는 memberId로 바꾸기
-        const res = await axios.post(`/rooms/${roomId}/members/${member.memberId}`);
+        const res = await axios.post(`/api/rooms/${roomId}/members/${member.memberId}`);
         console.log(res);
 
         if (res.status === 200) {
           console.log('입장 성공');
+          dispatch(setWaitingMemberList([member]));
           navigate(`/waiting-room/${roomId}`);
         }
       } catch (err) {
