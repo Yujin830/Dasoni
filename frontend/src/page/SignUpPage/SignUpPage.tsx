@@ -135,7 +135,7 @@ function SignupPage() {
 
     try {
       // 서버로 로그인 아이디 중복 체크 요청을 보냄
-      const response = await fetch(`/register/${loginId}`);
+      const response = await fetch(`/api/register/${loginId}`);
       const data = await response.json();
 
       // 중복된 아이디인 경우 메시지를 설정
