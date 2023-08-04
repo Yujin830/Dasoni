@@ -18,24 +18,22 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column
     private String roomType;
-    @Column
-    private String videoUrl;
     @Column
     private Long ratingLimit;
     @Column
     private String title;
     @Column
     private LocalDateTime startTime;
-
+    @Column
+    private String videoUrl;
     @Column
     private boolean megiAcceptable;
 
+
     @ManyToOne(cascade = CascadeType.ALL)
     private Party maleParty;
-
     @ManyToOne(cascade = CascadeType.ALL)
     private Party femaleParty;
 

@@ -14,6 +14,7 @@ import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
 import signiel.heartsigniel.model.rating.dto.TotalResultResponse;
 import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.RoomRepository;
+import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class RatingService {
         List<PartyMember> sortedPartyMembers = sortPartyMembersByScore(totalResultRequest);
         Room room = findRoomById(totalResultRequest.getRoomId());
         Long avgRating = calculateAvgRatingOfRoom(room);
+
+        if (room.getRoomType().equals("private")){
+            return Response.of(RoomCode.END_MEETING_SUCCESSFUL, null);
+        }
 
         List<PersonalResult> personalResults = new ArrayList<>();
 
