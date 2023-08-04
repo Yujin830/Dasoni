@@ -14,12 +14,10 @@ import signiel.heartsigniel.model.party.PartyRepository;
 import signiel.heartsigniel.model.party.PartyService;
 import signiel.heartsigniel.model.party.dto.PartyMatchResult;
 import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
-import signiel.heartsigniel.model.party.exception.PartyNotFoundException;
 import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.partymember.PartyMemberRepository;
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.Room;
-import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 
 import java.util.Optional;
@@ -73,6 +71,8 @@ public class MatchingService {
 
                 // 매칭 완료 메시지 전송
                 alarmService.sendMatchCompleteMessage(matchingRoom);
+                matchingRoomService.startRoom(matchingRoom);
+
                 // 매칭된 파티의 유저들에게 화상채팅방 url 전송
                 return Response.of(MatchingCode.MATCHING_SUCCESS, PrivateRoomInfo.of(matchingRoom));
             }
@@ -95,13 +95,6 @@ public class MatchingService {
                 .orElseThrow(()-> new MemberNotFoundException("해당 유저를 찾지 못하였습니다."));
 
         return memberEntity;
-    }
-
-    public Party findPartyById(Long partyId){
-        Party partyEntity = partyRepository.findById(partyId).
-                orElseThrow(() -> new PartyNotFoundException("파티를 찾지 못했습니다."));
-
-        return partyEntity;
     }
 
     public PartyMember findPartyMemberById(Long targetPartyMemberId){

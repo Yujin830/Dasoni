@@ -43,7 +43,7 @@ function CheckCurrentPw({ setIsCorrect, memberId }: any) {
     }
 
     try {
-      const res = await axios.post(`/users/${memberId}/password`, { password: currentPw });
+      const res = await axios.post(`/api/users/${memberId}/password`, { password: currentPw });
       console.log('data' + res.data);
       if (res.data) {
         setIsCorrect(true);
@@ -98,7 +98,7 @@ function ChangePw({ setType, memberId }: any) {
     }
 
     try {
-      const res = await axios.patch(`/users/${memberId}/password`, { password: newPw });
+      const res = await axios.patch(`/api/users/${memberId}/password`, { password: newPw });
       console.log(res.data);
 
       if (res.data === 'OK') {

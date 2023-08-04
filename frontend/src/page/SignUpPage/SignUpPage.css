@@ -20,8 +20,8 @@
   position: relative;
 }
 .signup-signal {
-  width: 9.8125rem;
-  height: 1.9375rem;
+  width: 15rem;
+  height: 3rem;
   flex-shrink: 0;
   align-items: center;
 }
@@ -40,7 +40,7 @@
   position: relative;
 }
 
-.label {
+.signup-box .label {
   color: #000;
   font-family: Roboto;
   font-size: 1.5rem;
@@ -55,6 +55,7 @@
 }
 
 .signup-content {
+  margin-top: 20px;
   width: 50rem;
   height: 30rem;
   flex-shrink: 0;
@@ -67,6 +68,16 @@
 }
 
 .signup-id {
+  display: flex;
+  align-items: center;
+}
+
+.signup-password {
+  display: flex;
+  align-items: center;
+}
+
+.signup-confirmedpassword {
   display: flex;
   align-items: center;
 }
@@ -98,7 +109,9 @@
 }
 
 .birth-calendar {
-  width: 100%;
+  width: 120px; /* 원하는 크기로 조정 (예시로 200px 사용) */
+  height: 30px; /* 원하는 높이로 조정 (예시로 30px 사용) */
+  font-size: 16px; /* 원하는 폰트 크기로 조정 (예시로 16px 사용) */
 }
 
 .signup-gender {
@@ -127,9 +140,10 @@
 }
 
 .gender-container {
+  margin: 10px 10px;
   display: flex;
   width: 12rem;
-  height: 2rem;
+  height: 3rem;
   align-items: flex-start;
   flex-shrink: 0;
   border-radius: 0.5rem;
@@ -140,13 +154,13 @@
 .gender-man {
   display: flex;
   width: 6rem;
-  height: 2rem;
+  height: 3rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   /* gap: 0.625rem; */
   border-right: 1px solid var(--m-3-sys-light-outline, #79747e);
-  background: #ffd8e4;
+  background: #dedede;
   border-top-left-radius: 0.5rem; /* 추가 */
   border-bottom-left-radius: 0.5rem; /* 추가 */
 }
@@ -154,7 +168,7 @@
 .gender-woman {
   display: flex;
   width: 6rem;
-  height: 2rem;
+  height: 3rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
