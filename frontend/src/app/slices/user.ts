@@ -18,6 +18,7 @@ export interface User {
   profileImageSrc?: string;
   point?: number;
   matchCnt?: number;
+  isFirst?: number;
 }
 
 // 초기상태를 선언
@@ -32,6 +33,7 @@ const initialState: User = {
   siDo: 0,
   guGun: 0,
   profileImageSrc: '',
+  isFirst: 0,
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
@@ -43,7 +45,7 @@ const userSlice = createSlice({
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
-        // console.log('저장할 정보', action.payload);
+        console.log('저장할 정보', action.payload);
         return { ...state, ...action.payload };
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
@@ -94,6 +96,7 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
     roles: data.roles,
     remainLife: data.remainLife,
     black: data.black,
+    isFirst: data.isFirst,
   };
 });
 
@@ -159,6 +162,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
       remainLife: data.remainLife,
       // token: data.token,
       black: data.black,
+      isFirst: data.isFirst,
     };
   } catch (error) {
     // 로그인에 실패한 경우 에러를 던집니다.

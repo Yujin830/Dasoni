@@ -44,6 +44,7 @@ function LoginPage() {
   const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
+  const { isFirst } = useAppSelector((state) => state.user);
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setloginId(event.target.value);
@@ -68,8 +69,12 @@ function LoginPage() {
 
       if (response.payload) {
         console.log('로그인 성공!');
-        // alert('로그인되었습니다.');
-        setModalOpen(true);
+        alert('로그인되었습니다.');
+        if (isFirst === 1) {
+          setModalOpen(true);
+        } else {
+          setModalOpen(false);
+        }
       } else {
         console.log('로그인 실패');
         alert('올바르지 않은 아이디 혹은 비밀번호입니다.');
