@@ -54,7 +54,13 @@ function WaitingRoomPage() {
 
       client.subscribe(`/topic/room/${roomId}/start`, (res: any) => {
         console.log('게임 시작 메세지 전송');
-        console.log(res);
+        console.log(res.body);
+
+        if (res.body === 'Start') {
+          setTimeout(() => {
+            navigate(`/meeting/${roomId}`, { replace: true });
+          }, 3000);
+        }
       });
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
       client.send(`/app/room/${roomId}`, {}, 'join');
@@ -70,9 +76,6 @@ function WaitingRoomPage() {
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
     client?.send(`/app/room/${roomId}/start`);
-    setTimeout(() => {
-      navigate(`/meeting/${roomId}`);
-    }, 3000);
   };
 
   const handleExitBtn = async () => {
