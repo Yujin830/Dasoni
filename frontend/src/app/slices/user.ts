@@ -70,7 +70,7 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
   };
 
   // 서버에 POST 요청 보내기
-  const response = await axios.post('/register', requestData);
+  const response = await axios.post('/api/register', requestData);
 
   // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
   const data = response.data;
@@ -107,7 +107,7 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
     profileImageSrc: modifyUser.profileImageSrc,
   };
   console.log('here', modifyUser);
-  const response = await axios.patch(`/users/${modifyUser.memberId}`, requestData);
+  const response = await axios.patch(`/api/users/${modifyUser.memberId}`, requestData);
   const data = response.data;
   console.log('from 서버');
   console.log(data);
@@ -129,7 +129,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
 
   try {
     // 서버에 POST 요청 보내기
-    const response = await axios.post('/login', requestData);
+    const response = await axios.post('/api/login', requestData);
 
     // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
     const data = response.data;
