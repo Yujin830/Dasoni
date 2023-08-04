@@ -17,37 +17,37 @@ import signiel.heartsigniel.model.member.dto.SignResponse;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request) {
         return new ResponseEntity<>(memberService.login(request), HttpStatus.OK);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public ResponseEntity<Boolean> signup(@RequestBody SignRequest request) throws Exception {
         return new ResponseEntity<>(memberService.register(request), HttpStatus.OK);
     }
 
-    @PostMapping("/register/{loginId}")
+    @PostMapping("/api/register/{loginId}")
     public ResponseEntity<String> getMember(@PathVariable String loginId) {
         return new ResponseEntity<>(memberService.checkDuplicateId(loginId), HttpStatus.OK);
     }
     
-    @DeleteMapping("/users/{memberId}")
+    @DeleteMapping("/api/users/{memberId}")
     public ResponseEntity<String> deleteMember(@PathVariable Long memberId) {
         return new ResponseEntity<>(memberService.deleteUserInfo(memberId), HttpStatus.OK);
     }
 
-    @PatchMapping("/users/{memberId}")
+    @PatchMapping("/api/users/{memberId}")
     public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) {
         return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto), HttpStatus.OK);
     }
 
-    @PatchMapping("/users/{memberId}/password")
+    @PatchMapping("/api/users/{memberId}/password")
     public ResponseEntity<String> patchMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) {
         return new ResponseEntity<>(memberService.patchMemberPW(memberId, request), HttpStatus.OK);
     }
 
-    @PostMapping("/users/{memberId}/password")
+    @PostMapping("/api/users/{memberId}/password")
     public ResponseEntity<Boolean> checkMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) {
         return new ResponseEntity<>(memberService.checkMemberPW(memberId, request), HttpStatus.OK);
     }

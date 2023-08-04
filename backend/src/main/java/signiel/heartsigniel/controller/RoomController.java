@@ -18,7 +18,7 @@ import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
 
 @RestController
-@RequestMapping("/rooms")
+@RequestMapping("/api/rooms")
 @Slf4j
 public class RoomController {
 
