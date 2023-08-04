@@ -32,9 +32,9 @@ public class Room {
     private boolean megiAcceptable;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Party maleParty;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Party femaleParty;
 
     public boolean isGameStarted() {
