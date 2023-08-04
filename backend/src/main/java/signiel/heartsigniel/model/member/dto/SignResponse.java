@@ -38,9 +38,9 @@ public class SignResponse {
 
     private String job;
 
-    private int siDo;
+    private Long siDo;
 
-    private int guGun;
+    private Long guGun;
 
     @Builder.Default
     private List<Authority> roles = new ArrayList<>();

@@ -1,11 +1,13 @@
 package signiel.heartsigniel.model.matching;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.alarm.AlarmService;
 import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.matching.dto.QuickFindResult;
+import signiel.heartsigniel.model.matching.queue.RatingQueue;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -20,6 +22,8 @@ import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,15 +36,16 @@ public class MatchingService {
     private final PartyRepository partyRepository;
     private final PartyMemberRepository partyMemberRepository;
     private final AlarmService alarmService;
+    private final RedisTemplate<String, Long> redisTemplate;
 
-
-    public MatchingService(MemberRepository memberRepository, MatchingRoomService matchingRoomService, PartyService partyService, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, AlarmService alarmService){
+    public MatchingService(MemberRepository memberRepository, MatchingRoomService matchingRoomService, PartyService partyService, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, AlarmService alarmService, RedisTemplate<String, Long> redisTemplate){
         this.memberRepository = memberRepository;
         this.matchingRoomService = matchingRoomService;
         this.partyService = partyService;
         this.partyRepository = partyRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.alarmService = alarmService;
+        this.redisTemplate = redisTemplate;
     }
 
     public Response quickFindMatch(Long memberId){
@@ -90,6 +95,32 @@ public class MatchingService {
         return Response.of(MatchingCode.USER_REMOVED_FROM_MATCH, null);
     }
 
+    public void enqueueMember(Member member) {
+        RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender());
+        if (queue != null) {
+            redisTemplate.opsForList().rightPush(queue.getName(), member.getMemberId());
+            checkAndMatchUsers(queue);
+        }
+    }
+
+    private void checkAndMatchUsers(RatingQueue queue) {
+        if (redisTemplate.opsForList().size(queue.getName()) >= 3) {
+            RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
+            if (redisTemplate.opsForList().size(oppositeQueue.getName()) >= 3) {
+                // 해당 큐와 상대 성별 큐에서 3명씩 팝해서 매칭
+                List<Long> matchedMembersId = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    matchedMembersId.add(redisTemplate.opsForList().leftPop(queue.getName()));
+                    matchedMembersId.add(redisTemplate.opsForList().leftPop(oppositeQueue.getName()));
+                }
+                // 매칭 처리 로직
+                // 예: matchingService.match(matchedUsers);
+                for (Long memberId : matchedMembersId){
+                    System.out.println(memberId);
+                }
+            }
+        }
+    }
     public Member findMemberById(Long targetMemberId){
         Member memberEntity =  memberRepository.findById(targetMemberId)
                 .orElseThrow(()-> new MemberNotFoundException("해당 유저를 찾지 못하였습니다."));
@@ -107,6 +138,5 @@ public class MatchingService {
     public boolean isMemberInAnotherParty(Member member) {
         return partyMemberRepository.findPartyMemberByMember(member).isPresent();
     }
-
 
 }

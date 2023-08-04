@@ -56,10 +56,10 @@ public class Member {
     private String job;
 
     @Column(name = "si_do")
-    private int siDo;
+    private Long siDo;
 
     @Column(name = "gu_gun")
-    private int guGun;
+    private Long guGun;
 
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
