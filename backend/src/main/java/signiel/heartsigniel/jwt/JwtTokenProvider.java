@@ -11,9 +11,8 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
-import signiel.heartsigniel.model.Token.RefreshToken;
 import signiel.heartsigniel.model.member.Authority;
-import signiel.heartsigniel.model.Token.Dto.Token;
+
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +51,17 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + exp))
+                .setExpiration(new Date(now.getTime() + exp/24))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createRefreshToken(String loginId, List<Authority> roles) {
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + exp*7))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -91,46 +100,6 @@ public class JwtTokenProvider {
         }
     }
 
-    public String validateRefreshToken(RefreshToken refreshTokenObj) {
 
-        String refreshToken = refreshTokenObj.getRefreshToken();
-
-
-        try {
-
-
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(refreshToken);
-
-            if (!claims.getBody().getExpiration().before(new Date())) {
-                return recreationAccessToken(claims.getBody().get("sub").toString(), claims.getBody().get("roles"));
-            }
-        } catch (Exception e) {
-
-            return e.getMessage();
-        }
-
-        return null;
-
-    }
-
-    public String recreationAccessToken(String loginId, Object roles) {
-
-        Claims claims = Jwts.claims().setSubject(loginId);
-        claims.put("roles", roles);
-        Date date = new Date();
-
-        //Access Token
-        String accessToken = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(date)
-                .setExpiration(new Date(date.getTime() + (exp / 24)))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-
-
-        return accessToken;
-
-
-    }
 
 }
