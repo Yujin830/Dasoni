@@ -35,43 +35,56 @@ const styles = {
 };
 
 function WaitingRoomPage() {
-  const [memberList, setMemberList] = useState<WaitingMember[]>([]);
+  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
+  const [memberList, setMemberList] = useState<WaitingMember[]>(
+    waitingRoomInfo.waitingRoomMemberList,
+  );
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const member = useAppSelector((state) => state.user);
 
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
-  useWebSocket({
+  const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         console.log(res);
         console.log(JSON.parse(res.body));
         setMemberList(JSON.parse(res.body));
       });
+
+      client.subscribe(`/topic/room/${roomId}/start`, (res: any) => {
+        console.log('게임 시작 메세지 전송');
+        console.log(res.body);
+
+        if (res.body === 'Start') {
+          setTimeout(() => {
+            navigate(`/meeting/${roomId}`, { replace: true });
+          }, 3000);
+        }
+      });
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
-      client.send(`/app/room/${roomId}`, {}, `${member.loginId}`);
+      client.send(`/app/room/${roomId}`, {}, 'join');
     },
-    beforeDisconnected: (client) => {
-      console.log(client);
-      setMemberList([]);
-    },
+    // beforeDisconnected: (client) => {
+    //   console.log(client);
+    //   client.send(`/app/room/${roomId}`, {}, 'quit');
+    // },
+    // disconnectMessage: 'quit',
+    // disconnectEndPoint: `room/${roomId}`,
   });
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
-    setTimeout(() => {
-      navigate(`/meeting/${roomId}`);
-    }, 3000);
+    client?.send(`/app/room/${roomId}/start`);
   };
 
   const handleExitBtn = async () => {
     console.log('방 나가기');
     try {
       console.log('roomID ', roomId);
-      const res = await axios.delete(`/rooms/${roomId}/members/1`);
+      const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
       console.log(res);
-
+      client?.send(`/app/room/${roomId}`, {}, 'quit');
       if (res.status === 200) {
         navigate('/main', { replace: true });
       }

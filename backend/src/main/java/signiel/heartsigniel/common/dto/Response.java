@@ -17,7 +17,7 @@ public class Response<T> {
 
     @Getter
     @Setter
-    private static class Status {
+    public static class Status {
         private int code;
         private String message;
     }
