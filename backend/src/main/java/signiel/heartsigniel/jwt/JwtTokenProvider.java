@@ -51,20 +51,11 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + exp/24))
+                .setExpiration(new Date(now.getTime() + exp))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String createRefreshToken(String loginId, List<Authority> roles) {
-        Date now = new Date();
-
-        return Jwts.builder()
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + exp*7))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
 
     // 권한정보 획득
     // Spring Security 인증과정에서 권한확인을 위한 기능
