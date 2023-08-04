@@ -149,7 +149,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
     // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
     return {
       memberId: data.memberId,
-      id: data.loginId,
+      loginId: data.loginId,
       nickname: data.nickname,
       gender: data.gender,
       birth: data.birth,
