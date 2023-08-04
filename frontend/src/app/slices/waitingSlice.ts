@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { WaitingMember } from '../../apis/response/waitingRoomRes';
 
 export interface WaitingState {
   roomId: number | undefined;
@@ -8,6 +9,7 @@ export interface WaitingState {
   ratingLimit: number | undefined;
   helpModalVisible: boolean;
   openRoomModalVisible: boolean;
+  waitingRoomMemberList: WaitingMember[];
 }
 
 const initialState: WaitingState = {
@@ -18,6 +20,7 @@ const initialState: WaitingState = {
   ratingLimit: undefined,
   helpModalVisible: false,
   openRoomModalVisible: false,
+  waitingRoomMemberList: [],
 };
 
 const waitingSlice = createSlice({
@@ -45,6 +48,9 @@ const waitingSlice = createSlice({
     setOpenRoomModalVisible(state, action: PayloadAction<boolean>) {
       state.openRoomModalVisible = action.payload;
     },
+    setWaitingMemberList(state, action) {
+      state.waitingRoomMemberList = action.payload;
+    },
   },
 });
 
@@ -56,6 +62,7 @@ export const {
   setMegiAcceptable,
   setHelpModalVisible,
   setOpenRoomModalVisible,
+  setWaitingMemberList,
 } = waitingSlice.actions;
 
 export default waitingSlice.reducer;
