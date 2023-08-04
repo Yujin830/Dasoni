@@ -19,7 +19,7 @@ public class PartyMember {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @ManyToOne(cascade = CascadeType.ALL)
+        @ManyToOne
         @JoinColumn(name = "party_id")
         private Party party;
 
