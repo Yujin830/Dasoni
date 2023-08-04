@@ -100,7 +100,7 @@ public class RoomController {
 
         Response response;
 
-        if (totalResultRequest.getRoomType().equals("match")){
+            if (totalResultRequest.getRoomType().equals("match")){
             response = matchingRoomService.endRoom(totalResultRequest);
         } else if (totalResultRequest.getRoomType().equals("private")) {
             response = privateRoomService.endRoom(totalResultRequest);
