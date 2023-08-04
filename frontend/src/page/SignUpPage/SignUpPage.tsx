@@ -9,6 +9,7 @@ import leftSignal from '../../assets/image/left_signal.png';
 import { useAppDispatch } from '../../app/hooks';
 import { signupAsync } from '../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const styles = {
   button: {
@@ -68,14 +69,22 @@ function SignupPage() {
   const [birthdate, setBirthdate] = useState('');
   const [gender, setGender] = useState('');
   const [phone, setPhone] = useState('');
-  const [isIdAvailable, setIsIdAvailable] = useState(false); // 중복 체크 결과를 나타내는 상태 변수
   const [passwordMatchMessage, setPasswordMatchMessage] = useState('');
+  const [isIdAvailable, setIsIdAvailable] = useState(true);
+  const [MulticheckClicked, setMulticheckClicked] = useState(false);
   const navigate = useNavigate();
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setloginId(event.target.value);
-    setIsIdAvailable(false); // 아이디 입력 시 중복 체크 결과를 초기화
+    const newloginId = event.target.value;
+    setloginId(newloginId);
+
+    // loginId가 변경되면 isIdAvailable을 true로 초기화
+    if (newloginId !== '') {
+      setIsIdAvailable(true);
+      setMulticheckClicked(false);
+    }
   };
+
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
     setPasswordMatchMessage(''); // 비밀번호 변경 시 비밀번호 일치 여부 메시지 초기화
@@ -135,20 +144,26 @@ function SignupPage() {
 
     try {
       // 서버로 로그인 아이디 중복 체크 요청을 보냄
-      const response = await fetch(`/api/register/${loginId}`);
-      const data = await response.json();
+      const response = await axios.post(`/register/${loginId}`);
 
-      // 중복된 아이디인 경우 메시지를 설정
-      if (data.isDuplicate) {
+      console.log('중복체크 성공');
+      console.log(response.status);
+
+      if (response.status === 200) {
+        // 중복된 아이디인 경우
         setIsIdAvailable(false);
-      } else {
+      } else if (response.status === 401) {
+        // 중복되지 않은 아이디인 경우
         setIsIdAvailable(true);
       }
     } catch (error) {
-      console.log('중복 체크 실패:', error);
+      console.log(error);
+      // 401에러로 인식함 -> 중복되지 않은 아이디
+      setIsIdAvailable(true);
     }
+    // 중복 체크 버튼이 클릭되었음을 표시
+    setMulticheckClicked(true);
   };
-
   //인증하기 버튼 기능
   const Certify = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -173,12 +188,16 @@ function SignupPage() {
             />
             <div className="button-multicheck">
               <Button style={styles.button2} content="중복체크" handleClick={handleMulticheck} />
-              {isIdAvailable !== null && (
-                <div>{isIdAvailable ? '사용 가능한 아이디입니다.' : '중복된 아이디입니다.'}</div>
-              )}
             </div>
           </div>
-
+          <div>
+            {/* MulticheckClicked가 true일 때에만 메시지를 표시 */}
+            {MulticheckClicked && isIdAvailable !== null && (
+              <div className="id-availability-message">
+                {isIdAvailable ? '사용 가능한 아이디입니다.' : '중복된 아이디입니다.'}
+              </div>
+            )}
+          </div>
           <div className="signup-password">
             <label htmlFor="label password">비밀번호</label>
             <Input
