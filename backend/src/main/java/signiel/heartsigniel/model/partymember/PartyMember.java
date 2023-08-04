@@ -23,7 +23,7 @@ public class PartyMember {
         @JoinColumn(name = "party_id")
         private Party party;
 
-        @ManyToOne(cascade = CascadeType.ALL)
+        @ManyToOne
         @JoinColumn(name = "member_id")
         private Member member;
 
