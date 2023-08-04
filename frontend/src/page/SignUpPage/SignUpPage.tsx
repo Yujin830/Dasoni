@@ -127,13 +127,26 @@ function SignupPage() {
   };
 
   //중복체크 버튼 기능
-  const handleMulticheck = () => {
-    // 아이디 중복 체크를 서버에서 처리하는 비동기 함수 또는 API 호출을 작성합니다.
-    // 이 예제에서는 간단히 하기 위해 setTimeout을 사용하여 1초 후에 중복 여부를 랜덤하게 설정합니다.
-    setTimeout(() => {
-      const isDuplicate = Math.random() < 0.5; // 랜덤하게 중복 여부를 설정 (50% 확률로 중복된 아이디)
-      setIsIdAvailable(isDuplicate); // true: 사용가능한 아이디, false: 중복된 아이디
-    }, 1000);
+  const handleMulticheck = async () => {
+    // 로그인 아이디가 비어있는 경우 중복 체크를 하지 않음
+    if (!loginId) {
+      return;
+    }
+
+    try {
+      // 서버로 로그인 아이디 중복 체크 요청을 보냄
+      const response = await fetch(`/api/register/${loginId}`);
+      const data = await response.json();
+
+      // 중복된 아이디인 경우 메시지를 설정
+      if (data.isDuplicate) {
+        setIsIdAvailable(false);
+      } else {
+        setIsIdAvailable(true);
+      }
+    } catch (error) {
+      console.log('중복 체크 실패:', error);
+    }
   };
 
   //인증하기 버튼 기능
@@ -160,14 +173,11 @@ function SignupPage() {
             />
             <div className="button-multicheck">
               <Button style={styles.button2} content="중복체크" handleClick={handleMulticheck} />
+              {isIdAvailable !== null && (
+                <div>{isIdAvailable ? '사용 가능한 아이디입니다.' : '중복된 아이디입니다.'}</div>
+              )}
             </div>
           </div>
-          {/* 현재 사용가능한 아이디(isIdAvailable(true))일 경우만 출력됨 */}
-          {isIdAvailable && (
-            <div className="id-availability-message">
-              {isIdAvailable ? '사용가능한 아이디입니다.' : '중복된 아이디입니다.'}
-            </div>
-          )}
 
           <div className="signup-password">
             <label htmlFor="label password">비밀번호</label>

@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.room;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 public class PrivateRoomService {
@@ -106,19 +108,6 @@ public class PrivateRoomService {
         partyService.joinParty(party, memberEntity);
         Response response = Response.of(RoomCode.SUCCESS_PARTICIPATE_ROOM, PrivateRoomInfo.of(roomEntity));
 
-        //멤버가 성공적으로 참가한 후, 업데이트 목록을 브로드캐스팅.
-        //1. 방에 있는 멤버 불러오기.
-
-        List<Member> membersInRoom = getMemberInRoom(roomId);
-        System.out.println("membersInRoom.get(1).toString() = " + membersInRoom.get(1).toString());
-        // 입장메시지때문에.
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSenderNickname(memberEntity.getNickname());
-        chatMessage.setContent("님이 입장하셨습니다.");
-        System.out.println("roomId " + roomId);
-        System.out.println("chatMessage.getSenderNickname() = " + chatMessage.getSenderNickname());
-        System.out.println("chatMessage.getNickname() = " + chatMessage.getContent());
-        operations.convertAndSend("/topic/room/" + roomId, membersInRoom);
         return response;
     }
 
@@ -152,6 +141,9 @@ public class PrivateRoomService {
                 }
             }
         }
+
+        renewMemberList(roomId, memberEntity.getLoginId());
+
         Response response = Response.of(RoomCode.USER_OUT_FROM_ROOM, PrivateRoomInfo.of(roomEntity));
         return response;
     }
@@ -196,6 +188,22 @@ public class PrivateRoomService {
             }
         }
         return membersInRoom;
+    }
+
+    public void renewMemberList(Long roomId, String loginId){
+        //멤버가 성공적으로 참가한 후, 업데이트 목록을 브로드캐스팅.
+        //1. 방에 있는 멤버 불러오기.
+        Member member = memberRepository.findByLoginId(loginId).get();
+        List<Member> membersInRoom = getMemberInRoom(roomId);
+        System.out.println("membersInRoom.get(1).toString() = " + membersInRoom.get(1).toString());
+        // 입장메시지때문에.
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSenderNickname(member.getNickname());
+        chatMessage.setContent("님이 입장하셨습니다.");
+        log.info("roomId " + roomId);
+        log.info("chatMessage.getSenderNickname() = " + chatMessage.getSenderNickname());
+        log.info("chatMessage.getNickname() = " + chatMessage.getContent());
+        operations.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
     public Response roomInfo(Long roomId){

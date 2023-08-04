@@ -11,9 +11,8 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
-import signiel.heartsigniel.model.Token.RefreshToken;
 import signiel.heartsigniel.model.member.Authority;
-import signiel.heartsigniel.model.Token.Dto.Token;
+
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +56,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+
     // 권한정보 획득
     // Spring Security 인증과정에서 권한확인을 위한 기능
     public Authentication getAuthentication(String token) {
@@ -91,46 +91,6 @@ public class JwtTokenProvider {
         }
     }
 
-    public String validateRefreshToken(RefreshToken refreshTokenObj) {
 
-        String refreshToken = refreshTokenObj.getRefreshToken();
-
-
-        try {
-
-
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(refreshToken);
-
-            if (!claims.getBody().getExpiration().before(new Date())) {
-                return recreationAccessToken(claims.getBody().get("sub").toString(), claims.getBody().get("roles"));
-            }
-        } catch (Exception e) {
-
-            return e.getMessage();
-        }
-
-        return null;
-
-    }
-
-    public String recreationAccessToken(String loginId, Object roles) {
-
-        Claims claims = Jwts.claims().setSubject(loginId);
-        claims.put("roles", roles);
-        Date date = new Date();
-
-        //Access Token
-        String accessToken = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(date)
-                .setExpiration(new Date(date.getTime() + (exp / 24)))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-
-
-        return accessToken;
-
-
-    }
 
 }
