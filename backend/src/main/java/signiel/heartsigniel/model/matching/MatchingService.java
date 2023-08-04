@@ -14,7 +14,6 @@ import signiel.heartsigniel.model.party.PartyRepository;
 import signiel.heartsigniel.model.party.PartyService;
 import signiel.heartsigniel.model.party.dto.PartyMatchResult;
 import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
-import signiel.heartsigniel.model.party.exception.PartyNotFoundException;
 import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.partymember.PartyMemberRepository;
 import signiel.heartsigniel.model.room.MatchingRoomService;
@@ -72,6 +71,8 @@ public class MatchingService {
 
                 // 매칭 완료 메시지 전송
                 alarmService.sendMatchCompleteMessage(matchingRoom);
+                matchingRoomService.startRoom(matchingRoom);
+
                 // 매칭된 파티의 유저들에게 화상채팅방 url 전송
                 return Response.of(MatchingCode.MATCHING_SUCCESS, PrivateRoomInfo.of(matchingRoom));
             }
