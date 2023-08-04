@@ -1,6 +1,7 @@
 package signiel.heartsigniel.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class ChatController {
 
@@ -48,7 +50,14 @@ public class ChatController {
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("result","sucess");
-
     }
+
+    @MessageMapping("room/{roomId}/start")
+    public void sendStartMessage(@DestinationVariable Long roomId){
+        log.info("STARTING MESSAGE SENDING COMPLETE1!!!");
+        privateRoomService.sendMessage(roomId);
+        log.info("STARTING MESSAGE SENDING COMPLETE2!!!");
+    }
+
 
 }
