@@ -35,10 +35,12 @@ const styles = {
 };
 
 function WaitingRoomPage() {
-  const [memberList, setMemberList] = useState<WaitingMember[]>([]);
+  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
+  const [memberList, setMemberList] = useState<WaitingMember[]>(
+    waitingRoomInfo.waitingRoomMemberList,
+  );
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const member = useAppSelector((state) => state.user);
 
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
@@ -69,7 +71,7 @@ function WaitingRoomPage() {
     console.log('방 나가기');
     try {
       console.log('roomID ', roomId);
-      const res = await axios.delete(`/rooms/${roomId}/members/1`);
+      const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
       console.log(res);
 
       if (res.status === 200) {

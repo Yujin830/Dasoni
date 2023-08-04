@@ -108,7 +108,7 @@ function MainPage() {
   const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
   const getWaitingRoomList = async () => {
     try {
-      const res = await axios.get('/rooms');
+      const res = await axios.get('/api/rooms');
       console.log(res);
       if (res.status === 200) {
         setWaitingRoomList(res.data.content.content);
