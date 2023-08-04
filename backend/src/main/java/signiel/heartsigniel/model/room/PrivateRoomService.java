@@ -14,14 +14,19 @@ import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
 import signiel.heartsigniel.model.party.Party;
 import signiel.heartsigniel.model.party.PartyRepository;
 import signiel.heartsigniel.model.party.PartyService;
+import signiel.heartsigniel.model.party.exception.NoPartyMemberException;
 import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.partymember.PartyMemberRepository;
 import signiel.heartsigniel.model.partymember.PartyMemberService;
+import signiel.heartsigniel.model.partymember.code.PartyMemberCode;
+import signiel.heartsigniel.model.rating.RatingService;
+import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
 import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.*;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +36,8 @@ import java.util.List;
 @Transactional
 public class PrivateRoomService {
 
+    private final LifeService lifeService;
+    private final RatingService ratingService;
     private final PartyRepository partyRepository;
     private final RoomRepository roomRepository;
     private final PartyMemberRepository partyMemberRepository;
@@ -40,14 +47,16 @@ public class PrivateRoomService {
     private final SimpMessagingTemplate template;
 
 
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessagingTemplate template) {
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessageSendingOperations operations, RatingService ratingService, LifeService lifeService) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
-        this.template = template;
+        this.operations = operations;
+        this.ratingService = ratingService;
+        this.lifeService = lifeService;
     }
 
     // 방 생성
@@ -78,6 +87,10 @@ public class PrivateRoomService {
 
         if (isMemberInAnotherRoom(memberEntity)) {
             return Response.of(RoomCode.ALREADY_IN_OTHER_ROOM, null);
+        }
+
+        if(!doesMemberHaveEnoughLife(memberEntity)){
+            return Response.of(LifeCode.LACK_OF_LIFE, null);
         }
 
         Party party = findPartyByGender(roomEntity, memberEntity.getGender());
@@ -131,6 +144,29 @@ public class PrivateRoomService {
         return response;
     }
 
+    public Response startRoom(Long roomId, Long roomLeaderPartyMemberId){
+        PartyMember roomLeader = findPartyMemberById(roomLeaderPartyMemberId);
+        Room roomEntity = findRoomById(roomId);
+
+        if (!roomLeader.isRoomLeader()){
+            return Response.of(PartyMemberCode.NOT_ROOM_LEADER, null);
+        }
+        useLifeAndIncreaseMeetingCount(roomEntity);
+        roomEntity.setStartTime(LocalDateTime.now());
+        roomRepository.save(roomEntity);
+
+        Response response = Response.of(RoomCode.START_MEETING_SUCCESSFUL, null);
+        return response;
+    }
+
+    public Response endRoom(TotalResultRequest totalResultRequest){
+
+        Response response = ratingService.calculateTotalResult(totalResultRequest);
+        Room roomEntity = findRoomById(totalResultRequest.getRoomId());
+        deleteRoomAndParties(roomEntity);
+        return response;
+    }
+
     /*
     실시간 갱신을 위해 방 안에 있는 멤버 정보 모두 반환 해주는 메서드.
      */
@@ -147,7 +183,6 @@ public class PrivateRoomService {
                 membersInRoom.add(partyMember.getMember());
             }
         }
-
         return membersInRoom;
     }
     /*
@@ -184,13 +219,13 @@ public class PrivateRoomService {
 
     // 사설방 리스트 조회
     public Page<PrivateRoomList> getPrivateRoomsByTitle(String searchKeyword, Pageable pageable) {
-        Page<Room> roomList = roomRepository.findRoomByTitleContaining(searchKeyword, pageable);
+        Page<Room> roomList = roomRepository.findRoomByTitleContainingAndStartTimeIsNull(searchKeyword, pageable);
         // 각 Room 엔티티를 PrivateRoomList DTO로 변환
         return roomList.map(room -> new PrivateRoomList(room));
     }
 
-    public Page<PrivateRoomList> getPrivateRooms(Pageable pageable) {
-        Page<Room> roomList = roomRepository.findAllByRoomType("private", pageable);
+    public Page<PrivateRoomList> getPrivateRooms(Pageable pageable){
+        Page<Room> roomList = roomRepository.findAllByRoomTypeAndStartTimeIsNull("private", pageable);
         return roomList.map(room -> new PrivateRoomList(room));
     }
 
@@ -290,4 +325,26 @@ public class PrivateRoomService {
         return room;
     }
 
+    public PartyMember findPartyMemberById(Long targetPartyMemberId){
+
+        PartyMember partyMemberEntity = partyMemberRepository.findById(targetPartyMemberId)
+                .orElseThrow(() -> new NoPartyMemberException("해당 파티멤버가 존재하지 않습니다."));
+        return partyMemberEntity;
+    }
+
+    public void useLifeAndIncreaseMeetingCount(Room room){
+        List<PartyMember> roomMemberList = new ArrayList<>();
+        roomMemberList.addAll(room.getFemaleParty().getMembers());
+        roomMemberList.addAll(room.getMaleParty().getMembers());
+        for (PartyMember partyMember : roomMemberList){
+            Member member = partyMember.getMember();
+            member.setMeetingCount(member.getMeetingCount() + 1);
+            memberRepository.save(member);
+            lifeService.useLife(member);
+        }
+    }
+
+    public boolean doesMemberHaveEnoughLife(Member member){
+        return lifeService.countRemainingLives(member.getMemberId()) > 0;
+    }
 }
