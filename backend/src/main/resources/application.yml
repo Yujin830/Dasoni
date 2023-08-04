@@ -14,23 +14,3 @@ logging:
 #servers:
 #  - url: http://i9a307.p.ssafy.io/
 #    description: Production server
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: port_8081
-
-server:
-  port: 8081
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: port_8082
-
-server:
-  port: 8082
