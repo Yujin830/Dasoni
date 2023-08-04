@@ -67,6 +67,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
       gugun: modifyGugun,
       job: job,
       nickname: nickname,
+      profileImageSrc: 'rank_profile.png',
     };
     try {
       await dispatch(modifyUserAsync(data));
