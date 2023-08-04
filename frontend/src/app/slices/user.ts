@@ -43,7 +43,7 @@ const userSlice = createSlice({
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
-        console.log('저장할 정보', action.payload);
+        // console.log('저장할 정보', action.payload);
         return { ...state, ...action.payload };
       })
       .addCase(signupAsync.fulfilled, (state, action) => {

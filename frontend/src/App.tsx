@@ -9,6 +9,7 @@ import WaitingRoomPage from './page/WatingRoomPage/WatingRoomPage';
 
 import MeetingPage from './page/MeetingPage/MeetingPage';
 import RatingModal from './components/Modal/RatingModal/RatingModal';
+import ResultModal from './components/Modal/ResultModal/ResultModal';
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -27,7 +28,7 @@ function App() {
           <Route path="/meeting/:roomId" element={<MeetingPage />}></Route>
           <Route path="/signup" element={<SignUpPage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
-          <Route path="/test" element={<RatingModal onClose={handleCloseModal} />} />{' '}
+          <Route path="/test" element={<ResultModal onClose={handleCloseModal} />} />{' '}
         </Routes>
       </BrowserRouter>
     </div>

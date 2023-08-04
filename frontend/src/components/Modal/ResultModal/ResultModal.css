@@ -1,0 +1,51 @@
+.result-modal {
+  position: fixed;
+  top: 50%; /* 화면 세로 중앙에 위치 */
+  left: 50%; /* 화면 가로 중앙에 위치 */
+  transform: translate(-50%, -50%); /* 세로와 가로로 50%만큼 이동하여 정확한 중앙 정렬 */
+  width: 63.5rem;
+  height: 46.25rem;
+  flex-shrink: 0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0px 4px 10px 8px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+}
+
+.signal {
+  margin-top: 20px;
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.matching-result {
+  color: #ec5e98;
+  font-family: Inter;
+  font-size: 3.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+#label-result {
+  width: 300px;
+  /* justify-content: center; */
+  color: #000;
+  font-family: Inter;
+  font-size: 3.5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
