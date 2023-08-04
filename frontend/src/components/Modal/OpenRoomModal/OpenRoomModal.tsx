@@ -84,7 +84,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     // 백엔드로 data 디스패치 하는 API 호출
 
     console.log(data);
-    const res = await axios.post('/rooms', data);
+    const res = await axios.post('/api/rooms', data);
     console.log(res);
     if (res.status === 200) {
       // 리덕스에 생성한 대기방 정보 저장
