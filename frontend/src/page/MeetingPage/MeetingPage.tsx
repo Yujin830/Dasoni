@@ -7,11 +7,12 @@ import { useAppSelector } from '../../app/hooks';
 
 function MeetingPage() {
   const { roomId } = useParams();
-  const { memberId, nickname } = useAppSelector((state) => state.user);
+  const { memberId, nickname, gender } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     memberId !== undefined ? memberId : 0,
     nickname !== undefined ? nickname : '',
     roomId !== undefined ? roomId : '1',
+    gender !== undefined ? gender : '',
   );
   console.log(publisher);
   console.log(streamList);
