@@ -35,13 +35,9 @@ public class JwtTokenProvider {
     private Key secretKey;
 
     // 만료시간 : 1Day
-    private static final long ACCESS_TIME =  60 * 1000L;
-    private static final long REFRESH_TIME =  2 * 60 * 1000L;
-    public static final String ACCESS_TOKEN = "Access_Token";
-    public static final String REFRESH_TOKEN = "Refresh_Token";
+   private final long exp = 1000L * 60 * 60 * 24;
 
     private final JpaUserDetailsService userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
 
 
     @PostConstruct
@@ -50,41 +46,19 @@ public class JwtTokenProvider {
     }
 
 
-    public TokenDto createAllToken(String nickname) {
-        return new TokenDto(createToken(nickname, "Access"), createToken(nickname, "Refresh"));
-    }
-
-    // 토큰 생성
-//    public String createToken(String account, List<Authority> roles) {
-<<<<<<< HEAD
     public String createToken(String loginId, List<Authority> roles) {
-//         Claims claims = Jwts.claims().setSubject(account);
         Claims claims = Jwts.claims().setSubject(loginId);
-        claims.put("roles", roles);
-        Date now = new Date();
+        claims.put("role", roles);
+       Date now = new Date();
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + exp))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-=======
-    public String createToken(String loginId, String type) {
-        Date date = new Date();
-
-        long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
-
-        return Jwts.builder()
-                .setSubject(loginId)
-                .setExpiration(new Date(date.getTime() + time))
-                .setIssuedAt(date)
                 .signWith(secretKey)
                 .compact();
 
     }
->>>>>>> dac19e99df86439176fc84d5e0ba1e737b92a280
 
 
     // 권한정보 획득
@@ -100,21 +74,11 @@ public class JwtTokenProvider {
     }
 
     // Authorization Header를 통해 인증을 한다.
-//    public String resolveToken(HttpServletRequest request) {
-//        return request.getHeader("Authorization");
-//    }
-
-    public String getHeaderToken(HttpServletRequest request, String type) {
-        return type.equals("Access") ? request.getHeader(ACCESS_TOKEN) :request.getHeader(REFRESH_TOKEN);
-    }
-    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader("Access_Token", accessToken);
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("Authorization");
     }
 
-    // 리프레시 토큰 헤더 설정
-    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
-        response.setHeader("Refresh_Token", refreshToken);
-    }
+
 
     // 토큰 검증
     public boolean validateToken(String token) {
@@ -133,16 +97,6 @@ public class JwtTokenProvider {
         }
     }
 
-    public Boolean refreshTokenValidation(String token) {
-
-        // 1차 토큰 검증
-        if(!validateToken(token)) return false;
-
-        // DB에 저장한 토큰 비교
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByLoginId(getAccount(token));
-
-        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
-    }
 
 
 }
