@@ -8,6 +8,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.life.LifeService;
+import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -46,15 +48,15 @@ public class PrivateRoomService {
     private final PartyMemberService partyMemberService;
     private final SimpMessagingTemplate template;
 
-
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessageSendingOperations operations, RatingService ratingService, LifeService lifeService) {
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, RatingService ratingService, LifeService lifeService, SimpMessagingTemplate template) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
         this.memberRepository = memberRepository;
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
-        this.operations = operations;
+        this.template = template;
+
         this.ratingService = ratingService;
         this.lifeService = lifeService;
     }

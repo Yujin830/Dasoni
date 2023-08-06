@@ -56,13 +56,13 @@ public class Member {
     private String job;
 
     @Column(name = "si_do")
-    private int siDo;
+    private Long siDo;
 
     @Column(name = "gu_gun")
-    private int guGun;
+    private Long guGun;
 
     @Column(name = "is_first")
-    private int isFirst;
+    private boolean isFirst;
 
 
 
@@ -73,5 +73,9 @@ public class Member {
     public void setRoles(List<Authority> role){
         this.roles = role;
         role.forEach(o->o.setMember(this));
+    }
+
+    public void setIsFirst(boolean first){
+        this.isFirst = first;
     }
 }
