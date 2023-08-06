@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MeetingPage.css';
 import { useAppSelector } from '../../app/hooks';
+import ToolBar from '../../components/ToolBar/ToolBar';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -53,6 +54,10 @@ function MeetingPage() {
               />
             ))}
         </div>
+        <ToolBar
+          onChangeCameraStatus={onChangeCameraStatus}
+          onChangeMicStatus={onChangeMicStatus}
+        />
       </div>
     </div>
   );
