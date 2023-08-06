@@ -76,7 +76,4 @@ public class Member {
         role.forEach(o->o.setMember(this));
     }
 
-    public void setIsFirst(boolean first){
-        this.isFirst = first;
-    }
 }

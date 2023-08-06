@@ -74,7 +74,7 @@ public class MemberService {
                 .roles(member.getRoles())
                 .remainLife(remainLives)
                 .token(jwtTokenProvider.createToken(member.getLoginId(), member.getRoles()))
-                .isFirst(member.isFirst())
+                .isFirst(member.getIsFirst())
                 .build();
     }
 
@@ -87,11 +87,7 @@ public class MemberService {
                     .birth(request.getBirth())
                     .phoneNumber(request.getPhoneNumber())
                     .rating(1000L)
-<<<<<<< HEAD
-                    .isFirst(false)
-=======
                     .isFirst(0L)
->>>>>>> feat/FE-253
                     .build();
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
