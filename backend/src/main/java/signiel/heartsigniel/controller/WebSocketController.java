@@ -4,45 +4,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
-import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
-import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class ChatController {
+public class WebSocketController {
 
-//    private final SimpMessageSendingOperations operations;
+    private final SimpMessageSendingOperations operations;
     private final PrivateRoomService privateRoomService;
 
 
-//    @MessageMapping("/room/{roomId}")
-//    public void send(@DestinationVariable Long roomId,String msg){
-//        privateRoomService.renewMemberList(roomId, msg);
-//        System.out.println("send arrive");
-//        System.out.println("msg " + msg);
-//        System.out.println("roomId " + roomId);
-//
-//        map.put("result", "success");
-////        operations.convertAndSend("/topic/room/"+roomId, map);
-//    }
+    @MessageMapping("room/{roomId}/chat")
+    public void sendMessage(@DestinationVariable Long roomId, @Payload ChatMessage chatMessage){
+        operations.convertAndSend("/topic/room/"+ roomId +"/chat", chatMessage);
+    }
 
     @MessageMapping("room/{roomId}")
-    public void joinAndQuitRoom(@DestinationVariable Long roomId, String msg){
+    public void joinAndQuitRoom(@DestinationVariable Long roomId, @Payload String msg){
         if (msg.equals("quit")) {
             privateRoomService.broadcastQuitMemberList(roomId);;
         }else{
