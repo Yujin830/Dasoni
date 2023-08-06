@@ -2,6 +2,7 @@ package signiel.heartsigniel.model.roommember;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.room.Room;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class RoomMember {
 
         @Id
@@ -25,7 +27,7 @@ public class RoomMember {
         private Member member;
 
         @Column(columnDefinition = "int default 0")
-        private int score;
+        private int score = 0;
 
         @Column(name = "is_special_user")
         private boolean isSpecialUser;
@@ -33,10 +35,15 @@ public class RoomMember {
         @Column(name = "is_room_leader")
         private boolean isRoomLeader;
 
-        @Builder RoomMember(boolean isSpecialUser, boolean isRoomLeader, Member member){
-                this.member = member;
-                this.isSpecialUser = isSpecialUser;
-                this.isRoomLeader = isRoomLeader;
+        @Builder
+        public static RoomMember of(Member member, Room room){
+                RoomMember roomMember = new RoomMember();
+                roomMember.setRoomLeader(false);
+                roomMember.setMember(member);
+                roomMember.setScore(0);
+                roomMember.setSpecialUser(false);
+                roomMember.setRoom(room);
+                return roomMember;
         }
 
 }

@@ -31,7 +31,7 @@ public class Room {
     @Column
     private boolean megiAcceptable;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
     private List<RoomMember> roomMembers;
 
     public boolean isGameStarted() {

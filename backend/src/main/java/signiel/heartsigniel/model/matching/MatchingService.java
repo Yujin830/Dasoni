@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.alarm.AlarmService;
 import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.matching.dto.QueueData;
 import signiel.heartsigniel.model.matching.queue.RatingQueue;
@@ -28,13 +29,15 @@ public class MatchingService {
     private final RoomMemberRepository roomMemberRepository;
     private final RedisTemplate<String, Long> redisTemplate;
     private final RoomMemberService roomMemberService;
+    private AlarmService alarmService;
 
-    public MatchingService(MemberRepository memberRepository, RoomMemberService roomMemberService, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, RoomRepository roomRepository){
+    public MatchingService(MemberRepository memberRepository, RoomMemberService roomMemberService, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService){
         this.memberRepository = memberRepository;
         this.matchingRoomService = matchingRoomService;
         this.roomMemberRepository = roomMemberRepository;
         this.roomMemberService = roomMemberService;
         this.redisTemplate = redisTemplate;
+        this.alarmService = alarmService;
     }
 
     public Response enqueueMember(Long memberId) {
@@ -59,10 +62,11 @@ public class MatchingService {
                 // 해당 큐와 상대 성별 큐에서 3명씩 팝해서 매칭(createRoom을 향후 Q1, Q2 넣도록 변경)
                 Room matchingRoom = matchingRoomService.createRoom();
                 for (int i = 0; i < 3; i++) {
-                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(redisTemplate.opsForList().leftPop(queue.getName()))));
-                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(redisTemplate.opsForList().leftPop(oppositeQueue.getName()))));
+                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(redisTemplate.opsForList().leftPop(queue.getName())), matchingRoom));
+                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(redisTemplate.opsForList().leftPop(oppositeQueue.getName())), matchingRoom));
                 }
                 matchingRoomService.startRoom(matchingRoom);
+                alarmService.sendMatchCompleteMessage(matchingRoom);
                 return Response.of(MatchingCode.MATCHING_SUCCESS, MatchingRoomInfo.of(matchingRoom));
             }
         }

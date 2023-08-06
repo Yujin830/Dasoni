@@ -65,7 +65,7 @@ public class PrivateRoomService {
 
         Room room = createPrivateRoomObject(privateRoomCreateRequest);
 
-        RoomMember roomMember = roomMemberService.createRoomMember(member);
+        RoomMember roomMember = roomMemberService.createRoomMember(member, room);
         roomMemberService.assignRoomLeader(roomMember);
 
         roomRepository.save(room);
@@ -100,7 +100,7 @@ public class PrivateRoomService {
             return Response.of(RoomCode.RATING_TOO_LOW, null);
         }
 
-        RoomMember roomMember = roomMemberService.createRoomMember(memberEntity);
+        RoomMember roomMember = roomMemberService.createRoomMember(memberEntity, roomEntity);
         addRoomMemberToRoom(roomEntity, roomMember);
 
         Response response = Response.of(RoomCode.SUCCESS_PARTICIPATE_ROOM, PrivateRoomInfo.of(roomEntity));

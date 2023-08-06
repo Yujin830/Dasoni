@@ -9,19 +9,18 @@ import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Service
 @Transactional
 public class MatchingRoomService {
 
     private final RoomRepository roomRepository;
-    private final LifeService lifeService;
     private final PrivateRoomService privateRoomService;
     private final RatingService ratingService;
 
-    public MatchingRoomService(RoomRepository roomRepository, LifeService lifeService, PrivateRoomService privateRoomService, RatingService ratingService){
+    public MatchingRoomService(RoomRepository roomRepository, PrivateRoomService privateRoomService, RatingService ratingService){
         this.roomRepository = roomRepository;
-        this.lifeService = lifeService;
         this.privateRoomService = privateRoomService;
         this.ratingService = ratingService;
     }
@@ -30,11 +29,12 @@ public class MatchingRoomService {
         Room room = new Room();
 
         room.setRoomType("match");
-
+        roomRepository.save(room);
         room.setRatingLimit(0L);
         room.setTitle(room.getId() + "번 자동매칭방");
         room.setMegiAcceptable(true);
         room.setStartTime(LocalDateTime.now());
+        room.setRoomMembers(new ArrayList<>());
         return room;
     }
 

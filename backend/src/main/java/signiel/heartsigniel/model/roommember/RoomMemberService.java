@@ -2,6 +2,7 @@ package signiel.heartsigniel.model.roommember;
 
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.model.member.Member;
+import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.roommember.exception.NotFoundRoomMemberException;
 
 
@@ -14,13 +15,8 @@ public class RoomMemberService {
         this.roomMemberRepository = roomMemberRepository;
     }
 
-    public RoomMember createRoomMember(Member member){
-        RoomMember roomMember = RoomMember.builder()
-                .isRoomLeader(false)
-                .isSpecialUser(false)
-                .member(member)
-                .build();
-
+    public RoomMember createRoomMember(Member member, Room room){
+        RoomMember roomMember = RoomMember.of(member, room);
         return roomMemberRepository.save(roomMember);
     }
 
