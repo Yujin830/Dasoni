@@ -49,6 +49,7 @@ public class PrivateRoomService {
     private final SimpMessagingTemplate template;
 
     public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, RatingService ratingService, LifeService lifeService, SimpMessagingTemplate template) {
+
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;

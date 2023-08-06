@@ -62,7 +62,8 @@ public class Member {
     private Long guGun;
 
     @Column(name = "is_first")
-    private boolean isFirst;
+    private Long isFirst;
+
 
 
 

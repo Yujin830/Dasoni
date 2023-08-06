@@ -52,9 +52,9 @@ public class MemberService {
 
         Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
-        boolean flags = true;
-        if(!member.isFirst()){
-            member.setIsFirst(true);
+
+        if(member.getIsFirst() == 0){
+            member.setIsFirst(1L);
         }
 
         return SignResponse.builder()
@@ -87,7 +87,11 @@ public class MemberService {
                     .birth(request.getBirth())
                     .phoneNumber(request.getPhoneNumber())
                     .rating(1000L)
+<<<<<<< HEAD
                     .isFirst(false)
+=======
+                    .isFirst(0L)
+>>>>>>> feat/FE-253
                     .build();
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
