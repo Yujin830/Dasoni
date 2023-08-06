@@ -17,19 +17,42 @@ function MeetingPage() {
   console.log(publisher);
   console.log(streamList);
 
-  const memberList = useMemo(() => streamList, [streamList]);
+  // const memberList = useMemo(() => streamList, [streamList]);
+
+  // 현재 로그인한 유저와 다른 성별의 memberList
+  const diffGenderMemberList = useMemo(
+    () => streamList.filter((stream) => stream.gender !== gender),
+    [streamList],
+  );
+
+  //현재 로그인한 유저와 같은 성별의 memberList
+  const sameGenderMemberList = useMemo(
+    () => streamList.filter((stream) => stream.gender === gender),
+    [streamList],
+  );
   return (
     <div id="meeting">
       <div id="meeting-video-container">
-        {publisher &&
-          memberList.map((stream, index) => (
-            // TODO : 로그인한 멤버의 nickname store에서 가져와서 보여주기
-            <UserVideo
-              streamManager={stream.streamManager}
-              nickname={stream.nickname}
-              key={index}
-            />
-          ))}
+        <div className="meeting-video-row">
+          {publisher &&
+            sameGenderMemberList.map((stream, index) => (
+              <UserVideo
+                streamManager={stream.streamManager}
+                nickname={stream.nickname}
+                key={index}
+              />
+            ))}
+        </div>
+        <div className="meeting-video-row">
+          {publisher &&
+            diffGenderMemberList.map((stream, index) => (
+              <UserVideo
+                streamManager={stream.streamManager}
+                nickname={stream.nickname}
+                key={index}
+              />
+            ))}
+        </div>
       </div>
     </div>
   );
