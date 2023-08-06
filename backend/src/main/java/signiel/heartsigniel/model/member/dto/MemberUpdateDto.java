@@ -8,7 +8,7 @@ import lombok.*;
 public class MemberUpdateDto {
     private String nickname;
     private String job;
-    private int siDo;
-    private int guGun;
+    private Long siDo;
+    private Long guGun;
     private String profileImageSrc;
 }
