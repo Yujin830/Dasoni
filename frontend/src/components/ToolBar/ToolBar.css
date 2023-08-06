@@ -1,0 +1,23 @@
+#tool-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  padding: 1rem 0;
+}
+
+#tool-bar .material-symbols-outlined.filled {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+  color: #fff;
+}
+
+#too-bar button {
+  border-radius: 50%;
+  padding: 0.5rem;
+  background: #777;
+  margin-right: 2rem;
+}
