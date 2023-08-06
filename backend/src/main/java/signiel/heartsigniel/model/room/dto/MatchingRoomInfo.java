@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class PrivateRoomInfo {
+public class MatchingRoomInfo {
 
     private Long roomId;
     private String title;
@@ -21,7 +21,7 @@ public class PrivateRoomInfo {
     private boolean megiAcceptable;
     private List<RoomMemberInfo> roomMemberInfoList;
 
-    public PrivateRoomInfo(Room roomEntity){
+    public MatchingRoomInfo(Room roomEntity){
         this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
         this.roomType = roomEntity.getRoomType();
@@ -34,8 +34,8 @@ public class PrivateRoomInfo {
                 .collect(Collectors.toList());
     }
     @Builder
-    public static PrivateRoomInfo of(Room roomEntity) {
-        return new PrivateRoomInfo(roomEntity);
+    public static MatchingRoomInfo of(Room roomEntity) {
+        return new MatchingRoomInfo(roomEntity);
     }
 }
 

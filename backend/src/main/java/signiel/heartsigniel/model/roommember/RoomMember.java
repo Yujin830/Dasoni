@@ -1,27 +1,24 @@
-package signiel.heartsigniel.model.partymember;
+package signiel.heartsigniel.model.roommember;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import signiel.heartsigniel.model.member.Member;
-import signiel.heartsigniel.model.party.Party;
+import signiel.heartsigniel.model.room.Room;
 
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@RequiredArgsConstructor
-public class PartyMember {
+public class RoomMember {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
         @ManyToOne
-        @JoinColumn(name = "party_id")
-        private Party party;
+        @JoinColumn(name = "room_id")
+        private Room room;
 
         @ManyToOne
         @JoinColumn(name = "member_id")
@@ -30,17 +27,13 @@ public class PartyMember {
         @Column(columnDefinition = "int default 0")
         private int score;
 
-        @Column(name = "is_party_leader")
-        private boolean isPartyLeader;
-
         @Column(name = "is_special_user")
         private boolean isSpecialUser;
 
         @Column(name = "is_room_leader")
         private boolean isRoomLeader;
 
-        @Builder PartyMember(boolean isPartyLeader, boolean isSpecialUser, boolean isRoomLeader, Member member){
-                this.isPartyLeader = isPartyLeader;
+        @Builder RoomMember(boolean isSpecialUser, boolean isRoomLeader, Member member){
                 this.member = member;
                 this.isSpecialUser = isSpecialUser;
                 this.isRoomLeader = isRoomLeader;
