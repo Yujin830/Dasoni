@@ -10,7 +10,8 @@ public enum MatchingCode implements ResponseCode {
     USER_ADDED_TO_MATCH(2104, "사용자가 매칭에 추가되었습니다."),
     DEQUEUE_SUCCESS(2105, "큐 대기열에서 성공적으로 제외되었습니다."),
     ALREADY_IN_MATCHING_QUEUE(2106, "이미 매칭 대기열에 등록되어 있습니다."),
-    ENQUEUE_SUCCESS(2107,"큐 대기열에 성공적으로 등록되었습니다.")
+    ENQUEUE_SUCCESS(2107,"큐 대기열에 성공적으로 등록되었습니다."),
+    DEQUEUE_FAIL(2108, "사용자가 큐에 존재하지 않습니다.")
     ;
 
     private final int code;
