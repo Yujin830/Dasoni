@@ -16,10 +16,6 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
       const currentTime = new Date();
       const timeDiffInSeconds = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
 
-      // 웹 소켓 메세지 sending
-      console.log(Math.floor(timeDiffInSeconds / 60).toString());
-      client?.send(`/app/room/${roomId}/guide`, {}, Math.floor(timeDiffInSeconds / 60).toString());
-
       updateTimer(timeDiffInSeconds);
     }, 1000);
 
@@ -32,6 +28,10 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
       .toString()
       .padStart(2, '0');
     const seconds = (timeInSeconds % 60).toString().padStart(2, '0');
+    // 웹 소켓 메세지 sending
+    if (minutes === '05' && seconds === '00') client?.send(`/app/room/${roomId}/guide`, {}, '5');
+    if (minutes === '20' && seconds === '00') client?.send(`/app/room/${roomId}/guide`, {}, '20');
+    if (minutes === '50' && seconds === '00') client?.send(`/app/room/${roomId}/guide`, {}, '50');
     setCurrentTime(`${minutes}:${seconds}`);
   }
 
