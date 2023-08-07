@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
 import signiel.heartsigniel.model.member.Authority;
 
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
