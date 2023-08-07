@@ -12,7 +12,6 @@ import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
 import signiel.heartsigniel.model.room.Room;
-import signiel.heartsigniel.model.room.RoomRepository;
 import signiel.heartsigniel.model.room.dto.MatchingRoomInfo;
 import signiel.heartsigniel.model.roommember.RoomMember;
 import signiel.heartsigniel.model.roommember.RoomMemberRepository;
@@ -47,11 +46,13 @@ public class MatchingService {
         }
         RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender());
         redisTemplate.opsForList().rightPush(queue.getName(), member.getMemberId());
+
         return checkAndMatchUsers(queue);
     }
 
     public Response dequeueMember(QueueData queueData) {
         redisTemplate.opsForList().remove(queueData.getQueue(),1,  queueData.getMemberId());
+        alarmService.removeEmitter(queueData.getMemberId());
         return Response.of(MatchingCode.DEQUEUE_SUCCESS, null);
     }
 
