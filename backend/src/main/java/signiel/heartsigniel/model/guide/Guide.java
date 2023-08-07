@@ -20,5 +20,5 @@ public class Guide {
 
     private String content;
 
-    private int visibleTime;
+    private Long visibleTime;
 }

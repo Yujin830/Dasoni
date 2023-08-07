@@ -10,6 +10,8 @@ import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.life.code.LifeCode;
+import signiel.heartsigniel.model.matching.MatchingService;
+import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
@@ -41,15 +43,16 @@ public class PrivateRoomService {
     private final MemberRepository memberRepository;
     private final RoomMemberService roomMemberService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final MatchingService matchingService;
 
     public PrivateRoomService(RoomRepository roomRepository, RoomMemberRepository roomMemberRepository, MemberRepository memberRepository, RoomMemberService roomMemberService, SimpMessageSendingOperations operations,
-                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService) {
+                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService, MatchingService matchingService) {
 
         this.roomRepository = roomRepository;
+        this.matchingService = matchingService;
         this.roomMemberRepository = roomMemberRepository;
         this.memberRepository = memberRepository;
         this.roomMemberService = roomMemberService;
-
         this.ratingService = ratingService;
         this.lifeService = lifeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
@@ -62,6 +65,9 @@ public class PrivateRoomService {
 
         if (isMemberInAnotherRoom(member)) {
             return Response.of(RoomCode.ALREADY_IN_OTHER_ROOM, null);
+        }
+        if (matchingService.isMemberMarkedInQueue(privateRoomCreateRequest.getMemberId())){
+            return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE, null);
         }
 
         Room room = createPrivateRoomObject(privateRoomCreateRequest);
@@ -99,6 +105,10 @@ public class PrivateRoomService {
 
         if (memberEntity.getRating() < roomEntity.getRatingLimit()) {
             return Response.of(RoomCode.RATING_TOO_LOW, null);
+        }
+
+        if(matchingService.isMemberMarkedInQueue(memberId)){
+            return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE,  null);
         }
 
         RoomMember roomMember = roomMemberService.createRoomMember(memberEntity, roomEntity);
@@ -139,9 +149,14 @@ public class PrivateRoomService {
         RoomMember roomLeader = findRoomMemberById(roomLeaderId);
         Room roomEntity = findRoomById(roomId);
 
-        if (!roomLeader.isRoomLeader()){
+        if(!roomLeader.isRoomLeader()){
             return Response.of(RoomMemberCode.NOT_ROOM_LEADER, null);
         }
+
+        if(roomEntity.roomMemberCount() < 6){
+            return Response.of(RoomCode.INSUFFICIENT_PARTICIPANTS, null);
+        }
+
         useLifeAndIncreaseMeetingCount(roomEntity);
         roomEntity.setStartTime(LocalDateTime.now());
         roomRepository.save(roomEntity);
@@ -199,6 +214,12 @@ public class PrivateRoomService {
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
+    public void broadcastCreateMessage(Long roomId){
+        log.info("Create Room Complete");
+        String creatMsg = "/topic/room/" + roomId + "is created!!!";
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, creatMsg);
+    }
+
     public Response roomInfo(Long roomId) {
         Room roomEntity = findRoomById(roomId);
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
@@ -218,14 +239,10 @@ public class PrivateRoomService {
     }
 
     public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable) {
-        if (gender.equals("male")) {
-            Page<Room> roomList = roomRepository.findAllByRoomTypeAndMaleMemberCountLessThanEqual("private", 3, pageable);
-            return roomList.map(room -> PrivateRoomList.of(room));
-        } else {
-            Page<Room> roomList = roomRepository.findAllByRoomTypeAndFemaleMemberCountLessThanEqual("private", 3, pageable);
-            return roomList.map(room -> PrivateRoomList.of(room));
-        }
+        Page<Room> roomList = roomRepository.findRoomsByGenderAndCountLessThanEqual(gender, 2L, pageable);
+        return roomList.map(room -> PrivateRoomList.of(room));
     }
+
 
     // 유저 엔티티 조회
     public Member findMemberById(Long targetMemberId) {

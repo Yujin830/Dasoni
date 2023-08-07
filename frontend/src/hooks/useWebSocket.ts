@@ -4,10 +4,6 @@ import { useEffect, useState } from 'react';
 
 interface Param {
   subscribe: (clinet: CompatClient) => void;
-  // beforeDisconnected: (client: CompatClient) => void;
-  // reconnectDelay?: number;
-  // disconnectMessage?: string;
-  // disconnectEndPoint?: string;
 }
 
 export const useWebSocket = ({ subscribe }: Param) => {
@@ -29,11 +25,6 @@ export const useWebSocket = ({ subscribe }: Param) => {
 
     const onDisconnected = () => {
       console.log('WebSocket 연결이 끊어졌습니다.');
-      // console.log('disconnectMessage ', disconnectMessage);
-      // if (disconnectMessage) {
-      //   stompClient.send(`/app/${disconnectEndPoint}`, {}, disconnectMessage);
-      // }
-      // beforeDisconnected(stompClient);
     };
 
     const onError = (error: any) => {

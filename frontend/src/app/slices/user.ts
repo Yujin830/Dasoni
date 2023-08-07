@@ -45,8 +45,8 @@ const userSlice = createSlice({
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
-        console.log('저장할 정보', action.payload);
-        return { ...state, ...action.payload };
+        console.log(action.payload.isFirst);
+        return { ...state, ...action.payload.isFirst };
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
         // 회원가입 응답 처리 코드(회원가입 후, 필요한 정보를 state에 반영)
@@ -87,13 +87,12 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
     gender: data.gender,
     birth: data.birth,
     phoneNumber: data.phoneNumber,
-    rank: data.rank,
     meetingCount: data.meetingCount,
     profileImageSrc: data.profileImageSrc,
     job: data.job,
     siDo: data.siDo,
     guGun: data.guGun,
-    roles: data.roles,
+
     remainLife: data.remainLife,
     black: data.black,
     isFirst: data.isFirst,
@@ -152,13 +151,12 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
       gender: data.gender,
       birth: data.birth,
       phoneNumber: data.phoneNumber,
-      rank: data.rank,
       meetingCount: data.meetingCount,
       profileImageSrc: data.profileImageSrc,
       job: data.job,
       siDo: data.siDo,
       guGun: data.guGun,
-      roles: data.roles,
+      // roles: data.roles,
       remainLife: data.remainLife,
       rating: data.rating,
       // token: data.token,
@@ -174,6 +172,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
 export const logout = () => {
   // 로컬 스토리지에서 토큰 삭제
   localStorage.removeItem('jwtToken');
+  // localStorage.clear()
   // Axios 헤더에서 인증 토큰 제거
   setAuthorizationToken(null); // Axios 헤더에서 토큰을 null로 설정하는 함수를 가정합니다.
   console.log('로그아웃 성공?', localStorage);

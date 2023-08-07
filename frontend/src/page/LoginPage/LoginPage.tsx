@@ -13,23 +13,24 @@ import { loginAsync, getUserInfo } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import ProfileModal from '../../components/Modal/ProfileModal/ProfileModal';
 import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   button: {
-    width: '26rem',
-    height: '4rem',
+    width: '40%',
+    height: '6vh',
     flexShrink: '0',
     borderRadius: '1.25rem',
     background: '#EC5E98',
     color: '#FFF',
-    fontSize: '1.75rem',
+    fontSize: '3vh',
     fontStyle: 'normal',
     fontWeight: '700',
     margin: '0.5rem 0',
   },
   input: {
-    width: '26rem',
-    height: '4rem',
+    width: '80%',
+    height: '8vh',
     flexShrink: '0',
     borderRadius: '1.25rem',
     border: '3px solid #D9D9D9',
@@ -45,6 +46,7 @@ function LoginPage() {
   const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
   const { isFirst } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
 
@@ -67,16 +69,16 @@ function LoginPage() {
     };
 
     try {
-      const response = await dispatch(loginAsync(data));
-
+      const response: any = await dispatch(loginAsync(data));
       if (response.payload) {
         console.log('로그인 성공!');
         alert('로그인되었습니다.');
-        if (isFirst === 1) {
+        if (response.payload.isFirst === 1) {
           setModalOpen(true);
         } else {
           setModalOpen(false);
           navigate('/main'); // 두번째 로그인부터는 바로 메인으로
+          navigate('/main');
         }
       } else {
         console.log('로그인 실패');
@@ -90,7 +92,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="box" id="login">
+    <div className="box">
       <div className="left-box">
         <img className="signal left" src={leftSignal} alt="시그널 아이콘" />
         <div className="left-box-content">
@@ -131,6 +133,7 @@ function LoginPage() {
             </Link>
           </p>
         </div>
+        <img className="mobile" src={main} alt="있어보이는 우리와 어울리는 사진" />
       </div>
     </div>
   );

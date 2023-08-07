@@ -68,6 +68,6 @@ public class Room {
                 avgRating += roomMember.getMember().getRating();
             }
         }
-        return avgRating/memberCountByGender(gender);
+        return memberCountByGender(gender) >0? avgRating/memberCountByGender(gender) : 0;
     }
 }
