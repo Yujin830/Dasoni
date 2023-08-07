@@ -48,8 +48,8 @@ public class PrivateRoomService {
     private final PartyMemberService partyMemberService;
     private final SimpMessagingTemplate template;
 
-    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, RatingService ratingService, LifeService lifeService, SimpMessagingTemplate template) {
 
+    public PrivateRoomService(RoomRepository roomRepository, PartyRepository partyRepository, PartyMemberRepository partyMemberRepository, MemberRepository memberRepository, PartyService partyService, PartyMemberService partyMemberService, SimpMessageSendingOperations operations, RatingService ratingService, LifeService lifeService, SimpMessagingTemplate template) {
         this.partyRepository = partyRepository;
         this.roomRepository = roomRepository;
         this.partyMemberRepository = partyMemberRepository;
@@ -57,7 +57,6 @@ public class PrivateRoomService {
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
         this.template = template;
-
         this.ratingService = ratingService;
         this.lifeService = lifeService;
     }
