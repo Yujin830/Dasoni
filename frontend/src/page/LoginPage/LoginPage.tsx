@@ -46,8 +46,7 @@ function LoginPage() {
   const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
-  const navigate = useNavigate();
-  const { isFirst } = useAppSelector((state) => state.user);
+
   const navigate = useNavigate();
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
