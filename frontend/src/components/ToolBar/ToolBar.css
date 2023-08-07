@@ -15,9 +15,14 @@
   color: #fff;
 }
 
-#too-bar button {
+#tool-bar button {
   border-radius: 50%;
   padding: 0.5rem;
-  background: #777;
-  margin-right: 2rem;
+  background: transparent;
+  margin-right: 1.5rem;
+  border: 2px solid #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
