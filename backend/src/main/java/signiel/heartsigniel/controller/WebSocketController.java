@@ -9,6 +9,9 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
+import signiel.heartsigniel.model.guide.Guide;
+import signiel.heartsigniel.model.guide.GuideRepo;
+import signiel.heartsigniel.model.guide.dto.GuideDto;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.room.PrivateRoomService;
@@ -23,7 +26,22 @@ public class WebSocketController {
 
     private final SimpMessageSendingOperations operations;
     private final PrivateRoomService privateRoomService;
-    private final MemberRepository memberRepository;
+    private final GuideRepo guideRepo;
+
+
+    /**
+     * 시작 시 가이드 메시지 출력하기 위한 메소드.
+     * @param roomId : 방 번호 식별용
+     * @param guide : 시간, 내용 받아오기용.
+     */
+    @MessageMapping("room/{roomId}/guide")
+    public void sendGuideMessage(@DestinationVariable Long roomId, @Payload GuideDto guide){
+        GuideDto guide1 = guideRepo.findByVisibleTime(guide.getVisibleTime()).get();
+        String content = guide1.getContent();
+        guide.setContent(content);
+        operations.convertAndSend("/topic/room/"+roomId+"/guide", guide);
+    }
+
 
     /**
      * Chat method
