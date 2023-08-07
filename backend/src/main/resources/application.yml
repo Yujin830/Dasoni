@@ -14,3 +14,14 @@ logging:
 #servers:
 #  - url: http://i9a307.p.ssafy.io/
 #    description: Production server
+
+# access-key와 secret-key는 반드시 gitignore 확인!!!!!!
+cloud:
+  aws:
+    credentials:
+      access-key: AKIASUML2QGY2ZDUQV6P
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
