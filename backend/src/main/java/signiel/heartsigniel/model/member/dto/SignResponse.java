@@ -44,7 +44,6 @@ public class SignResponse {
 
     private Long isFirst;
 
-
     @Builder.Default
     private List<Authority> roles = new ArrayList<>();
 

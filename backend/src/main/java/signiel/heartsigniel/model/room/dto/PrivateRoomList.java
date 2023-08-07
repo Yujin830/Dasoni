@@ -1,6 +1,5 @@
 package signiel.heartsigniel.model.room.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import signiel.heartsigniel.model.room.Room;
 
@@ -15,16 +14,17 @@ public class PrivateRoomList {
     private Long femaleAvgRating;
     private Long maleAvgRating;
     private Long ratingLimit;
+    private boolean megiAcceptable;
 
     public PrivateRoomList(Room roomEntity){
         this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
         this.ratingLimit = roomEntity.getRatingLimit();
         this.femaleAvgRating = roomEntity.memberAvgRatingByGender("female");
-        this.maleMemberCount = ratingLimit;
+        this.maleMemberCount = roomEntity.memberCountByGender("male");
         this.femaleMemberCount = roomEntity.memberCountByGender("female");
         this.maleAvgRating = roomEntity.memberAvgRatingByGender("male");;
-
+        this.megiAcceptable = roomEntity.isMegiAcceptable();
     }
 
     public static PrivateRoomList of(Room roomEntity){
