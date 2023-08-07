@@ -1,17 +1,11 @@
 package signiel.heartsigniel.model.room.dto;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import signiel.heartsigniel.model.chat.WebSocketInfo;
 import signiel.heartsigniel.model.party.dto.PartyInfo;
-import signiel.heartsigniel.model.question.dto.MatchingQuestionInfo;
 import signiel.heartsigniel.model.room.Room;
 
-import javax.servlet.http.Part;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class PrivateRoomInfo {
