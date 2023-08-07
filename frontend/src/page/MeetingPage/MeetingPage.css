@@ -1,7 +1,7 @@
 #meeting {
   width: 100%;
   height: 100vh;
-  background: #555;
+  background: linear-gradient(180deg, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,5 +10,5 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1.5rem;
-  margin: 0 1.2rem;
+  margin: 0 1.2rem 1.5rem;
 }

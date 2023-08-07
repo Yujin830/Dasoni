@@ -10,20 +10,21 @@ public class PrivateRoomList {
 
     private Long roomId;
     private String title;
-    private Long femalePartyMemberCount;
-    private Long malePartyMemberCount;
-    private Long femalePartyAvgRating;
-    private Long malePartyAvgRating;
+    private Long femaleMemberCount;
+    private Long maleMemberCount;
+    private Long femaleAvgRating;
+    private Long maleAvgRating;
     private Long ratingLimit;
 
     public PrivateRoomList(Room roomEntity){
         this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
-        this.femalePartyMemberCount = roomEntity.femaleMemberCount();
-        this.malePartyMemberCount = roomEntity.maleMemberCount();
         this.ratingLimit = roomEntity.getRatingLimit();
-        this.femalePartyAvgRating = roomEntity.getFemaleParty().getAvgRating();
-        this.malePartyAvgRating = roomEntity.getMaleParty().getAvgRating();
+        this.femaleAvgRating = roomEntity.memberAvgRatingByGender("female");
+        this.maleMemberCount = ratingLimit;
+        this.femaleMemberCount = roomEntity.memberCountByGender("female");
+        this.maleAvgRating = roomEntity.memberAvgRatingByGender("male");;
+
     }
 
     public static PrivateRoomList of(Room roomEntity){

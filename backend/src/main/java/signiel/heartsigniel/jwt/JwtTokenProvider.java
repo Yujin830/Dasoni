@@ -12,9 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
 import signiel.heartsigniel.model.member.Authority;
-
-
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

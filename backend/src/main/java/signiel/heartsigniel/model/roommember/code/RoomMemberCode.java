@@ -1,8 +1,8 @@
-package signiel.heartsigniel.model.partymember.code;
+package signiel.heartsigniel.model.roommember.code;
 
 import signiel.heartsigniel.common.code.ResponseCode;
 
-public enum PartyMemberCode implements ResponseCode {
+public enum RoomMemberCode implements ResponseCode {
     CREATE_SUCCESS(3000, "파티 멤버 생성 성공"),
     CREATE_FAIL(3001, "파티 멤버 생성 실패"),
     READ_SUCCESS(3002, "파티 멤버 조회 성공"),
@@ -16,7 +16,7 @@ public enum PartyMemberCode implements ResponseCode {
     private int code;
     private String message;
 
-    PartyMemberCode(int code, String message) {
+    RoomMemberCode(int code, String message) {
         this.code = code;
         this.message = message;
     }

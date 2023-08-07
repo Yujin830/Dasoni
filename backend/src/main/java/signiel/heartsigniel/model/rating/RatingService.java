@@ -4,9 +4,8 @@ import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
-import signiel.heartsigniel.model.party.Party;
-import signiel.heartsigniel.model.partymember.PartyMember;
-import signiel.heartsigniel.model.partymember.PartyMemberRepository;
+import signiel.heartsigniel.model.roommember.RoomMember;
+import signiel.heartsigniel.model.roommember.RoomMemberRepository;
 import signiel.heartsigniel.model.rating.code.RatingCode;
 import signiel.heartsigniel.model.rating.dto.PersonalResult;
 import signiel.heartsigniel.model.rating.dto.SignalResultRequest;
@@ -26,18 +25,18 @@ public class RatingService {
 
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
-    private final PartyMemberRepository partyMemberRepository;
+    private final RoomMemberRepository roomMemberRepository;
     private static final int K_FACTOR = 40;
 
-    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, PartyMemberRepository partyMemberRepository){
+    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository){
         this.roomRepository = roomRepository;
         this.memberRepository = memberRepository;
-        this.partyMemberRepository = partyMemberRepository;
+        this.roomMemberRepository = roomMemberRepository;
     }
 
     public Response calculateTotalResult(TotalResultRequest totalResultRequest){
 
-        List<PartyMember> sortedPartyMembers = sortPartyMembersByScore(totalResultRequest);
+        List<RoomMember> sortedRoomMembers = sortRoomMembersByScore(totalResultRequest);
         Room room = findRoomById(totalResultRequest.getRoomId());
         Long avgRating = calculateAvgRatingOfRoom(room);
 
@@ -47,16 +46,16 @@ public class RatingService {
 
         List<PersonalResult> personalResults = new ArrayList<>();
 
-        for(int rank = 1; rank <= sortedPartyMembers.size(); rank++){
-            PartyMember partyMember = sortedPartyMembers.get(rank-1);
-            Member member = partyMember.getMember();
+        for(int rank = 1; rank <= sortedRoomMembers.size(); rank++){
+            RoomMember roomMember = sortedRoomMembers.get(rank-1);
+            Member member = roomMember.getMember();
             Long myRating = member.getRating();
             Long ratingChange = calculateRatingChange(myRating, avgRating, rank, K_FACTOR);
 
             //레이팅 적용
             saveMemberRating(member, myRating + ratingChange);
 
-            PersonalResult result = PersonalResult.of(partyMember, ratingChange);
+            PersonalResult result = PersonalResult.of(roomMember, ratingChange);
             personalResults.add(result);
         }
         TotalResultResponse totalResultResponse = TotalResultResponse.of(personalResults, totalResultRequest.getRoomId());
@@ -86,30 +85,22 @@ public class RatingService {
 
 
     public Long calculateAvgRatingOfRoom(Room targetRoom){
-        return (targetRoom.getMaleParty().getAvgRating() + targetRoom.getFemaleParty().getAvgRating())/2;
+        return (targetRoom.memberAvgRatingByGender("male") + targetRoom.memberAvgRatingByGender("female")) / targetRoom.roomMemberCount();
     }
 
-    public List<PartyMember> iteratePartyMembers(Room room){
-        List<PartyMember> partyMemberList = new ArrayList<>();
-        Party femaleParty = room.getFemaleParty();
-        Party maleParty = room.getMaleParty();
-        partyMemberList.addAll(femaleParty.getMembers());
-        partyMemberList.addAll(maleParty.getMembers());
-        return partyMemberList;
-    }
-    public List<PartyMember> sortPartyMembersByScore(TotalResultRequest totalResult) {
+    public List<RoomMember> sortRoomMembersByScore(TotalResultRequest totalResult) {
         Room room = findRoomById(totalResult.getRoomId());
-        List<PartyMember> partyMembers = iteratePartyMembers(room);
+        List<RoomMember> roomMembers = room.getRoomMembers();
 
         int[] scoreBoard = calculatePersonalScore(totalResult.getSignalResults());
         for (int i = 0; i < 6; i++) {
-            PartyMember partyMember = partyMembers.get(i);
-            savePartyMemberScore(partyMember, scoreBoard[i]); // PartyMember 객체에 점수 설정
+            RoomMember roomMember = roomMembers.get(i);
+            savePartyMemberScore(roomMember, scoreBoard[i]); // PartyMember 객체에 점수 설정
         }
 
-        partyMembers.sort(Comparator.comparingInt(PartyMember::getScore).reversed()); // 점수를 기준으로 내림차순 정렬
+        roomMembers.sort(Comparator.comparingInt(RoomMember::getScore).reversed()); // 점수를 기준으로 내림차순 정렬
 
-        return partyMembers;
+        return roomMembers;
     }
 
     public int[] calculatePersonalScore(List<SignalResultRequest> signalResults){
@@ -174,9 +165,9 @@ public class RatingService {
         return roomEntity;
     }
 
-    public PartyMember savePartyMemberScore(PartyMember partyMember, int score){
-        partyMember.setScore(score);
-        return partyMemberRepository.save(partyMember);
+    public RoomMember savePartyMemberScore(RoomMember roomMember, int score){
+        roomMember.setScore(score);
+        return roomMemberRepository.save(roomMember);
     }
 
     public Member saveMemberRating(Member member, Long rating){
