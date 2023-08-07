@@ -19,11 +19,16 @@
   align-items: center;
   position: relative;
 }
-.signup-signal {
+.signup-icon {
   width: 15rem;
   height: 3rem;
   flex-shrink: 0;
   align-items: center;
+}
+
+.signup-logo {
+  display: flex;
+  flex-direction: column;
 }
 
 .signup-box {
