@@ -12,6 +12,8 @@ import { useAppDispatch } from '../../app/hooks';
 import { loginAsync, getUserInfo } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import ProfileModal from '../../components/Modal/ProfileModal/ProfileModal';
+import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   button: {
@@ -44,7 +46,8 @@ function LoginPage() {
   const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
-  const { isFirst } = useAppSelector((state) => state.user);
+
+  const navigate = useNavigate();
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setloginId(event.target.value);
@@ -65,15 +68,16 @@ function LoginPage() {
     };
 
     try {
-      const response = await dispatch(loginAsync(data));
-
+      const response: any = await dispatch(loginAsync(data));
       if (response.payload) {
         console.log('로그인 성공!');
         alert('로그인되었습니다.');
-        if (isFirst === 1) {
+        if (response.payload.isFirst === 1) {
           setModalOpen(true);
         } else {
           setModalOpen(false);
+          navigate('/main'); // 두번째 로그인부터는 바로 메인으로
+          navigate('/main');
         }
       } else {
         console.log('로그인 실패');
