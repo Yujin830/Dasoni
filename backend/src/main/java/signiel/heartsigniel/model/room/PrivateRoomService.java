@@ -199,6 +199,12 @@ public class PrivateRoomService {
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
+    public void broadcastCreateMessage(Long roomId){
+        log.info("Create Room Complete");
+        String creatMsg = "/topic/room/" + roomId + "is created!!!";
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, creatMsg);
+    }
+
     public Response roomInfo(Long roomId) {
         Room roomEntity = findRoomById(roomId);
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);

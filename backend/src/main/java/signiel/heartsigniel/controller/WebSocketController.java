@@ -32,14 +32,12 @@ public class WebSocketController {
     /**
      * 시작 시 가이드 메시지 출력하기 위한 메소드.
      * @param roomId : 방 번호 식별용
-     * @param guide : 시간, 내용 받아오기용.
+     * @param visibleTime : 시간, 내용 받아오기용.
      */
     @MessageMapping("room/{roomId}/guide")
-    public void sendGuideMessage(@DestinationVariable Long roomId, @Payload GuideDto guide){
-        GuideDto guide1 = guideRepo.findByVisibleTime(guide.getVisibleTime()).get();
-        String content = guide1.getContent();
-        guide.setContent(content);
-        operations.convertAndSend("/topic/room/"+roomId+"/guide", guide);
+    public void sendGuideMessage(@DestinationVariable Long roomId, @Payload Long visibleTime){
+        String content = guideRepo.findByVisibleTime(visibleTime).get().getContent();
+        operations.convertAndSend("/topic/room/"+roomId+"/guide", content);
     }
 
 
@@ -75,8 +73,10 @@ public class WebSocketController {
     public void joinAndQuitRoom(@DestinationVariable Long roomId, @Payload String msg){
         if (msg.equals("quit")) {
             privateRoomService.broadcastQuitMemberList(roomId);;
-        }else{
+        }else if(msg.equals("join")){
             privateRoomService.broadcastJoinMemberList(roomId);
+        }else{
+            privateRoomService.broadcastCreateMessage(roomId);
         }
     }
 
