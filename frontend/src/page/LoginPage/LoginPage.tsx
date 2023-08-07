@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { loginAsync, getUserInfo } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import ProfileModal from '../../components/Modal/ProfileModal/ProfileModal';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   button: {
@@ -45,6 +46,7 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const { isFirst } = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setloginId(event.target.value);
@@ -74,6 +76,7 @@ function LoginPage() {
           setModalOpen(true);
         } else {
           setModalOpen(false);
+          navigate('/main'); // 두번째 로그인부터는 바로 메인으로
         }
       } else {
         console.log('로그인 실패');
