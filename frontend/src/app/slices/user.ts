@@ -45,8 +45,8 @@ const userSlice = createSlice({
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
-        console.log(action.payload.isFirst);
-        return { ...state, ...action.payload.isFirst };
+        console.log(action.payload);
+        return { ...state, ...action.payload };
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
         // 회원가입 응답 처리 코드(회원가입 후, 필요한 정보를 state에 반영)
@@ -175,7 +175,7 @@ export const logout = () => {
   // localStorage.clear()
   // Axios 헤더에서 인증 토큰 제거
   setAuthorizationToken(null); // Axios 헤더에서 토큰을 null로 설정하는 함수를 가정합니다.
-  console.log('로그아웃 성공?', localStorage);
+  console.log('로그아웃', localStorage);
   // 필요에 따라 Redux 상태를 초기화하는 액션을 디스패치할 수도 있습니다.
   // dispatch(resetUserState());
 };

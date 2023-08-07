@@ -20,14 +20,17 @@
   align-items: center;
   position: relative;
 }
-.signup-signal {
-  margin-top: 2%;
-  /* float: right; */
-  width: 11rem;
+.signup-icon {
+  width: 15rem;
   height: 3rem;
   flex-shrink: 0;
   align-items: center;
   margin-left: auto;
+}
+
+.signup-logo {
+  display: flex;
+  flex-direction: column;
 }
 
 .signup-box {
