@@ -11,18 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
 import signiel.heartsigniel.model.member.Authority;
-//import signiel.heartsigniel.token.RefreshTokenRepository;
-//import signiel.heartsigniel.token.dto.RefreshToken;
-//import signiel.heartsigniel.token.dto.TokenDto;
 
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
