@@ -65,12 +65,6 @@ function WaitingRoomPage() {
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
       client.send(`/app/room/${roomId}`, {}, 'join');
     },
-    // beforeDisconnected: (client) => {
-    //   console.log(client);
-    //   client.send(`/app/room/${roomId}`, {}, 'quit');
-    // },
-    // disconnectMessage: 'quit',
-    // disconnectEndPoint: `room/${roomId}`,
   });
 
   const handleStartBtn = () => {
