@@ -64,3 +64,15 @@
   display: flex;
   justify-content: space-between;
 }
+
+#waiting-page .chat-room {
+  width: 25%;
+  position: absolute;
+  right: 2rem;
+  height: 90vh;
+  background: #ffd8e4;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  z-index: 2;
+}
