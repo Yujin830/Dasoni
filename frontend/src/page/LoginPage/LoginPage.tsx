@@ -60,12 +60,10 @@ function LoginPage() {
 
   const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
     const data = {
       loginId: loginId,
       password: password,
     };
-
     try {
       const response: any = await dispatch(loginAsync(data));
       if (response.payload) {
@@ -79,6 +77,7 @@ function LoginPage() {
         }
       } else {
         console.log('로그인 실패');
+
         alert('올바르지 않은 아이디 혹은 비밀번호입니다.');
         setModalOpen(false); // 로그인에 실패하면 모달 닫기
       }
