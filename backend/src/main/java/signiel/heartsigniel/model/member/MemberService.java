@@ -52,9 +52,11 @@ public class MemberService {
 
         Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
+        Long loginCount = member.getIsFirst();
 
-        if(member.getIsFirst() == 0){
-            member.setIsFirst(1L);
+        if(member.getIsFirst() != 2){
+            loginCount++;
+            member.setIsFirst(loginCount);
         }
 
         return SignResponse.builder()

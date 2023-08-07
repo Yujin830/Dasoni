@@ -41,11 +41,8 @@ public class SignResponse {
     private Long siDo;
 
     private Long guGun;
-<<<<<<< HEAD
-=======
-
     private Long isFirst;
->>>>>>> dev
+
 
 
     @Builder.Default
