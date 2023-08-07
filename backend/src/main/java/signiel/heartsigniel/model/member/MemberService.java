@@ -52,7 +52,7 @@ public class MemberService {
 
         Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
-        Long loginCount = 0L;
+        Long loginCount = member.getIsFirst();
 
         if(member.getIsFirst() != 2){
             loginCount++;

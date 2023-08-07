@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WhisperMessage {
-    private String senderNickname;
+    private String receiverId;
     private String content;
-    private String gender;
+    private String status;
 }

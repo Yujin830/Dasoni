@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
 import signiel.heartsigniel.model.member.Authority;
-import signiel.heartsigniel.token.RefreshTokenRepository;
-import signiel.heartsigniel.token.dto.RefreshToken;
-import signiel.heartsigniel.token.dto.TokenDto;
+
 
 
 import javax.annotation.PostConstruct;

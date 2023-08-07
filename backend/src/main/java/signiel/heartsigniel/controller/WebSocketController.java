@@ -9,9 +9,12 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
+import signiel.heartsigniel.model.member.Member;
+import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -20,6 +23,7 @@ public class WebSocketController {
 
     private final SimpMessageSendingOperations operations;
     private final PrivateRoomService privateRoomService;
+    private final MemberRepository memberRepository;
 
     /**
      * Chat method
@@ -35,12 +39,13 @@ public class WebSocketController {
     /***
      * 귓속말 보내기
      * @param roomId : 방 식별용
-     * @param whisperMessage : senderNickname, gender, content로 구성
+     * @param whisperMessage : receiverId, gender, content로 구성
      */
     @MessageMapping("room/{roomId}/whisper")
     public void whisperChatting(@DestinationVariable Long roomId, @Payload WhisperMessage whisperMessage){
         log.info("Whisper Complete");
-        operations.convertAndSendToUser(whisperMessage.getSenderNickname(),"/queue/room./"+roomId + "/whisper", whisperMessage);
+        whisperMessage.setStatus("OK");
+        operations.convertAndSendToUser(whisperMessage.getReceiverId(),"/queue/room./"+roomId + "/whisper", whisperMessage);
     }
 
 
