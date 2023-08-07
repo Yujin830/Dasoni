@@ -3,23 +3,24 @@ import logo from '../../assets/image/logo.png';
 import './Header.css';
 import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
 import { logout } from '../../app/slices/user';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   onModalToggle?: () => void;
 }
 
-const handleLogout = () => {
-  logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
-  // 선택적으로, 로그아웃 후 로그인 페이지로 리다이렉트할 수 있습니다.
-  window.location.href = '/'; // 로그아웃 후 로그인 페이지로 리다이렉트합니다.
-};
-
 function Header({ onModalToggle }: HeaderProps) {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
+    navigate('/');
+  };
   return (
     <header className="header">
-      <a className="logo" href="/">
+      <Link className="logo" to="/">
         <img src={logo} alt="다소니 로고 이미지"></img>
-      </a>
+      </Link>
       <nav className="nav">
         <ul>
           <li>
@@ -40,12 +41,10 @@ function Header({ onModalToggle }: HeaderProps) {
             <BasicAvartar src="default_profile.png" />
           </li>
           <li className="btn">
-            <a href="/" onClick={handleLogout}>
-              로그아웃
-            </a>
+            <button onClick={handleLogout}>로그아웃</button>
           </li>
           <li className="btn">
-            <a href="/mypage">마이페이지</a>
+            <Link to="/mypage">마이페이지</Link>
           </li>
         </ul>
       </nav>

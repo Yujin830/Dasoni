@@ -14,6 +14,7 @@ public class PrivateRoomList {
     private Long femaleAvgRating;
     private Long maleAvgRating;
     private Long ratingLimit;
+    private boolean megiAcceptable;
 
     public PrivateRoomList(Room roomEntity){
         this.roomId = roomEntity.getId();
@@ -23,7 +24,7 @@ public class PrivateRoomList {
         this.maleMemberCount = roomEntity.memberCountByGender("male");
         this.femaleMemberCount = roomEntity.memberCountByGender("female");
         this.maleAvgRating = roomEntity.memberAvgRatingByGender("male");;
-
+        this.megiAcceptable = roomEntity.isMegiAcceptable();
     }
 
     public static PrivateRoomList of(Room roomEntity){

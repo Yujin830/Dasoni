@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useOpenvidu } from '../../hooks/useOpenvidu';
 import { useParams } from 'react-router';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
@@ -7,6 +7,7 @@ import { useAppSelector } from '../../app/hooks';
 import ToolBar from '../../components/ToolBar/ToolBar';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import TimeDisplay from '../../components/Element/TimeDisplay';
+import Guide from '../../components/MeetingPage/Guide/Guide';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -21,12 +22,14 @@ function MeetingPage() {
   console.log(streamList);
 
   const [guideMessage, setGuideMessage] = useState('');
+  const [isShow, setIsShow] = useState(false);
   const client = useWebSocket({
     subscribe: (client) => {
       // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
-        console.log(JSON.parse(res.body));
-        setGuideMessage(JSON.parse(res.body));
+        console.log(res.body);
+        setGuideMessage(res.body);
+        setIsShow(true);
       });
 
       // TODO : 질문 구독
@@ -36,6 +39,13 @@ function MeetingPage() {
       // TODO : 최종 투표 구독
     },
   });
+
+  // guide 사라지게 하기
+  useEffect(() => {
+    setTimeout(() => {
+      setIsShow(false);
+    }, 5000);
+  }, [isShow]);
 
   // 현재 로그인한 유저와 다른 성별의 memberList
   const diffGenderMemberList = useMemo(
@@ -51,6 +61,7 @@ function MeetingPage() {
   return (
     <div id="meeting">
       <TimeDisplay client={client} roomId={roomId} />
+      <Guide isShow={isShow} guideMessage={guideMessage} />
       <div id="meeting-video-container">
         <div className="meeting-video-row">
           {publisher &&

@@ -8,7 +8,6 @@ import signiel.heartsigniel.model.alarm.AlarmService;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.matching.code.MatchingCode;
-import signiel.heartsigniel.model.matching.dto.QueueData;
 import signiel.heartsigniel.model.matching.queue.RatingQueue;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
@@ -45,22 +44,26 @@ public class MatchingService {
 
     public Response enqueueMember(Long memberId) {
         Member member = findMemberById(memberId);
-        if (isMemberMarkedInQueue(memberId)){
+        if (isMemberInAnyQueue(memberId)){
             return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE, null);
         }
         if (lifeService.countRemainingLives(memberId) == 0){
             return Response.of(LifeCode.LACK_OF_LIFE, null);
         }
         RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender());
-        redisTemplate.opsForList().rightPush(queue.getName(), member.getMemberId());
-        markMembersInQueue(memberId);
+        redisTemplate.opsForList().rightPush(queue.getName(), memberId);
+        markMemberInQueue(memberId, queue.getName());
 
         return checkAndMatchUsers(queue);
     }
 
-    public Response dequeueMember(QueueData queueData) {
-        redisTemplate.opsForList().remove(queueData.getQueue(),1,  queueData.getMemberId());
-        unmarkMemberAsInQueue(queueData.getMemberId());
+    public Response dequeueMember(Long memberId) {
+        if (!isMemberInAnyQueue(memberId)){
+            return Response.of(MatchingCode.DEQUEUE_FAIL, null);
+        }
+        String queueName = getQueueNameForMember(memberId);
+        redisTemplate.opsForList().remove(queueName,1,  memberId);
+        unmarkMemberFromQueue(memberId);
         return Response.of(MatchingCode.DEQUEUE_SUCCESS, null);
     }
 
@@ -75,8 +78,8 @@ public class MatchingService {
                     Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
                     matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(queueMemberId), matchingRoom));
                     matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(opponentQueueMemberId), matchingRoom));
-                    unmarkMemberAsInQueue(queueMemberId);
-                    unmarkMemberAsInQueue(opponentQueueMemberId);
+                    unmarkMemberFromQueue(queueMemberId);
+                    unmarkMemberFromQueue(opponentQueueMemberId);
                 }
                 matchingRoomService.startRoom(matchingRoom);
                 alarmService.sendMatchCompleteMessage(matchingRoom);
@@ -101,22 +104,28 @@ public class MatchingService {
         return roomMemberEntity;
     }
 
-    // 대기열에 참가한 유저를 대기열 참가여부 set에도 추가
-    public void markMembersInQueue(Long memberId){
-        String key = "member:inQueue";
-        redisTemplate.opsForSet().add(key, memberId);
+    // 대기열에 유저 추가
+    public void markMemberInQueue(Long memberId, String queueName) {
+        String key = "memberQueueStatus";
+        redisTemplate.opsForHash().put(key, memberId.toString(), queueName);
     }
 
-    // 대기열 취소하거나 매칭 되었을 경우
-    public void unmarkMemberAsInQueue(Long memberId) {
-        String key = "member:inQueue";
-        redisTemplate.opsForSet().remove(key, memberId.toString());
+    // 대기열에서 유저 제거
+    public void unmarkMemberFromQueue(Long memberId) {
+        String key = "memberQueueStatus";
+        redisTemplate.opsForHash().delete(key, memberId.toString());
     }
 
-    public boolean isMemberMarkedInQueue(Long memberId) {
-        String key = "member:inQueue";
-        return redisTemplate.opsForSet().isMember(key, memberId);
+    // 유저가 어떤 대기열에 있는지 확인
+    public String getQueueNameForMember(Long memberId) {
+        String key = "memberQueueStatus";
+        return (String) redisTemplate.opsForHash().get(key, memberId.toString());
     }
 
+    // 유저가 어떤 대기열에 있는지 확인 (boolean 반환)
+    public boolean isMemberInAnyQueue(Long memberId) {
+        String key = "memberQueueStatus";
+        return redisTemplate.opsForHash().hasKey(key, memberId.toString());
+    }
 
 }

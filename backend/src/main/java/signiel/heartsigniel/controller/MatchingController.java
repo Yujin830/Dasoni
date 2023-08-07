@@ -23,8 +23,8 @@ public class MatchingController {
     }
 
     @DeleteMapping("/members/{memberId}")
-    public ResponseEntity<Response> cancelQuickMatch(@RequestBody QueueData queueData){
-            Response response = matchingService.dequeueMember(queueData);
+    public ResponseEntity<Response> cancelQuickMatch(@PathVariable Long memberId){
+            Response response = matchingService.dequeueMember(memberId);
             return ResponseEntity.ok(response);
     }
 
