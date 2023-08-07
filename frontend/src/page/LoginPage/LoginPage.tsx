@@ -13,7 +13,6 @@ import { loginAsync, getUserInfo } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import ProfileModal from '../../components/Modal/ProfileModal/ProfileModal';
 import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 const styles = {
   button: {
@@ -77,7 +76,6 @@ function LoginPage() {
         } else {
           setModalOpen(false);
           navigate('/main'); // 두번째 로그인부터는 바로 메인으로
-          navigate('/main');
         }
       } else {
         console.log('로그인 실패');
