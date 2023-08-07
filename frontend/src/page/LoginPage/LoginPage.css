@@ -8,17 +8,17 @@
   gap: 0.5rem;
 }
 
- .signal {
+.signal {
   position: absolute;
   top: 1rem;
   width: 15rem;
 }
 
- .signal.left {
+.signal.left {
   right: -1rem;
 }
 
- .signal.right {
+.signal.right {
   left: 0;
 }
 
@@ -104,34 +104,58 @@
   margin-right: 2rem;
 }
 
+.right-box-content .login-input {
+  width: 80%;
+  height: 8vh;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  border: 3px solid #d9d9d9;
+  background: #fff;
+  color: #898989;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.7rem;
+}
 
+.right-box-content .login-btn {
+  width: 40%;
+  height: 6vh;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  background: #ec5e98;
+  color: #fff;
+  font-size: 3vh;
+  font-style: normal;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
 
 @media (max-width: 800px) {
   .left-box {
     width: 50%;
   }
-  .right-box{
+  .right-box {
     width: 50%;
   }
 }
 
 @media (min-width: 760px) {
-  .mobile{
+  .mobile {
     display: none;
   }
 }
 
 @media (max-width: 430px) {
-  .left-box{
+  .left-box {
     display: none;
   }
-  .right-box{
+  .right-box {
     width: 100%;
   }
-  .signal{
-    top:-0.7rem;
+  .signal {
+    top: -0.7rem;
   }
-  .mobile{
+  .mobile {
     margin-top: 1rem;
     width: 75%;
     margin-bottom: -4rem;

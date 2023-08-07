@@ -13,26 +13,26 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
 
-const styles = {
-  startBtn: {
-    width: '10rem',
-    height: '4rem',
-    borderRadius: ' 0.5rem',
-    background: '#ECC835',
-    color: '#fff',
-    fontSize: '1.5rem',
-    fontWeight: '700',
-  },
-  exitBtn: {
-    width: '10rem',
-    height: '4rem',
-    borderRadius: ' 0.5rem',
-    background: '#EC5E98',
-    color: '#fff',
-    fontSize: '1.5rem',
-    fontWeight: '700',
-  },
-};
+// const styles = {
+//   startBtn: {
+//     width: '10rem',
+//     height: '4rem',
+//     borderRadius: ' 0.5rem',
+//     background: '#ECC835',
+//     color: '#fff',
+//     fontSize: '1.5rem',
+//     fontWeight: '700',
+//   },
+//   exitBtn: {
+//     width: '10rem',
+//     height: '4rem',
+//     borderRadius: ' 0.5rem',
+//     background: '#EC5E98',
+//     color: '#fff',
+//     fontSize: '1.5rem',
+//     fontWeight: '700',
+//   },
+// };
 
 function WaitingRoomPage() {
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
@@ -126,8 +126,8 @@ function WaitingRoomPage() {
           <ChatRoom />
         </div>
         <div id="waiting-room-footer">
-          <FilledButton content="시작하기" style={styles.startBtn} handleClick={handleStartBtn} />
-          <FilledButton content="나가기" style={styles.exitBtn} handleClick={handleExitBtn} />
+          <FilledButton content="시작하기" classes="btn start-btn" handleClick={handleStartBtn} />
+          <FilledButton content="나가기" classes="btn exit-btn" handleClick={handleExitBtn} />
         </div>
       </main>
     </div>
