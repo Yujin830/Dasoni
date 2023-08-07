@@ -74,4 +74,5 @@ public class Member {
         this.roles = role;
         role.forEach(o->o.setMember(this));
     }
+
 }

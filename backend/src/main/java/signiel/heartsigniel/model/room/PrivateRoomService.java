@@ -57,7 +57,6 @@ public class PrivateRoomService {
         this.partyService = partyService;
         this.partyMemberService = partyMemberService;
         this.template = template;
-//        this.operations = operations;
         this.ratingService = ratingService;
         this.lifeService = lifeService;
     }

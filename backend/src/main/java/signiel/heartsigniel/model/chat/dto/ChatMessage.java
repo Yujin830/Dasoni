@@ -12,8 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ChatMessage {
 
-    @NotNull
+
     private String senderNickname;
-    @NotNull
     private String content;
 }

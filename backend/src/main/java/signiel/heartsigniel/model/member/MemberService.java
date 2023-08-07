@@ -52,6 +52,7 @@ public class MemberService {
 
         Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
+
         if(member.getIsFirst() == 0){
             member.setIsFirst(1L);
         }
