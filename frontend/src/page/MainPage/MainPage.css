@@ -39,7 +39,7 @@
 #main #main-top .refresh:hover {
   color: #ec5e98;
 }
-
+/* --------------------------- */
 #main #filter-box {
   position: relative;
   margin-right: 1.5rem;
@@ -76,6 +76,7 @@
 #main #filter-box li:first-child {
   border-bottom: 1px solid #d9d9d9;
 }
+/* --------------------- */
 
 #main #search-box {
   position: relative;
