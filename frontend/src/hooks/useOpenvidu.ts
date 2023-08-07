@@ -39,7 +39,12 @@ export const useOpenvidu = (
       console.log('data', data);
       setSubscribers((prev) => [
         ...prev.filter((it) => it.memberId !== data.memberId),
-        { streamManager: subscriber, memberId: data.memberId, nickname: data.nickname },
+        {
+          streamManager: subscriber,
+          memberId: data.memberId,
+          nickname: data.nickname,
+          gender: data.gender,
+        },
       ]);
     });
 
@@ -74,7 +79,7 @@ export const useOpenvidu = (
             resolution: '640x480', // 비디오 해상도 :: "320x240(low)", "640x480(medium)", "1280x720(high)"
             frameRate: 30, // 초당 프레임 수 설정
             insertMode: 'APPEND', // DOM에 publisher video element 삽입하는 방법
-            mirror: true, // 거울모드 설정
+            mirror: false, // 거울모드 설정
           });
 
           console.log('publisher ' + publisher);
@@ -132,8 +137,8 @@ export const useOpenvidu = (
   );
 
   const streamList = useMemo(
-    () => [{ streamManager: publisher, memberId, nickname }, ...subscribers],
-    [publisher, subscribers, memberId, nickname],
+    () => [{ streamManager: publisher, memberId, nickname, gender }, ...subscribers],
+    [publisher, subscribers, memberId, nickname, gender],
   );
 
   return {
