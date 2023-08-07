@@ -74,10 +74,10 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{gender}")
-    public ResponseEntity<Response> filterRoomByGender(@PathVariable String gender) {
+    @GetMapping("/filter/{condition}")
+    public ResponseEntity<Response> filterRoomByGender(@PathVariable String condition) {
         Pageable pageable = PageRequest.of(0, 6);
-        Page<PrivateRoomList> roomList = privateRoomService.filterRoomByGender(gender, pageable);
+        Page<PrivateRoomList> roomList = privateRoomService.filterRoomByGender(condition, pageable);
         Response response = Response.of(CommonCode.GOOD_REQUEST, roomList);
 
         return ResponseEntity.ok(response);
