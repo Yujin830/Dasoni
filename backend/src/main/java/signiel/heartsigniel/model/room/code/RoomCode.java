@@ -22,7 +22,8 @@ public enum RoomCode implements ResponseCode {
     ALREADY_IN_OTHER_ROOM(1219, "이미 다른 방에 참가중입니다."),
     RATING_TOO_LOW(1220, "레이팅이 낮아 방에 참여할 수 없습니다."),
     START_MEETING_SUCCESSFUL(1221, "미팅이 성공적으로 시작되었습니다."),
-    END_MEETING_SUCCESSFUL(1222, "미팅이 종료되었습니다.");
+    END_MEETING_SUCCESSFUL(1222, "미팅이 종료되었습니다."),
+    ROOM_DELETED(1223, "방이 삭제되었습니다.");
 
 
     private final int code;

@@ -9,10 +9,12 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     Page<Room> findAllByRoomTypeAndStartTimeIsNull(String type, Pageable pageable);
     Page<Room> findRoomByTitleContainingAndStartTimeIsNull(String title, Pageable pageable);
 
-    @Query("SELECT r FROM room r WHERE r.roomType = :roomType AND SIZE(r.maleParty.members) <= :malePartySize")
-    Page<Room> findAllByRoomTypeAndMalePartyMemberCountLessThanEqual(String roomType, Long malePartySize, Pageable pageable);
+    @Query("SELECT r FROM room r WHERE r.roomType = :roomType AND "
+            + "(SELECT COUNT(rm) FROM r.roomMembers rm WHERE rm.member.gender = 'male') <= :maleCount")
+    Page<Room> findAllByRoomTypeAndMaleMemberCountLessThanEqual(String roomType, int maleCount, Pageable pageable);
 
-    @Query("SELECT r FROM room r WHERE r.roomType = :roomType AND SIZE(r.femaleParty.members) <= :femalePartySize")
-    Page<Room> findAllByRoomTypeAndFemalePartyMemberCountLessThanEqual(String roomType, Long femalePartySize, Pageable pageable);
+    @Query("SELECT r FROM room r WHERE r.roomType = :roomType AND "
+            + "(SELECT COUNT(rm) FROM r.roomMembers rm WHERE rm.member.gender = 'female') <= :femaleCount")
+    Page<Room> findAllByRoomTypeAndFemaleMemberCountLessThanEqual(String roomType, int femaleCount, Pageable pageable);
 
 }
