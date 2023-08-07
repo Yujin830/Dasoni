@@ -192,7 +192,7 @@ public class PrivateRoomService {
     Sending START Message Method
      */
 
-    public void sendMessage(Long roomId){
+    public void sendStartMessage(Long roomId){
         String startMessage = "Start";
         simpMessagingTemplate.convertAndSend("/topic/room/"+roomId+"/start",startMessage);
     }
@@ -201,12 +201,15 @@ public class PrivateRoomService {
     유저 목록 브로드캐스팅
      */
 
+    // 누구 들어왔을대 메시지
     public void broadcastJoinMemberList(Long roomId){
         List<Member> membersInRoom = getMemberInRoom(roomId);
         log.info("roomid = " + roomId);
         log.info("JoinMember!!!");
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
+
+    // 방 인원 나가기 메시지
     public void broadcastQuitMemberList(Long roomId){
         List<Member> membersInRoom = getMemberInRoom(roomId);
         log.info("roomid = " + roomId);
@@ -214,6 +217,7 @@ public class PrivateRoomService {
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
+    // 방 생성 메시지
     public void broadcastCreateMessage(Long roomId){
         log.info("Create Room Complete");
         String creatMsg = "/topic/room/" + roomId + "is created!!!";

@@ -87,7 +87,7 @@ public class WebSocketController {
     @MessageMapping("room/{roomId}/start")
     public void sendStartMessage(@DestinationVariable Long roomId){
         log.info("STARTING MESSAGE SENDING COMPLETE1!!!");
-        privateRoomService.sendMessage(roomId);
+        privateRoomService.sendStartMessage(roomId);
         log.info("STARTING MESSAGE SENDING COMPLETE2!!!");
     }
 
