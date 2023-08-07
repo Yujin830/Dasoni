@@ -1,6 +1,5 @@
 package signiel.heartsigniel.model.room.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import signiel.heartsigniel.model.room.Room;
 
@@ -21,7 +20,7 @@ public class PrivateRoomList {
         this.title = roomEntity.getTitle();
         this.ratingLimit = roomEntity.getRatingLimit();
         this.femaleAvgRating = roomEntity.memberAvgRatingByGender("female");
-        this.maleMemberCount = ratingLimit;
+        this.maleMemberCount = roomEntity.memberCountByGender("male");
         this.femaleMemberCount = roomEntity.memberCountByGender("female");
         this.maleAvgRating = roomEntity.memberAvgRatingByGender("male");;
 

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.alarm.AlarmService;
+import signiel.heartsigniel.model.life.LifeService;
+import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.matching.dto.QueueData;
 import signiel.heartsigniel.model.matching.queue.RatingQueue;
@@ -29,30 +31,36 @@ public class MatchingService {
     private final RedisTemplate<String, Long> redisTemplate;
     private final RoomMemberService roomMemberService;
     private AlarmService alarmService;
+    private LifeService lifeService;
 
-    public MatchingService(MemberRepository memberRepository, RoomMemberService roomMemberService, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService){
+    public MatchingService(MemberRepository memberRepository, RoomMemberService roomMemberService, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService, LifeService lifeService){
         this.memberRepository = memberRepository;
         this.matchingRoomService = matchingRoomService;
         this.roomMemberRepository = roomMemberRepository;
         this.roomMemberService = roomMemberService;
         this.redisTemplate = redisTemplate;
         this.alarmService = alarmService;
+        this.lifeService = lifeService;
     }
 
     public Response enqueueMember(Long memberId) {
         Member member = findMemberById(memberId);
-        if(isMemberInAlreadyQueue(member)){
+        if (isMemberMarkedInQueue(memberId)){
             return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE, null);
+        }
+        if (lifeService.countRemainingLives(memberId) == 0){
+            return Response.of(LifeCode.LACK_OF_LIFE, null);
         }
         RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender());
         redisTemplate.opsForList().rightPush(queue.getName(), member.getMemberId());
+        markMembersInQueue(memberId);
 
         return checkAndMatchUsers(queue);
     }
 
     public Response dequeueMember(QueueData queueData) {
         redisTemplate.opsForList().remove(queueData.getQueue(),1,  queueData.getMemberId());
-        alarmService.removeEmitter(queueData.getMemberId());
+        unmarkMemberAsInQueue(queueData.getMemberId());
         return Response.of(MatchingCode.DEQUEUE_SUCCESS, null);
     }
 
@@ -63,8 +71,12 @@ public class MatchingService {
                 // 해당 큐와 상대 성별 큐에서 3명씩 팝해서 매칭(createRoom을 향후 Q1, Q2 넣도록 변경)
                 Room matchingRoom = matchingRoomService.createRoom();
                 for (int i = 0; i < 3; i++) {
-                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(redisTemplate.opsForList().leftPop(queue.getName())), matchingRoom));
-                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(redisTemplate.opsForList().leftPop(oppositeQueue.getName())), matchingRoom));
+                    Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
+                    Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
+                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(queueMemberId), matchingRoom));
+                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(opponentQueueMemberId), matchingRoom));
+                    unmarkMemberAsInQueue(queueMemberId);
+                    unmarkMemberAsInQueue(opponentQueueMemberId);
                 }
                 matchingRoomService.startRoom(matchingRoom);
                 alarmService.sendMatchCompleteMessage(matchingRoom);
@@ -89,8 +101,22 @@ public class MatchingService {
         return roomMemberEntity;
     }
 
-    public boolean isMemberInAlreadyQueue(Member member) {
-        return roomMemberRepository.findRoomMemberByMember(member).isPresent();
+    // 대기열에 참가한 유저를 대기열 참가여부 set에도 추가
+    public void markMembersInQueue(Long memberId){
+        String key = "member:inQueue";
+        redisTemplate.opsForSet().add(key, memberId);
     }
+
+    // 대기열 취소하거나 매칭 되었을 경우
+    public void unmarkMemberAsInQueue(Long memberId) {
+        String key = "member:inQueue";
+        redisTemplate.opsForSet().remove(key, memberId.toString());
+    }
+
+    public boolean isMemberMarkedInQueue(Long memberId) {
+        String key = "member:inQueue";
+        return redisTemplate.opsForSet().isMember(key, memberId);
+    }
+
 
 }
