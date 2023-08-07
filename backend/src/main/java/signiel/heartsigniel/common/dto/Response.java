@@ -3,9 +3,6 @@ package signiel.heartsigniel.common.dto;
 import lombok.Getter;
 import lombok.Setter;
 import signiel.heartsigniel.common.code.ResponseCode;
-import signiel.heartsigniel.model.chat.WebSocketInfo;
-import signiel.heartsigniel.model.member.Member;
-import signiel.heartsigniel.model.member.dto.MeetingRoomMemberReq;
 
 @Setter
 @Getter
