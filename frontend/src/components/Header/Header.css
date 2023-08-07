@@ -28,7 +28,84 @@
 .header nav li {
   margin: 0 0.5rem;
 }
+/* ---------------------- */
+#filter-menu .material-symbols-outlined {
+  color: #ff257e;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+#filter-menu ul.show .material-symbols-outlined {
+  color: black;
+}
 
+#filter-menu ul.show .material-symbols-outlined:hover {
+  color: #ec5e98;
+}
+
+#filter-menu li button {
+  border: none;
+  background-color: #ffffff; /* 흰색 배경 */
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+#filter-menu li button:hover {
+  color: #ec5e98; /* 마우스 호버 시 배경색 변경 */
+}
+
+.header nav #nav-bar ul {
+  width: 8rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  background-color: #ffffff; /* 흰색 배경 */
+  box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.25);
+  padding: 0.5rem 0.8rem;
+  position: absolute;
+  right: 0;
+  /* bottom: -5rem; */
+  display: none;
+}
+
+.header nav #nav-bar ul.show {
+  display: block;
+  fill: #fff;
+  stroke-width: 1px;
+  stroke: #ec5e98;
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.25));
+}
+
+/* .header nav #nav-bar li {
+  width: 100%;
+  height: 50%;
+  list-style: none;
+  padding: 0.3rem 0;
+  cursor: pointer;
+} */
+
+/* .header nav #nav-bar li:hover {
+  color: #ec5e98;
+} */
+
+#filter-menu li a {
+  text-decoration: none; /* 링크 텍스트의 밑줄 제거 */
+  color: black; /* 검은색 텍스트 색상 */
+  font-size: 14px; /* 폰트 크기 조정 (원하는 크기로 변경) */
+  padding: 8px 16px; /* 버튼과 동일한 패딩 적용 */
+  display: block; /* 전체 영역 클릭 가능하도록 block 속성 추가 */
+}
+
+#filter-menu li a:hover {
+  color: #ec5e98; /* 마우스 호버 시 배경색 변경 */
+}
+
+.header nav #nav-bar li:first-child {
+  border-bottom: 1px solid #d9d9d9;
+}
+.header nav #nav-bar li:last-child {
+  border-top: 1px solid #d9d9d9;
+}
+/* ---------------------------- */
 .header .material-symbols-outlined.filled {
   font-variation-settings:
     'FILL' 1,
