@@ -5,8 +5,8 @@ import { useAppSelector } from '../../app/hooks';
 import './ChatRoom.css';
 
 interface ChatMessage {
-  username: string;
-  message: string;
+  senderNickname: string;
+  content: string;
   timestamp: Date;
 }
 
@@ -21,7 +21,9 @@ const ChatRoom: React.FC = () => {
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}/chat`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
+        console.log(chatMessage);
         setMessages((messages) => [...messages, chatMessage]);
+        console.log(messages);
       });
     },
   });
@@ -42,8 +44,14 @@ const ChatRoom: React.FC = () => {
       client?.send(
         `/app/room/${roomId}/chat`,
         {},
-        JSON.stringify({ username: 'senderNickname', message: newMessage, timestamp: new Date() }),
+        JSON.stringify({
+          senderNickname: member.nickname,
+          content: newMessage,
+          timestamp: new Date(),
+        }),
       );
+      console.log(member);
+      console.log(newMessage);
       setNewMessage('');
     }
   };
@@ -54,9 +62,9 @@ const ChatRoom: React.FC = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`message ${member.nickname === member?.nickname ? 'message-own' : ''}`}
+            className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
           >
-            <strong>{msg.username}:</strong> {msg.message}
+            <strong>{msg.senderNickname}:</strong> {msg.content}
           </div>
         ))}
       </div>
