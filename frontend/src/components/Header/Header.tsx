@@ -18,7 +18,7 @@ function Header({ onModalToggle }: HeaderProps) {
   };
   return (
     <header className="header">
-      <a className="logo" href="/">
+      <a className="logo" href="/main">
         <img src={logo} alt="다소니 로고 이미지"></img>
       </a>
       <nav className="nav">
@@ -45,6 +45,10 @@ function Header({ onModalToggle }: HeaderProps) {
           </li>
           <li className="btn">
             <Link to="/mypage">마이페이지</Link>
+          </li>
+
+          <li className="menu">
+            <span className="material-symbols-outlined">menu</span>
           </li>
         </ul>
       </nav>
