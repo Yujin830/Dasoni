@@ -10,6 +10,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { signupAsync } from '../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const styles = {
   button: {
@@ -172,8 +173,10 @@ function SignupPage() {
   return (
     <div className="signupbox">
       <div className="header">
-        <img className="signup-signal" src={leftSignal} alt="시그널 아이콘" />
-        <img className="signup-logo" src={logo} alt="다소니 로고 이미지" />
+        <Link className="signup-logo" to="/">
+          <img className="signup-icon" src={leftSignal} alt="시그널 아이콘" />
+          <img className="signup-title" src={logo} alt="다소니 로고 이미지" />
+        </Link>
       </div>
       <div className="signup-box">
         <div className="signup-content">
