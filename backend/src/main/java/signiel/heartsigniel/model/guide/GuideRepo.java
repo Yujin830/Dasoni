@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Transactional
 public interface GuideRepo extends JpaRepository<Guide, Long> {
-    Optional<GuideDto> findByVisibleTime(Long visibleTime);
+    Optional<Guide> findByVisibleTime(Long visibleTime);
 }
