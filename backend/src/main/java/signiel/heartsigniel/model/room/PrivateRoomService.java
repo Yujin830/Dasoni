@@ -66,7 +66,7 @@ public class PrivateRoomService {
         if (isMemberInAnotherRoom(member)) {
             return Response.of(RoomCode.ALREADY_IN_OTHER_ROOM, null);
         }
-        if (matchingService.isMemberMarkedInQueue(privateRoomCreateRequest.getMemberId())){
+        if (matchingService.isMemberInAnyQueue(privateRoomCreateRequest.getMemberId())){
             return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE, null);
         }
 
@@ -107,7 +107,7 @@ public class PrivateRoomService {
             return Response.of(RoomCode.RATING_TOO_LOW, null);
         }
 
-        if(matchingService.isMemberMarkedInQueue(memberId)){
+        if(matchingService.isMemberInAnyQueue(memberId)){
             return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE,  null);
         }
 
