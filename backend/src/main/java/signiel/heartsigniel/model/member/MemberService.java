@@ -52,8 +52,9 @@ public class MemberService {
 
         Long remainLives = lifeService.countRemainingLives(member.getMemberId());
 
+
         if(member.getIsFirst() == 0){
-            member.setIsFirst(1);
+            member.setIsFirst(1L);
         }
 
         return SignResponse.builder()
@@ -86,7 +87,7 @@ public class MemberService {
                     .birth(request.getBirth())
                     .phoneNumber(request.getPhoneNumber())
                     .rating(1000L)
-                    .isFirst(0)
+                    .isFirst(0L)
                     .build();
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));

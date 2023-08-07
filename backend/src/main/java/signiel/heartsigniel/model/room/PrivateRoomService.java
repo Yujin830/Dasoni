@@ -42,13 +42,14 @@ public class PrivateRoomService {
     private final RoomMemberService roomMemberService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-
     public PrivateRoomService(RoomRepository roomRepository, RoomMemberRepository roomMemberRepository, MemberRepository memberRepository, RoomMemberService roomMemberService, SimpMessageSendingOperations operations,
                               SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService) {
+
         this.roomRepository = roomRepository;
         this.roomMemberRepository = roomMemberRepository;
         this.memberRepository = memberRepository;
         this.roomMemberService = roomMemberService;
+
         this.ratingService = ratingService;
         this.lifeService = lifeService;
         this.simpMessagingTemplate = simpMessagingTemplate;

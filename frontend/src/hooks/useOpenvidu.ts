@@ -6,7 +6,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
-export const useOpenvidu = (memberId: number, nickname: string, meetingRoomId: string) => {
+export const useOpenvidu = (
+  memberId: number,
+  nickname: string,
+  meetingRoomId: string,
+  gender: string,
+) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
@@ -55,7 +60,7 @@ export const useOpenvidu = (memberId: number, nickname: string, meetingRoomId: s
         try {
           console.log(token);
           // 획득한 토큰으로 세션에 연결
-          await session.connect(token, JSON.stringify({ memberId }));
+          await session.connect(token, JSON.stringify({ memberId, nickname, gender }));
           // await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           const devices: Device[] = await openVidu.getDevices(); // 사용 가능한 미디어 입력 장치 대한 정보 가져오기
           const videoDevices = devices.filter((device) => device.kind === 'videoinput'); // device.kind : device 종류 videoinput | audioinput

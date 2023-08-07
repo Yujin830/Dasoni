@@ -62,7 +62,7 @@ public class Member {
     private Long guGun;
 
     @Column(name = "is_first")
-    private int isFirst;
+    private Long isFirst;
 
 
 
@@ -74,4 +74,5 @@ public class Member {
         this.roles = role;
         role.forEach(o->o.setMember(this));
     }
+
 }
