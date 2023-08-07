@@ -13,10 +13,10 @@ import { setWaitingMemberList } from '../../app/slices/waitingSlice';
 export type RoomBoxProps = {
   roomId: number; // room을 구분하는 id
   title: string; // 방 제목
-  malePartyMemberCount: number; // 현재 남자 참가인원
-  femalePartyMemberCount: number; // 현재 여자 참가인원
-  malePartyAvgRating: number; // 참가한 남자 평균 레이팅
-  femalePartyAvgRating: number; // 참가한 여자 평균 레이팅
+  maleMemberCount: number; // 현재 남자 참가인원
+  femaleMemberCount: number; // 현재 여자 참가인원
+  maleAvgRating: number; // 참가한 남자 평균 레이팅
+  femaleAvgRating: number; // 참가한 여자 평균 레이팅
   megiAcceptable: boolean; // 메기 입장 가능 여부
 };
 
@@ -82,10 +82,10 @@ function GenderInfo({ genderIcon, genderCount, genderAvgRank, fullCount }: Gende
 function RoomBox({
   roomId,
   title,
-  malePartyMemberCount,
-  femalePartyMemberCount,
-  malePartyAvgRating,
-  femalePartyAvgRating,
+  maleMemberCount,
+  femaleMemberCount,
+  maleAvgRating,
+  femaleAvgRating,
   megiAcceptable,
 }: RoomBoxProps) {
   const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
@@ -125,7 +125,7 @@ function RoomBox({
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
-        {megiAcceptable && femalePartyMemberCount + malePartyAvgRating === 2 * FULL_COUNT ? (
+        {megiAcceptable && femaleMemberCount + maleAvgRating === 2 * FULL_COUNT ? (
           <FilledButton
             style={isFull ? styles.disabled : styles.megi}
             content="메기 입장하기"
@@ -133,7 +133,7 @@ function RoomBox({
           />
         ) : null}
 
-        {!megiAcceptable && femalePartyMemberCount + malePartyMemberCount < 2 * FULL_COUNT ? (
+        {!megiAcceptable && femaleMemberCount + maleMemberCount < 2 * FULL_COUNT ? (
           <FilledButton
             style={isFull ? styles.disabled : styles.basic}
             content="입장하기"
@@ -144,14 +144,14 @@ function RoomBox({
       <div className="content">
         <GenderInfo
           genderIcon={maleIcon}
-          genderCount={malePartyMemberCount}
-          genderAvgRank={malePartyAvgRating}
+          genderCount={maleMemberCount}
+          genderAvgRank={maleAvgRating}
           fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
         <GenderInfo
           genderIcon={femaleIcon}
-          genderCount={femalePartyMemberCount}
-          genderAvgRank={femalePartyAvgRating}
+          genderCount={femaleMemberCount}
+          genderAvgRank={femaleAvgRating}
           fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
         />
       </div>

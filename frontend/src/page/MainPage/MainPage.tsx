@@ -187,10 +187,10 @@ function MainPage() {
                   key={room.roomId}
                   roomId={room.roomId}
                   title={room.title}
-                  malePartyMemberCount={room.malePartyMemberCount}
-                  femalePartyMemberCount={room.femalePartyMemberCount}
-                  malePartyAvgRating={room.malePartyAvgRating}
-                  femalePartyAvgRating={room.femalePartyAvgRating}
+                  maleMemberCount={room.maleMemberCount}
+                  femaleMemberCount={room.femaleMemberCount}
+                  maleAvgRating={room.maleAvgRating}
+                  femaleAvgRating={room.femaleAvgRating}
                   megiAcceptable={room.megiAcceptable}
                 />
               ))
