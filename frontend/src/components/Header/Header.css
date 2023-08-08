@@ -13,6 +13,8 @@
 
 .header .logo {
   width: 8rem;
+  display: flex;
+  margin-right: auto;
 }
 
 .logo img {
@@ -29,6 +31,92 @@
   margin: 0 0.5rem;
 }
 
+.header button {
+  border: none;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+/* ---------------------- */
+/* 메뉴필터 아이콘 */
+#filter-menu .material-symbols-outlined {
+  color: #ff257e;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+/* 도움말 아이콘 */
+#filter-menu #help .material-symbols-outlined {
+  color: black;
+  padding: 10px 10px;
+}
+#filter-menu #help .material-symbols-outlined:hover {
+  color: #ec5e98;
+}
+
+/* 도움말 버튼 링크처럼 보이기 */
+#filter-menu li button {
+  border: none;
+  background-color: #ffffff;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+#filter-menu li button:hover {
+  color: #ec5e98; /* 마우스 호버 시 배경색 변경 */
+}
+
+/* 메뉴박스 */
+#filter-menu ul {
+  width: 8rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  background-color: #ffffff; /* 흰색 배경 */
+  box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.25);
+  padding: 0 0;
+  position: absolute;
+  right: 0;
+  display: none;
+}
+#filter-menu ul.show {
+  display: block;
+  fill: #fff;
+  stroke-width: 1px;
+  stroke: #ec5e98;
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.25));
+  border: 1px solid #ec5e98;
+}
+
+#filter-menu #help {
+  margin: 0 0;
+  display: flex;
+  justify-content: center;
+}
+#filter-menu #logout {
+  margin: 0 0;
+  display: flex;
+  justify-content: center;
+}
+
+#filter-menu li a {
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  padding: 8px 8px;
+  display: block;
+}
+
+#filter-menu li a:hover {
+  color: #ec5e98;
+}
+
+#filter-menu li:first-child {
+  border-bottom: 1px solid #ec5e98;
+}
+#filter-menu li:last-child {
+  border-top: 1px solid #ec5e98;
+}
+/* ---------------------------- */
 .header .material-symbols-outlined.filled {
   font-variation-settings:
     'FILL' 1,

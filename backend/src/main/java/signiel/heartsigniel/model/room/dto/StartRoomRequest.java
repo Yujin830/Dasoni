@@ -6,5 +6,4 @@ import lombok.Getter;
 public class StartRoomRequest {
     private Long roomLeaderPartyMemberId;
     private Long roomId;
-
 }

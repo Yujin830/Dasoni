@@ -1,0 +1,30 @@
+.guide {
+  width: 100%;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.guide.show {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.guide img {
+  width: 100%;
+}
+
+.guide p {
+  font-size: 2rem;
+  font-weight: 700;
+  width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+}

@@ -6,7 +6,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
-export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
+export const useOpenvidu = (
+  memberId: number,
+  nickname: string,
+  meetingRoomId: string,
+  gender: string,
+) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
@@ -30,7 +35,17 @@ export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
     session.on('streamCreated', (event) => {
       console.log(event);
       const subscriber = session.subscribe(event.stream, undefined);
-      setSubscribers((subscribers) => [...subscribers, subscriber]);
+      const data = JSON.parse(event.stream.connection.data);
+      console.log('data', data);
+      setSubscribers((prev) => [
+        ...prev.filter((it) => it.memberId !== data.memberId),
+        {
+          streamManager: subscriber,
+          memberId: data.memberId,
+          nickname: data.nickname,
+          gender: data.gender,
+        },
+      ]);
     });
 
     // 스트림 삭제 이벤트 구독
@@ -50,7 +65,7 @@ export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
         try {
           console.log(token);
           // 획득한 토큰으로 세션에 연결
-          await session.connect(token, JSON.stringify({ memberId }));
+          await session.connect(token, JSON.stringify({ memberId, nickname, gender }));
           // await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           const devices: Device[] = await openVidu.getDevices(); // 사용 가능한 미디어 입력 장치 대한 정보 가져오기
           const videoDevices = devices.filter((device) => device.kind === 'videoinput'); // device.kind : device 종류 videoinput | audioinput
@@ -64,7 +79,7 @@ export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
             resolution: '640x480', // 비디오 해상도 :: "320x240(low)", "640x480(medium)", "1280x720(high)"
             frameRate: 30, // 초당 프레임 수 설정
             insertMode: 'APPEND', // DOM에 publisher video element 삽입하는 방법
-            mirror: true, // 거울모드 설정
+            mirror: false, // 거울모드 설정
           });
 
           console.log('publisher ' + publisher);
@@ -83,7 +98,7 @@ export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
       setPublisher(null);
       setSubscribers([]);
     };
-  }, []);
+  }, [memberId]);
 
   // subscriber 삭제
   const deleteSubscriber = useCallback((streamManager: any) => {
@@ -122,8 +137,8 @@ export const useOpenvidu = (memberId: number, meetingRoomId: string) => {
   );
 
   const streamList = useMemo(
-    () => [{ streamManager: publisher, memberId }, ...subscribers],
-    [publisher, subscribers, memberId],
+    () => [{ streamManager: publisher, memberId, nickname, gender }, ...subscribers],
+    [publisher, subscribers, memberId, nickname, gender],
   );
 
   return {
@@ -159,7 +174,13 @@ const createSession = async (roomId: string) => {
       return res.data.sessionId; // sessionId 반환
     }
   } catch (err) {
-    console.error(err);
+    const error: any = Object.assign({}, err);
+    if (error?.response?.status === 409) {
+      return roomId;
+    } else {
+      console.error(err);
+      console.warn('No connection to OpenVidu Server. This may be a certificate error at ');
+    }
   }
 };
 

@@ -3,50 +3,57 @@ import logo from '../../assets/image/logo.png';
 import './Header.css';
 import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
 import { logout } from '../../app/slices/user';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   onModalToggle?: () => void;
 }
 
-const handleLogout = () => {
-  logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
-  // 선택적으로, 로그아웃 후 로그인 페이지로 리다이렉트할 수 있습니다.
-  window.location.href = '/'; // 로그아웃 후 로그인 페이지로 리다이렉트합니다.
-};
-
 function Header({ onModalToggle }: HeaderProps) {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
+    navigate('/');
+  };
+  // 필터 버튼 토클
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggleFilter = () => {
+    setIsOpen((prevState) => !prevState);
+  };
   return (
     <header className="header">
-      <a className="logo" href="/">
+      <button className="material-symbols-outlined">double_arrow</button>
+      <Link className="logo" to="/main">
         <img src={logo} alt="다소니 로고 이미지"></img>
-      </a>
+      </Link>
       <nav className="nav">
-        <ul>
+        <ul id="nav-bar">
           <li>
             <span className="material-symbols-outlined filled">favorite</span>
             <span className="material-symbols-outlined filled">favorite</span>
           </li>
-
-          <li className="help">
-            <button
-              className="material-symbols-outlined"
-              onClick={onModalToggle} // MainPage의 handleModalToggle 함수를 호출
-            >
-              help
-            </button>
-          </li>
-
           <li>
             <BasicAvartar src="default_profile.png" />
           </li>
-          <li className="btn">
-            <a href="/" onClick={handleLogout}>
-              로그아웃
-            </a>
-          </li>
-          <li className="btn">
-            <a href="/mypage">마이페이지</a>
-          </li>
+          <div id="filter-menu">
+            <button className="material-symbols-outlined" onClick={handleToggleFilter}>
+              menu
+            </button>
+            <ul className={isOpen ? 'show' : ''}>
+              <li id="help">
+                <button className="material-symbols-outlined" onClick={onModalToggle}>
+                  help도움말
+                </button>
+              </li>
+              <li id="mypage">
+                <Link to="/mypage">마이페이지</Link>
+              </li>
+              <li id="logout">
+                <button onClick={handleLogout}>로그아웃</button>
+              </li>
+            </ul>
+          </div>
         </ul>
       </nav>
     </header>
