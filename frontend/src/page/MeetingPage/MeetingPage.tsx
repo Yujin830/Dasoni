@@ -41,7 +41,7 @@ function MeetingPage() {
       // 질문 구독
       client.subscribe(`/topic/room/${roomId}/questions`, (res: any) => {
         console.log(res.body);
-        setQuestion(res.body[0]);
+        setQuestion(res.body);
         setIsQuestionTime(true);
       });
       client.send(`/app/room/${roomId}/questions`);
