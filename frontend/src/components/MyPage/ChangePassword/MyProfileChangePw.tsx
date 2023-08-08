@@ -57,16 +57,20 @@ function CheckCurrentPw({ setIsCorrect, memberId }: any) {
 
   return (
     <div className="confirm-currentPw">
-      <FiledLabelInput
-        classes="confirm-input"
-        label="현재 비밀번호"
-        type="password"
-        value={currentPw}
-        placeholer="현재 비밀번호를 입력해주세요"
-        handleChange={handleCurrentPw}
-      />
-      <div className={`alert ${alertMsg ? 'show' : ''}`}>{alertMsg}</div>
-      <FilledButton classes="confirm-btn" content="확인" handleClick={handleClick} />
+      <div className="current-container">
+        <FiledLabelInput
+          classes="confirm-input"
+          label="현재 비밀번호"
+          type="password"
+          value={currentPw}
+          placeholer="현재 비밀번호를 입력해주세요"
+          handleChange={handleCurrentPw}
+        />
+        <div className={`alert ${alertMsg ? 'show' : ''}`}>{alertMsg}</div>
+      </div>
+      <div className="c-btn">
+        <FilledButton classes="confirm-btn" content="확인" handleClick={handleClick} />
+      </div>
     </div>
   );
 }
@@ -113,23 +117,25 @@ function ChangePw({ setType, memberId }: any) {
 
   return (
     <div className="confirm-changePw">
-      <FiledLabelInput
-        classes="confirm-input"
-        label="변경 비밀번호"
-        type="password"
-        value={newPw}
-        placeholer="변경할 비밀번호를 입력해주세요"
-        handleChange={handleNewPwChange}
-      />
-      <FiledLabelInput
-        classes="confirm-input"
-        label="비밀번호 확인"
-        type="password"
-        value={checkNewPw}
-        placeholer="다시 한 번 비밀번호를 입력해주세요"
-        handleChange={handleCheckNewPwChange}
-      />
-      <div className={`alert ${alertMsg ? 'show' : ''}`}>{alertMsg}</div>
+      <div className="confirm-container">
+        <FiledLabelInput
+          classes="confirm-input"
+          label="변경 비밀번호"
+          type="password"
+          value={newPw}
+          placeholer="변경할 비밀번호를 입력해주세요"
+          handleChange={handleNewPwChange}
+        />
+        <FiledLabelInput
+          classes="confirm-input"
+          label="비밀번호 확인"
+          type="password"
+          value={checkNewPw}
+          placeholer="다시 한 번 비밀번호를 입력해주세요"
+          handleChange={handleCheckNewPwChange}
+        />
+        <div className={`alert ${alertMsg ? 'show' : ''}`}>{alertMsg}</div>
+      </div>
       <FilledButton classes="confirm-btn" content="확인" handleClick={sendNewPw} />
     </div>
   );
