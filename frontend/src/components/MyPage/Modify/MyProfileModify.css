@@ -11,14 +11,20 @@
 }
 
 .mypage .modify-form .info-input {
-  width: 26rem;
-  height: 4rem;
+  width: 70%;
+  height: 7vh;
   flex-shrink: 0;
   border-radius: 1.25rem;
   border: 3px solid #d9d9d9;
   background: #fff;
   color: #898989;
-  font-size: 1.2rem;
+  font-size: 2.5vh;
   margin: 0.5rem 0;
   padding: 0.5rem 0.7rem;
+}
+
+@media (max-width: 970px) {
+  .mypage .modify-form .info-input {
+    width: 100%;
+  }
 }

@@ -3,14 +3,22 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   /* padding: 2rem; */
 }
-
-.confirm-currentPw {
-  /* background-color: pink; */
-  width: 70%;
+.current-container,
+.confirm-container {
+  width: 90%;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
+}
+.confirm-currentPw,
+.confirm-changePw {
+  width: 80%;
+}
+.input-box {
+  width: 100%;
 }
 
 .mypage .changePw-box h3 {
@@ -23,25 +31,31 @@
 }
 
 .mypage .changePw-box .confirm-input {
-  height: 3rem;
+  width: 68%;
+  height: 8vh;
   flex-shrink: 0;
   border-radius: 1.25rem;
   border: 3px solid #d9d9d9;
   background: #fff;
   color: #898989;
-  font-size: 1rem;
+  font-size: 2.5vh;
   margin: 0.5rem 0;
   padding: 0.5rem 0.7rem;
 }
 
+.c-btn {
+  width: 100%;
+  height: 10vh;
+}
 .mypage .changePw-box .confirm-btn {
   border-radius: 0.625rem;
   background: #ec5e98;
-  width: 7rem;
-  height: 3rem;
+  width: 14vh;
+  height: 5vh;
   position: absolute;
   right: 0;
   margin-top: 1rem;
+  font-size: 2vh;
 }
 
 .mypage .changePw-box .confirm-changePw .alert,
@@ -56,4 +70,10 @@
   text-align: center;
   font-size: 1rem;
   margin-top: 0.5rem;
+}
+
+@media (max-width: 1360px) {
+  .mypage .changePw-box .confirm-input {
+    width: 100%;
+  }
 }
