@@ -96,11 +96,11 @@ function WaitingRoomPage() {
       const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
       console.log(res);
 
-      const data = {
+      const quitData = {
         type: 'quit',
-        memeberId: member.memberId,
+        memberId: member.memberId,
       };
-      client?.send(`/app/room/${roomId}`, {}, JSON.stringify(data));
+      client?.send(`/app/room/${roomId}`, {}, JSON.stringify(quitData));
       if (res.status === 200) {
         navigate('/main', { replace: true });
       }
@@ -126,10 +126,7 @@ function WaitingRoomPage() {
           </div>
           <div className="info">
             <span>메기 : {waitingRoomInfo.megiAcceptable ? 'Yes' : 'No'}</span>
-            <span>
-              Rank :
-              {convertScoreToName(waitingRoomInfo.ratingLimit ? waitingRoomInfo.ratingLimit : 0)}
-            </span>
+            <span>Rank :{convertScoreToName(waitingRoomInfo.ratingLimit)}</span>
           </div>
         </div>
         <div id="waiting-room-body">
