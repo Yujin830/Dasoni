@@ -44,7 +44,6 @@ function MeetingPage() {
         setQuestion(res.body);
         setIsQuestionTime(true);
       });
-      client.send(`/app/room/${roomId}/questions`);
 
       // TODO : 첫인상 투표 구독
 
