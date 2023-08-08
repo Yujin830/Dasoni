@@ -132,7 +132,7 @@ function WaitingRoomPage() {
                 <WaitingMemberBox
                   key={member.memberId}
                   nickname={member.nickname}
-                  point={member.rating}
+                  rating={member.rating}
                   matchCnt={member.meetingCount}
                   gender={member.gender}
                   profileImageSrc={member.profileImageSrc}
@@ -144,7 +144,7 @@ function WaitingRoomPage() {
                 <WaitingMemberBox
                   key={member.memberId}
                   nickname={member.nickname}
-                  point={member.rating}
+                  rating={member.rating}
                   matchCnt={member.meetingCount}
                   gender={member.gender}
                   profileImageSrc={member.profileImageSrc}
