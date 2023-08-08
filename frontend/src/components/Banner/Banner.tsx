@@ -7,7 +7,7 @@ function Banner() {
     <div id="banner">
       <div id="text-box">
         <h2>
-          첫인상을 결정하는 <span className="highlight">3초!</span>
+          첫인상을 결정하는 <br className="mobile" /> <span className="highlight">3초!</span>
         </h2>
         <h3>
           나만의 매력을 어필하고 마음에 드는 이성에게
