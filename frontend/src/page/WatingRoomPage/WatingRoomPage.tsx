@@ -58,9 +58,11 @@ function WaitingRoomPage() {
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
-        console.log(res);
+        // console.log(res.body);
         console.log(JSON.parse(res.body));
-        setMemberList(JSON.parse(res.body));
+        const data = JSON.parse(res.body);
+        console.log('received data: ', data);
+        setMemberList(data.memberList);
       });
 
       client.subscribe(`/topic/room/${roomId}/start`, (res: any) => {
@@ -76,7 +78,7 @@ function WaitingRoomPage() {
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
       const joinData = {
         type: 'join',
-        memeberId: member.memberId,
+        memberId: member.memberId,
       };
       client.send(`/app/room/${roomId}`, {}, JSON.stringify(joinData));
     },
@@ -93,7 +95,12 @@ function WaitingRoomPage() {
       console.log('roomID ', roomId);
       const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
       console.log(res);
-      client?.send(`/app/room/${roomId}`, {}, 'quit');
+
+      const data = {
+        type: 'quit',
+        memeberId: member.memberId,
+      };
+      client?.send(`/app/room/${roomId}`, {}, JSON.stringify(data));
       if (res.status === 200) {
         navigate('/main', { replace: true });
       }
@@ -110,7 +117,7 @@ function WaitingRoomPage() {
 
   return (
     <div id="waiting-page">
-      <Header onModalToggle={handleModalToggle} />{' '}
+      <Header onModalToggle={handleModalToggle} />
       <main id="waiting-room-box">
         <div id="waiting-room-top">
           <div className="title">
@@ -132,7 +139,7 @@ function WaitingRoomPage() {
                 <WaitingMemberBox
                   key={member.memberId}
                   nickname={member.nickname}
-                  point={member.rating}
+                  rating={member.rating}
                   matchCnt={member.meetingCount}
                   gender={member.gender}
                   profileImageSrc={member.profileImageSrc}
@@ -144,7 +151,7 @@ function WaitingRoomPage() {
                 <WaitingMemberBox
                   key={member.memberId}
                   nickname={member.nickname}
-                  point={member.rating}
+                  rating={member.rating}
                   matchCnt={member.meetingCount}
                   gender={member.gender}
                   profileImageSrc={member.profileImageSrc}

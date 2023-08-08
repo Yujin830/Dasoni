@@ -4,7 +4,7 @@ import { useAppSelector } from '../../../app/hooks';
 
 type RankAvartarProps = {
   src: string;
-  point: number;
+  point: number | undefined;
 };
 
 function RankAvartar({ src, point }: RankAvartarProps) {
@@ -38,7 +38,7 @@ function RankAvartar({ src, point }: RankAvartarProps) {
 
   useEffect(() => {
     loadImage(src, 'profile');
-    loadImage(parsePointToRankImage(point), 'rank');
+    if (point !== undefined) loadImage(parsePointToRankImage(point), 'rank');
   }, []);
 
   return (

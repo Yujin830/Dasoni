@@ -6,6 +6,7 @@ import './MyPage.css';
 import MyProfile from '../../components/MyPage/MyProfile';
 import MyProfileModify from '../../components/MyPage/Modify/MyProfileModify';
 import MyProfileChangePw from '../../components/MyPage/ChangePassword/MyProfileChangePw';
+import { useAppSelector } from '../../app/hooks';
 
 type SideBarProps = {
   points: number; // 현재 유저의 포인트
@@ -14,7 +15,8 @@ type SideBarProps = {
   setType: (type: string) => void; //set state 함수
 };
 
-function SideBar({ points, percent, match, setType }: SideBarProps) {
+function SideBar({ percent, match, points, setType }: SideBarProps) {
+  const { rating, matchCnt } = useAppSelector((state) => state.user);
   const changePw = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setType('changePw');

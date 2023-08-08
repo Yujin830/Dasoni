@@ -8,7 +8,12 @@ import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { setWaitingMemberList } from '../../app/slices/waitingSlice';
+import {
+  setMegiAcceptable,
+  setRoomTitle,
+  setWaitingMemberList,
+  setWaitingRoomId,
+} from '../../app/slices/waitingSlice';
 
 export type RoomBoxProps = {
   roomId: number; // room을 구분하는 id
@@ -113,6 +118,10 @@ function RoomBox({
         if (res.status === 200) {
           console.log('입장 성공');
           dispatch(setWaitingMemberList([member]));
+          dispatch(setWaitingRoomId(roomId));
+          dispatch(setRoomTitle(title));
+          dispatch(setMegiAcceptable(title));
+          dispatch(setRoomTitle(title));
           navigate(`/waiting-room/${roomId}`);
         }
       } catch (err) {

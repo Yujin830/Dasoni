@@ -33,6 +33,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -212,12 +213,21 @@ public class PrivateRoomService {
     public void broadcastJoinMemberList(Long roomId, Long memberId){
         ChatMessageWithMember chatMessage = new ChatMessageWithMember();
         List<Member> membersInRoom = getMemberInRoom(roomId);
-        Member member = memberRepository.findById(memberId).get();
-        chatMessage.setSenderNickname(member.getNickname());
-        chatMessage.setContent("님이 입장하셨습니다.");
-        chatService.addMessage(roomId, chatMessage);
-        chatMessage.setMemberList(membersInRoom);
-        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
+
+        Optional<Member> memberOpt = memberRepository.findById(memberId);
+
+        Member member;
+
+        if(memberOpt.isPresent()) {
+            member = memberOpt.get();
+            chatMessage.setSenderNickname(member.getNickname());
+            chatMessage.setContent("님이 입장하셨습니다.");
+            chatService.addMessage(roomId, chatMessage);
+            chatMessage.setMemberList(membersInRoom);
+            simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
+        }else{
+            log.info("널 값 입 니  다. ");
+        }
     }
     public void broadcastQuitMemberList(Long roomId, Long memberId){
         ChatMessageWithMember chatMessage = new ChatMessageWithMember();

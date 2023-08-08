@@ -1,5 +1,5 @@
 #meeting {
-  width: 100%;
+  /* width: 100%; */
   height: 100vh;
   background: linear-gradient(180deg, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
   display: flex;
@@ -8,7 +8,7 @@
 }
 #meeting .meeting-video-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 0.5fr 0.5fr 0.5fr;
   gap: 1.5rem;
   margin: 0 1.2rem 1.5rem;
 }

@@ -162,11 +162,18 @@
 }
 
 .mypage #matched-user-list {
+  text-align: center;
   display: grid;
   place-items: center;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 50% 50%;
   height: 90%;
+}
+
+.mypage #matched-user-list p {
+  font-size: 2vh;
+  font-weight: 400;
+  margin-left: 1vh;
 }
 
 .mypage .content footer {
