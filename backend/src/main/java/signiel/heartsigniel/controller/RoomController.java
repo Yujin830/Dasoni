@@ -1,7 +1,6 @@
 package signiel.heartsigniel.controller;
 
 
-import ch.qos.logback.core.status.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.rating.RatingService;
-import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
+import signiel.heartsigniel.model.meeting.RatingService;
+import signiel.heartsigniel.model.meeting.SignalService;
+import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
+import signiel.heartsigniel.model.meeting.dto.TotalResultRequest;
 
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
@@ -28,11 +29,13 @@ public class RoomController {
     private final PrivateRoomService privateRoomService;
     private final MatchingRoomService matchingRoomService;
     private final RatingService ratingService;
+    private final SignalService signalService;
 
-    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService, RatingService ratingService) {
+    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService, RatingService ratingService, SignalService signalService) {
         this.privateRoomService = privateRoomService;
         this.matchingRoomService = matchingRoomService;
         this.ratingService = ratingService;
+        this.signalService = signalService;
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
@@ -111,4 +114,12 @@ public class RoomController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/{roomId}/signals")
+    public ResponseEntity<Response> storeSignalInRedis(@PathVariable Long roomId, @RequestBody SingleSignalRequest singleSignalRequest){
+        Response response = signalService.storeSignalInRedis(roomId, singleSignalRequest);
+        return ResponseEntity.ok(response);
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.rating.dto;
+package signiel.heartsigniel.model.meeting.dto;
 
 import lombok.Getter;
 import lombok.Setter;

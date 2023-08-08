@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.rating;
+package signiel.heartsigniel.model.meeting;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -6,10 +6,10 @@ import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
-import signiel.heartsigniel.model.rating.dto.*;
+import signiel.heartsigniel.model.meeting.dto.*;
 import signiel.heartsigniel.model.roommember.RoomMember;
 import signiel.heartsigniel.model.roommember.RoomMemberRepository;
-import signiel.heartsigniel.model.rating.code.RatingCode;
+import signiel.heartsigniel.model.meeting.code.RatingCode;
 import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.RoomRepository;
 import signiel.heartsigniel.model.room.code.RoomCode;
@@ -123,7 +123,12 @@ public class RatingService {
 
     public int[] calculateSignalScore(SignalResultRequest signalResult){
         int[] scoreBoard = new int[6];
-        int[][] signalBoard = signalResult.getSignalBoard();
+        int[][] signalBoard = new int[6][6];
+
+        // 시그널보드에 기록
+        for(SingleSignalRequest singleSignalRequest : signalResult.getSignalList()){
+            signalBoard[singleSignalRequest.getSenderId()][singleSignalRequest.getReceiverId()] = 1;
+        }
 
         // 시그널 횟수 표시
         for(int i = 0; i < 6; i++){
@@ -187,16 +192,16 @@ public class RatingService {
                 .orElseThrow(() -> new MemberNotFoundException("해당 유저를 찾을 수 없습니다."));
         return member.getProfileImageSrc();
     }
-    public int[] isMutuallySignaled(SignalResultRequest signalResultRequest){
-        int[] signalBoard = new int[7];
+    public int[] isMutuallySignaled(int[][] signalBoard){
+        int[] matchBoard = new int[signalBoard.length + 1]; // 인원수 + 1 만큼의
         for (int i=0; i<6; i++){
             for (int j=0; j<6; j++){
-                if (signalResultRequest.getSignalBoard()[i][j] == 1 && signalResultRequest.getSignalBoard()[j][i] == 1){
-                    signalBoard[i+1] = j+1;
+                if (signalBoard[i][j] == 1 && signalBoard[j][i] == 1){
+                    matchBoard[i+1] = j+1;
                 }
             }
         }
-        return signalBoard;
+        return matchBoard;
     }
 
 
