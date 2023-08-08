@@ -169,7 +169,7 @@ function MainPage() {
               classes="search-bar"
               type="text"
               value={searchInput}
-              placeholer="검색어를 입력해주세요."
+              placeholer="검색하기"
               handleChange={handleSearchInput}
             />
             <button
@@ -194,17 +194,9 @@ function MainPage() {
                   megiAcceptable={room.megiAcceptable}
                 />
               ))
-            : null}
+            : '존재하는 방이 없습니다.'}
         </div>
         <div id="room-footer">
-          <div id="btn-box">
-            <FilledButton
-              classes="create-room-btn"
-              content="방 만들기"
-              handleClick={handleOpenRoomModalToggle}
-            />
-            <FilledButton classes="fast-match-btn" content="빠른 매칭" handleClick={matchFast} />
-          </div>
           <div id="pagenationBtn-box">
             <IconButton
               classes="page-btn"
@@ -220,6 +212,14 @@ function MainPage() {
               handleClick={createRoom}
               icon="chevron_right"
             />
+          </div>
+          <div id="btn-box">
+            <FilledButton
+              classes="create-room-btn"
+              content="방 만들기"
+              handleClick={handleOpenRoomModalToggle}
+            />
+            <FilledButton classes="fast-match-btn" content="빠른 매칭" handleClick={matchFast} />
           </div>
         </div>
       </main>

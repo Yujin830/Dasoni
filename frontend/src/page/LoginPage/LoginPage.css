@@ -139,13 +139,13 @@
   }
 }
 
-@media (min-width: 760px) {
+@media (min-width: 540px) {
   .mobile {
     display: none;
   }
 }
 
-@media (max-width: 430px) {
+@media (max-width: 540px) {
   .left-box {
     display: none;
   }
