@@ -29,11 +29,15 @@ import { useAppSelector } from '../../../app/hooks';
 // };
 
 // 현재 비밀번호 확인 컴포넌트 :: 이중 인증 목적
-function CheckCurrentPw({ setIsCorrect, memberId }: any) {
+function CheckCurrentPw({ setIsCorrect, memberId, setType }: any) {
   const [currentPw, setCurrentPw] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
   const handleCurrentPw = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentPw(e.target.value);
+  };
+  const cancelChangePw = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setType('read');
   };
   const handleClick = async () => {
     console.log(currentPw);
@@ -68,14 +72,16 @@ function CheckCurrentPw({ setIsCorrect, memberId }: any) {
         />
         <div className={`alert ${alertMsg ? 'show' : ''}`}>{alertMsg}</div>
       </div>
+
       <div className="c-btn">
+        <FilledButton classes="cancel-btn" content="취소" handleClick={cancelChangePw} />
         <FilledButton classes="confirm-btn" content="확인" handleClick={handleClick} />
       </div>
     </div>
   );
 }
 
-// 비밀번호 변경 컴포넌튼
+// 비밀번호 변경 컴포넌트
 function ChangePw({ setType, memberId }: any) {
   const [newPw, setNewPw] = useState('');
   const [checkNewPw, setCheckNewPw] = useState('');
@@ -149,7 +155,7 @@ function MyProfileChangePw({ setType }: any) {
     <div className="content changePw-box">
       <h3>비밀번호 변경</h3>
       {!isCorrect ? (
-        <CheckCurrentPw setIsCorrect={setIsCorrect} memberId={memberId} />
+        <CheckCurrentPw setType={setType} setIsCorrect={setIsCorrect} memberId={memberId} />
       ) : (
         <ChangePw setType={setType} memberId={memberId} />
       )}

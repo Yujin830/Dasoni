@@ -24,6 +24,7 @@
 .header nav ul {
   display: flex;
   align-items: center;
+  justify-content: end;
   list-style: none;
 }
 
@@ -36,6 +37,10 @@
   background-color: #ffffff;
   cursor: pointer;
 }
+
+/* .header #profile {
+  width: 20%;
+} */
 /* ---------------------- */
 /* 메뉴필터 아이콘 */
 #filter-menu .material-symbols-outlined {
@@ -48,7 +53,9 @@
 /* 도움말 아이콘 */
 #filter-menu #help .material-symbols-outlined {
   color: black;
-  padding: 10px 10px;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
 }
 #filter-menu #help .material-symbols-outlined:hover {
   color: #ec5e98;
@@ -85,6 +92,7 @@
   stroke: #ec5e98;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.25));
   border: 1px solid #ec5e98;
+  z-index: 9999;
 }
 
 #filter-menu #help {
@@ -127,10 +135,10 @@
   color: #ff257e;
 }
 
-.header .help,
+/* .header .help,
 .header .btn {
   cursor: pointer;
-}
+} */
 
 .header a {
   text-decoration: none;

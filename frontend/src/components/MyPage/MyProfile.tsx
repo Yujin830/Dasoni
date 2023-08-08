@@ -3,11 +3,15 @@ import { useAppSelector } from '../../app/hooks';
 import RecentMatchAvartar from '../../components/Avarta/RecentMatchAvartar/RecentMatchAvartar';
 import RankAvartar from '../Avarta/RankAvartar/RackAvartar';
 import ExpPointBar from '../Element/ExpPointBar';
+import user, { deleteUserAsync } from '../../app/slices/user';
+import { useAppDispatch } from '../../app/hooks';
+import { useNavigate } from 'react-router';
 
 function MyProfile({ setType }: { setType: (type: string) => void }) {
   const { loginId, nickname, job, birth, siDo, guGun, profileImageSrc } = useAppSelector(
     (state) => state.user,
   );
+  const user = useAppSelector((state) => state.user);
   // TODO : 최근 매칭된 다소니 리스트 조회 recentUserList로 state 변경
   const [recentUserList, setRecentUserList] = useState([]);
   const faketUserList = [
@@ -18,13 +22,21 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
     { profileImg: 'rank_profile.png', userId: 5 },
     { profileImg: 'rank_profile.png', userId: 6 },
   ];
-
-  const deleteUser = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const deleteUser = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (window.confirm(`탈퇴하면 복구할 수 없습니다.\n정말 탈퇴하시겠습니까?`)) {
-      // TODO : 회원 탈퇴 API 개발
-      alert(`탈퇴 되었습니다.`);
-      // location : 로그인 화면으로 이동
+      try {
+        // TODO : 회원 탈퇴 API 개발
+        await dispatch(deleteUserAsync(user));
+        alert(`탈퇴 되었습니다.`);
+        // location : 로그인 화면으로 이동
+        navigate('/');
+      } catch (error) {
+        console.error(error);
+        alert(`탈퇴 중에 오류가 발생했습니다.`);
+      }
     }
   };
 
