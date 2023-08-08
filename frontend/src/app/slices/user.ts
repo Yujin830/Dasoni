@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
+import exp from 'constants';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export interface User {
@@ -99,6 +100,14 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
     black: data.black,
     isFirst: data.isFirst,
   };
+});
+
+// 회원 탈퇴
+export const deleteUserAsync = createAsyncThunk('DELETE_USER', async (user: User) => {
+  const response = await axios.delete(`/api/users/${user.memberId}`);
+  console.log('회원탈퇴');
+  console.log(response);
+  return {};
 });
 
 // 유저 정보 업데이트
