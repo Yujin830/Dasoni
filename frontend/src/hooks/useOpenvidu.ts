@@ -66,7 +66,7 @@ export const useOpenvidu = (
           console.log(token);
           // 획득한 토큰으로 세션에 연결
           await session.connect(token, JSON.stringify({ memberId, nickname, gender }));
-          // await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           const devices: Device[] = await openVidu.getDevices(); // 사용 가능한 미디어 입력 장치 대한 정보 가져오기
           const videoDevices = devices.filter((device) => device.kind === 'videoinput'); // device.kind : device 종류 videoinput | audioinput
 
