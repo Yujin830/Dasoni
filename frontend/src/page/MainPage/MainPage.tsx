@@ -20,50 +20,50 @@ import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
-const styles = {
-  iconBtn: {
-    width: '5rem',
-    height: '2.5rem',
-    borderRadius: '6.25rem',
-    background: 'rgba(238, 114, 165, 0.50)',
-  },
-  searchBar: {
-    width: '16rem',
-    height: '2.5rem',
-    borderRadius: '1.5rem',
-    background: '#FFE8EF',
-    color: '#555',
-    fontSize: '0.8rem',
-    border: 'none',
-    paddingLeft: '1rem',
-  },
-  createRoomBtn: {
-    width: '8rem',
-    height: '3rem',
-    borderRadius: '0.5rem',
-    background: '#ECC835',
-    color: '#fff',
-    fontSize: '1.2rem',
-    fontWeight: '600',
-  },
-  fastMatchBtn: {
-    width: '8rem',
-    height: '3rem',
-    borderRadius: '0.5rem',
-    background: '#EC5E98',
-    color: '#fff',
-    fontSize: '1.2rem',
-    fontWeight: '600',
-  },
-  pagenationBtn: {
-    width: '5.5rem',
-    height: '2.5rem',
-    borderRadius: '6.25rem',
-    background: '#FFE8EF',
-    color: '#555',
-    fontSize: '1rem',
-  },
-};
+// const styles = {
+//   iconBtn: {
+//     width: '5rem',
+//     height: '2.5rem',
+//     borderRadius: '6.25rem',
+//     background: 'rgba(238, 114, 165, 0.50)',
+//   },
+//   searchBar: {
+//     width: '16rem',
+//     height: '2.5rem',
+//     borderRadius: '1.5rem',
+//     background: '#FFE8EF',
+//     color: '#555',
+//     fontSize: '0.8rem',
+//     border: 'none',
+//     paddingLeft: '1rem',
+//   },
+//   createRoomBtn: {
+//     width: '8rem',
+//     height: '3rem',
+//     borderRadius: '0.5rem',
+//     background: '#ECC835',
+//     color: '#fff',
+//     fontSize: '1.2rem',
+//     fontWeight: '600',
+//   },
+//   fastMatchBtn: {
+//     width: '8rem',
+//     height: '3rem',
+//     borderRadius: '0.5rem',
+//     background: '#EC5E98',
+//     color: '#fff',
+//     fontSize: '1.2rem',
+//     fontWeight: '600',
+//   },
+//   pagenationBtn: {
+//     width: '5.5rem',
+//     height: '2.5rem',
+//     borderRadius: '6.25rem',
+//     background: '#FFE8EF',
+//     color: '#555',
+//     fontSize: '1rem',
+//   },
+// };
 
 function MainPage() {
   //모달 띄우기
@@ -153,7 +153,7 @@ function MainPage() {
           </button>
           <div id="filter-box">
             <IconButton
-              style={styles.iconBtn}
+              classes="filter-btn"
               content="필터"
               iconPosition="left"
               icon="filter_list"
@@ -166,7 +166,7 @@ function MainPage() {
           </div>
           <div id="search-box">
             <NoLableInput
-              style={styles.searchBar}
+              classes="search-bar"
               type="text"
               value={searchInput}
               placeholer="검색어를 입력해주세요."
@@ -199,22 +199,22 @@ function MainPage() {
         <div id="room-footer">
           <div id="btn-box">
             <FilledButton
+              classes="create-room-btn"
               content="방 만들기"
-              style={styles.createRoomBtn}
               handleClick={handleOpenRoomModalToggle}
             />
-            <FilledButton content="빠른 매칭" style={styles.fastMatchBtn} handleClick={matchFast} />
+            <FilledButton classes="fast-match-btn" content="빠른 매칭" handleClick={matchFast} />
           </div>
           <div id="pagenationBtn-box">
             <IconButton
-              style={styles.pagenationBtn}
+              classes="page-btn"
               content="이전"
               iconPosition="left"
               handleClick={createRoom}
               icon="chevron_left"
             />
             <IconButton
-              style={styles.pagenationBtn}
+              classes="page-btn"
               content="다음"
               iconPosition="right"
               handleClick={createRoom}

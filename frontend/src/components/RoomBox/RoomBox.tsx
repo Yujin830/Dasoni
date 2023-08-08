@@ -30,6 +30,7 @@ type GenderInfoProps = {
 const styles = {
   //FilledButton 컴포넌트 일반 style
   basic: {
+    width: 'auto',
     height: '2rem',
     borderRadius: '6rem',
     background: '#EC5E98',
@@ -41,6 +42,7 @@ const styles = {
   },
   //Filledbutton 컴포넌트 메기 입장 style
   megi: {
+    width: 'auto',
     height: '2rem',
     borderRadius: '6rem',
     background: '#ECC835',
@@ -52,6 +54,7 @@ const styles = {
   },
   //FilledButton 컴포넌트 disabled style
   disabled: {
+    width: 'auto',
     height: '2rem',
     borderRadius: '6rem',
     background: '#8B8B8B',
