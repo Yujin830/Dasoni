@@ -18,6 +18,8 @@ import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import signiel.heartsigniel.model.question.QuestionRepository;
 @RestController
@@ -30,6 +32,8 @@ public class WebSocketController {
     private final ChatService chatService;
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
+
+    private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
     public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService) {
         this.operations = operations;
@@ -47,7 +51,7 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId]/open")
     public void openMembersInformation(@DestinationVariable Long roomId){
-        String openInfo = "OPEN MEMBERS INFORMATION!!!";
+        String openInfo = "OPEN";
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
     }
 
@@ -59,7 +63,7 @@ public class WebSocketController {
 
     @MessageMapping("room/{roomId}/signal")
     public void startSendingSignal(@DestinationVariable Long roomId) {
-        String endMessage = "START SENDING SIGNAL!!!!";
+        String endMessage = "SIGNAL";
         operations.convertAndSend("/topic/room/" + roomId + "/signal", endMessage);
     }
 
@@ -70,14 +74,16 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/questions")
     public void sendQuestions(@DestinationVariable Long roomId, @Payload String numberStr) {
-        List<Question> questionList = privateRoomService.sendList();
+
         try {
+            List<Question> questionList = questionListPerRoom.get(roomId);
+            System.out.println(questionList.toString());
             int num = Integer.parseInt(numberStr);
             String question = questionList.get(num).getContent();
+            log.info(question);
             operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
         } catch (NumberFormatException e) {
-            // 로깅을 통해 에러 상황을 기록하거나 적절한 에러 처리를 진행하세요.
-            System.out.println("Invalid number format: " + numberStr);
+            log.info(e.getMessage());
         }
     }
 
@@ -147,11 +153,9 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/start")
     public void sendStartMessage(@DestinationVariable Long roomId){
-        log.info("STARTING MESSAGE SENDING COMPLETE1!!!");
         List<Question> questionList = questionService.makeQuestionList(); // 랜덤 질문 리스트 생성,
-        privateRoomService.saveList(questionList);
+        questionListPerRoom.put(roomId, questionList);
         privateRoomService.sendStartMessage(roomId);
-        log.info("STARTING MESSAGE SENDING COMPLETE2!!!");
     }
 
     @GetMapping("/api/room/{roomId}/messages")

@@ -32,12 +32,12 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
 
     // 웹 소켓 메세지 sending
     if (minutes === '05' && seconds === '00') client?.send(`/app/room/${roomId}/guide`, {}, '5');
-    else if (minutes === '00' && seconds === '1')
+    else if (minutes === '00' && seconds === '15')
       client?.send(`/app/room/${roomId}/questions`, {}, '0'); // 랜덤 주제 1번
-    else if (minutes === '20' && seconds === '00') {
+    else if (minutes === '00' && seconds === '25') {
       client?.send(`/app/room/${roomId}/guide`, {}, '20');
       client?.send(`/app/room/${roomId}/questions`, {}, '1'); // 랜덤 주제 2번
-    } else if (minutes === '40' && seconds === '00')
+    } else if (minutes === '00' && seconds === '35')
       client?.send(`/app/room/${roomId}/questions`, {}, '2'); // 랜덤 주제 3번
     else if (minutes === '50' && seconds === '00')
       client?.send(`/app/room/${roomId}/guide`, {}, '50');

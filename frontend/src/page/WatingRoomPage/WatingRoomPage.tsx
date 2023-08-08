@@ -13,7 +13,7 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
 // BGM
-import song from '../../assets/music/lobbyBGM.mp3';
+import song from '../../assets/music/lobby.mp3';
 // const styles = {
 //   startBtn: {
 //     width: '10rem',

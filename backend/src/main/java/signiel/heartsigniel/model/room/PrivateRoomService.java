@@ -340,13 +340,5 @@ public class PrivateRoomService {
         roomRepository.save(room);
     }
 
-    public List<Question> sendList(){
-        return saveList(list);
-    }
 
-
-    public List<Question> saveList(List<Question> questionList) {
-        List<Question> l = questionList;
-        return l;
-    }
 }

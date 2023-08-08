@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useOpenvidu } from '../../hooks/useOpenvidu';
 import { useParams } from 'react-router';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
@@ -9,8 +9,10 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import TimeDisplay from '../../components/Element/TimeDisplay';
 import Guide from '../../components/MeetingPage/Guide/Guide';
 import Question from '../../components/MeetingPage/Question/Question';
+import song from '../../assets/music/meeting.mp3';
 
 function MeetingPage() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { roomId } = useParams();
   const { memberId, nickname, gender } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
@@ -102,6 +104,8 @@ function MeetingPage() {
           onChangeMicStatus={onChangeMicStatus}
         />
       </div>
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <audio ref={audioRef} src={song} loop autoPlay={true} />
     </div>
   );
 }
