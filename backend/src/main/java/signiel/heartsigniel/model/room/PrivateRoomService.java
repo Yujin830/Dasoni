@@ -135,6 +135,7 @@ public class PrivateRoomService {
         // 나 혼자 있는 경우
         if (roomEntity.roomMemberCount() == 1L) {
             roomRepository.delete(roomEntity);
+            chatService.deleteMessages(roomId);
             return Response.of(RoomCode.ROOM_DELETED, null);
         }
         else {
@@ -289,7 +290,7 @@ public class PrivateRoomService {
     }
 
     public RoomMember getFirstMember(Room room){
-        return room.getRoomMembers().get(0);
+        return room.getRoomMembers().get(1);
     }
 
     // 해당 성별 입장 가능 판단

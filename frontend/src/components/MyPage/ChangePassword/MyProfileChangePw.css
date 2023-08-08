@@ -15,6 +15,28 @@
   position: relative;
 }
 
+.mypage .changePw-box .confirm-input {
+  height: 3rem;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  border: 3px solid #d9d9d9;
+  background: #fff;
+  color: #898989;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.7rem;
+}
+
+.mypage .changePw-box .confirm-btn {
+  border-radius: 0.625rem;
+  background: #ec5e98;
+  width: 7rem;
+  height: 3rem;
+  position: absolute;
+  right: 0;
+  margin-top: 1rem;
+}
+
 .mypage .changePw-box .confirm-changePw .alert,
 .mypage .changePw-box .confirm-currentPw .alert {
   display: none;

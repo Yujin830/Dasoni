@@ -65,6 +65,23 @@
   justify-content: space-between;
 }
 
+#waiting-page #waiting-room-footer .btn {
+  width: 10rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+#waiting-page #waiting-room-footer .start-btn {
+  background: #ecc835;
+}
+
+#waiting-page #waiting-room-footer .exit-btn {
+  background: #ec5e98;
+}
+
 #waiting-page .chat-room {
   width: 25%;
   position: absolute;

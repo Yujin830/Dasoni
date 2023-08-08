@@ -16,36 +16,45 @@ function Header({ onModalToggle }: HeaderProps) {
     logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
     navigate('/');
   };
+  // 필터 버튼 토클
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggleFilter = () => {
+    setIsOpen((prevState) => !prevState);
+  };
   return (
     <header className="header">
-      <a className="logo" href="/">
+      <Link className="logo" to="/main">
         <img src={logo} alt="다소니 로고 이미지"></img>
-      </a>
+      </Link>
       <nav className="nav">
-        <ul>
+        <ul id="nav-bar">
           <li>
             <span className="material-symbols-outlined filled">favorite</span>
             <span className="material-symbols-outlined filled">favorite</span>
-          </li>
-
-          <li className="help">
-            <button
-              className="material-symbols-outlined"
-              onClick={onModalToggle} // MainPage의 handleModalToggle 함수를 호출
-            >
-              help
-            </button>
           </li>
 
           <li>
             <BasicAvartar src="default_profile.png" />
           </li>
-          <li className="btn">
-            <button onClick={handleLogout}>로그아웃</button>
-          </li>
-          <li className="btn">
-            <Link to="/mypage">마이페이지</Link>
-          </li>
+
+          <div id="filter-menu">
+            <button className="material-symbols-outlined" onClick={handleToggleFilter}>
+              menu
+            </button>
+            <ul className={isOpen ? 'show' : ''}>
+              <li>
+                <button className="material-symbols-outlined" onClick={onModalToggle}>
+                  help
+                </button>
+              </li>
+              <li>
+                <button onClick={handleLogout}>로그아웃</button>
+              </li>
+              <li>
+                <Link to="/mypage">마이페이지</Link>
+              </li>
+            </ul>
+          </div>
         </ul>
       </nav>
     </header>

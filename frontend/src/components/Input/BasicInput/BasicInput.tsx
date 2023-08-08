@@ -3,7 +3,8 @@ import '../input.css';
 import './BasicInput.css';
 
 type BasicInputProps = {
-  style: object;
+  classes?: string;
+  style?: object;
   label?: string;
   type: string;
   value?: string;
@@ -11,12 +12,20 @@ type BasicInputProps = {
   placeholer?: string;
 };
 
-function BasicInput({ style, label, type, value, handleChange, placeholer }: BasicInputProps) {
+function BasicInput({
+  style,
+  label,
+  type,
+  value,
+  handleChange,
+  placeholer,
+  classes,
+}: BasicInputProps) {
   return (
     <div className="input-box">
       <label className="label">{label}</label>
       <input
-        className="input"
+        className={`input ${classes}`}
         style={style}
         type={type}
         value={value}

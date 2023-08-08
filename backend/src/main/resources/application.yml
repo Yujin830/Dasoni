@@ -16,6 +16,7 @@ logging:
 #    description: Production server
 
 # access-key와 secret-key는 반드시 gitignore 확인!!!!!!
+# 두번 확인 !!!!
 cloud:
   aws:
     credentials:

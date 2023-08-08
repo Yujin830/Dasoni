@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import signiel.heartsigniel.model.chat.ChatService;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
+
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.GuideRepository;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
 import java.util.List;
 
+import signiel.heartsigniel.model.question.Question;
+import signiel.heartsigniel.model.question.QuestionRepository;
 @RestController
 @Slf4j
 public class WebSocketController {
@@ -24,12 +27,35 @@ public class WebSocketController {
     private final PrivateRoomService privateRoomService;
     private final GuideRepository guideRepository;
     private final ChatService chatService;
+    private final QuestionRepository questionRepository;
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService){
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository) {
         this.operations = operations;
         this.privateRoomService = privateRoomService;
         this.guideRepository = guideRepository;
         this.chatService = chatService;
+        this.questionRepository = questionRepository;
+    }
+
+
+    /**
+     * 시그널 보내기 시작!
+     * @param roomId
+     */
+
+    @MessageMapping("room/{roomId}/signal")
+    public void startSendingSignal(@DestinationVariable Long roomId){
+        String endMessage = "START SENDING SIGNAL!!!!";
+        operations.convertAndSend("/topic/room/"+roomId+"/signal", endMessage);
+    }
+    /**
+     * 질문 리스트 전송
+     * @param roomId 방 번호 식별용
+     */
+    @MessageMapping("room/{roomId}/questions")
+    public void sendQuestions(@DestinationVariable Long roomId){
+        List<Question> questionList = questionRepository.randomQuestion();
+        operations.convertAndSend("/topic/room/"+roomId+"/questions", questionList);
     }
 
 
@@ -96,7 +122,7 @@ public class WebSocketController {
         log.info("STARTING MESSAGE SENDING COMPLETE2!!!");
     }
 
-    @GetMapping("room/{roomId}/messages")
+    @GetMapping("/api/room/{roomId}/messages")
     public List<ChatMessage> getChatMessages(@PathVariable Long roomId){
         return chatService.getMessages(roomId);
     }

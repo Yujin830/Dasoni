@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '../../components/Button/FilledButton';
 import Input from '../../components/Input/NoLabelInput/NoLabelInput';
-import IconLabelInput from '../../components/Input/IconLabelInput/IconLabelInput';
+// import IconLabelInput from '../../components/Input/IconLabelInput/IconLabelInput';
 import './SignUpPage.css';
 import logo from '../../assets/image/logo.png';
 import leftSignal from '../../assets/image/left_signal.png';
@@ -10,57 +10,58 @@ import { useAppDispatch } from '../../app/hooks';
 import { signupAsync } from '../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const styles = {
-  button: {
-    width: '12rem',
-    height: '4rem',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '1.75rem',
-    fontStyle: 'normal',
-    fontWeight: '700',
-    margin: '0.5rem 0',
-  },
-  button2: {
-    width: '7.5rem',
-    height: '4rem',
-    flexshrink: '0',
-    borderRadius: '6.25rem',
-    background: '#FFE8EF',
-    color: '#555',
-    fontSize: '1.5rem',
-    fontStyle: 'normal',
-    fontWeight: '700',
-    margin: '0.5rem 0',
-  },
-  input: {
-    width: '26rem',
-    height: '4rem',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-  input2: {
-    width: '20rem',
-    height: '4rem',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-};
+// const styles = {
+//   button: {
+//     width: '100%',
+//     height: '100%',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     background: '#EC5E98',
+//     color: '#FFF',
+//     fontSize: '2.5vh',
+//     fontStyle: 'normal',
+//     fontWeight: '700',
+//     margin: '0.5rem 0',
+//   },
+//   button2: {
+//     width: '100%',
+//     height: '100%',
+//     flexshrink: '0',
+//     borderRadius: '1rem',
+//     background: '#FFE8EF',
+//     color: '#555',
+//     fontSize: '2vh',
+//     fontStyle: 'normal',
+//     fontWeight: '700',
+//     // margin: '0.5rem 0',
+//   },
+//   input: {
+//     width: '60%',
+//     height: '80%',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     border: '3px solid #D9D9D9',
+//     background: '#FFF',
+//     color: '#898989',
+//     fontSize: '1rem',
+//     // margin: '0.5rem 0',
+//     padding: '0.5rem 0.7rem',
+//   },
+//   input2: {
+//     width: '40%',
+//     height: '80%',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     border: '3px solid #D9D9D9',
+//     background: '#FFF',
+//     color: '#898989',
+//     fontSize: '1rem',
+//     // margin: '0.5rem 0',
+//     padding: '0.5rem 0.7rem',
+//   },
+// };
 
 function SignupPage() {
   const [loginId, setloginId] = useState('');
@@ -172,25 +173,28 @@ function SignupPage() {
   return (
     <div className="signupbox">
       <div className="header">
-        <img className="signup-signal" src={leftSignal} alt="시그널 아이콘" />
-        <img className="signup-logo" src={logo} alt="다소니 로고 이미지" />
+        <Link className="signup-logo" to="/">
+          <img className="signup-icon" src={leftSignal} alt="시그널 아이콘" />
+          <img className="signup-title" src={logo} alt="다소니 로고 이미지" />
+        </Link>
       </div>
       <div className="signup-box">
         <div className="signup-content">
           <div className="signup-id">
-            <label htmlFor="label id">아이디</label>
+            {/* <label htmlFor="label id">아이디</label> */}
+            <div className="label-name">아이디</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="text"
               value={loginId}
               handleChange={handleChangeId}
               placeholer="사용하실 아이디를 입력해주세요."
             />
             <div className="button-multicheck">
-              <Button style={styles.button2} content="중복체크" handleClick={handleMulticheck} />
+              <Button classes="check-btn" content="중복체크" handleClick={handleMulticheck} />
             </div>
           </div>
-          <div>
+          <div className="msg">
             {/* MulticheckClicked가 true일 때에만 메시지를 표시 */}
             {MulticheckClicked && isIdAvailable !== null && (
               <div className="id-availability-message">
@@ -199,9 +203,10 @@ function SignupPage() {
             )}
           </div>
           <div className="signup-password">
-            <label htmlFor="label password">비밀번호</label>
+            {/* <label htmlFor="label password">비밀번호</label> */}
+            <div className="label-name">비밀번호</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="password"
               value={password}
               handleChange={handleChangePassword}
@@ -209,30 +214,34 @@ function SignupPage() {
             />
           </div>
           <div className="signup-confirmedpassword">
-            <label htmlFor="label confirmedpassword">비밀번호 확인</label>
+            {/* <label htmlFor="label confirmedpassword">비밀번호 확인</label> */}
+            <div className="label-name">비밀번호 확인</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="password"
               value={confirmPassword}
               handleChange={handleChangeConfirmPassword}
               placeholer="비밀번호를 다시한번 입력해주세요"
             />
           </div>
-          {/* 비밀번호 일치 여부 메시지 출력 */}
-          {passwordMatchMessage && (
-            <div className="password-match-message">{passwordMatchMessage}</div>
-          )}
+          <div className="msg">
+            {/* 비밀번호 일치 여부 메시지 출력 */}
+            {passwordMatchMessage && (
+              <div className="password-match-message">{passwordMatchMessage}</div>
+            )}
+          </div>
           <div className="signup-birthdate">
-            <div className="birthdate-container">
-              <IconLabelInput
-                style={styles.input2}
-                label="생년월일"
-                type="text"
-                value={birthdate}
-                handleChange={handleChangeBirthdate}
-                placeholer="생년월일을 선택하세요"
-              />
-            </div>
+            {/* <div className="birthdate-container"> */}
+            {/* <label htmlFor="label birth">생년월일</label> */}
+            <div className="label-name">생년월일</div>
+            <Input
+              classes="birth-input"
+              type="text"
+              value={birthdate}
+              handleChange={handleChangeBirthdate}
+              placeholer="생년월일을 선택하세요"
+            />
+            {/* </div> */}
             <input
               className="birth-calendar"
               type="date"
@@ -245,7 +254,8 @@ function SignupPage() {
             ></input>
           </div>
           <div className="signup-gender">
-            <label htmlFor="label gender">성별</label>
+            {/* <label htmlFor="label gender">성별</label> */}
+            <div className="label-name">성별</div>
             <div className="gender-container">
               <button
                 className={gender === 'male' ? 'gender-man selected' : 'gender-man'}
@@ -262,21 +272,24 @@ function SignupPage() {
             </div>
           </div>
           <div className="signup-phone">
-            <label htmlFor="label phone">전화번호</label>
+            {/* <label htmlFor="label phone">전화번호</label> */}
+            <div className="label-name">전화번호</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="text"
               value={phone}
               handleChange={handleChangePhone}
               placeholer="000-0000-0000"
             />
             <div className="button-certify">
-              <Button style={styles.button2} content="인증하기" handleClick={Certify} />
+              <Button classes="check-btn" content="인증하기" handleClick={Certify} />
             </div>
           </div>
         </div>
         <div className="button-signup">
-          <Button style={styles.button} content="가입하기" handleClick={Signup} />
+          <div className="btn">
+            <Button classes="signup-btn" content="가입하기" handleClick={Signup} />
+          </div>
         </div>
       </div>
     </div>

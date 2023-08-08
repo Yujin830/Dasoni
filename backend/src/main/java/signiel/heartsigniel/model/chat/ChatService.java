@@ -16,11 +16,16 @@ public class ChatService {
 
     // 메시지를 추가하는 메서드
     public void addMessage(Long roomId, ChatMessage message) {
-        redisTemplate.opsForList().rightPush("room:" + roomId + "messages", message);
+        redisTemplate.opsForList().rightPush("room:" + roomId + ":messages", message);
     }
 
     // 특정 방의 모든 메시지를 가져오는 메서드
     public List<ChatMessage> getMessages(Long roomId) {
-        return redisTemplate.opsForList().range("room:" + roomId + "messages", 0, -1);
+        return redisTemplate.opsForList().range("room:" + roomId + ":messages", 0, -1);
+    }
+
+    // 특정 방의 메시지 리스트를 삭제하는 메서드
+    public void deleteMessages(Long roomId) {
+        redisTemplate.delete("room:" + roomId + ":messages");
     }
 }

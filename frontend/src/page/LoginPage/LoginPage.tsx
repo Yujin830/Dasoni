@@ -14,32 +14,32 @@ import { Link } from 'react-router-dom';
 import ProfileModal from '../../components/Modal/ProfileModal/ProfileModal';
 import { useNavigate } from 'react-router-dom';
 
-const styles = {
-  button: {
-    width: '40%',
-    height: '6vh',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '3vh',
-    fontStyle: 'normal',
-    fontWeight: '700',
-    margin: '0.5rem 0',
-  },
-  input: {
-    width: '80%',
-    height: '8vh',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-};
+// const styles = {
+//   button: {
+//     width: '40%',
+//     height: '6vh',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     background: '#EC5E98',
+//     color: '#FFF',
+//     fontSize: '3vh',
+//     fontStyle: 'normal',
+//     fontWeight: '700',
+//     margin: '0.5rem 0',
+//   },
+//   input: {
+//     width: '80%',
+//     height: '8vh',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     border: '3px solid #D9D9D9',
+//     background: '#FFF',
+//     color: '#898989',
+//     fontSize: '1rem',
+//     margin: '0.5rem 0',
+//     padding: '0.5rem 0.7rem',
+//   },
+// };
 
 function LoginPage() {
   const [loginId, setloginId] = useState('');
@@ -60,12 +60,10 @@ function LoginPage() {
 
   const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
     const data = {
       loginId: loginId,
       password: password,
     };
-
     try {
       const response: any = await dispatch(loginAsync(data));
       if (response.payload) {
@@ -79,6 +77,7 @@ function LoginPage() {
         }
       } else {
         console.log('로그인 실패');
+
         alert('올바르지 않은 아이디 혹은 비밀번호입니다.');
         setModalOpen(false); // 로그인에 실패하면 모달 닫기
       }
@@ -106,20 +105,20 @@ function LoginPage() {
           <img src={logo} alt="다소니 로고 이미지" />
           <form>
             <Input
-              style={styles.input}
+              classes="login-input"
               type="text"
               value={loginId}
               handleChange={handleChangeId}
               placeholer="아이디를 입력해주세요."
             />
             <Input
-              style={styles.input}
+              classes="login-input"
               type="password"
               value={password}
               handleChange={handleChangeIdPassword}
               placeholer="비밀번호를 입력해주세요."
             />
-            <Button style={styles.button} content="로그인" handleClick={handleLogin} />
+            <Button classes="login-btn" content="로그인" handleClick={handleLogin} />
             {/* isModalOpen 변수에 따라 ProfileModal 컴포넌트를 조건부 렌더링합니다 */}
             {isModalOpen && <ProfileModal onClose={() => setModalOpen(false)} />}
           </form>
