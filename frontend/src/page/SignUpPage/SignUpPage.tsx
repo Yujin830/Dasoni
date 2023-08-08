@@ -12,56 +12,56 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const styles = {
-  button: {
-    width: '100%',
-    height: '100%',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '2.5vh',
-    fontStyle: 'normal',
-    fontWeight: '700',
-    margin: '0.5rem 0',
-  },
-  button2: {
-    width: '100%',
-    height: '100%',
-    flexshrink: '0',
-    borderRadius: '1rem',
-    background: '#FFE8EF',
-    color: '#555',
-    fontSize: '2vh',
-    fontStyle: 'normal',
-    fontWeight: '700',
-    // margin: '0.5rem 0',
-  },
-  input: {
-    width: '60%',
-    height: '80%',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    // margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-  input2: {
-    width: '40%',
-    height: '80%',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    // margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-};
+// const styles = {
+//   button: {
+//     width: '100%',
+//     height: '100%',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     background: '#EC5E98',
+//     color: '#FFF',
+//     fontSize: '2.5vh',
+//     fontStyle: 'normal',
+//     fontWeight: '700',
+//     margin: '0.5rem 0',
+//   },
+//   button2: {
+//     width: '100%',
+//     height: '100%',
+//     flexshrink: '0',
+//     borderRadius: '1rem',
+//     background: '#FFE8EF',
+//     color: '#555',
+//     fontSize: '2vh',
+//     fontStyle: 'normal',
+//     fontWeight: '700',
+//     // margin: '0.5rem 0',
+//   },
+//   input: {
+//     width: '60%',
+//     height: '80%',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     border: '3px solid #D9D9D9',
+//     background: '#FFF',
+//     color: '#898989',
+//     fontSize: '1rem',
+//     // margin: '0.5rem 0',
+//     padding: '0.5rem 0.7rem',
+//   },
+//   input2: {
+//     width: '40%',
+//     height: '80%',
+//     flexShrink: '0',
+//     borderRadius: '1.25rem',
+//     border: '3px solid #D9D9D9',
+//     background: '#FFF',
+//     color: '#898989',
+//     fontSize: '1rem',
+//     // margin: '0.5rem 0',
+//     padding: '0.5rem 0.7rem',
+//   },
+// };
 
 function SignupPage() {
   const [loginId, setloginId] = useState('');
@@ -184,14 +184,14 @@ function SignupPage() {
             {/* <label htmlFor="label id">아이디</label> */}
             <div className="label-name">아이디</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="text"
               value={loginId}
               handleChange={handleChangeId}
               placeholer="사용하실 아이디를 입력해주세요."
             />
             <div className="button-multicheck">
-              <Button style={styles.button2} content="중복체크" handleClick={handleMulticheck} />
+              <Button classes="check-btn" content="중복체크" handleClick={handleMulticheck} />
             </div>
           </div>
           <div className="msg">
@@ -206,7 +206,7 @@ function SignupPage() {
             {/* <label htmlFor="label password">비밀번호</label> */}
             <div className="label-name">비밀번호</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="password"
               value={password}
               handleChange={handleChangePassword}
@@ -217,7 +217,7 @@ function SignupPage() {
             {/* <label htmlFor="label confirmedpassword">비밀번호 확인</label> */}
             <div className="label-name">비밀번호 확인</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="password"
               value={confirmPassword}
               handleChange={handleChangeConfirmPassword}
@@ -235,7 +235,7 @@ function SignupPage() {
             {/* <label htmlFor="label birth">생년월일</label> */}
             <div className="label-name">생년월일</div>
             <Input
-              style={styles.input2}
+              classes="birth-input"
               type="text"
               value={birthdate}
               handleChange={handleChangeBirthdate}
@@ -275,20 +275,20 @@ function SignupPage() {
             {/* <label htmlFor="label phone">전화번호</label> */}
             <div className="label-name">전화번호</div>
             <Input
-              style={styles.input}
+              classes="signup-input"
               type="text"
               value={phone}
               handleChange={handleChangePhone}
               placeholer="000-0000-0000"
             />
             <div className="button-certify">
-              <Button style={styles.button2} content="인증하기" handleClick={Certify} />
+              <Button classes="check-btn" content="인증하기" handleClick={Certify} />
             </div>
           </div>
         </div>
         <div className="button-signup">
           <div className="btn">
-            <Button style={styles.button} content="가입하기" handleClick={Signup} />
+            <Button classes="signup-btn" content="가입하기" handleClick={Signup} />
           </div>
         </div>
       </div>
