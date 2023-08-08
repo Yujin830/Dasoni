@@ -58,9 +58,11 @@ function WaitingRoomPage() {
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
-        console.log(res);
+        // console.log(res.body);
         console.log(JSON.parse(res.body));
-        setMemberList(JSON.parse(res.body));
+        const data = JSON.parse(res.body);
+        console.log('received data: ', data);
+        setMemberList(data.memberList);
       });
 
       client.subscribe(`/topic/room/${roomId}/start`, (res: any) => {
@@ -76,7 +78,7 @@ function WaitingRoomPage() {
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
       const joinData = {
         type: 'join',
-        memeberId: member.memberId,
+        memberId: member.memberId,
       };
       client.send(`/app/room/${roomId}`, {}, JSON.stringify(joinData));
     },

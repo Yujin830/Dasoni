@@ -8,6 +8,7 @@ interface ChatMessage {
   senderNickname: string;
   content: string;
   timestamp: Date;
+  isUserMessage?: boolean;
 }
 
 const ChatRoom: React.FC = () => {
@@ -52,20 +53,25 @@ const ChatRoom: React.FC = () => {
   }, [messages]);
 
   const sendMessage = () => {
-    if (newMessage) {
-      client?.send(
+    if (newMessage && client?.connected) {
+      client.send(
         `/app/room/${roomId}/chat`,
         {},
         JSON.stringify({
           senderNickname: member.nickname,
           content: newMessage,
           timestamp: new Date(),
+          isUserMessage: true,
         }),
       );
       console.log(member);
       console.log(newMessage);
       setNewMessage('');
     }
+  };
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // 새로고침을 막습니다
+    sendMessage(); // 메시지를 보냅니다
   };
 
   return (
@@ -76,14 +82,22 @@ const ChatRoom: React.FC = () => {
             key={index}
             className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
           >
-            <strong>{msg.senderNickname}:</strong> {msg.content}
+            {msg.content.includes(`입장하셨습니다.`) || msg.content.includes(`퇴장하셨습니다.`) ? (
+              <>
+                <strong>{msg.senderNickname} </strong> {msg.content}
+              </>
+            ) : (
+              <>
+                <strong>{msg.senderNickname} : </strong> {msg.content}
+              </>
+            )}
           </div>
         ))}
       </div>
-      <div className="chat-input">
+      <form onSubmit={handleFormSubmit} className="chat-input">
         <input value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
-        <button onClick={sendMessage}>보내기</button>
-      </div>
+        <button type="submit">보내기</button>
+      </form>
     </div>
   );
 };
