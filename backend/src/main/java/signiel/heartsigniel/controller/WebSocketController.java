@@ -56,11 +56,18 @@ public class WebSocketController {
      * @param roomId 방 번호 식별용
      */
     @MessageMapping("room/{roomId}/questions")
-    public void sendQuestions(@DestinationVariable Long roomId, @Payload int number) {
-        List<Question> questionList = questionRepository.randomQuestion();
-        String question = questionList.get(number).getContent();
-        operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
+    public void sendQuestions(@DestinationVariable Long roomId, @Payload String numberStr) {
+        try {
+            int num = Integer.parseInt(numberStr);
+            List<Question> questionList = questionRepository.randomQuestion();
+            String question = questionList.get(num).getContent();
+            operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
+        } catch (NumberFormatException e) {
+            // 로깅을 통해 에러 상황을 기록하거나 적절한 에러 처리를 진행하세요.
+            System.out.println("Invalid number format: " + numberStr);
+        }
     }
+
 
 
     /**

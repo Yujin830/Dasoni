@@ -25,7 +25,7 @@ function MeetingPage() {
   const [guideMessage, setGuideMessage] = useState(
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
-  const [question, setQuestion] = useState([]);
+  const [question, setQuestion] = useState('');
   const [isShow, setIsShow] = useState(true);
   const [isQuestionTime, setIsQuestionTime] = useState(false);
   const client = useWebSocket({
@@ -44,7 +44,6 @@ function MeetingPage() {
         setQuestion(res.body);
         setIsQuestionTime(true);
       });
-      client.send(`/app/room/${roomId}/questions`);
 
       // TODO : 첫인상 투표 구독
 
@@ -77,7 +76,7 @@ function MeetingPage() {
       <TimeDisplay client={client} roomId={roomId} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
       <div id="meeting-video-container">
-        {isQuestionTime && <Question content={question[0]} />}
+        {isQuestionTime && <Question content={question} />}
         <div className="meeting-video-row">
           {publisher &&
             sameGenderMemberList.map((stream, index) => (
