@@ -1,32 +1,36 @@
 package signiel.heartsigniel.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import signiel.heartsigniel.model.chat.ChatService;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
-import signiel.heartsigniel.model.guide.Guide;
-import signiel.heartsigniel.model.guide.GuideRepo;
-import signiel.heartsigniel.model.guide.dto.GuideDto;
-import signiel.heartsigniel.model.member.Member;
-import signiel.heartsigniel.model.member.MemberRepository;
+import signiel.heartsigniel.model.guide.GuideRepository;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @Slf4j
-@RequiredArgsConstructor
 public class WebSocketController {
 
     private final SimpMessageSendingOperations operations;
     private final PrivateRoomService privateRoomService;
-    private final GuideRepo guideRepo;
+    private final GuideRepository guideRepository;
+    private final ChatService chatService;
+
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService){
+        this.operations = operations;
+        this.privateRoomService = privateRoomService;
+        this.guideRepository = guideRepository;
+        this.chatService = chatService;
+    }
 
 
     /**
@@ -36,7 +40,7 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/guide")
     public void sendGuideMessage(@DestinationVariable Long roomId, @Payload Long visibleTime){
-        String content = guideRepo.findByVisibleTime(visibleTime).get().getContent();
+        String content = guideRepository.findByVisibleTime(visibleTime).get().getContent();
         operations.convertAndSend("/topic/room/"+roomId+"/guide", content);
     }
 
@@ -49,6 +53,7 @@ public class WebSocketController {
     @MessageMapping("room/{roomId}/chat")
     public void sendMessage(@DestinationVariable Long roomId, @Payload ChatMessage chatMessage){
         log.info("Sending Complete");
+        chatService.addMessage(roomId, chatMessage);
         operations.convertAndSend("/topic/room/"+ roomId +"/chat", chatMessage);
     }
 
@@ -89,6 +94,11 @@ public class WebSocketController {
         log.info("STARTING MESSAGE SENDING COMPLETE1!!!");
         privateRoomService.sendStartMessage(roomId);
         log.info("STARTING MESSAGE SENDING COMPLETE2!!!");
+    }
+
+    @GetMapping("room/{roomId}/messages")
+    public List<ChatMessage> getChatMessages(@PathVariable Long roomId){
+        return chatService.getMessages(roomId);
     }
 
 

@@ -8,6 +8,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.chat.ChatService;
+import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.matching.MatchingService;
@@ -44,9 +46,10 @@ public class PrivateRoomService {
     private final RoomMemberService roomMemberService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MatchingService matchingService;
+    private final ChatService chatService;
 
     public PrivateRoomService(RoomRepository roomRepository, RoomMemberRepository roomMemberRepository, MemberRepository memberRepository, RoomMemberService roomMemberService, SimpMessageSendingOperations operations,
-                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService, MatchingService matchingService) {
+                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService, MatchingService matchingService, ChatService chatService) {
 
         this.roomRepository = roomRepository;
         this.matchingService = matchingService;
@@ -56,6 +59,8 @@ public class PrivateRoomService {
         this.ratingService = ratingService;
         this.lifeService = lifeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.chatService = chatService;
+
     }
 
     // 방 생성
@@ -206,6 +211,8 @@ public class PrivateRoomService {
         List<Member> membersInRoom = getMemberInRoom(roomId);
         log.info("roomid = " + roomId);
         log.info("JoinMember!!!");
+        ChatMessage chatMessage = sendSystemMessage("님이 입장하셨습니다.");
+        chatService.addMessage(roomId, chatMessage);
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
@@ -214,6 +221,8 @@ public class PrivateRoomService {
         List<Member> membersInRoom = getMemberInRoom(roomId);
         log.info("roomid = " + roomId);
         log.info("Quit member!!!");
+        ChatMessage chatMessage = sendSystemMessage("님이 퇴장하셨습니다.");
+        chatService.addMessage(roomId, chatMessage);
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
@@ -320,4 +329,12 @@ public class PrivateRoomService {
         room.getRoomMembers().add(roomMember);
         roomRepository.save(room);
     }
+
+    public ChatMessage sendSystemMessage(String content){
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSenderNickname("[SYSTEM MESSAGE]");
+        chatMessage.setContent(content);
+        return chatMessage;
+    }
+
 }
