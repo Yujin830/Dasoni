@@ -56,9 +56,10 @@ public class WebSocketController {
      * @param roomId 방 번호 식별용
      */
     @MessageMapping("room/{roomId}/questions")
-    public void sendQuestions(@DestinationVariable Long roomId) {
+    public void sendQuestions(@DestinationVariable Long roomId, @Payload int number) {
         List<Question> questionList = questionRepository.randomQuestion();
-        operations.convertAndSend("/topic/room/" + roomId + "/questions", questionList);
+        String question = questionList.get(number).getContent();
+        operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
     }
 
 
