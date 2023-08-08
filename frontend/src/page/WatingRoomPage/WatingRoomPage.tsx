@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import Header from '../../components/Header/Header';
 import titleLogo from '../../assets/image/title_img.png';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
@@ -12,7 +12,8 @@ import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
-
+// BGM
+import song from '../../assets/music/lobbyBGM.mp3';
 // const styles = {
 //   startBtn: {
 //     width: '10rem',
@@ -35,6 +36,7 @@ import convertScoreToName from '../../utils/convertScoreToName';
 // };
 
 function WaitingRoomPage() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const { gender } = useAppSelector((state) => state.user);
   const [memberList, setMemberList] = useState<WaitingMember[]>(
@@ -166,6 +168,8 @@ function WaitingRoomPage() {
           <FilledButton content="나가기" classes="btn exit-btn" handleClick={handleExitBtn} />
         </div>
       </main>
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <audio ref={audioRef} src={song} loop autoPlay={true} />
     </div>
   );
 }

@@ -18,6 +18,7 @@ import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
+import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.roommember.RoomMemberRepository;
 import signiel.heartsigniel.model.roommember.RoomMemberService;
 import signiel.heartsigniel.model.roommember.RoomMember;
@@ -339,5 +340,13 @@ public class PrivateRoomService {
         roomRepository.save(room);
     }
 
+    public List<Question> sendList(){
+        return saveList(list);
+    }
 
+
+    public List<Question> saveList(List<Question> questionList) {
+        List<Question> l = questionList;
+        return l;
+    }
 }

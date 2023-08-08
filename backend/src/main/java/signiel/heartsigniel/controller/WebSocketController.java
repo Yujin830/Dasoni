@@ -13,11 +13,12 @@ import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.chat.dto.MemberEntryExitDto;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.GuideRepository;
+import signiel.heartsigniel.model.question.Question;
+import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
 import java.util.List;
 
-import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionRepository;
 @RestController
 @Slf4j
@@ -28,15 +29,27 @@ public class WebSocketController {
     private final GuideRepository guideRepository;
     private final ChatService chatService;
     private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository) {
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService) {
         this.operations = operations;
         this.privateRoomService = privateRoomService;
         this.guideRepository = guideRepository;
         this.chatService = chatService;
         this.questionRepository = questionRepository;
+        this.questionService = questionService;
     }
 
+
+    /**
+     * 유저 정보 오픈!!
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId]/open")
+    public void openMembersInformation(@DestinationVariable Long roomId){
+        String openInfo = "OPEN MEMBERS INFORMATION!!!";
+        operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
+    }
 
     /**
      * 시그널 보내기 시작!
@@ -57,9 +70,9 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/questions")
     public void sendQuestions(@DestinationVariable Long roomId, @Payload String numberStr) {
+        List<Question> questionList = privateRoomService.sendList();
         try {
             int num = Integer.parseInt(numberStr);
-            List<Question> questionList = questionRepository.randomQuestion();
             String question = questionList.get(num).getContent();
             operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
         } catch (NumberFormatException e) {
@@ -135,6 +148,8 @@ public class WebSocketController {
     @MessageMapping("room/{roomId}/start")
     public void sendStartMessage(@DestinationVariable Long roomId){
         log.info("STARTING MESSAGE SENDING COMPLETE1!!!");
+        List<Question> questionList = questionService.makeQuestionList(); // 랜덤 질문 리스트 생성,
+        privateRoomService.saveList(questionList);
         privateRoomService.sendStartMessage(roomId);
         log.info("STARTING MESSAGE SENDING COMPLETE2!!!");
     }
