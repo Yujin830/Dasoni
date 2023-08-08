@@ -50,9 +50,14 @@
 #waiting-page #waiting-room-body {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
-#waiting-page #waiting-room-content {
+#waiting-page #member-list-box {
+  width: 80%;
+}
+
+#waiting-page .waiting-room-content {
   display: grid;
   grid-template-columns: 0.6fr 0.6fr 0.6fr;
   gap: 2rem;
@@ -63,4 +68,35 @@
   margin: 0 2rem 2rem;
   display: flex;
   justify-content: space-between;
+}
+
+#waiting-page #waiting-room-footer .btn {
+  width: 10rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+#waiting-page #waiting-room-footer .start-btn {
+  background: #ecc835;
+}
+
+#waiting-page #waiting-room-footer .exit-btn {
+  background: #ec5e98;
+}
+
+#waiting-page .chat-room {
+  width: 20%;
+  /* position: absolute;
+  right: 2rem; */
+  height: 60vh;
+  background: #ffd8e4;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  /* z-index: 2; */
+  margin: 2rem 0 1.5rem;
+  width: auto;
 }

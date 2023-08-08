@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import Header from '../../components/Header/Header';
 import titleLogo from '../../assets/image/title_img.png';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
@@ -13,65 +13,94 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
 
-const styles = {
-  startBtn: {
-    width: '10rem',
-    height: '4rem',
-    borderRadius: ' 0.5rem',
-    background: '#ECC835',
-    color: '#fff',
-    fontSize: '1.5rem',
-    fontWeight: '700',
-  },
-  exitBtn: {
-    width: '10rem',
-    height: '4rem',
-    borderRadius: ' 0.5rem',
-    background: '#EC5E98',
-    color: '#fff',
-    fontSize: '1.5rem',
-    fontWeight: '700',
-  },
-};
+// const styles = {
+//   startBtn: {
+//     width: '10rem',
+//     height: '4rem',
+//     borderRadius: ' 0.5rem',
+//     background: '#ECC835',
+//     color: '#fff',
+//     fontSize: '1.5rem',
+//     fontWeight: '700',
+//   },
+//   exitBtn: {
+//     width: '10rem',
+//     height: '4rem',
+//     borderRadius: ' 0.5rem',
+//     background: '#EC5E98',
+//     color: '#fff',
+//     fontSize: '1.5rem',
+//     fontWeight: '700',
+//   },
+// };
 
 function WaitingRoomPage() {
-  const [memberList, setMemberList] = useState<WaitingMember[]>([]);
+  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
+  const { gender } = useAppSelector((state) => state.user);
+  const [memberList, setMemberList] = useState<WaitingMember[]>(
+    waitingRoomInfo.waitingRoomMemberList,
+  );
+
+  const sameGenderMemberList = useMemo(
+    () => memberList.filter((member) => member.gender === gender),
+    [memberList],
+  );
+
+  const diffGenderMemberList = useMemo(
+    () => memberList.filter((member) => member.gender !== gender),
+    [memberList],
+  );
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const member = useAppSelector((state) => state.user);
 
   // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
-  useWebSocket({
+  const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
-        console.log(res);
+        // console.log(res.body);
         console.log(JSON.parse(res.body));
-        setMemberList(JSON.parse(res.body));
+        const data = JSON.parse(res.body);
+        console.log('received data: ', data);
+        setMemberList(data.memberList);
+      });
+
+      client.subscribe(`/topic/room/${roomId}/start`, (res: any) => {
+        console.log('게임 시작 메세지 전송');
+        console.log(res.body);
+
+        if (res.body === 'Start') {
+          setTimeout(() => {
+            navigate(`/meeting/${roomId}`, { replace: true });
+          }, 3000);
+        }
       });
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
-      client.send(`/app/room/${roomId}`, {}, `${member.loginId}`);
-    },
-    beforeDisconnected: (client) => {
-      console.log(client);
-      setMemberList([]);
+      const joinData = {
+        type: 'join',
+        memberId: member.memberId,
+      };
+      client.send(`/app/room/${roomId}`, {}, JSON.stringify(joinData));
     },
   });
 
   const handleStartBtn = () => {
     alert('미팅이 3초 후 시작됩니다');
-    setTimeout(() => {
-      navigate(`/meeting/${roomId}`);
-    }, 3000);
+    client?.send(`/app/room/${roomId}/start`);
   };
 
   const handleExitBtn = async () => {
     console.log('방 나가기');
     try {
       console.log('roomID ', roomId);
-      const res = await axios.delete(`/rooms/${roomId}/members/1`);
+      const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
       console.log(res);
 
+      const data = {
+        type: 'quit',
+        memeberId: member.memberId,
+      };
+      client?.send(`/app/room/${roomId}`, {}, JSON.stringify(data));
       if (res.status === 200) {
         navigate('/main', { replace: true });
       }
@@ -88,7 +117,7 @@ function WaitingRoomPage() {
 
   return (
     <div id="waiting-page">
-      <Header onModalToggle={handleModalToggle} />{' '}
+      <Header onModalToggle={handleModalToggle} />
       <main id="waiting-room-box">
         <div id="waiting-room-top">
           <div className="title">
@@ -104,23 +133,37 @@ function WaitingRoomPage() {
           </div>
         </div>
         <div id="waiting-room-body">
-          <div id="waiting-room-content">
-            {memberList.map((member) => (
-              <WaitingMemberBox
-                key={member.memberId}
-                nickname={member.nickname}
-                point={member.rating}
-                matchCnt={member.meetingCount}
-                gender={member.gender}
-                profileImageSrc={member.profileImageSrc}
-              />
-            ))}
+          <div id="member-list-box">
+            <div className="waiting-room-content">
+              {sameGenderMemberList.map((member) => (
+                <WaitingMemberBox
+                  key={member.memberId}
+                  nickname={member.nickname}
+                  rating={member.rating}
+                  matchCnt={member.meetingCount}
+                  gender={member.gender}
+                  profileImageSrc={member.profileImageSrc}
+                />
+              ))}
+            </div>
+            <div className="waiting-room-content">
+              {diffGenderMemberList.map((member) => (
+                <WaitingMemberBox
+                  key={member.memberId}
+                  nickname={member.nickname}
+                  rating={member.rating}
+                  matchCnt={member.meetingCount}
+                  gender={member.gender}
+                  profileImageSrc={member.profileImageSrc}
+                />
+              ))}
+            </div>
           </div>
           <ChatRoom />
         </div>
         <div id="waiting-room-footer">
-          <FilledButton content="시작하기" style={styles.startBtn} handleClick={handleStartBtn} />
-          <FilledButton content="나가기" style={styles.exitBtn} handleClick={handleExitBtn} />
+          <FilledButton content="시작하기" classes="btn start-btn" handleClick={handleStartBtn} />
+          <FilledButton content="나가기" classes="btn exit-btn" handleClick={handleExitBtn} />
         </div>
       </main>
     </div>

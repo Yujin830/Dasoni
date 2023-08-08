@@ -1,6 +1,7 @@
 package signiel.heartsigniel.controller;
 
 
+import ch.qos.logback.core.status.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,29 +29,29 @@ public class RoomController {
     private final MatchingRoomService matchingRoomService;
     private final RatingService ratingService;
 
-    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService, RatingService ratingService){
+    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService, RatingService ratingService) {
         this.privateRoomService = privateRoomService;
         this.matchingRoomService = matchingRoomService;
         this.ratingService = ratingService;
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
-    public ResponseEntity<Response> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId){
+    public ResponseEntity<Response> joinRoom(@PathVariable Long roomId, @PathVariable Long memberId) {
         Response response = privateRoomService.joinRoom(memberId, roomId);
 
         return ResponseEntity.ok(response);
+
     }
 
     @DeleteMapping("/{roomId}/members/{memberId}")
-    public ResponseEntity<Response> quitRoom(@PathVariable Long roomId, @PathVariable Long memberId){
+    public ResponseEntity<Response> quitRoom(@PathVariable Long roomId, @PathVariable Long memberId) {
         Response response = privateRoomService.quitRoom(memberId, roomId);
-
+//        privateRoomService.broadcastMemberList(roomId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Response> getRoomByTitle(@PathVariable String searchKeyword)
-    {
+    public ResponseEntity<Response> getRoomByTitle(@PathVariable String searchKeyword) {
         Pageable pageable = PageRequest.of(0, 6);
         Page<PrivateRoomList> rooms = privateRoomService.getPrivateRoomsByTitle(searchKeyword, pageable);
         Response response = Response.of(CommonCode.GOOD_REQUEST, rooms);
@@ -65,7 +66,7 @@ public class RoomController {
         Response response = Response.of(CommonCode.GOOD_REQUEST, rooms);
 
         return ResponseEntity.ok(response);
-        }
+    }
 
     @PostMapping("")
     public ResponseEntity<Response> createRoom(@RequestBody PrivateRoomCreate privateRoomCreateRequest) {
@@ -73,17 +74,17 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{gender}")
-    public ResponseEntity<Response> filterRoomByGender(@PathVariable String gender){
-        Pageable pageable = PageRequest.of(0 ,6);
-        Page<PrivateRoomList> roomList = privateRoomService.filterRoomByGender(gender, pageable);
+    @GetMapping("/filter/{condition}")
+    public ResponseEntity<Response> filterRoomByGender(@PathVariable String condition) {
+        Pageable pageable = PageRequest.of(0, 6);
+        Page<PrivateRoomList> roomList = privateRoomService.filterRoomByGender(condition, pageable);
         Response response = Response.of(CommonCode.GOOD_REQUEST, roomList);
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{roomId}")
-    public ResponseEntity<Response> getRoomInfo(@PathVariable Long roomId){
+    public ResponseEntity<Response> getRoomInfo(@PathVariable Long roomId) {
         Response response = privateRoomService.roomInfo(roomId);
         return ResponseEntity.ok(response);
     }

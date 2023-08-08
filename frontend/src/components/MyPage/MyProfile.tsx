@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import RecentMatchAvartar from '../../components/Avarta/RecentMatchAvartar/RecentMatchAvartar';
 
-function MyProfile({ setType }: any) {
-  const { loginId, nickname, job, birth, siDo, guGun } = useAppSelector((state) => state.user);
-
+function MyProfile({ setType }: { setType: (type: string) => void }) {
+  const { loginId, nickname, job, birth, siDo, guGun, profileImageSrc } = useAppSelector(
+    (state) => state.user,
+  );
   // TODO : 최근 매칭된 다소니 리스트 조회 recentUserList로 state 변경
-  const recentUserList = useState([]);
+  const [recentUserList, setRecentUserList] = useState([]);
   const faketUserList = [
     { profileImg: 'rank_profile.png', userId: 1 },
     { profileImg: 'rank_profile.png', userId: 2 },
@@ -18,7 +19,7 @@ function MyProfile({ setType }: any) {
 
   const deleteUser = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    if (confirm(`탈퇴하면 복구할 수 없습니다.\n정말 탈퇴하시겠습니까?`)) {
+    if (window.confirm(`탈퇴하면 복구할 수 없습니다.\n정말 탈퇴하시겠습니까?`)) {
       // TODO : 회원 탈퇴 API 개발
       alert(`탈퇴 되었습니다.`);
       // location : 로그인 화면으로 이동
@@ -32,6 +33,10 @@ function MyProfile({ setType }: any) {
 
   useEffect(() => {
     // TODO : 최근 매칭된 다소니 리스트 조회 API 개발
+    // 예시 사용법:
+    // fetchRecentUserList().then((data) => {
+    //   setRecentUserList(data);
+    // });
   }, []);
 
   return (

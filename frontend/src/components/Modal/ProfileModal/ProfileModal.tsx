@@ -43,7 +43,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
   const [job, setJob] = useState('');
   const [modifySido, setModifySido] = useState(11); // "서울특별시"의 sidoCode인 "11"을 설정
   const [modifyGugun, setModifyGugun] = useState(0); // 초기값은 빈 문자열
-  const { memberId } = useAppSelector((state) => state.user);
+  const { memberId, isFirst } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
 
   const handleChangeJob = (event: React.ChangeEvent<HTMLInputElement>) =>

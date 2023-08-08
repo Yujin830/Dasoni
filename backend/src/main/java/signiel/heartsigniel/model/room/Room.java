@@ -1,13 +1,13 @@
 package signiel.heartsigniel.model.room;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import signiel.heartsigniel.model.party.Party;
+        import lombok.Data;
+        import lombok.NoArgsConstructor;
+        import signiel.heartsigniel.model.member.Member;
+        import signiel.heartsigniel.model.roommember.RoomMember;
 
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
+        import javax.persistence.*;
+        import java.time.LocalDateTime;
+        import java.util.List;
 
 
 @Data
@@ -31,11 +31,8 @@ public class Room {
     @Column
     private boolean megiAcceptable;
 
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    private Party maleParty;
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    private Party femaleParty;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    private List<RoomMember> roomMembers;
 
     public boolean isGameStarted() {
         return startTime.isBefore(LocalDateTime.now());
@@ -46,15 +43,31 @@ public class Room {
     }
 
     public Long roomMemberCount() {
-        return (long) (maleParty.getMembers().size() + femaleParty.getMembers().size());
+        return (long) roomMembers.size();
     }
 
-    public Long femaleMemberCount() {
-        return (long) femaleParty.getMembers().size();
+    // 성별에 따른 방 인원 구하기
+    public Long memberCountByGender(String gender){
+        Long genderCount = 0L;
+
+        for(RoomMember roomMember : roomMembers){
+            if(roomMember.getMember().getGender().equals(gender)){
+                genderCount += 1;
+            }
+        }
+        return genderCount;
     }
 
-    public Long maleMemberCount() {
-        return (long) maleParty.getMembers().size();
-    }
+    // 성별에 따른 방 평균 레이팅 구하기
+    public Long memberAvgRatingByGender(String gender){
 
+        Long avgRating = 0L;
+
+        for(RoomMember roomMember : roomMembers){
+            if(roomMember.getMember().getGender().equals(gender)){
+                avgRating += roomMember.getMember().getRating();
+            }
+        }
+        return memberCountByGender(gender) >0? avgRating/memberCountByGender(gender) : 0;
+    }
 }

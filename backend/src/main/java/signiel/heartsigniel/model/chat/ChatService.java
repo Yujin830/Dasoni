@@ -1,78 +1,31 @@
 package signiel.heartsigniel.model.chat;
 
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import signiel.heartsigniel.common.code.CommonCode;
-import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.chat.dto.ChatRoom;
-import signiel.heartsigniel.model.member.Member;
-import signiel.heartsigniel.model.member.MemberRepository;
-import signiel.heartsigniel.model.member.dto.MeetingRoomMemberReq;
-import signiel.heartsigniel.model.room.dto.PrivateRoomInfo;
+import signiel.heartsigniel.model.chat.dto.ChatMessage;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.List;
 
 @Service
-@Slf4j
 public class ChatService {
+    private final RedisTemplate<String, ChatMessage> redisTemplate;
 
-    private final MemberRepository memberRepository;
-
-    public ChatService(MemberRepository memberRepository){
-        this.memberRepository = memberRepository;
-    }
-    private Map<String, ChatRoom> chatRooms;
-
-    //의존관계 주입시 자동실행
-    @PostConstruct
-    private void init(){
-        chatRooms = new LinkedHashMap<>();
+    public ChatService(RedisTemplate<String, ChatMessage> redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 
-
-    public Member getLoggedInMember(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.isAuthenticated()){
-            String userName = authentication.getName();
-            Member member = memberRepository.findByLoginId(userName).get();
-
-            return member;
-        }
-
-        return null;
-    }
-    //채팅방 불러오기
-    public List<ChatRoom> findAllRoom(){
-        List<ChatRoom> result = new ArrayList<>(chatRooms.values());
-        Collections.reverse(result);
-
-        return result;
+    // 메시지를 추가하는 메서드
+    public void addMessage(Long roomId, ChatMessage message) {
+        redisTemplate.opsForList().rightPush("room:" + roomId + ":messages", message);
     }
 
-    public String createChattingRoomUrl(Long roomId){
-        return "/ws/chat/" + roomId;
+    // 특정 방의 모든 메시지를 가져오는 메서드
+    public List<ChatMessage> getMessages(Long roomId) {
+        return redisTemplate.opsForList().range("room:" + roomId + ":messages", 0, -1);
     }
 
-    //채팅방 한개 불러오기
-
-    public ChatRoom findById(String roomId){
-        return chatRooms.get(roomId);
+    // 특정 방의 메시지 리스트를 삭제하는 메서드
+    public void deleteMessages(Long roomId) {
+        redisTemplate.delete("room:" + roomId + ":messages");
     }
-
-    //채팅방 생성
-    public ChatRoom createRoom(String name){
-        ChatRoom chatRoom = ChatRoom.create(name);
-        chatRooms.put(chatRoom.getRoomId(), chatRoom);
-        return chatRoom;
-
-
-    }
-
-
-
 }

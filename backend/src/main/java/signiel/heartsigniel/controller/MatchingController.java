@@ -6,6 +6,8 @@ import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.alarm.AlarmService;
 import signiel.heartsigniel.model.matching.MatchingService;
 import signiel.heartsigniel.model.matching.code.MatchingCode;
+import signiel.heartsigniel.model.matching.dto.QueueData;
+import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
 
 @RestController
@@ -20,18 +22,16 @@ public class MatchingController {
         this.alarmService = alarmService;
     }
 
-    @PostMapping("/members/{memberId}")
-    public ResponseEntity<Response> quickMatch(@PathVariable Long memberId){
-        Response response = matchingService.quickFindMatch(memberId);
-
-
+    @DeleteMapping("/members/{memberId}")
+    public ResponseEntity<Response> cancelQuickMatch(@PathVariable Long memberId){
+            Response response = matchingService.dequeueMember(memberId);
             return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/partymembers/{partyMemberId}")
-    public ResponseEntity<Response> cancelQuickMatch(@PathVariable Long partyMemberId){
-            Response response = matchingService.cancelFindMatch(partyMemberId);
-            return ResponseEntity.ok(response);
+    @PostMapping("/members/{memberId}")
+    public ResponseEntity<Response> findQuickMatch(@PathVariable Long memberId) {
+        Response response = matchingService.enqueueMember(memberId);
+        return ResponseEntity.ok(response);
     }
 
 }

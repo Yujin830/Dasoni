@@ -3,7 +3,7 @@ import './ExpPointBar.css';
 
 type ExpPointBarProps = {
   percent: number; // 경험치 바의 퍼센트 값 (0~100 사이의 숫자)
-  points: number; // 현재까지 쌓은 포인트
+  points: number | undefined; // 현재까지 쌓은 포인트
   style?: React.CSSProperties; // 옵셔널한 스타일 객체
 };
 
@@ -21,7 +21,7 @@ function ExpPointBar({ percent, points, style }: ExpPointBarProps) {
 }
 
 type ExpPointLabelProps = {
-  points: number; // 현재까지 쌓은 포인트
+  points: number | undefined; // 현재까지 쌓은 포인트
 };
 
 function ExpPointLabel({ points }: ExpPointLabelProps) {

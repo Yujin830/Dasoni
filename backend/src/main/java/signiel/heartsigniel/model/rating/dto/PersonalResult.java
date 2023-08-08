@@ -2,23 +2,22 @@ package signiel.heartsigniel.model.rating.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import signiel.heartsigniel.model.member.dto.MemberInfo;
-import signiel.heartsigniel.model.partymember.PartyMember;
-import signiel.heartsigniel.model.partymember.dto.PartyMemberInfo;
+import signiel.heartsigniel.model.roommember.RoomMember;
+import signiel.heartsigniel.model.roommember.dto.RoomMemberInfo;
 
 @Getter
 public class PersonalResult {
-    private PartyMemberInfo partyMemberInfo;
+    private RoomMemberInfo roomMemberInfo;
     private Long ratingChange;
 
-    public PersonalResult (PartyMember partyMember, Long ratingChange){
-        this.partyMemberInfo = new PartyMemberInfo(partyMember);
+    public PersonalResult (RoomMember roomMember, Long ratingChange){
+        this.roomMemberInfo = new RoomMemberInfo(roomMember);
         this.ratingChange = ratingChange;
     }
 
     @Builder
-    public static PersonalResult of(PartyMember partyMember, Long ratingChange){
-        return new PersonalResult(partyMember, ratingChange);
+    public static PersonalResult of(RoomMember roomMember, Long ratingChange){
+        return new PersonalResult(roomMember, ratingChange);
     }
 }
 
