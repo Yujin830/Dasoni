@@ -35,6 +35,9 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
       client?.send(`/app/room/${roomId}/guide`, {}, '20');
     else if (minutes === '50' && seconds === '00')
       client?.send(`/app/room/${roomId}/guide`, {}, '50');
+    // 시그널 메세지 send
+    else if (minutes === '00' && seconds === '25') client?.send(`/app/room/${roomId}/signal`);
+
     setCurrentTime(`${minutes}:${seconds}`);
   }
 
