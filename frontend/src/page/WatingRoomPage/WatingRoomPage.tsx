@@ -93,7 +93,12 @@ function WaitingRoomPage() {
       console.log('roomID ', roomId);
       const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
       console.log(res);
-      client?.send(`/app/room/${roomId}`, {}, 'quit');
+
+      const data = {
+        type: 'quit',
+        memeberId: member.memberId,
+      };
+      client?.send(`/app/room/${roomId}`, {}, JSON.stringify(data));
       if (res.status === 200) {
         navigate('/main', { replace: true });
       }
@@ -110,7 +115,7 @@ function WaitingRoomPage() {
 
   return (
     <div id="waiting-page">
-      <Header onModalToggle={handleModalToggle} />{' '}
+      <Header onModalToggle={handleModalToggle} />
       <main id="waiting-room-box">
         <div id="waiting-room-top">
           <div className="title">
