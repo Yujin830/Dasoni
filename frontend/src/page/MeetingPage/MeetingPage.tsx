@@ -8,6 +8,7 @@ import ToolBar from '../../components/ToolBar/ToolBar';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import TimeDisplay from '../../components/Element/TimeDisplay';
 import Guide from '../../components/MeetingPage/Guide/Guide';
+import Question from '../../components/MeetingPage/Question/Question';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -21,8 +22,12 @@ function MeetingPage() {
   console.log(publisher);
   console.log(streamList);
 
-  const [guideMessage, setGuideMessage] = useState('');
-  const [isShow, setIsShow] = useState(false);
+  const [guideMessage, setGuideMessage] = useState(
+    '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
+  );
+  const [question, setQuestion] = useState([]);
+  const [isShow, setIsShow] = useState(true);
+  const [isQuestionTime, setIsQuestionTime] = useState(false);
   const client = useWebSocket({
     subscribe: (client) => {
       // 가이드 구독
@@ -30,9 +35,16 @@ function MeetingPage() {
         console.log(res.body);
         setGuideMessage(res.body);
         setIsShow(true);
+        setIsQuestionTime(false);
       });
 
-      // TODO : 질문 구독
+      // 질문 구독
+      client.subscribe(`/topic/room/${roomId}/questions`, (res: any) => {
+        console.log(res.body);
+        setQuestion(res.body[0]);
+        setIsQuestionTime(true);
+      });
+      client.send(`/app/room/${roomId}/questions`);
 
       // TODO : 첫인상 투표 구독
 
@@ -42,9 +54,11 @@ function MeetingPage() {
 
   // guide 사라지게 하기
   useEffect(() => {
-    setTimeout(() => {
-      setIsShow(false);
-    }, 5000);
+    if (isShow) {
+      setTimeout(() => {
+        setIsShow(false);
+      }, 5000);
+    }
   }, [isShow]);
 
   // 현재 로그인한 유저와 다른 성별의 memberList
@@ -63,6 +77,7 @@ function MeetingPage() {
       <TimeDisplay client={client} roomId={roomId} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
       <div id="meeting-video-container">
+        {isQuestionTime && <Question content={question[0]} />}
         <div className="meeting-video-row">
           {publisher &&
             sameGenderMemberList.map((stream, index) => (
