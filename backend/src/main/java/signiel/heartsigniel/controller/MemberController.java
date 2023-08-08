@@ -1,24 +1,27 @@
 package signiel.heartsigniel.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import signiel.heartsigniel.common.code.CommonCode;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.*;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
+import signiel.heartsigniel.model.rating.RatingService;
 
-import javax.servlet.http.HttpServletResponse;
-
-
-@RequiredArgsConstructor
 @RestController
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
+    private final RatingService ratingService;
 
+    public MemberController(MemberService memberService, RatingService ratingService){
+        this.memberService = memberService;
+        this.ratingService = ratingService;
+    }
 
     @PostMapping("/api/login")
     public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request) {
@@ -56,8 +59,17 @@ public class MemberController {
     public ResponseEntity<Boolean> checkMemberPW(@PathVariable Long memberId, @RequestBody SignRequest request) {
         return new ResponseEntity<>(memberService.checkMemberPW(memberId, request), HttpStatus.OK);
     }
+
+    @GetMapping("/api/users/{memberId}/history")
+    public ResponseEntity<Response> getMatchingHistory(@PathVariable Long memberId){
+        Response response = Response.of(CommonCode.GOOD_REQUEST, ratingService.getMatchedMemberIds(memberId));
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/api/users/{memberId}/history")
+    public ResponseEntity<Response> deleteMatchingHistory(@PathVariable Long memberId){
+        ratingService.deleteMatchingHistory(memberId);
+        Response response = Response.of(CommonCode.GOOD_REQUEST, null);
+        return ResponseEntity.ok(response);
+    }
 }
-
-
-
-

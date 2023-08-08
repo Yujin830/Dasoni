@@ -1,16 +1,15 @@
 package signiel.heartsigniel.model.rating;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
+import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
+import signiel.heartsigniel.model.rating.dto.*;
 import signiel.heartsigniel.model.roommember.RoomMember;
 import signiel.heartsigniel.model.roommember.RoomMemberRepository;
 import signiel.heartsigniel.model.rating.code.RatingCode;
-import signiel.heartsigniel.model.rating.dto.PersonalResult;
-import signiel.heartsigniel.model.rating.dto.SignalResultRequest;
-import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
-import signiel.heartsigniel.model.rating.dto.TotalResultResponse;
 import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.RoomRepository;
 import signiel.heartsigniel.model.room.code.RoomCode;
@@ -26,12 +25,14 @@ public class RatingService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
     private final RoomMemberRepository roomMemberRepository;
+    private final RedisTemplate<String, SignalMatchingResult> redisTemplate;
     private static final int K_FACTOR = 40;
 
-    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository){
+    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, RedisTemplate<String, SignalMatchingResult> redisTemplate){
         this.roomRepository = roomRepository;
         this.memberRepository = memberRepository;
         this.roomMemberRepository = roomMemberRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     public Response calculateTotalResult(TotalResultRequest totalResultRequest){
@@ -93,9 +94,15 @@ public class RatingService {
         List<RoomMember> roomMembers = room.getRoomMembers();
 
         int[] scoreBoard = calculatePersonalScore(totalResult.getSignalResults());
+        int[] signalBoard = isMutuallySignaled(totalResult.getSignalResults().get(1));
         for (int i = 0; i < 6; i++) {
             RoomMember roomMember = roomMembers.get(i);
             savePartyMemberScore(roomMember, scoreBoard[i]); // PartyMember 객체에 점수 설정
+            if (signalBoard[i+1] > 0){
+                Long memberId = roomMember.getMember().getMemberId();
+                Long opponentId = roomMembers.get(signalBoard[i+1]).getMember().getMemberId();
+                addMatchedMemberId(memberId, opponentId);
+            }
         }
 
         roomMembers.sort(Comparator.comparingInt(RoomMember::getScore).reversed()); // 점수를 기준으로 내림차순 정렬
@@ -173,6 +180,45 @@ public class RatingService {
     public Member saveMemberRating(Member member, Long rating){
         member.setRating(rating);
         return memberRepository.save(member);
+    }
+
+    public String getMemberProfileImage(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("해당 유저를 찾을 수 없습니다."));
+        return member.getProfileImageSrc();
+    }
+    public int[] isMutuallySignaled(SignalResultRequest signalResultRequest){
+        int[] signalBoard = new int[7];
+        for (int i=0; i<6; i++){
+            for (int j=0; j<6; j++){
+                if (signalResultRequest.getSignalBoard()[i][j] == 1 && signalResultRequest.getSignalBoard()[j][i] == 1){
+                    signalBoard[i+1] = j+1;
+                }
+            }
+        }
+        return signalBoard;
+    }
+
+
+    // 매칭된 유저 추가
+    public void addMatchedMemberId(Long memberId, Long matchedUserId) {
+        SignalMatchingResult signalMatchingResult = SignalMatchingResult.of(memberId, matchedUserId, getMemberProfileImage(matchedUserId));
+        redisTemplate.opsForList().rightPush("member:" + memberId + ":matchHistory", signalMatchingResult);
+
+        // 리스트 크기 유지
+        while (redisTemplate.opsForList().size("member:" + memberId + ":matchHistory") > 6) {
+            redisTemplate.opsForList().leftPop("member" + memberId + ":matchHistory");
+        }
+    }
+
+    // 매칭 히스토리 조회
+    public List<SignalMatchingResult> getMatchedMemberIds(Long memberId){
+        return redisTemplate.opsForList().range("member:" + memberId + ":matchHistory", 0, -1);
+    }
+
+    // 매칭 히스토리 삭제
+    public void deleteMatchingHistory(Long memberId) {
+        redisTemplate.delete("member:" + memberId + ":matchHistory");
     }
 
 }
