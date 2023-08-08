@@ -70,11 +70,12 @@ function MyProfileModify({ setType }: any) {
         님의 개인정보
       </p>
       <div className="modify-form">
+        <img src={profileImageSrc} alt="프로필 사진" />
         <BasicInput
           classes="info-input"
           label="프로필"
           type="file"
-          value={String(modifyProfileSrc)}
+          // value={String(modifyProfileSrc)}
           handleChange={handleProfileSrcChange}
         />
         <BasicInput

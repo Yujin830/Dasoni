@@ -16,7 +16,7 @@ export interface User {
   guGun?: number;
   gender?: string;
   profileImageSrc?: string;
-  point?: number;
+  rating?: number;
   matchCnt?: number;
   isFirst?: number;
 }
@@ -34,6 +34,8 @@ const initialState: User = {
   guGun: 0,
   profileImageSrc: '',
   isFirst: 0,
+  rating: 1000,
+  matchCnt: 0,
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
@@ -154,8 +156,8 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
       meetingCount: data.meetingCount,
       profileImageSrc: data.profileImageSrc,
       job: data.job,
-      siDo: data.siDo,
-      guGun: data.guGun,
+      siDo: data.siDo || 0,
+      guGun: data.guGun || 0,
       // roles: data.roles,
       remainLife: data.remainLife,
       rating: data.rating,
