@@ -21,26 +21,43 @@ function SideBar({ points, percent, match, setType }: SideBarProps) {
   };
 
   return (
-    <div className="my-side-bar">
-      <div className="top">
-        <RankAvartar src="rank_profile.png" point={points} />
-        <h3>나전문</h3>
-      </div>
-      <div className="info">
-        <div className="signal">
-          <p className="title"> Signal</p>
-          <ExpPointBar percent={percent} points={points} />
+    <div className="bar">
+      <div className="mobile">
+        <div className="top">
+          <RankAvartar src="rank_profile.png" point={points} />
         </div>
-        <div className="match">
-          <p className="title">Match</p>
-          <h3>{match}</h3>
+        <div className="info">
+          <div className="sidebar_signal">
+            <p className="title"> Signal</p>
+            <ExpPointBar percent={percent} points={points} />
+          </div>
+          <div className="sidebar_match">
+            <p className="title">Match</p>
+            <h3>{match}</h3>
+          </div>
         </div>
       </div>
-      <footer className="footer">
-        <a href="/" onClick={changePw}>
-          비밀번호 변경
-        </a>
-      </footer>
+      <div className="my-side-bar">
+        <div className="top">
+          <RankAvartar src="rank_profile.png" point={points} />
+          <h3>나전문</h3>
+        </div>
+        <div className="info">
+          <div className="sidebar_signal">
+            <p className="title"> Signal</p>
+            <ExpPointBar percent={percent} points={points} />
+          </div>
+          <div className="sidebar_match">
+            <p className="title">Match</p>
+            <h3>{match}</h3>
+          </div>
+        </div>
+        <footer className="footer">
+          <a href="/" onClick={changePw}>
+            비밀번호 변경
+          </a>
+        </footer>
+      </div>
     </div>
   );
 }

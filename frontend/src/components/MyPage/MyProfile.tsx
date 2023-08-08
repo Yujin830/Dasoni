@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import RecentMatchAvartar from '../../components/Avarta/RecentMatchAvartar/RecentMatchAvartar';
+import RankAvartar from '../Avarta/RankAvartar/RackAvartar';
+import ExpPointBar from '../Element/ExpPointBar';
 
 function MyProfile({ setType }: any) {
   const { loginId, nickname, job, birth, siDo, guGun, profileImageSrc } = useAppSelector(
@@ -30,6 +32,11 @@ function MyProfile({ setType }: any) {
   const modifyUser = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setType('modify');
+  };
+
+  const changePw = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setType('changePw');
   };
 
   useEffect(() => {
@@ -63,7 +70,9 @@ function MyProfile({ setType }: any) {
         </tbody>
       </table>
       <div id="recent-matched-user-box">
-        <p>최근 매칭된 다소니</p>
+        <div className="recent-matched-title">
+          <p>최근 매칭된 다소니</p>
+        </div>
         <div id="matched-user-list">
           {recentUserList.length > 0 ? (
             faketUserList.map((user) => (
@@ -75,6 +84,9 @@ function MyProfile({ setType }: any) {
         </div>
       </div>
       <footer>
+        <a className="btn mobile" href="/" onClick={changePw}>
+          비밀번호 변경
+        </a>
         <a className="btn modify" href="/" onClick={modifyUser}>
           회원 정보 수정
         </a>

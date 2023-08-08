@@ -7,24 +7,25 @@ import { useAppSelector } from '../../../app/hooks';
 
 const styles = {
   input: {
-    height: '3rem',
+    width: '80%',
+    height: '7vh',
     flexShrink: '0',
     borderRadius: '1.25rem',
     border: '3px solid #D9D9D9',
     background: '#FFF',
     color: '#898989',
-    fontSize: '1rem',
+    fontSize: '2.5vh',
     margin: '0.5rem 0',
     padding: '0.5rem 0.7rem',
   },
   button: {
     borderRadius: '0.625rem',
     background: '#EC5E98',
-    width: '7rem',
-    height: '3rem',
+    width: '10vh',
+    height: '5vh',
     position: 'absolute',
     right: 0,
-    marginTop: '1rem',
+    marginTop: '1vh',
   },
 };
 

@@ -3,7 +3,14 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 2rem;
+  /* padding: 2rem; */
+}
+
+.confirm-currentPw {
+  /* background-color: pink; */
+  width: 70%;
+  align-items: center;
+  justify-content: center;
 }
 
 .mypage .changePw-box h3 {
