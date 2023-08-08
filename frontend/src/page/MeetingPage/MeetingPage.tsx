@@ -92,7 +92,7 @@ function MeetingPage() {
     <div id="meeting">
       <TimeDisplay client={client} roomId={roomId} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
-      <ChatRoom />
+
       <div id="meeting-video-container">
         {isQuestionTime && <Question content={question} />}
         <div className="meeting-video-row">
@@ -130,7 +130,9 @@ function MeetingPage() {
           onChange={handleVolumeChange}
         />
         <button onClick={handleMuteToggle}>{muted ? 'Unmute' : 'Mute'}</button>
+        <ChatRoom />
       </div>
+
       {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <audio ref={audioRef} src={song} loop autoPlay={true} />
     </div>
