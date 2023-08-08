@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import Header from '../../components/Header/Header';
 import titleLogo from '../../assets/image/title_img.png';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
@@ -36,8 +36,19 @@ import convertScoreToName from '../../utils/convertScoreToName';
 
 function WaitingRoomPage() {
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
+  const { gender } = useAppSelector((state) => state.user);
   const [memberList, setMemberList] = useState<WaitingMember[]>(
     waitingRoomInfo.waitingRoomMemberList,
+  );
+
+  const sameGenderMemberList = useMemo(
+    () => memberList.filter((member) => member.gender === gender),
+    [memberList],
+  );
+
+  const diffGenderMemberList = useMemo(
+    () => memberList.filter((member) => member.gender !== gender),
+    [memberList],
   );
   const navigate = useNavigate();
   const { roomId } = useParams();
@@ -63,7 +74,11 @@ function WaitingRoomPage() {
         }
       });
       // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
-      client.send(`/app/room/${roomId}`, {}, 'join');
+      const joinData = {
+        type: 'join',
+        memeberId: member.memberId,
+      };
+      client.send(`/app/room/${roomId}`, {}, JSON.stringify(joinData));
     },
   });
 
@@ -111,17 +126,31 @@ function WaitingRoomPage() {
           </div>
         </div>
         <div id="waiting-room-body">
-          <div id="waiting-room-content">
-            {memberList.map((member) => (
-              <WaitingMemberBox
-                key={member.memberId}
-                nickname={member.nickname}
-                point={member.rating}
-                matchCnt={member.meetingCount}
-                gender={member.gender}
-                profileImageSrc={member.profileImageSrc}
-              />
-            ))}
+          <div id="member-list-box">
+            <div className="waiting-room-content">
+              {sameGenderMemberList.map((member) => (
+                <WaitingMemberBox
+                  key={member.memberId}
+                  nickname={member.nickname}
+                  point={member.rating}
+                  matchCnt={member.meetingCount}
+                  gender={member.gender}
+                  profileImageSrc={member.profileImageSrc}
+                />
+              ))}
+            </div>
+            <div className="waiting-room-content">
+              {diffGenderMemberList.map((member) => (
+                <WaitingMemberBox
+                  key={member.memberId}
+                  nickname={member.nickname}
+                  point={member.rating}
+                  matchCnt={member.meetingCount}
+                  gender={member.gender}
+                  profileImageSrc={member.profileImageSrc}
+                />
+              ))}
+            </div>
           </div>
           <ChatRoom />
         </div>

@@ -8,8 +8,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
-import signiel.heartsigniel.model.chat.dto.ChatMessage;
-import signiel.heartsigniel.model.chat.dto.ChatMessageWithMember;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.matching.MatchingService;
@@ -46,9 +44,10 @@ public class PrivateRoomService {
     private final RoomMemberService roomMemberService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MatchingService matchingService;
+    private final ChatService chatService;
 
     public PrivateRoomService(RoomRepository roomRepository, RoomMemberRepository roomMemberRepository, MemberRepository memberRepository, RoomMemberService roomMemberService, SimpMessageSendingOperations operations,
-                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService, MatchingService matchingService) {
+                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService, MatchingService matchingService, ChatService chatService) {
 
         this.roomRepository = roomRepository;
         this.matchingService = matchingService;
@@ -58,6 +57,8 @@ public class PrivateRoomService {
         this.ratingService = ratingService;
         this.lifeService = lifeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.chatService = chatService;
+
     }
 
     // 방 생성
@@ -132,6 +133,7 @@ public class PrivateRoomService {
         // 나 혼자 있는 경우
         if (roomEntity.roomMemberCount() == 1L) {
             roomRepository.delete(roomEntity);
+            chatService.deleteMessages(roomId);
             return Response.of(RoomCode.ROOM_DELETED, null);
         }
         else {
@@ -195,7 +197,7 @@ public class PrivateRoomService {
     Sending START Message Method
      */
 
-    public void sendMessage(Long roomId){
+    public void sendStartMessage(Long roomId){
         String startMessage = "Start";
         simpMessagingTemplate.convertAndSend("/topic/room/"+roomId+"/start",startMessage);
     }
@@ -204,26 +206,24 @@ public class PrivateRoomService {
     유저 목록 브로드캐스팅
      */
 
-    public void broadcastJoinMemberList(Long roomId, Long memberId){
-        ChatMessageWithMember chatMessage = new ChatMessageWithMember();
+    public void broadcastJoinMemberList(Long roomId){
         List<Member> membersInRoom = getMemberInRoom(roomId);
-        Member member = memberRepository.findById(memberId).get();
-        chatMessage.setSenderNickname(member.getNickname());
-        chatMessage.setContent("님이 입장하셨습니다.");
-        chatMessage.setMemberList(membersInRoom);
-        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
+        log.info("roomid = " + roomId);
+        log.info("JoinMember!!!");
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
-    public void broadcastQuitMemberList(Long roomId, Long memberId){
-        ChatMessageWithMember chatMessage = new ChatMessageWithMember();
+    public void broadcastQuitMemberList(Long roomId){
         List<Member> membersInRoom = getMemberInRoom(roomId);
-        Member member = memberRepository.findById(memberId).get();
-        chatMessage.setSenderNickname(member.getNickname());
-        chatMessage.setContent("님이 퇴장하셨습니다.");
-        chatMessage.setMemberList(membersInRoom);
-        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
+        log.info("roomid = " + roomId);
+        log.info("Quit member!!!");
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, membersInRoom);
     }
 
-
+    public void broadcastCreateMessage(Long roomId){
+        log.info("Create Room Complete");
+        String creatMsg = "/topic/room/" + roomId + "is created!!!";
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, creatMsg);
+    }
 
     public Response roomInfo(Long roomId) {
         Room roomEntity = findRoomById(roomId);
@@ -281,7 +281,7 @@ public class PrivateRoomService {
     }
 
     public RoomMember getFirstMember(Room room){
-        return room.getRoomMembers().get(0);
+        return room.getRoomMembers().get(1);
     }
 
     // 해당 성별 입장 가능 판단
@@ -321,4 +321,12 @@ public class PrivateRoomService {
         room.getRoomMembers().add(roomMember);
         roomRepository.save(room);
     }
+
+    public ChatMessage sendSystemMessage(String content){
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSenderNickname("[SYSTEM MESSAGE]");
+        chatMessage.setContent(content);
+        return chatMessage;
+    }
+
 }
