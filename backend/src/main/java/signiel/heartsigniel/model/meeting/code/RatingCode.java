@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.rating.code;
+package signiel.heartsigniel.model.meeting.code;
 
 import signiel.heartsigniel.common.code.ResponseCode;
 

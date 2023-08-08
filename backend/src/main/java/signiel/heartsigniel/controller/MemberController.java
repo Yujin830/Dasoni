@@ -10,7 +10,7 @@ import signiel.heartsigniel.model.member.*;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
-import signiel.heartsigniel.model.rating.RatingService;
+import signiel.heartsigniel.model.meeting.RatingService;
 
 @RestController
 @Slf4j

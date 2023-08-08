@@ -5,8 +5,8 @@ import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
-import signiel.heartsigniel.model.rating.RatingService;
-import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
+import signiel.heartsigniel.model.meeting.RatingService;
+import signiel.heartsigniel.model.meeting.dto.TotalResultRequest;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 import signiel.heartsigniel.model.roommember.RoomMember;
 
