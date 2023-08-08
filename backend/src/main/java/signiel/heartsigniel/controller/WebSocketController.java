@@ -86,7 +86,6 @@ public class WebSocketController {
         log.info("Sending Complete");
         chatService.addMessage(roomId, chatMessage);
         operations.convertAndSend("/topic/room/"+ roomId +"/chat", chatMessage);
-
     }
 
     /***
@@ -109,6 +108,8 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}")
     public void joinAndQuitRoom(@DestinationVariable Long roomId, @Payload MemberEntryExitDto memberEntryExitDto) {
+        log.info(memberEntryExitDto.toString());
+
         Long memberId = memberEntryExitDto.getMemberId();
         String type = memberEntryExitDto.getType();
 
