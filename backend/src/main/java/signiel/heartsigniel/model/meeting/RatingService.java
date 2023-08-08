@@ -26,19 +26,22 @@ public class RatingService {
     private final MemberRepository memberRepository;
     private final RoomMemberRepository roomMemberRepository;
     private final RedisTemplate<String, SignalMatchingResult> redisTemplate;
+    private final SignalService signalService;
     private static final int K_FACTOR = 40;
 
-    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, RedisTemplate<String, SignalMatchingResult> redisTemplate){
+    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, RedisTemplate<String, SignalMatchingResult> redisTemplate, SignalService signalService){
         this.roomRepository = roomRepository;
         this.memberRepository = memberRepository;
         this.roomMemberRepository = roomMemberRepository;
         this.redisTemplate = redisTemplate;
+        this.signalService = signalService;
     }
 
-    public Response calculateTotalResult(TotalResultRequest totalResultRequest){
+    public Response calculateTotalResult(Long roomId){
 
-        List<RoomMember> sortedRoomMembers = sortRoomMembersByScore(totalResultRequest);
-        Room room = findRoomById(totalResultRequest.getRoomId());
+        Room room = findRoomById(roomId);
+        List<SingleSignalRequest> singleSignalRequests = signalService.fetchAllSignalsForRoom(roomId);
+        List<RoomMember> sortedRoomMembers = sortRoomMembersByScore(room.getRoomMembers(), singleSignalRequests);
         Long avgRating = calculateAvgRatingOfRoom(room);
 
         if (room.getRoomType().equals("private")){
@@ -63,7 +66,7 @@ public class RatingService {
         return Response.of(RatingCode.CALCULATION_SUCCESS, totalResultResponse);
     }
 
-    public Long calculateRatingChange(Long myRating, Long avgRating, int rank, int kFactor) {
+    public Long calculateRatingChange(Long memberRating, Long avgRating, int rank, int kFactor) {
         // 순위에 따른 기본 점수 변동 배열 (인덱스 0은 사용하지 않음)
         int[] baseScoreChanges = {0, 47, 30, 15, -15, -30, -47};
 
@@ -72,7 +75,7 @@ public class RatingService {
         int baseScoreChange = rank >= 1 && rank <= 6 ? baseScoreChanges[rank] : 0;
 
         // Elo 점수계산
-        double expectedWinProbability = 1.0 / (1.0 + Math.pow(10, (avgRating - myRating) / 400.0));
+        double expectedWinProbability = 1.0 / (1.0 + Math.pow(10, (avgRating - memberRating) / 400.0));
         Long eloChange = Math.round(kFactor * (1 - expectedWinProbability));
 
         // Elo 점수 변동을 -10에서 +10 사이로 제한
@@ -89,20 +92,11 @@ public class RatingService {
         return (targetRoom.memberAvgRatingByGender("male") + targetRoom.memberAvgRatingByGender("female")) / targetRoom.roomMemberCount();
     }
 
-    public List<RoomMember> sortRoomMembersByScore(TotalResultRequest totalResult) {
-        Room room = findRoomById(totalResult.getRoomId());
-        List<RoomMember> roomMembers = room.getRoomMembers();
-
-        int[] scoreBoard = calculatePersonalScore(totalResult.getSignalResults());
-        int[] signalBoard = isMutuallySignaled(totalResult.getSignalResults().get(1));
-        for (int i = 0; i < 6; i++) {
+    public List<RoomMember> sortRoomMembersByScore(List<RoomMember> roomMembers) {
+        int[] scoreBoard = calculatePersonalScore(roomMembers);
+        for (int i = 0; i < roomMembers.size(); i++) {
             RoomMember roomMember = roomMembers.get(i);
             savePartyMemberScore(roomMember, scoreBoard[i]); // PartyMember 객체에 점수 설정
-            if (signalBoard[i+1] > 0){
-                Long memberId = roomMember.getMember().getMemberId();
-                Long opponentId = roomMembers.get(signalBoard[i+1]).getMember().getMemberId();
-                addMatchedMemberId(memberId, opponentId);
-            }
         }
 
         roomMembers.sort(Comparator.comparingInt(RoomMember::getScore).reversed()); // 점수를 기준으로 내림차순 정렬
@@ -110,8 +104,17 @@ public class RatingService {
         return roomMembers;
     }
 
-    public int[] calculatePersonalScore(List<SignalResultRequest> signalResults){
-        int[] finalScore = new int[6];
+
+
+    public int[] calculatePersonalScore(List<RoomMember> roomMembers){
+        int roomMemberSize = roomMembers.size();
+        int[] roomMemberSequence = new int[roomMemberSize];
+
+        for(int i = 0; i < roomMemberSize; i++){
+            roomMemberSequence[i] = (roomMembers.get(i).getMember().getMemberId()).intValue();// 시간 복잡도 고려한 수정 필요
+        }
+        int[] finalScore = new int[roomMembers.size()];
+
         for(SignalResultRequest signalResultRequest : signalResults){
             int[] scoreBoard = calculateSignalScore(signalResultRequest);
             for (int i = 0; i < 6; i++) {
@@ -123,9 +126,10 @@ public class RatingService {
 
     public int[] calculateSignalScore(SignalResultRequest signalResult){
         int[] scoreBoard = new int[6];
-        int[][] signalBoard = new int[6][6];
+        int[][] firstSignalBoard = new int[6][6];
+        int[][] finalSignalBoard = new int[6][6];
 
-        // 시그널보드에 기록
+        // 시그널 보드에 기록
         for(SingleSignalRequest singleSignalRequest : signalResult.getSignalList()){
             signalBoard[singleSignalRequest.getSenderId()][singleSignalRequest.getReceiverId()] = 1;
         }
@@ -187,11 +191,25 @@ public class RatingService {
         return memberRepository.save(member);
     }
 
+    public List<int [][]> makeSignalBoard(int roomMemberSize, List<SingleSignalRequest> singleSignalRequests, int[] roomMemberSequence){
+        int[][] firstBoard = new int[roomMemberSize][roomMemberSize];
+        int[][] finalBoard = new int[roomMemberSize][roomMemberSize];
+
+        for(SingleSignalRequest singleSignalRequest : singleSignalRequests){
+            if(singleSignalRequest.getSignalSequence() == 1){
+                firstBoard[][]
+            }
+            else{
+
+            }
+        }
+
     public String getMemberProfileImage(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 유저를 찾을 수 없습니다."));
         return member.getProfileImageSrc();
     }
+
     public int[] isMutuallySignaled(int[][] signalBoard){
         int[] matchBoard = new int[signalBoard.length + 1]; // 인원수 + 1 만큼의
         for (int i=0; i<6; i++){
@@ -210,7 +228,7 @@ public class RatingService {
         SignalMatchingResult signalMatchingResult = SignalMatchingResult.of(memberId, matchedUserId, getMemberProfileImage(matchedUserId));
         redisTemplate.opsForList().rightPush("member:" + memberId + ":matchHistory", signalMatchingResult);
 
-        // 리스트 크기 유지
+        // 큐 크기 유지
         while (redisTemplate.opsForList().size("member:" + memberId + ":matchHistory") > 6) {
             redisTemplate.opsForList().leftPop("member" + memberId + ":matchHistory");
         }

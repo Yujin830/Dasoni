@@ -12,7 +12,6 @@ import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.meeting.RatingService;
 import signiel.heartsigniel.model.meeting.SignalService;
 import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
-import signiel.heartsigniel.model.meeting.dto.TotalResultRequest;
 
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;

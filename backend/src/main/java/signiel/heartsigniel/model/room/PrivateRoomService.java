@@ -22,7 +22,6 @@ import signiel.heartsigniel.model.roommember.RoomMemberService;
 import signiel.heartsigniel.model.roommember.RoomMember;
 import signiel.heartsigniel.model.roommember.code.RoomMemberCode;
 import signiel.heartsigniel.model.meeting.RatingService;
-import signiel.heartsigniel.model.meeting.dto.TotalResultRequest;
 import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.*;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
