@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
+import signiel.heartsigniel.model.chat.dto.MemberEntryExitDto;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.Guide;
 import signiel.heartsigniel.model.guide.GuideRepo;
@@ -35,46 +36,51 @@ public class WebSocketController {
 
     /**
      * 시그널 보내기 시작!
+     *
      * @param roomId
      */
 
     @MessageMapping("room/{roomId}/signal")
-    public void startSendingSignal(@DestinationVariable Long roomId){
+    public void startSendingSignal(@DestinationVariable Long roomId) {
         String endMessage = "START SENDING SIGNAL!!!!";
-        operations.convertAndSend("/topic/room/"+roomId+"/signal", endMessage);
+        operations.convertAndSend("/topic/room/" + roomId + "/signal", endMessage);
     }
+
     /**
      * 질문 리스트 전송
+     *
      * @param roomId 방 번호 식별용
      */
     @MessageMapping("room/{roomId}/questions")
-    public void sendQuestions(@DestinationVariable Long roomId){
+    public void sendQuestions(@DestinationVariable Long roomId) {
         List<Question> questionList = questionRepository.randomQuestion();
-        operations.convertAndSend("/topic/room/"+roomId+"/questions", questionList);
+        operations.convertAndSend("/topic/room/" + roomId + "/questions", questionList);
     }
 
 
     /**
      * 시작 시 가이드 메시지 출력하기 위한 메소드.
-     * @param roomId : 방 번호 식별용
+     *
+     * @param roomId      : 방 번호 식별용
      * @param visibleTime : 시간, 내용 받아오기용.
      */
     @MessageMapping("room/{roomId}/guide")
-    public void sendGuideMessage(@DestinationVariable Long roomId, @Payload Long visibleTime){
+    public void sendGuideMessage(@DestinationVariable Long roomId, @Payload Long visibleTime) {
         String content = guideRepo.findByVisibleTime(visibleTime).get().getContent();
-        operations.convertAndSend("/topic/room/"+roomId+"/guide", content);
+        operations.convertAndSend("/topic/room/" + roomId + "/guide", content);
     }
 
 
     /**
      * Chat method
-     * @param roomId : 방 식별용
+     *
+     * @param roomId      : 방 식별용
      * @param chatMessage : senderNickname, Content 형식
      */
     @MessageMapping("room/{roomId}/chat")
-    public void sendMessage(@DestinationVariable Long roomId, @Payload ChatMessage chatMessage){
+    public void sendMessage(@DestinationVariable Long roomId, @Payload ChatMessage chatMessage) {
         log.info("Sending Complete");
-        operations.convertAndSend("/topic/room/"+ roomId +"/chat", chatMessage);
+        operations.convertAndSend("/topic/room/" + roomId + "/chat", chatMessage);
     }
 
     /***
@@ -83,25 +89,27 @@ public class WebSocketController {
      * @param whisperMessage : receiverId, gender, content로 구성
      */
     @MessageMapping("room/{roomId}/whisper")
-    public void whisperChatting(@DestinationVariable Long roomId, @Payload WhisperMessage whisperMessage){
+    public void whisperChatting(@DestinationVariable Long roomId, @Payload WhisperMessage whisperMessage) {
         log.info("Whisper Complete");
         whisperMessage.setStatus("OK");
-        operations.convertAndSendToUser(whisperMessage.getReceiverId(),"/queue/room./"+roomId + "/whisper", whisperMessage);
+        operations.convertAndSendToUser(whisperMessage.getReceiverId(), "/queue/room./" + roomId + "/whisper", whisperMessage);
     }
 
 
     /**
      * 실시간 갱신을 위한 method
+     *
      * @param roomId : 방 식별용
      */
     @MessageMapping("room/{roomId}")
-    public void joinAndQuitRoom(@DestinationVariable Long roomId, @Payload String msg){
-        if (msg.equals("quit")) {
-            privateRoomService.broadcastQuitMemberList(roomId);;
-        }else if(msg.equals("join")){
-            privateRoomService.broadcastJoinMemberList(roomId);
-        }else{
-            privateRoomService.broadcastCreateMessage(roomId);
+    public void joinAndQuitRoom(@DestinationVariable Long roomId, @Payload MemberEntryExitDto memberEntryExitDto) {
+        Long memberId = memberEntryExitDto.getMemberId();
+        String type = memberEntryExitDto.getType();
+
+        if (type.equals("quit")) {
+            privateRoomService.broadcastQuitMemberList(roomId, memberId);
+        } else {
+            privateRoomService.broadcastJoinMemberList(roomId, memberId);
         }
     }
 
