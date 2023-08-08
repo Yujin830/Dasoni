@@ -10,8 +10,8 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class GuideService {
-    private final GuideRepo guideRepo;
+    private final GuideRepository guideRepository;
     public List<Guide> selectAll(){
-        return guideRepo.findAll();
+        return guideRepository.findAll();
     }
 }
