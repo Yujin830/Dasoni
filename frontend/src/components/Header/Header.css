@@ -13,6 +13,8 @@
 
 .header .logo {
   width: 8rem;
+  display: flex;
+  margin-right: auto;
 }
 
 .logo img {
@@ -28,82 +30,91 @@
 .header nav li {
   margin: 0 0.5rem;
 }
+
+.header button {
+  border: none;
+  background-color: #ffffff;
+  cursor: pointer;
+}
 /* ---------------------- */
+/* 메뉴필터 아이콘 */
 #filter-menu .material-symbols-outlined {
   color: #ff257e;
   border: none;
   background-color: transparent;
   cursor: pointer;
 }
-#filter-menu ul.show .material-symbols-outlined {
+/* 도움말 아이콘 */
+#filter-menu #help .material-symbols-outlined {
   color: black;
+  padding: 10px 10px;
 }
-
-#filter-menu ul.show .material-symbols-outlined:hover {
+#filter-menu #help .material-symbols-outlined:hover {
   color: #ec5e98;
 }
 
+/* 도움말 버튼 링크처럼 보이기 */
 #filter-menu li button {
   border: none;
-  background-color: #ffffff; /* 흰색 배경 */
-  padding: 8px 16px;
+  background-color: #ffffff;
+  padding: 8px 10px;
   cursor: pointer;
+  font-size: 14px;
 }
-
 #filter-menu li button:hover {
   color: #ec5e98; /* 마우스 호버 시 배경색 변경 */
 }
 
-.header nav #nav-bar ul {
+/* 메뉴박스 */
+#filter-menu ul {
   width: 8rem;
   border-radius: 0.5rem;
   background: #fff;
   background-color: #ffffff; /* 흰색 배경 */
   box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.25);
-  padding: 0.5rem 0.8rem;
+  padding: 0 0;
   position: absolute;
   right: 0;
-  /* bottom: -5rem; */
   display: none;
 }
-
-.header nav #nav-bar ul.show {
+#filter-menu ul.show {
   display: block;
   fill: #fff;
   stroke-width: 1px;
   stroke: #ec5e98;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.25));
+  border: 1px solid #ec5e98;
 }
 
-/* .header nav #nav-bar li {
-  width: 100%;
-  height: 50%;
-  list-style: none;
-  padding: 0.3rem 0;
-  cursor: pointer;
-} */
-
-/* .header nav #nav-bar li:hover {
-  color: #ec5e98;
-} */
+#filter-menu #help {
+  margin: 0 0;
+  display: flex;
+  justify-content: center;
+}
+#filter-menu #logout {
+  margin: 0 0;
+  display: flex;
+  justify-content: center;
+}
 
 #filter-menu li a {
-  text-decoration: none; /* 링크 텍스트의 밑줄 제거 */
-  color: black; /* 검은색 텍스트 색상 */
-  font-size: 14px; /* 폰트 크기 조정 (원하는 크기로 변경) */
-  padding: 8px 16px; /* 버튼과 동일한 패딩 적용 */
-  display: block; /* 전체 영역 클릭 가능하도록 block 속성 추가 */
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  padding: 8px 8px;
+  display: block;
 }
 
 #filter-menu li a:hover {
-  color: #ec5e98; /* 마우스 호버 시 배경색 변경 */
+  color: #ec5e98;
 }
 
-.header nav #nav-bar li:first-child {
-  border-bottom: 1px solid #d9d9d9;
+#filter-menu li:first-child {
+  border-bottom: 1px solid #ec5e98;
 }
-.header nav #nav-bar li:last-child {
-  border-top: 1px solid #d9d9d9;
+#filter-menu li:last-child {
+  border-top: 1px solid #ec5e98;
 }
 /* ---------------------------- */
 .header .material-symbols-outlined.filled {

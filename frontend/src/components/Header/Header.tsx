@@ -23,6 +23,7 @@ function Header({ onModalToggle }: HeaderProps) {
   };
   return (
     <header className="header">
+      <button className="material-symbols-outlined">double_arrow</button>
       <Link className="logo" to="/main">
         <img src={logo} alt="다소니 로고 이미지"></img>
       </Link>
@@ -32,26 +33,24 @@ function Header({ onModalToggle }: HeaderProps) {
             <span className="material-symbols-outlined filled">favorite</span>
             <span className="material-symbols-outlined filled">favorite</span>
           </li>
-
           <li>
             <BasicAvartar src="default_profile.png" />
           </li>
-
           <div id="filter-menu">
             <button className="material-symbols-outlined" onClick={handleToggleFilter}>
               menu
             </button>
             <ul className={isOpen ? 'show' : ''}>
-              <li>
+              <li id="help">
                 <button className="material-symbols-outlined" onClick={onModalToggle}>
-                  help
+                  help도움말
                 </button>
               </li>
-              <li>
-                <button onClick={handleLogout}>로그아웃</button>
-              </li>
-              <li>
+              <li id="mypage">
                 <Link to="/mypage">마이페이지</Link>
+              </li>
+              <li id="logout">
+                <button onClick={handleLogout}>로그아웃</button>
               </li>
             </ul>
           </div>
