@@ -8,32 +8,6 @@ import { modifyUserAsync } from '../../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
 import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
-const styles = {
-  button: {
-    width: '10rem',
-    height: '4rem',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '1.75rem',
-    fontStyle: 'normal',
-    fontWeight: '700',
-  },
-  input: {
-    width: '26rem',
-    height: '3rem',
-    flexShrink: '0',
-    borderRadius: '0.8rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-};
-
 interface ProfileModalProps {
   onClose: () => void;
 }
@@ -81,7 +55,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
   };
 
   return (
-    <div className="modal">
+    <div className="profile_modal">
       <div className="header">
         프로필 정보 추가
         <button className="pass-button" onClick={handleSkip}>
@@ -89,7 +63,9 @@ function ProfileModal({ onClose }: ProfileModalProps) {
         </button>
       </div>
       <div className="box">
-        <h3>이성에게 어필할 수 있는 나의 정보를 더 작성해주세요!</h3>
+        <h3>
+          이성에게 어필할 수 있는 <br className="mobile" /> 나의 정보를 더 작성해주세요!
+        </h3>
         <div className="inputbox">
           <div className="input nickname">
             {/* <label htmlFor="label nickname">닉네임</label> */}
