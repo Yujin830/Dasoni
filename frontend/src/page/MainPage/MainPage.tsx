@@ -45,6 +45,22 @@ function MainPage() {
     setIsOpen((prevState) => !prevState);
   };
 
+  // 필터 적용
+  const handleClickFilter = async (gender: string) => {
+    console.log(gender);
+
+    try {
+      const res = await axios.get(`/api/rooms/filter/${gender}`);
+      console.log(res);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // 검색창 입력값
   const [searchInput, setSearchInput] = useState('');
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,6 +85,7 @@ function MainPage() {
     }
   };
 
+  // 미팅방 전체 목록 불러오기
   const getWaitingRoomList = async () => {
     try {
       const res = await axios.get('/api/rooms');
@@ -123,8 +140,12 @@ function MainPage() {
               handleClick={handleToggleFilter}
             />
             <ul className={isOpen ? 'show' : ''}>
-              <li>남자만 입장 가능</li>
-              <li>여자만 입장 가능</li>
+              <li role="presentation" onClick={() => handleClickFilter('male')}>
+                남자만 입장 가능
+              </li>
+              <li role="presentation" onClick={() => handleClickFilter('female')}>
+                여자만 입장 가능
+              </li>
             </ul>
           </div>
           <div id="search-box">
