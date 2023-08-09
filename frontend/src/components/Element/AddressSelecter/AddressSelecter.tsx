@@ -110,7 +110,7 @@ function AddressSelecter({
   return (
     <div className="AddressSelecter">
       <span>사는 곳</span>
-      <div>
+      <div className="AddressContainer">
         <select id="sido" value={modifySido} onChange={handleSidoChange}>
           {sidoList.map((sido) => (
             <option key={sido.sidoId} value={sido.sidoCode}>
