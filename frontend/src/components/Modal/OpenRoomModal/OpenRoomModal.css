@@ -56,14 +56,14 @@
   margin: 2vh 0;
 }
 
-.h1 {
+/* .openroom-modal .box-content h2 {
   color: #898989;
   font-family: Inter;
-  /* font-size: 1.875rem; */
+  /* font-size: 1.875rem; 
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-}
+} */
 
 .megi {
   display: flex;
@@ -126,14 +126,34 @@
   color: red;
 }
 
+svg {
+  width: 15%;
+  margin-right: 1vh;
+}
+
 @media (max-width: 768px) {
   .openroom-modal {
     width: 60%;
   }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 426px) {
   .openroom-modal {
-    width: 60%;
+    width: 85%;
+    height: 50%;
+  }
+  .openroom-modal .box-content {
+    width: 90%;
+  }
+  .openroom-modal .box-content h2 {
+    font-size: 2.5vh;
+  }
+  .allowed,
+  .banned,
+  .rank-content p {
+    font-size: 2vh;
+  }
+  .openroom-modal .header {
+    font-size: 2.5vh;
   }
 }
