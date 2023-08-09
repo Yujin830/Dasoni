@@ -25,14 +25,11 @@ import signiel.heartsigniel.model.room.dto.StartRoomRequest;
 public class RoomController {
 
     private final PrivateRoomService privateRoomService;
-    private final MatchingRoomService matchingRoomService;
-    private final RatingService ratingService;
+
     private final SignalService signalService;
 
-    public RoomController(PrivateRoomService privateRoomService, MatchingRoomService matchingRoomService, RatingService ratingService, SignalService signalService) {
+    public RoomController(PrivateRoomService privateRoomService, SignalService signalService) {
         this.privateRoomService = privateRoomService;
-        this.matchingRoomService = matchingRoomService;
-        this.ratingService = ratingService;
         this.signalService = signalService;
     }
 
@@ -99,7 +96,7 @@ public class RoomController {
 
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Response> calculateMeetingResult(@PathVariable Long roomId){
-        Response response = ratingService.calculateTotalResult(roomId);
+        Response response = privateRoomService.endRoom(roomId);
         return ResponseEntity.ok(response);
     }
 

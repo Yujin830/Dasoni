@@ -19,13 +19,11 @@ import java.util.List;
 public class MatchingRoomService {
 
     private final RoomRepository roomRepository;
-    private final RatingService ratingService;
     private final LifeService lifeService;
     private final MemberRepository memberRepository;
 
-    public MatchingRoomService(RoomRepository roomRepository, RatingService ratingService, LifeService lifeService, MemberRepository memberRepository){
+    public MatchingRoomService(RoomRepository roomRepository, LifeService lifeService, MemberRepository memberRepository){
         this.roomRepository = roomRepository;
-        this.ratingService = ratingService;
         this.memberRepository = memberRepository;
         this.lifeService = lifeService;
     }
@@ -47,25 +45,6 @@ public class MatchingRoomService {
         room.setStartTime(LocalDateTime.now());
         useLifeAndIncreaseMeetingCount(room);
         roomRepository.save(room);
-    }
-
-    public Response endRoom(Long roomId){
-
-        Response response = ratingService.calculateTotalResult(roomId);
-        Room roomEntity = findRoomById(roomId);
-        deleteRoomEntity(roomEntity);
-
-        return response;
-    }
-
-    public void deleteRoomEntity(Room room){
-        roomRepository.delete(room);
-    }
-
-    public Room findRoomById(Long roomId){
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NotFoundRoomException("해당 방을 찾을 수 없습니다."));
-        return room;
     }
 
     public void useLifeAndIncreaseMeetingCount(Room room){

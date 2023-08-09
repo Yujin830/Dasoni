@@ -12,7 +12,7 @@ import signiel.heartsigniel.model.roommember.RoomMemberRepository;
 import signiel.heartsigniel.model.meeting.code.RatingCode;
 import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.RoomRepository;
-import signiel.heartsigniel.model.room.code.RoomCode;
+
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 
 import java.util.ArrayList;
@@ -46,11 +46,7 @@ public class RatingService {
 
         // 시그널 데이터들 레디스에서 추출
         List<SingleSignalRequest> singleSignalRequests = signalService.fetchAllSignalsForRoom(roomId);
-        System.out.println("나 이만큼이다" + singleSignalRequests.size());
-        for (SingleSignalRequest singleSignalRequest : singleSignalRequests){
-            System.out.println("보낸 사람 : " + singleSignalRequest.getSenderId());
-            System.out.println("받은 사람 : " + singleSignalRequest.getReceiverId());
-        }
+
         // 유저 순서
         int[] roomMemberSequence = makeRoomMemberSequence(roomMembers);
 
@@ -97,10 +93,15 @@ public class RatingService {
             if(mutuallySignaledList[memberIndex] != 0){
                 addMatchedMemberId(memberId, (long) signalOpponent);
             }
+            // 메기일 경우 변동 2배
+            if (roomMember.isSpecialUser()){
+                ratingChange *= 2;
+            }
             PersonalResult result = PersonalResult.of(roomMember, ratingChange, signalOpponent);
             personalResults.add(result);
         }
         TotalResultResponse totalResultResponse = TotalResultResponse.of(personalResults, roomId);
+        signalService.deleteAllSignalsForRoom(roomId);
         return Response.of(RatingCode.CALCULATION_SUCCESS, totalResultResponse);
     }
 
