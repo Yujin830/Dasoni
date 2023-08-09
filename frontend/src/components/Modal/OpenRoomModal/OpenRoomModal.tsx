@@ -22,38 +22,6 @@ interface OpenRoomModalProps {
   onClose: () => void;
 }
 
-const styles = {
-  button: {
-    width: '35%',
-    height: '100%',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '3vh',
-    fontStyle: 'normal',
-    fontWeight: '700',
-  },
-  input: {
-    width: '100%',
-    height: '20%',
-    flexShrink: '0',
-    borderRadius: '0.8rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    // margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-    marginleft: 'auto',
-  },
-  //   checkbox: {
-  //     width: '2.125rem',
-  //     height: '2.125rem',
-  //     flexshrink: '0',
-  //   },
-};
-
 function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   const [roomTitle, setOpenRoomTitle] = useState('');
   const [megiAcceptable, setOpenMegiAcceptable] = useState(false);
@@ -114,7 +82,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       <div className="box">
         <div className="box-content">
           <NoLabelInput
-            style={styles.input}
+            classes="box-title-content"
             type="text"
             value={roomTitle}
             handleChange={handleChangeRoomTitle}
@@ -235,7 +203,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
           {/* <div className="modal-background" /> */}
         </div>
         <div className="openroom-button">
-          <Button style={styles.button} content="개설하기" handleClick={OpenRoom} />
+          <Button classes="openroom-btn" content="개설하기" handleClick={OpenRoom} />
         </div>
       </div>
     </div>
