@@ -1,0 +1,13 @@
+#audio-controls {
+  display: flex;
+  align-items: center;
+}
+
+#audio-controls button {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: #ec5e98;
+  cursor: pointer;
+}
