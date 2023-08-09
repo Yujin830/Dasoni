@@ -127,9 +127,8 @@ function SignupPage() {
     };
     console.log(data);
     try {
-      const response = await dispatch(signupAsync(data)); // 회원가입 요청, 서버 응답 처리를 기다립니다.
+      await dispatch(signupAsync(data)); // 회원가입 요청, 서버 응답 처리를 기다립니다.
       console.log('회원가입 성공!');
-      console.log('회원 정보:', response.payload); // 회원가입 후 서버로부터 받은 응답 데이터를 출력합니다.
       navigate('/');
     } catch (error) {
       console.log('회원가입 실패:', error);
