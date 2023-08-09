@@ -66,6 +66,9 @@ const APPLICATION_SERVER_URL =
 // };
 
 function MainPage() {
+  // 미팅 대기방 리스트
+  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+
   //모달 띄우기
   const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
   const openRoomModalVisible = useSelector(
@@ -94,18 +97,23 @@ function MainPage() {
   };
 
   // 검색
-  const search = (searchInput: string) => {
+  const search = async (searchInput: string) => {
     if (searchInput === '') {
-      alert('검색어를 입력해주세요');
+      getWaitingRoomList();
       return;
     }
 
-    console.log(searchInput);
-    // TODO : 검색 API 로직 개발
+    try {
+      const res = await axios.get(`/api/rooms/search/${searchInput}`);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // 미팅 대기방 리스트
-  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
   const getWaitingRoomList = async () => {
     try {
       const res = await axios.get('/api/rooms');
