@@ -26,9 +26,10 @@ function MeetingPage() {
   const [guideMessage, setGuideMessage] = useState(
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
-  const [question, setQuestion] = useState('');
-  const [isShow, setIsShow] = useState(true);
-  const [isQuestionTime, setIsQuestionTime] = useState(false);
+  const [question, setQuestion] = useState(''); // 질문 저장
+  const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
+  const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
+  const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -48,6 +49,10 @@ function MeetingPage() {
       // TODO : 첫인상 투표 구독
 
       // TODO : 최종 투표 구독
+      client.subscribe(`/topic/room/${roomId}/signal`, (res: any) => {
+        console.log(res.body);
+        setSignalOpen(true);
+      });
     },
   });
 
@@ -101,6 +106,7 @@ function MeetingPage() {
               <UserVideo
                 streamManager={stream.streamManager}
                 nickname={stream.nickname}
+                signalOpen={false}
                 key={index}
               />
             ))}
@@ -111,6 +117,7 @@ function MeetingPage() {
               <UserVideo
                 streamManager={stream.streamManager}
                 nickname={stream.nickname}
+                signalOpen={signalOpen}
                 key={index}
               />
             ))}

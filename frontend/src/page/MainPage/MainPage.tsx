@@ -215,6 +215,7 @@ function MainPage() {
                   maleAvgRating={room.maleAvgRating}
                   femaleAvgRating={room.femaleAvgRating}
                   megiAcceptable={room.megiAcceptable}
+                  ratingLimit={room.ratingLimit}
                 />
               ))
             : '존재하는 방이 없습니다.'}

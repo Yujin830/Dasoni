@@ -14,6 +14,7 @@ import {
   setRoomTitle,
   setWaitingRoomId,
   setWaitingMemberList,
+  setRoomType,
 } from '../../../app/slices/waitingSlice';
 import convertScoreToName from '../../../utils/convertScoreToName';
 import { useAppSelector } from '../../../app/hooks';
@@ -59,6 +60,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     if (res.status === 200) {
       // 리덕스에 생성한 대기방 정보 저장
       dispatch(setWaitingRoomId(res.data.content.createdRoomId));
+      dispatch(setRoomType('private'));
       dispatch(setRoomTitle(data.title));
       dispatch(setMaster(false));
       dispatch(setRatingLimit(data.ratingLimit));

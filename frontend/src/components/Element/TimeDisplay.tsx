@@ -37,7 +37,7 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     }
 
     // 랜덤 주제 1번
-    else if (minutes === '08' && seconds === '00') {
+    else if (minutes === '00' && seconds === '30') {
       client?.send(`/app/room/${roomId}/questions`, {}, '0');
     }
 
@@ -47,19 +47,22 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     }
 
     // 랜덤 주제 2번
-    else if (minutes === '20' && seconds === '05') {
+    else if (minutes === '00' && seconds === '40') {
       client?.send(`/app/room/${roomId}/questions`, {}, '1');
     }
 
     // 랜덤 주제 3번
-    else if (minutes === '40' && seconds === '00') {
+    else if (minutes === '00' && seconds === '45') {
       client?.send(`/app/room/${roomId}/questions`, {}, '2');
     }
 
     // 가이드 - 최종 투표
-    else if (minutes === '50' && seconds === '00') {
+    else if (minutes === '00' && seconds === '50') {
       client?.send(`/app/room/${roomId}/guide`, {}, '50');
     }
+    // 시그널 메세지 send
+    else if (minutes === '00' && seconds === '55') client?.send(`/app/room/${roomId}/signal`);
+
     setCurrentTime(`${minutes}:${seconds}`);
   }
 
