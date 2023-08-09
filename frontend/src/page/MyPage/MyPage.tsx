@@ -7,6 +7,10 @@ import MyProfile from '../../components/MyPage/MyProfile';
 import MyProfileModify from '../../components/MyPage/Modify/MyProfileModify';
 import MyProfileChangePw from '../../components/MyPage/ChangePassword/MyProfileChangePw';
 import { useAppSelector } from '../../app/hooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
+import { setHelpModalVisible } from '../../app/slices/waitingSlice';
+import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 
 type SideBarProps = {
   points: number; // 현재 유저의 포인트
@@ -66,11 +70,11 @@ function SideBar({ percent, match, points, setType }: SideBarProps) {
 
 function MyPage() {
   const [type, setType] = useState('read');
+  const dispatch = useDispatch();
+  const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
 
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleModalToggle = () => {
-    setModalVisible(!modalVisible);
+  const handleHelpModalToggle = () => {
+    dispatch(setHelpModalVisible(!helpModalVisible));
   };
 
   let content = null;
@@ -79,11 +83,13 @@ function MyPage() {
   else if (type === 'changePw') content = <MyProfileChangePw setType={setType} />;
   return (
     <div className="mypage">
-      <Header onModalToggle={handleModalToggle} />
+      <Header onModalToggle={handleHelpModalToggle} />
       <main>
         <SideBar percent={75} points={2750} match={109} setType={setType} />
         {content}
       </main>
+      {/* HelpModal 컴포넌트를 렌더링합니다. */}
+      {helpModalVisible && <HelpModal onClose={handleHelpModalToggle} />}
     </div>
   );
 }
