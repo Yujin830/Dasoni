@@ -13,4 +13,6 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(value = "SELECT DISTINCT * FROM question ORDER BY RAND() LIMIT 3", nativeQuery = true)
     List<Question> randomQuestion();
+
+
 }

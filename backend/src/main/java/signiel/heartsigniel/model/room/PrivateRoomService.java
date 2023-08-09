@@ -18,6 +18,7 @@ import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
+import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.roommember.RoomMemberRepository;
 import signiel.heartsigniel.model.roommember.RoomMemberService;
 import signiel.heartsigniel.model.roommember.RoomMember;
