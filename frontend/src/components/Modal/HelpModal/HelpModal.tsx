@@ -12,16 +12,20 @@ function HelpModal({ onClose }: HelpModalProps) {
       <div className="header">
         도움말
         <div className="close-button">
-          <button onClick={onClose}>Close</button>
+          <button onClick={onClose}>X</button>
         </div>
       </div>
       <div className="box">
-        <h1>1. 메기 입장하기</h1>
+        <h2>1. 메기 입장하기</h2>
         <div className="explain">
-          메기는 느슨한 미팅 씬에 긴장을 주는 플레이어입니다. 메기는 미팅 시작 20분 후부터 입장이
-          가능합니다. 늦게 참여한만큼 불리하기도 하겠지만 모두의 관심과 이목을 한 번에 받을 수
-          있으며 메기로 참여해 시그널을 받을 경우 더 높은 가중치의 레이팅 점수를 받게 됩니다! 이
-          점을 잘 이용하여 메기로 이성들의 시그널을 받으세요!
+          메기는 느슨한 미팅 씬에 긴장을 주는 플레이어입니다. 메기는 미팅 20분 후부터 입장이
+          가능합니다. <br /> 늦게 참여한만큼 불리하기도 하겠지만 모두의 관심과 이목을 한 번에 받을
+          수 있으며 <br /> 메기로 참여해 시그널을 받을 경우 더 높은 레이팅 점수를 받게 됩니다!{' '}
+          <br /> 이 점을 잘 이용하여 메기로 이성들의 시그널을 받으세요!
+        </div>
+        <div className="mobile_explain">
+          메기는 미팅 20분 후부터 입장합니다. <br />
+          메기로 참여해 시그널을 받을 경우 <br />더 높은 레이팅 점수를 받게 됩니다.
         </div>
         <div className="content">메기 입장 보여주는 GIF</div>
         <svg

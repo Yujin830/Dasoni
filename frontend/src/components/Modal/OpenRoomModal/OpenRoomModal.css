@@ -3,8 +3,8 @@
   top: 50%; /* 화면 세로 중앙에 위치 */
   left: 50%; /* 화면 가로 중앙에 위치 */
   transform: translate(-50%, -50%); /* 세로와 가로로 50%만큼 이동하여 정확한 중앙 정렬 */
-  width: 48.8125rem;
-  height: 34.3125rem;
+  width: 40%;
+  height: 55%;
   flex-shrink: 0;
   border-radius: 1rem;
   background: #fff;
@@ -16,7 +16,7 @@
 
 .openroom-modal .header {
   width: 100%; /* 헤더의 너비를 100%로 설정하여 부모 요소에 맞춤 */
-  height: 5.4375rem;
+  height: 12%;
   flex-shrink: 0;
   border-radius: 1rem 1rem 0rem 0rem;
   background: #ffd8e4;
@@ -24,12 +24,12 @@
   flex-direction: row;
   justify-content: start; /* 가로 가운데 정렬 */
   align-items: center; /* 세로 가운데 정렬 */
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   position: relative;
   color: #232323;
   text-align: center;
   font-family: Roboto;
-  font-size: 2rem;
+  font-size: 3vh;
   font-style: normal;
   font-weight: 500;
   line-height: 1.25rem; /* 62.5% */
@@ -40,22 +40,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  height: 100%;
+  justify-content: center;
+  height: 90%;
+  width: 100%;
   position: relative;
 }
 
 .openroom-modal .box-content {
   display: flex;
+  width: 80%;
+  height: 85%;
   flex-direction: column;
   justify-content: space-between;
   /* align-items: center; */
+  margin: 2vh 0;
 }
 
 .h1 {
   color: #898989;
   font-family: Inter;
-  font-size: 1.875rem;
+  /* font-size: 1.875rem; */
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -66,14 +70,19 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  margin-top: 30px;
+  margin-top: 2vh;
 }
 
 .megi-allowed label,
 .megi-banned label {
   display: flex;
   flex-direction: row;
-  width: 15rem;
+  width: 100%;
+}
+
+.allowed,
+.banned {
+  font-size: 2.5vh;
 }
 
 /* 새로운 체크박스 스타일 */
@@ -84,17 +93,47 @@
 }
 
 .rank-content {
+  width: 100%;
+  height: 20%;
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  justify-content: flex-start;
+  margin-top: 2vh;
 }
 .select-rank {
-  width: 10rem;
-  height: 2.375rem;
-  margin-right: 20px;
-  margin-left: 30px;
+  width: 25%;
+  height: 5vh;
+  margin-right: 2vh;
+  margin-left: 1vh;
 }
 
 .openroom-button {
-  margin-bottom: 30px;
+  width: 100%;
+  height: 15%;
+  margin-bottom: 2vh;
+}
+
+.close-button {
+  display: flex;
+  margin-left: auto;
+}
+.close-button button {
+  font-size: 2.5vh;
+  font-weight: 700;
+  background-color: #ffd8e4;
+}
+.close-button button:hover {
+  color: red;
+}
+
+@media (max-width: 768px) {
+  .openroom-modal {
+    width: 60%;
+  }
+}
+
+@media (max-width: 425px) {
+  .openroom-modal {
+    width: 60%;
+  }
 }

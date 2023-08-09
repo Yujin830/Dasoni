@@ -9,7 +9,7 @@
   gap: 1rem 2rem;
   justify-content: space-between;
   justify-items: center;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 #main #video-container {
   display: flex;
@@ -212,18 +212,31 @@
   #main .room-container {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto auto auto;
     gap: 1rem;
     justify-items: center;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
 }
 @media (max-width: 426px) {
+  #main main {
+    width: 100%;
+    margin: 0;
+  }
   #main #search-box {
-    width: 75%;
+    width: 60%;
+    margin-right: 1vh;
+    margin-left: 1.5vh;
   }
   #main #main-top {
     justify-content: center;
+  }
+  #main #main-top .refresh {
+    margin-right: 1.5vh;
+    margin-left: 1vh;
+  }
+  .btn span.content-box .material-symbols-outlined {
+    font-size: 2.5vh;
   }
 }
 @media (max-width: 390px) {
