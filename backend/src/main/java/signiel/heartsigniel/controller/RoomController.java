@@ -59,9 +59,11 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<Response> getRoomList() {
+    public ResponseEntity<Response> getRoomList(@RequestParam(defaultValue = "0") int page)
 
-        Pageable pageable = PageRequest.of(0, 6);
+    {
+
+        Pageable pageable = PageRequest.of(page, 6);
         Page<PrivateRoomList> rooms = privateRoomService.getPrivateRooms(pageable);
         Response response = Response.of(CommonCode.GOOD_REQUEST, rooms);
 
