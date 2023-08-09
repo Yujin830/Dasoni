@@ -23,7 +23,7 @@ function FiledLabelInput({
 }: FiledLabelProps) {
   return (
     <div className="input-box">
-      <label className="label filled-bg">{label}</label>
+      <label className="filled-bg">{label}</label>
       <input
         className={`input ${classes}`}
         style={style}

@@ -1,4 +1,5 @@
 .rank-avartar {
+  height: 80%;
   border-radius: 50%;
   position: relative;
 }
@@ -11,6 +12,6 @@
 .rank-avartar .rank {
   width: 40%;
   position: absolute;
-  bottom: -30%;
+  /* bottom: -30%; */
   right: 5%;
 }
