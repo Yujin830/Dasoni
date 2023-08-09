@@ -15,6 +15,8 @@ import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
+import SkeletonElement from '../../components/SkeletonElement/SkeletonElement';
+import SkeletonMainPage from './SkeletonMainPage';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
@@ -22,7 +24,6 @@ const APPLICATION_SERVER_URL =
 
 function MainPage() {
   // 미팅 대기방 리스트
-  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
 
   //모달 띄우기
   const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
@@ -85,7 +86,9 @@ function MainPage() {
     }
   };
 
-  // 미팅방 전체 목록 불러오기
+  // 미팅 대기방 리스트
+  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
   const getWaitingRoomList = async () => {
     try {
       const res = await axios.get('/api/rooms');
@@ -101,11 +104,47 @@ function MainPage() {
     getWaitingRoomList();
   }, []);
 
-  // 방 만들기 모달 open
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const createRoom = () => {
-    console.log('방 만들기');
+  // const createRoom = () => {
+  //   console.log('방 만들기');
+  // };
+
+  // 방목록 페이지 넘기기
+  const nextRoomList = async () => {
+    try {
+      const nextPage = currentPage + 1; // 현재 페이지에서 1 증가
+      const res = await axios.get(`/api/rooms?page=${nextPage}`);
+      console.log('다음');
+      if (res.status === 200) {
+        const nextPageData = res.data.content.content;
+
+        if (nextPageData.length > 0) {
+          setCurrentPage(nextPage);
+          setWaitingRoomList(nextPageData);
+        } else {
+          console.log('다음 페이지에 방이 없습니다.');
+          // 다음 페이지에 방이 없을 경우 처리
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const prevRoomList = async () => {
+    try {
+      const prevPage = Math.max(currentPage - 1, 0); // 현재 페이지에서 1 감소, 최소 0 이상
+      const res = await axios.get(`/api/rooms?page=${prevPage}`);
+      console.log('이전');
+      if (res.status === 200) {
+        setCurrentPage(prevPage);
+        console.log('현재페이지:', prevPage, 'content:', res.data.content);
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 빠른 매칭 모달 open
@@ -179,6 +218,7 @@ function MainPage() {
                 />
               ))
             : '존재하는 방이 없습니다.'}
+          {!waitingRoomList && <SkeletonMainPage />}
         </div>
         <div id="room-footer">
           <div id="pagenationBtn-box">
@@ -186,14 +226,14 @@ function MainPage() {
               classes="page-btn"
               content="이전"
               iconPosition="left"
-              handleClick={createRoom}
+              handleClick={prevRoomList}
               icon="chevron_left"
             />
             <IconButton
               classes="page-btn"
               content="다음"
               iconPosition="right"
-              handleClick={createRoom}
+              handleClick={nextRoomList}
               icon="chevron_right"
             />
           </div>
