@@ -18,7 +18,6 @@
 }
 
 .meeting-signal span:hover {
-  /* transform: rotateY(180deg); */
   transform: scale(1.5);
 }
 

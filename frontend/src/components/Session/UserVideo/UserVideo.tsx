@@ -4,6 +4,7 @@ import { StreamManager } from 'openvidu-browser';
 import './UserVideo.css';
 import { useStream } from '../../../hooks/useStrem';
 import { useAppSelector } from '../../../app/hooks';
+import axios from 'axios';
 
 interface UserVideoProps {
   streamManager: StreamManager;
@@ -24,19 +25,28 @@ function UserVideo({ streamManager, nickname, signalOpen }: UserVideoProps) {
       confirm('한 번 선택하면 취소할 수 없습니다.\n이분에게 마음을 전하시겠습니까?')
     ) {
       const streamData = JSON.parse(streamManager.stream.connection.data);
-      const data = {
+      const signalData = {
         type: roomType,
-        roomId: roomId,
+        signalSequence: 2,
         senderId: memberId,
         receiverId: streamData.memberId,
       };
 
       console.log('시그널 전송');
-      console.log(data);
+      console.log(signalData);
 
-      // TODO : 서버로 시그널 데이터 전송
+      // 서버로 시그널 데이터 전송
+      try {
+        const res = await axios.post(`/api/rooms/${roomId}/signal`, signalData);
 
-      setIsSendSignal(true);
+        if (res.status === 200) {
+          alert('당신의 마음이 성공적으로 전달되었습니다.\n그 마음이 이어지길 응원합니다.');
+          setIsSendSignal(true);
+        }
+      } catch (err) {
+        alert('다시 시도해주세요.');
+        console.error(err);
+      }
     }
   };
 
