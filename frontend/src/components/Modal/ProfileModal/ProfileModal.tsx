@@ -92,17 +92,28 @@ function ProfileModal({ onClose }: ProfileModalProps) {
         <h3>이성에게 어필할 수 있는 나의 정보를 더 작성해주세요!</h3>
         <div className="inputbox">
           <div className="input nickname">
-            <label htmlFor="label nickname">닉네임</label>
+            {/* <label htmlFor="label nickname">닉네임</label> */}
             <Input
-              style={styles.input}
+              label="닉네임"
+              labelClass="profile-label"
+              classes="profile-input"
               type="text"
               value={nickname}
+              placeholer="닉네임을 입력해주세요"
               handleChange={handleChangeNickname}
             />
           </div>
           <div className="input job">
-            <label htmlFor="label job">직업</label>
-            <Input style={styles.input} type="text" value={job} handleChange={handleChangeJob} />
+            {/* <label htmlFor="label job">직업</label> */}
+            <Input
+              label="직업"
+              labelClass="profile-label"
+              classes="profile-input"
+              type="text"
+              value={job}
+              handleChange={handleChangeJob}
+              placeholer="직업을 입력해주세요"
+            />
           </div>
 
           <div className="input address">
@@ -111,11 +122,11 @@ function ProfileModal({ onClose }: ProfileModalProps) {
               modifyGugun={modifyGugun}
               setModifySido={setModifySido}
               setModifyGugun={setModifyGugun}
-            />{' '}
+            />
           </div>
         </div>
         <div className="complete-button">
-          <Button style={styles.button} content="완료" handleClick={AddProfile} />
+          <Button classes="profile-complete-btn" content="완료" handleClick={AddProfile} />
         </div>
       </div>
     </div>
