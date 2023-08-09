@@ -1,6 +1,10 @@
+#main {
+  justify-content: ceneter;
+  align-items: center;
+}
 #main main {
   margin: 2vh;
-  width: 90%;
+  /* width: 100%; */
 }
 
 #main .room-container {
