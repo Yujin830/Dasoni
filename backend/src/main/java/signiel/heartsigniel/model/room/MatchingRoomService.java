@@ -5,8 +5,7 @@ import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
-import signiel.heartsigniel.model.rating.RatingService;
-import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
+import signiel.heartsigniel.model.meeting.RatingService;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 import signiel.heartsigniel.model.roommember.RoomMember;
 
@@ -50,10 +49,10 @@ public class MatchingRoomService {
         roomRepository.save(room);
     }
 
-    public Response endRoom(TotalResultRequest totalResultRequest){
+    public Response endRoom(Long roomId){
 
-        Response response = ratingService.calculateTotalResult(totalResultRequest);
-        Room roomEntity = findRoomById(totalResultRequest.getRoomId());
+        Response response = ratingService.calculateTotalResult(roomId);
+        Room roomEntity = findRoomById(roomId);
         deleteRoomEntity(roomEntity);
 
         return response;
