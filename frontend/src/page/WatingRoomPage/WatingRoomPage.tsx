@@ -101,7 +101,6 @@ function WaitingRoomPage() {
 
   return (
     <div id="waiting-page">
-      <Header onModalToggle={handleModalToggle} />
       <main id="waiting-room-box">
         <div id="waiting-room-top">
           <div className="title">
