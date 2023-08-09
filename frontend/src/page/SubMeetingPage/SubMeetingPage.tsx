@@ -35,6 +35,7 @@ function SubMeetingPage() {
             {publisher &&
               me.map((stream, index) => (
                 <UserVideo
+                  signalOpen={false}
                   key={index}
                   nickname={stream.nickname}
                   streamManager={stream.streamManager}
@@ -45,6 +46,7 @@ function SubMeetingPage() {
             {publisher &&
               other.map((stream, index) => (
                 <UserVideo
+                  signalOpen={false}
                   key={index}
                   nickname={stream.nickname}
                   streamManager={stream.streamManager}

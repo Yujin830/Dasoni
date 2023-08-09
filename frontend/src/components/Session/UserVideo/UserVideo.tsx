@@ -36,7 +36,7 @@ function UserVideo({ streamManager, nickname, signalOpen }: UserVideoProps) {
 
       // 서버로 시그널 데이터 전송
       try {
-        const res = await axios.post(`/api/rooms/${roomId}/signal`, signalData);
+        const res = await axios.post(`/api/rooms/${roomId}/signals`, signalData);
 
         if (res.status === 200) {
           alert('당신의 마음이 성공적으로 전달되었습니다.\n그 마음이 이어지길 응원합니다.');

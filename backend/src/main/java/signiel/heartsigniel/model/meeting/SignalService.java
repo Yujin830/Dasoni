@@ -25,7 +25,7 @@ public class SignalService {
 
     // 해당 방의 모든 시그널 조회
     public List<SingleSignalRequest> fetchAllSignalsForRoom(Long roomId){
-        return redisTemplate.opsForList().range("room:" + roomId + "signal", 0, -1);
+        return redisTemplate.opsForList().range("room:" + roomId + ":signal", 0, -1);
     }
 
     // 해당 방의 모든 시그널 삭제
