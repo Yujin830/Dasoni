@@ -20,51 +20,6 @@ import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
-// const styles = {
-//   iconBtn: {
-//     width: '5rem',
-//     height: '2.5rem',
-//     borderRadius: '6.25rem',
-//     background: 'rgba(238, 114, 165, 0.50)',
-//   },
-//   searchBar: {
-//     width: '16rem',
-//     height: '2.5rem',
-//     borderRadius: '1.5rem',
-//     background: '#FFE8EF',
-//     color: '#555',
-//     fontSize: '0.8rem',
-//     border: 'none',
-//     paddingLeft: '1rem',
-//   },
-//   createRoomBtn: {
-//     width: '8rem',
-//     height: '3rem',
-//     borderRadius: '0.5rem',
-//     background: '#ECC835',
-//     color: '#fff',
-//     fontSize: '1.2rem',
-//     fontWeight: '600',
-//   },
-//   fastMatchBtn: {
-//     width: '8rem',
-//     height: '3rem',
-//     borderRadius: '0.5rem',
-//     background: '#EC5E98',
-//     color: '#fff',
-//     fontSize: '1.2rem',
-//     fontWeight: '600',
-//   },
-//   pagenationBtn: {
-//     width: '5.5rem',
-//     height: '2.5rem',
-//     borderRadius: '6.25rem',
-//     background: '#FFE8EF',
-//     color: '#555',
-//     fontSize: '1rem',
-//   },
-// };
-
 function MainPage() {
   // 미팅 대기방 리스트
   const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
