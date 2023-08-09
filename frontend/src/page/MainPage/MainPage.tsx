@@ -20,52 +20,10 @@ import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
-// const styles = {
-//   iconBtn: {
-//     width: '5rem',
-//     height: '2.5rem',
-//     borderRadius: '6.25rem',
-//     background: 'rgba(238, 114, 165, 0.50)',
-//   },
-//   searchBar: {
-//     width: '16rem',
-//     height: '2.5rem',
-//     borderRadius: '1.5rem',
-//     background: '#FFE8EF',
-//     color: '#555',
-//     fontSize: '0.8rem',
-//     border: 'none',
-//     paddingLeft: '1rem',
-//   },
-//   createRoomBtn: {
-//     width: '8rem',
-//     height: '3rem',
-//     borderRadius: '0.5rem',
-//     background: '#ECC835',
-//     color: '#fff',
-//     fontSize: '1.2rem',
-//     fontWeight: '600',
-//   },
-//   fastMatchBtn: {
-//     width: '8rem',
-//     height: '3rem',
-//     borderRadius: '0.5rem',
-//     background: '#EC5E98',
-//     color: '#fff',
-//     fontSize: '1.2rem',
-//     fontWeight: '600',
-//   },
-//   pagenationBtn: {
-//     width: '5.5rem',
-//     height: '2.5rem',
-//     borderRadius: '6.25rem',
-//     background: '#FFE8EF',
-//     color: '#555',
-//     fontSize: '1rem',
-//   },
-// };
-
 function MainPage() {
+  // 미팅 대기방 리스트
+  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+
   //모달 띄우기
   const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
   const openRoomModalVisible = useSelector(
@@ -87,6 +45,22 @@ function MainPage() {
     setIsOpen((prevState) => !prevState);
   };
 
+  // 필터 적용
+  const handleClickFilter = async (gender: string) => {
+    console.log(gender);
+
+    try {
+      const res = await axios.get(`/api/rooms/filter/${gender}`);
+      console.log(res);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // 검색창 입력값
   const [searchInput, setSearchInput] = useState('');
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,18 +68,24 @@ function MainPage() {
   };
 
   // 검색
-  const search = (searchInput: string) => {
+  const search = async (searchInput: string) => {
     if (searchInput === '') {
-      alert('검색어를 입력해주세요');
+      getWaitingRoomList();
       return;
     }
 
-    console.log(searchInput);
-    // TODO : 검색 API 로직 개발
+    try {
+      const res = await axios.get(`/api/rooms/search/${searchInput}`);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // 미팅 대기방 리스트
-  const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+  // 미팅방 전체 목록 불러오기
   const getWaitingRoomList = async () => {
     try {
       const res = await axios.get('/api/rooms');
@@ -160,8 +140,12 @@ function MainPage() {
               handleClick={handleToggleFilter}
             />
             <ul className={isOpen ? 'show' : ''}>
-              <li>남자만 입장 가능</li>
-              <li>여자만 입장 가능</li>
+              <li role="presentation" onClick={() => handleClickFilter('male')}>
+                남자만 입장 가능
+              </li>
+              <li role="presentation" onClick={() => handleClickFilter('female')}>
+                여자만 입장 가능
+              </li>
             </ul>
           </div>
           <div id="search-box">
