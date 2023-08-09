@@ -51,7 +51,11 @@ export const useOpenvidu = (
     // 스트림 삭제 이벤트 구독
     // 스트림 삭제시 subscriber 삭제 >> 세션 참여자가 세션에 미디어 게시 멈출 때 발생
     session.on('streamDestroyed', (event) => {
-      deleteSubscriber(event.stream.streamManager);
+      event.preventDefault();
+
+      const data = JSON.parse(event.stream.connection.data);
+      console.log('data', data);
+      setSubscribers((prev) => prev.filter((it) => it.memberId !== data.memberId));
     });
 
     // 에러 발생시 이벤트 발생
@@ -116,7 +120,7 @@ export const useOpenvidu = (
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => leaveSession());
-
+    console.log('나가기');
     return () => {
       window.removeEventListener('beforeunload', () => leaveSession());
     };
