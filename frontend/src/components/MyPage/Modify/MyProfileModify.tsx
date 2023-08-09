@@ -70,34 +70,35 @@ function MyProfileModify({ setType }: any) {
         님의 개인정보
       </p>
       <div className="modify-form">
-        <img src={profileImageSrc} alt="프로필 사진" />
-        <BasicInput
-          classes="info-input"
-          label="프로필"
-          type="file"
-          // value={String(modifyProfileSrc)}
-          handleChange={handleProfileSrcChange}
-        />
-        <BasicInput
-          classes="info-input"
-          label="닉네임"
-          type="text"
-          value={String(modifyNickname)}
-          handleChange={handleBirthChange}
-        />
-        <AddressSelecter
-          modifySido={modifySido}
-          modifyGugun={modifyGugun}
-          setModifySido={setModifySido}
-          setModifyGugun={setModifyGugun}
-        />
-        <BasicInput
-          classes="info-input"
-          label="직업"
-          type="text"
-          value={String(modifyJob)}
-          handleChange={handleJobChange}
-        />
+        <div className="modiy_container">
+          <BasicInput
+            classes="info-input"
+            label="프로필"
+            type="file"
+            // value={String(modifyProfileSrc)}
+            handleChange={handleProfileSrcChange}
+          />
+          <BasicInput
+            classes="info-input"
+            label="닉네임"
+            type="text"
+            value={String(modifyNickname)}
+            handleChange={handleBirthChange}
+          />
+          <AddressSelecter
+            modifySido={modifySido}
+            modifyGugun={modifyGugun}
+            setModifySido={setModifySido}
+            setModifyGugun={setModifyGugun}
+          />
+          <BasicInput
+            classes="info-input"
+            label="직업"
+            type="text"
+            value={String(modifyJob)}
+            handleChange={handleJobChange}
+          />
+        </div>
       </div>
       <footer>
         <a className="btn modify" href="/" onClick={modifyUserProfile}>

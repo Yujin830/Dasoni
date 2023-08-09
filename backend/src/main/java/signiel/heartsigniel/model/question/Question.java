@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Data
+@ToString
 @Entity(name="question")
 public class Question {
     @Id

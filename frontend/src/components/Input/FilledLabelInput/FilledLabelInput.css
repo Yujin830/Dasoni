@@ -5,7 +5,17 @@
   color: #232323;
   text-align: center;
   font-weight: 500;
+  font-size: 2.5vh;
   border-radius: 0.6rem;
   background: #d9d9d9;
-  padding: 0.8rem 2.5rem;
+  /* padding: 0.8rem 2.5rem; */
+  width: 30%;
+  height: 5vh;
+  margin-right: 0;
+}
+
+@media (max-width: 1360px) {
+  .filled-bg {
+    display: none;
+  }
 }

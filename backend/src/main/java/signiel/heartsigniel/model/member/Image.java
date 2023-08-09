@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.file;
+package signiel.heartsigniel.model.member;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
