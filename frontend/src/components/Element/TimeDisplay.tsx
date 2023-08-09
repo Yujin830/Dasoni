@@ -31,12 +31,6 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     // console.log(timeInSeconds);
 
     // 웹 소켓 메세지 sending
-    sendingMessage(minutes, seconds);
-
-    setCurrentTime(`${minutes}:${seconds}`);
-  }
-
-  function sendingMessage(minutes: string, seconds: string) {
     // 가이드 - 첫인상 투표
     if (minutes === '05' && seconds === '00') {
       client?.send(`/app/room/${roomId}/guide`, {}, '5');
@@ -68,6 +62,8 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     }
     // 시그널 메세지 send
     else if (minutes === '00' && seconds === '55') client?.send(`/app/room/${roomId}/signal`);
+
+    setCurrentTime(`${minutes}:${seconds}`);
   }
 
   return (
