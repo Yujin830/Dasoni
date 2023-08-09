@@ -120,12 +120,17 @@ public class WebSocketController {
      * @param roomId : 방 식별용
      * @param whisperMessage : receiverId, gender, content로 구성
      */
-    @MessageMapping("room/{roomId}/whisper")
-    public void whisperChatting(@DestinationVariable Long roomId, @Payload WhisperMessage whisperMessage) {
-        log.info("Whisper Complete");
-        whisperMessage.setStatus("OK");
-        operations.convertAndSendToUser(whisperMessage.getReceiverId(), "/queue/room./" + roomId + "/whisper", whisperMessage);
-    }
+        @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
+            public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
+            log.info("Whisper Complete");
+            log.info(whisperMessage.toString());
+            Long memId = Long.valueOf(whisperMessage.getMemberId());
+            whisperMessage.setStatus("OK");
+            log.info("detination : " + receiveMemberId);
+            log.info("receive" + String.valueOf(whisperMessage.getMemberId()));
+            log.info(whisperMessage.getReceiverId());
+            operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
+        }
 
 
     /**
