@@ -14,9 +14,11 @@ import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
 // BGM
 import song from '../../assets/music/lobby.mp3';
+import AudioController from '../../components/AudioController/AudioController';
 
 function WaitingRoomPage() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
+
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const { gender } = useAppSelector((state) => state.user);
   const [memberList, setMemberList] = useState<WaitingMember[]>(
@@ -99,16 +101,8 @@ function WaitingRoomPage() {
     setMuted((prevMuted) => !prevMuted);
   };
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-      audioRef.current.muted = muted;
-    }
-  }, [volume, muted]);
-
   return (
     <div id="waiting-page">
-      <Header onModalToggle={handleModalToggle} />
       <main id="waiting-room-box">
         <div id="waiting-room-top">
           <div className="title">
@@ -122,17 +116,13 @@ function WaitingRoomPage() {
               {convertScoreToName(waitingRoomInfo.ratingLimit ? waitingRoomInfo.ratingLimit : 0)}
             </span>
           </div>
-          <div id="audio-controls">
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-            />
-            <button onClick={handleMuteToggle}>{muted ? '음소거해제' : '음소거'}</button>
-          </div>
+          <AudioController
+            volume={volume}
+            muted={muted}
+            songName="lobby"
+            handleMuteToggle={handleMuteToggle}
+            handleVolumeChange={handleVolumeChange}
+          />
         </div>
         <div id="waiting-room-body">
           <div id="member-list-box">
@@ -168,8 +158,6 @@ function WaitingRoomPage() {
           <FilledButton content="나가기" classes="btn exit-btn" handleClick={handleExitBtn} />
         </div>
       </main>
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <audio ref={audioRef} src={song} loop autoPlay={true} />
     </div>
   );
 }

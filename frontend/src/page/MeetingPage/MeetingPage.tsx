@@ -9,11 +9,11 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import TimeDisplay from '../../components/Element/TimeDisplay';
 import Guide from '../../components/MeetingPage/Guide/Guide';
 import Question from '../../components/MeetingPage/Question/Question';
-import song from '../../assets/music/meeting.mp3';
 import ChatRoom from '../../components/ChatRoom/ChatRoom';
+import AudioController from '../../components/AudioController/AudioController';
+import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 
 function MeetingPage() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { roomId } = useParams();
   const { memberId, nickname, gender } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
@@ -29,10 +29,6 @@ function MeetingPage() {
   const [question, setQuestion] = useState('');
   const [isShow, setIsShow] = useState(true);
   const [isQuestionTime, setIsQuestionTime] = useState(false);
-
-  // Volume and Mute Controls
-  const [volume, setVolume] = useState(1);
-  const [muted, setMuted] = useState(false);
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -55,6 +51,10 @@ function MeetingPage() {
     },
   });
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Volume and Mute Controls
+  const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
@@ -120,21 +120,16 @@ function MeetingPage() {
           onChangeMicStatus={onChangeMicStatus}
         />
       </div>
-      <div id="audio-controls">
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
+      <div>
+        <AudioController
+          volume={volume}
+          muted={muted}
+          songName="meeting"
+          handleMuteToggle={handleMuteToggle}
+          handleVolumeChange={handleVolumeChange}
         />
-        <button onClick={handleMuteToggle}>{muted ? 'Unmute' : 'Mute'}</button>
-        <ChatRoom />
+        <WhisperChatRoom diffGenderMemberList={diffGenderMemberList} />
       </div>
-
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <audio ref={audioRef} src={song} loop autoPlay={true} />
     </div>
   );
 }

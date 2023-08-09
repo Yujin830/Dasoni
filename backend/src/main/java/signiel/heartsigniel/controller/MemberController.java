@@ -11,7 +11,7 @@ import signiel.heartsigniel.model.member.dto.ImageSaveDto;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
-import signiel.heartsigniel.model.rating.RatingService;
+import signiel.heartsigniel.model.meeting.RatingService;
 
 import java.util.List;
 
