@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useOpenvidu } from '../../hooks/useOpenvidu';
 import { useParams } from 'react-router';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
@@ -9,6 +9,8 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import TimeDisplay from '../../components/Element/TimeDisplay';
 import Guide from '../../components/MeetingPage/Guide/Guide';
 import Question from '../../components/MeetingPage/Question/Question';
+import ChatRoom from '../../components/ChatRoom/ChatRoom';
+import AudioController from '../../components/AudioController/AudioController';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -19,20 +21,18 @@ function MeetingPage() {
     roomId !== undefined ? roomId : '1',
     gender !== undefined ? gender : '',
   );
-  console.log(publisher);
-  console.log(streamList);
 
   const [guideMessage, setGuideMessage] = useState(
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
-  const [question, setQuestion] = useState([]);
+  const [question, setQuestion] = useState('');
   const [isShow, setIsShow] = useState(true);
   const [isQuestionTime, setIsQuestionTime] = useState(false);
+
   const client = useWebSocket({
     subscribe: (client) => {
       // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
-        console.log(res.body);
         setGuideMessage(res.body);
         setIsShow(true);
         setIsQuestionTime(false);
@@ -40,11 +40,9 @@ function MeetingPage() {
 
       // 질문 구독
       client.subscribe(`/topic/room/${roomId}/questions`, (res: any) => {
-        console.log(res.body);
-        setQuestion(res.body[0]);
+        setQuestion(res.body);
         setIsQuestionTime(true);
       });
-      client.send(`/app/room/${roomId}/questions`);
 
       // TODO : 첫인상 투표 구독
 
@@ -52,7 +50,17 @@ function MeetingPage() {
     },
   });
 
-  // guide 사라지게 하기
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Volume and Mute Controls
+  const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      audioRef.current.muted = muted;
+    }
+  }, [volume, muted]);
+
   useEffect(() => {
     if (isShow) {
       setTimeout(() => {
@@ -61,23 +69,31 @@ function MeetingPage() {
     }
   }, [isShow]);
 
-  // 현재 로그인한 유저와 다른 성별의 memberList
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(e.target.value));
+  };
+
+  const handleMuteToggle = () => {
+    setMuted((prevMuted) => !prevMuted);
+  };
+
   const diffGenderMemberList = useMemo(
     () => streamList.filter((stream) => stream.gender !== gender),
     [streamList],
   );
 
-  //현재 로그인한 유저와 같은 성별의 memberList
   const sameGenderMemberList = useMemo(
     () => streamList.filter((stream) => stream.gender === gender),
     [streamList],
   );
+
   return (
     <div id="meeting">
       <TimeDisplay client={client} roomId={roomId} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
+
       <div id="meeting-video-container">
-        {isQuestionTime && <Question content={question[0]} />}
+        {isQuestionTime && <Question content={question} />}
         <div className="meeting-video-row">
           {publisher &&
             sameGenderMemberList.map((stream, index) => (
@@ -102,6 +118,16 @@ function MeetingPage() {
           onChangeCameraStatus={onChangeCameraStatus}
           onChangeMicStatus={onChangeMicStatus}
         />
+      </div>
+      <div>
+        <AudioController
+          volume={volume}
+          muted={muted}
+          songName="meeting"
+          handleMuteToggle={handleMuteToggle}
+          handleVolumeChange={handleVolumeChange}
+        />
+        <ChatRoom />
       </div>
     </div>
   );
