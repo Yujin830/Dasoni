@@ -10,7 +10,6 @@ import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.chat.dto.ChatMessageWithMember;
 import signiel.heartsigniel.model.chat.ChatService;
-import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.matching.MatchingService;
@@ -18,12 +17,12 @@ import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
+import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.roommember.RoomMemberRepository;
 import signiel.heartsigniel.model.roommember.RoomMemberService;
 import signiel.heartsigniel.model.roommember.RoomMember;
 import signiel.heartsigniel.model.roommember.code.RoomMemberCode;
-import signiel.heartsigniel.model.rating.RatingService;
-import signiel.heartsigniel.model.rating.dto.TotalResultRequest;
+import signiel.heartsigniel.model.meeting.RatingService;
 import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.*;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
@@ -173,10 +172,10 @@ public class PrivateRoomService {
         return response;
     }
 
-    public Response endRoom(TotalResultRequest totalResultRequest){
+    public Response endRoom(Long roomId){
 
-        Response response = ratingService.calculateTotalResult(totalResultRequest);
-        Room roomEntity = findRoomById(totalResultRequest.getRoomId());
+        Response response = ratingService.calculateTotalResult(roomId);
+        Room roomEntity = findRoomById(roomId);
         roomRepository.delete(roomEntity);
         return response;
     }

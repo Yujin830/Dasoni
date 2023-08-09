@@ -13,11 +13,14 @@ import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.chat.dto.MemberEntryExitDto;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.GuideRepository;
+import signiel.heartsigniel.model.question.Question;
+import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionRepository;
 @RestController
 @Slf4j
@@ -28,15 +31,29 @@ public class WebSocketController {
     private final GuideRepository guideRepository;
     private final ChatService chatService;
     private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository) {
+    private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
+
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService) {
         this.operations = operations;
         this.privateRoomService = privateRoomService;
         this.guideRepository = guideRepository;
         this.chatService = chatService;
         this.questionRepository = questionRepository;
+        this.questionService = questionService;
     }
 
+
+    /**
+     * 유저 정보 오픈!!
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId]/open")
+    public void openMembersInformation(@DestinationVariable Long roomId){
+        String openInfo = "OPEN";
+        operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
+    }
 
     /**
      * 시그널 보내기 시작!
@@ -46,7 +63,7 @@ public class WebSocketController {
 
     @MessageMapping("room/{roomId}/signal")
     public void startSendingSignal(@DestinationVariable Long roomId) {
-        String endMessage = "START SENDING SIGNAL!!!!";
+        String endMessage = "SIGNAL";
         operations.convertAndSend("/topic/room/" + roomId + "/signal", endMessage);
     }
 
@@ -56,10 +73,20 @@ public class WebSocketController {
      * @param roomId 방 번호 식별용
      */
     @MessageMapping("room/{roomId}/questions")
-    public void sendQuestions(@DestinationVariable Long roomId) {
-        List<Question> questionList = questionRepository.randomQuestion();
-        operations.convertAndSend("/topic/room/" + roomId + "/questions", questionList);
+    public void sendQuestions(@DestinationVariable Long roomId, @Payload String numberStr) {
+
+        try {
+            List<Question> questionList = questionListPerRoom.get(roomId);
+            System.out.println(questionList.toString());
+            int num = Integer.parseInt(numberStr);
+            String question = questionList.get(num).getContent();
+            log.info(question);
+            operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
+        } catch (NumberFormatException e) {
+            log.info(e.getMessage());
+        }
     }
+
 
 
     /**
@@ -93,12 +120,17 @@ public class WebSocketController {
      * @param roomId : 방 식별용
      * @param whisperMessage : receiverId, gender, content로 구성
      */
-    @MessageMapping("room/{roomId}/whisper")
-    public void whisperChatting(@DestinationVariable Long roomId, @Payload WhisperMessage whisperMessage) {
-        log.info("Whisper Complete");
-        whisperMessage.setStatus("OK");
-        operations.convertAndSendToUser(whisperMessage.getReceiverId(), "/queue/room./" + roomId + "/whisper", whisperMessage);
-    }
+        @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
+            public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
+            log.info("Whisper Complete");
+            log.info(whisperMessage.toString());
+            Long memId = Long.valueOf(whisperMessage.getMemberId());
+            whisperMessage.setStatus("OK");
+            log.info("detination : " + receiveMemberId);
+            log.info("receive" + String.valueOf(whisperMessage.getMemberId()));
+            log.info(whisperMessage.getReceiverId());
+            operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
+        }
 
 
     /**
@@ -126,9 +158,9 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/start")
     public void sendStartMessage(@DestinationVariable Long roomId){
-        log.info("STARTING MESSAGE SENDING COMPLETE1!!!");
+        List<Question> questionList = questionService.makeQuestionList(); // 랜덤 질문 리스트 생성,
+        questionListPerRoom.put(roomId, questionList);
         privateRoomService.sendStartMessage(roomId);
-        log.info("STARTING MESSAGE SENDING COMPLETE2!!!");
     }
 
     @GetMapping("/api/room/{roomId}/messages")

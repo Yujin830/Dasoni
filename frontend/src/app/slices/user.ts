@@ -107,6 +107,7 @@ export const deleteUserAsync = createAsyncThunk('DELETE_USER', async (user: User
   const response = await axios.delete(`/api/users/${user.memberId}`);
   console.log('회원탈퇴');
   console.log(response);
+  localStorage.removeItem('jwtToken');
   return {};
 });
 

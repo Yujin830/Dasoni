@@ -3,6 +3,7 @@ package signiel.heartsigniel.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
@@ -17,6 +18,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import signiel.heartsigniel.jwt.JwtAuthenticationFilter;
@@ -24,6 +26,7 @@ import signiel.heartsigniel.jwt.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -86,6 +89,17 @@ public class SecurityConfig {
                 .and()
                 // JWT 인증 필터 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .logout()
+                .logoutUrl("/api/logout")
+                .addLogoutHandler((request, response, authentication) -> {
+                            HttpSession session = request.getSession();
+                            if(session != null){
+                                session.invalidate();;
+                            }
+                        }
+                ).logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
+                .deleteCookies("JSESSIONID","remember-me")
+                .and()
                 // 에러 핸들링
                 .exceptionHandling()
                 .accessDeniedHandler(new AccessDeniedHandler() {
