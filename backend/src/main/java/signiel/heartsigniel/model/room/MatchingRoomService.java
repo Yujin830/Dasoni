@@ -49,10 +49,10 @@ public class MatchingRoomService {
         roomRepository.save(room);
     }
 
-    public Response endRoom(TotalResultRequest totalResultRequest){
+    public Response endRoom(Long roomId){
 
-        Response response = ratingService.calculateTotalResult(totalResultRequest);
-        Room roomEntity = findRoomById(totalResultRequest.getRoomId());
+        Response response = ratingService.calculateTotalResult(roomId);
+        Room roomEntity = findRoomById(roomId);
         deleteRoomEntity(roomEntity);
 
         return response;

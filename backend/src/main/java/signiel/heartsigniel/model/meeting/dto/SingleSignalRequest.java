@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class SingleSignalRequest {
     private int signalSequence;
-    private Long senderId;
-    private Long receiverId;
+    private int senderId;
+    private int receiverId;
 }

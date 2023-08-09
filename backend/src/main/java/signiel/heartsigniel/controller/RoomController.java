@@ -53,17 +53,17 @@ public class RoomController {
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Response> getRoomByTitle(@PathVariable String searchKeyword) {
-        Pageable pageable = PageRequest.of(0, 6);
+    public ResponseEntity<Response> getRoomByTitle(@PathVariable String searchKeyword, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 6);
         Page<PrivateRoomList> rooms = privateRoomService.getPrivateRoomsByTitle(searchKeyword, pageable);
         Response response = Response.of(CommonCode.GOOD_REQUEST, rooms);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<Response> getRoomList() {
+    public ResponseEntity<Response> getRoomList(@RequestParam(defaultValue = "0") int page) {
 
-        Pageable pageable = PageRequest.of(0, 6);
+        Pageable pageable = PageRequest.of(page, 6);
         Page<PrivateRoomList> rooms = privateRoomService.getPrivateRooms(pageable);
         Response response = Response.of(CommonCode.GOOD_REQUEST, rooms);
 
@@ -77,8 +77,8 @@ public class RoomController {
     }
 
     @GetMapping("/filter/{condition}")
-    public ResponseEntity<Response> filterRoomByGender(@PathVariable String condition) {
-        Pageable pageable = PageRequest.of(0, 6);
+    public ResponseEntity<Response> filterRoomByGender(@PathVariable String condition, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 6);
         Page<PrivateRoomList> roomList = privateRoomService.filterRoomByGender(condition, pageable);
         Response response = Response.of(CommonCode.GOOD_REQUEST, roomList);
 
@@ -99,18 +99,8 @@ public class RoomController {
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity<Response> endMeetingRoom(@RequestBody TotalResultRequest totalResultRequest){
-
-        Response response;
-
-            if (totalResultRequest.getRoomType().equals("match")){
-            response = matchingRoomService.endRoom(totalResultRequest);
-        } else if (totalResultRequest.getRoomType().equals("private")) {
-            response = privateRoomService.endRoom(totalResultRequest);
-        } else{
-            response = Response.of(RoomCode.NOT_PARTICIPATE_ROOM, null);
-        }
-
+    public ResponseEntity<Response> calculateMeetingResult(@PathVariable Long roomId){
+        Response response = ratingService.calculateTotalResult(roomId);
         return ResponseEntity.ok(response);
     }
 

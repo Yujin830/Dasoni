@@ -1,9 +1,7 @@
 package signiel.heartsigniel.model.meeting;
 
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.meeting.code.SignalCode;
 import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
