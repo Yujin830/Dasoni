@@ -11,8 +11,6 @@ logging:
     org.hibernate.sql: debug
     org.hibernate.type: trace
 
-<<<<<<< HEAD
-=======
 cloud:
   aws:
     credentials:
@@ -22,7 +20,6 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
->>>>>>> b8ababfeaf41bb04d86a9c91731ae10ecf7caf9f
 #servers:
 #  - url: http://i9a307.p.ssafy.io/
 #    description: Production server
