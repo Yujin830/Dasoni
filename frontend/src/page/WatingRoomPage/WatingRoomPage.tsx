@@ -35,6 +35,8 @@ import convertScoreToName from '../../utils/convertScoreToName';
 // };
 
 function WaitingRoomPage() {
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
+
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const { gender } = useAppSelector((state) => state.user);
   const [memberList, setMemberList] = useState<WaitingMember[]>(
