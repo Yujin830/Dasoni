@@ -26,7 +26,6 @@ function UserVideo({ streamManager, nickname, signalOpen }: UserVideoProps) {
     ) {
       const streamData = JSON.parse(streamManager.stream.connection.data);
       const signalData = {
-        type: roomType,
         signalSequence: 2,
         senderId: memberId,
         receiverId: streamData.memberId,
