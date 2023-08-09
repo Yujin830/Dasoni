@@ -37,7 +37,7 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     }
 
     // 랜덤 주제 1번
-    else if (minutes === '00' && seconds === '20') {
+    else if (minutes === '08' && seconds === '00') {
       client?.send(`/app/room/${roomId}/questions`, {}, '0');
     }
 
@@ -47,12 +47,12 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     }
 
     // 랜덤 주제 2번
-    else if (minutes === '00' && seconds === '30') {
+    else if (minutes === '20' && seconds === '05') {
       client?.send(`/app/room/${roomId}/questions`, {}, '1');
     }
 
     // 랜덤 주제 3번
-    else if (minutes === '00' && seconds === '40') {
+    else if (minutes === '40' && seconds === '00') {
       client?.send(`/app/room/${roomId}/questions`, {}, '2');
     }
 
