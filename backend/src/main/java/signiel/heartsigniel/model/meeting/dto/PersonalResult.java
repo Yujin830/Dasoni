@@ -1,4 +1,4 @@
-package signiel.heartsigniel.model.rating.dto;
+package signiel.heartsigniel.model.meeting.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,15 +9,17 @@ import signiel.heartsigniel.model.roommember.dto.RoomMemberInfo;
 public class PersonalResult {
     private RoomMemberInfo roomMemberInfo;
     private Long ratingChange;
+    private int matchMemberId = 0;
 
-    public PersonalResult (RoomMember roomMember, Long ratingChange){
+    public PersonalResult (RoomMember roomMember, Long ratingChange, int matchedMemberId){
         this.roomMemberInfo = new RoomMemberInfo(roomMember);
         this.ratingChange = ratingChange;
+        this.matchMemberId = matchedMemberId;
     }
 
     @Builder
-    public static PersonalResult of(RoomMember roomMember, Long ratingChange){
-        return new PersonalResult(roomMember, ratingChange);
+    public static PersonalResult of(RoomMember roomMember, Long ratingChange, int matchMemberId){
+        return new PersonalResult(roomMember, ratingChange, matchMemberId);
     }
 }
 
