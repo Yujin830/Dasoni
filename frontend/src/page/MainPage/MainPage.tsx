@@ -160,10 +160,7 @@ function MainPage() {
 
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
-      <Header
-        onModalToggle={handleHelpModalToggle}
-        // onOpenRoomModalToggle={handleOpenRoomModalToggle}
-      />
+      <Header onModalToggle={handleHelpModalToggle} />
       <Banner />
       <main>
         <div id="main-top">
