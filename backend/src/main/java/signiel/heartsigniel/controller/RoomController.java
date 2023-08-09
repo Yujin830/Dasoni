@@ -15,7 +15,6 @@ import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
 
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
-import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
 import signiel.heartsigniel.model.room.dto.StartRoomRequest;

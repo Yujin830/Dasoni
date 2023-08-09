@@ -26,7 +26,7 @@
   flex-shrink: 0;
   margin-left: auto;
 }
-.signup-title{
+.signup-title {
   width: 30vh;
 }
 
@@ -110,7 +110,7 @@
   width: 100%;
   height: 15%;
   align-items: center;
-  /* background-color: red; */
+  justify-content: flex-start;
 }
 
 .signup-password {
@@ -145,6 +145,7 @@
   width: 100%;
   height: 15%;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .signup-birthdate {
@@ -317,8 +318,26 @@
   .signup-box {
     width: 90%;
   }
+  .signup-content {
+    width: 95%;
+  }
+  .signup-content .signup-input {
+    width: 75%;
+    font-size: 2vh;
+  }
+  .signup-birthdate .birth-input {
+    width: 75%;
+    font-size: 2vh;
+  }
+  .signup-content .check-btn {
+    font-size: 1.7vh;
+  }
   .btn {
     width: 40%;
+    margin-right: 0;
+  }
+  .btn .signup-btn {
+    margin-right: 2vh;
   }
   .id-availability-message {
     margin-left: 5%;
@@ -330,18 +349,19 @@
     width: 40%;
   }
   .button-multicheck {
-    width: 32%;
+    width: 22%;
     height: 70%;
-    margin-left: 0.3rem;
+    margin-left: 1vh;
   }
   .button-certify {
-    width: 32%;
+    width: 22%;
     height: 70%;
-    margin-left: 0.3rem;
+    margin-left: 1vh;
   }
   .birth-calendar {
-    margin-left: 1rem;
+    margin-left: 2vh;
     width: 6%;
+    height: 3vh;
     border: white;
   }
 }

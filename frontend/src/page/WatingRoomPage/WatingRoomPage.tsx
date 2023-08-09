@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import Header from '../../components/Header/Header';
 import titleLogo from '../../assets/image/title_img.png';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
@@ -12,29 +12,13 @@ import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
-
-// const styles = {
-//   startBtn: {
-//     width: '10rem',
-//     height: '4rem',
-//     borderRadius: ' 0.5rem',
-//     background: '#ECC835',
-//     color: '#fff',
-//     fontSize: '1.5rem',
-//     fontWeight: '700',
-//   },
-//   exitBtn: {
-//     width: '10rem',
-//     height: '4rem',
-//     borderRadius: ' 0.5rem',
-//     background: '#EC5E98',
-//     color: '#fff',
-//     fontSize: '1.5rem',
-//     fontWeight: '700',
-//   },
-// };
+// BGM
+import song from '../../assets/music/lobby.mp3';
+import AudioController from '../../components/AudioController/AudioController';
 
 function WaitingRoomPage() {
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
+
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const { gender } = useAppSelector((state) => state.user);
   const [memberList, setMemberList] = useState<WaitingMember[]>(
@@ -54,28 +38,21 @@ function WaitingRoomPage() {
   const { roomId } = useParams();
   const member = useAppSelector((state) => state.user);
 
-  // webSocket 사용해 실시간으로 대기방에 입장하는 memberList 갱신
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
-        // console.log(res.body);
-        console.log(JSON.parse(res.body));
         const data = JSON.parse(res.body);
-        console.log('received data: ', data);
         setMemberList(data.memberList);
       });
 
       client.subscribe(`/topic/room/${roomId}/start`, (res: any) => {
-        console.log('게임 시작 메세지 전송');
-        console.log(res.body);
-
         if (res.body === 'Start') {
           setTimeout(() => {
             navigate(`/meeting/${roomId}`, { replace: true });
           }, 3000);
         }
       });
-      // 서버가 받을 주소(string), 헤더({[key: string]}: any;|undefined), 전달할 메세지(string|undefined)
+
       const joinData = {
         type: 'join',
         memberId: member.memberId,
@@ -90,15 +67,12 @@ function WaitingRoomPage() {
   };
 
   const handleExitBtn = async () => {
-    console.log('방 나가기');
     try {
-      console.log('roomID ', roomId);
       const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
-      console.log(res);
 
       const data = {
         type: 'quit',
-        memeberId: member.memberId,
+        memberId: member.memberId,
       };
       client?.send(`/app/room/${roomId}`, {}, JSON.stringify(data));
       if (res.status === 200) {
@@ -108,16 +82,27 @@ function WaitingRoomPage() {
       console.error(err);
     }
   };
-  // 모달 띄우기
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleModalToggle = useCallback(() => {
     setModalVisible((prev) => !prev);
   }, []);
 
+  // Volume and Mute Controls
+  const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(e.target.value));
+  };
+
+  const handleMuteToggle = () => {
+    setMuted((prevMuted) => !prevMuted);
+  };
+
   return (
     <div id="waiting-page">
-      <Header onModalToggle={handleModalToggle} />
       <main id="waiting-room-box">
         <div id="waiting-room-top">
           <div className="title">
@@ -131,6 +116,13 @@ function WaitingRoomPage() {
               {convertScoreToName(waitingRoomInfo.ratingLimit ? waitingRoomInfo.ratingLimit : 0)}
             </span>
           </div>
+          <AudioController
+            volume={volume}
+            muted={muted}
+            songName="lobby"
+            handleMuteToggle={handleMuteToggle}
+            handleVolumeChange={handleVolumeChange}
+          />
         </div>
         <div id="waiting-room-body">
           <div id="member-list-box">

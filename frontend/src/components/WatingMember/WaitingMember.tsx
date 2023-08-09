@@ -13,12 +13,6 @@ function WaitingMember({ nickname, rating, matchCnt, gender, profileImageSrc }: 
         <p>{nickname}</p>
       </div>
       <div id="waiting-member-contents">
-        <div id="profile">
-          <RankAvartar
-            point={rating !== undefined ? rating : 1000}
-            src={profileImageSrc !== undefined ? profileImageSrc : 'rank_profile.png'}
-          />
-        </div>
         <div id="info-box">
           <div id="signal">
             <span className="name">Signal</span>
@@ -28,6 +22,12 @@ function WaitingMember({ nickname, rating, matchCnt, gender, profileImageSrc }: 
             <span className="name">Match</span>
             <span className="info">{matchCnt}</span>
           </div>
+        </div>
+        <div id="profile">
+          <RankAvartar
+            point={rating !== undefined ? rating : 1000}
+            src={profileImageSrc !== undefined ? profileImageSrc : 'rank_profile.png'}
+          />
         </div>
       </div>
     </div>

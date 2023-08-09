@@ -36,4 +36,16 @@ footer {
   .mypage .modify-form .info-input {
     width: 90%;
   }
+  .mypage .modify-form .AddressSelecter {
+    justify-content: center;
+    width: 100%;
+  }
+  .mypage .modify-form .AddressSelecter .AddressContainer {
+    width: 90%;
+  }
+  .mypage .modify-form .AddressSelecter select {
+    width: calc(50% - 0.75rem);
+    height: 3rem;
+    /* font-size: 2vh; */
+  }
 }

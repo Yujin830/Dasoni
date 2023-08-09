@@ -15,57 +15,16 @@ import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
 
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
+import SkeletonElement from '../../components/SkeletonElement/SkeletonElement';
+import SkeletonMainPage from './SkeletonMainPage';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
-// const styles = {
-//   iconBtn: {
-//     width: '5rem',
-//     height: '2.5rem',
-//     borderRadius: '6.25rem',
-//     background: 'rgba(238, 114, 165, 0.50)',
-//   },
-//   searchBar: {
-//     width: '16rem',
-//     height: '2.5rem',
-//     borderRadius: '1.5rem',
-//     background: '#FFE8EF',
-//     color: '#555',
-//     fontSize: '0.8rem',
-//     border: 'none',
-//     paddingLeft: '1rem',
-//   },
-//   createRoomBtn: {
-//     width: '8rem',
-//     height: '3rem',
-//     borderRadius: '0.5rem',
-//     background: '#ECC835',
-//     color: '#fff',
-//     fontSize: '1.2rem',
-//     fontWeight: '600',
-//   },
-//   fastMatchBtn: {
-//     width: '8rem',
-//     height: '3rem',
-//     borderRadius: '0.5rem',
-//     background: '#EC5E98',
-//     color: '#fff',
-//     fontSize: '1.2rem',
-//     fontWeight: '600',
-//   },
-//   pagenationBtn: {
-//     width: '5.5rem',
-//     height: '2.5rem',
-//     borderRadius: '6.25rem',
-//     background: '#FFE8EF',
-//     color: '#555',
-//     fontSize: '1rem',
-//   },
-// };
-
 function MainPage() {
+  // 미팅 대기방 리스트
+
   //모달 띄우기
   const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
   const openRoomModalVisible = useSelector(
@@ -87,6 +46,22 @@ function MainPage() {
     setIsOpen((prevState) => !prevState);
   };
 
+  // 필터 적용
+  const handleClickFilter = async (gender: string) => {
+    console.log(gender);
+
+    try {
+      const res = await axios.get(`/api/rooms/filter/${gender}`);
+      console.log(res);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // 검색창 입력값
   const [searchInput, setSearchInput] = useState('');
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,18 +69,26 @@ function MainPage() {
   };
 
   // 검색
-  const search = (searchInput: string) => {
+  const search = async (searchInput: string) => {
     if (searchInput === '') {
-      alert('검색어를 입력해주세요');
+      getWaitingRoomList();
       return;
     }
 
-    console.log(searchInput);
-    // TODO : 검색 API 로직 개발
+    try {
+      const res = await axios.get(`/api/rooms/search/${searchInput}`);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 미팅 대기방 리스트
   const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
   const getWaitingRoomList = async () => {
     try {
       const res = await axios.get('/api/rooms');
@@ -121,11 +104,47 @@ function MainPage() {
     getWaitingRoomList();
   }, []);
 
-  // 방 만들기 모달 open
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const createRoom = () => {
-    console.log('방 만들기');
+  // const createRoom = () => {
+  //   console.log('방 만들기');
+  // };
+
+  // 방목록 페이지 넘기기
+  const nextRoomList = async () => {
+    try {
+      const nextPage = currentPage + 1; // 현재 페이지에서 1 증가
+      const res = await axios.get(`/api/rooms?page=${nextPage}`);
+      console.log('다음');
+      if (res.status === 200) {
+        const nextPageData = res.data.content.content;
+
+        if (nextPageData.length > 0) {
+          setCurrentPage(nextPage);
+          setWaitingRoomList(nextPageData);
+        } else {
+          console.log('다음 페이지에 방이 없습니다.');
+          // 다음 페이지에 방이 없을 경우 처리
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const prevRoomList = async () => {
+    try {
+      const prevPage = Math.max(currentPage - 1, 0); // 현재 페이지에서 1 감소, 최소 0 이상
+      const res = await axios.get(`/api/rooms?page=${prevPage}`);
+      console.log('이전');
+      if (res.status === 200) {
+        setCurrentPage(prevPage);
+        console.log('현재페이지:', prevPage, 'content:', res.data.content);
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 빠른 매칭 모달 open
@@ -160,8 +179,12 @@ function MainPage() {
               handleClick={handleToggleFilter}
             />
             <ul className={isOpen ? 'show' : ''}>
-              <li>남자만 입장 가능</li>
-              <li>여자만 입장 가능</li>
+              <li role="presentation" onClick={() => handleClickFilter('male')}>
+                남자만 입장 가능
+              </li>
+              <li role="presentation" onClick={() => handleClickFilter('female')}>
+                여자만 입장 가능
+              </li>
             </ul>
           </div>
           <div id="search-box">
@@ -195,6 +218,7 @@ function MainPage() {
                 />
               ))
             : '존재하는 방이 없습니다.'}
+          {!waitingRoomList && <SkeletonMainPage />}
         </div>
         <div id="room-footer">
           <div id="pagenationBtn-box">
@@ -202,14 +226,14 @@ function MainPage() {
               classes="page-btn"
               content="이전"
               iconPosition="left"
-              handleClick={createRoom}
+              handleClick={prevRoomList}
               icon="chevron_left"
             />
             <IconButton
               classes="page-btn"
               content="다음"
               iconPosition="right"
-              handleClick={createRoom}
+              handleClick={nextRoomList}
               icon="chevron_right"
             />
           </div>
