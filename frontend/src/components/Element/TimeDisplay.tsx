@@ -30,6 +30,12 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     const seconds = (timeInSeconds % 60).toString().padStart(2, '0');
     // console.log(minutes, seconds);
     // 웹 소켓 메세지 sending
+    sendingMessage(minutes, seconds);
+
+    setCurrentTime(`${minutes}:${seconds}`);
+  }
+
+  function sendingMessage(minutes: string, seconds: string) {
     if (minutes === '05' && seconds === '00') client?.send(`/app/room/${roomId}/guide`, {}, '5');
     else if (minutes === '20' && seconds === '00')
       client?.send(`/app/room/${roomId}/guide`, {}, '20');
@@ -37,8 +43,6 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
       client?.send(`/app/room/${roomId}/guide`, {}, '50');
     // 시그널 메세지 send
     else if (minutes === '00' && seconds === '25') client?.send(`/app/room/${roomId}/signal`);
-
-    setCurrentTime(`${minutes}:${seconds}`);
   }
 
   return (
