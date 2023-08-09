@@ -146,8 +146,7 @@ function SignupPage() {
       // 서버로 로그인 아이디 중복 체크 요청을 보냄
       const response = await axios.post(`/api/register/${loginId}`);
 
-      console.log('중복체크 성공');
-      console.log(response.status);
+      console.log('중복체크 성공', response.status);
 
       if (response.status === 200) {
         // 중복된 아이디인 경우
@@ -157,7 +156,7 @@ function SignupPage() {
         setIsIdAvailable(true);
       }
     } catch (error) {
-      console.log(error);
+      console.log('401에러면 중복체크됨', error);
       // 401에러로 인식함 -> 중복되지 않은 아이디
       setIsIdAvailable(true);
     }
