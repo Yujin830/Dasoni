@@ -8,32 +8,6 @@ import { modifyUserAsync } from '../../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
 import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
-const styles = {
-  button: {
-    width: '10rem',
-    height: '4rem',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '1.75rem',
-    fontStyle: 'normal',
-    fontWeight: '700',
-  },
-  input: {
-    width: '26rem',
-    height: '3rem',
-    flexShrink: '0',
-    borderRadius: '0.8rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-};
-
 interface ProfileModalProps {
   onClose: () => void;
 }
@@ -81,7 +55,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
   };
 
   return (
-    <div className="modal">
+    <div className="profile_modal">
       <div className="header">
         프로필 정보 추가
         <button className="pass-button" onClick={handleSkip}>
@@ -89,20 +63,33 @@ function ProfileModal({ onClose }: ProfileModalProps) {
         </button>
       </div>
       <div className="box">
-        <h3>이성에게 어필할 수 있는 나의 정보를 더 작성해주세요!</h3>
+        <h3>
+          이성에게 어필할 수 있는 <br className="mobile" /> 나의 정보를 더 작성해주세요!
+        </h3>
         <div className="inputbox">
           <div className="input nickname">
-            <label htmlFor="label nickname">닉네임</label>
+            {/* <label htmlFor="label nickname">닉네임</label> */}
             <Input
-              style={styles.input}
+              label="닉네임"
+              labelClass="profile-label"
+              classes="profile-input"
               type="text"
               value={nickname}
+              placeholer="닉네임을 입력해주세요"
               handleChange={handleChangeNickname}
             />
           </div>
           <div className="input job">
-            <label htmlFor="label job">직업</label>
-            <Input style={styles.input} type="text" value={job} handleChange={handleChangeJob} />
+            {/* <label htmlFor="label job">직업</label> */}
+            <Input
+              label="직업"
+              labelClass="profile-label"
+              classes="profile-input"
+              type="text"
+              value={job}
+              handleChange={handleChangeJob}
+              placeholer="직업을 입력해주세요"
+            />
           </div>
 
           <div className="input address">
@@ -111,11 +98,11 @@ function ProfileModal({ onClose }: ProfileModalProps) {
               modifyGugun={modifyGugun}
               setModifySido={setModifySido}
               setModifyGugun={setModifyGugun}
-            />{' '}
+            />
           </div>
         </div>
         <div className="complete-button">
-          <Button style={styles.button} content="완료" handleClick={AddProfile} />
+          <Button classes="profile-complete-btn" content="완료" handleClick={AddProfile} />
         </div>
       </div>
     </div>
