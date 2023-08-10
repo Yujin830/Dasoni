@@ -6,6 +6,8 @@ import { useStream } from '../../../hooks/useStrem';
 import { useAppSelector } from '../../../app/hooks';
 import axios from 'axios';
 import InfoElement from '../../Element/InfoElement';
+import { useDispatch } from 'react-redux';
+import { setFinalSignalReceiver } from '../../../app/slices/meetingSlice';
 
 interface UserVideoProps {
   streamManager: StreamManager;
@@ -26,13 +28,16 @@ function UserVideo({
   year,
 }: UserVideoProps) {
   const { videoRef, speaking } = useStream(streamManager);
-  const { roomId, roomType } = useAppSelector((state) => state.waitingRoom);
+  const { roomId } = useAppSelector((state) => state.waitingRoom);
   const { memberId } = useAppSelector((state) => state.user);
+  const { finalSignalReceiver } = useAppSelector((state) => state.meetingRoom);
   const [isSendSignal, setIsSendSignal] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleSendSignal = async () => {
     if (
-      !isSendSignal &&
+      finalSignalReceiver === 0 &&
       confirm('한 번 선택하면 취소할 수 없습니다.\n이분에게 마음을 전하시겠습니까?')
     ) {
       const streamData = JSON.parse(streamManager.stream.connection.data);
@@ -52,6 +57,7 @@ function UserVideo({
         if (res.status === 200) {
           alert('당신의 마음이 성공적으로 전달되었습니다.\n그 마음이 이어지길 응원합니다.');
           setIsSendSignal(true);
+          dispatch(setFinalSignalReceiver(streamData.memberId));
         }
       } catch (err) {
         alert('다시 시도해주세요.');
