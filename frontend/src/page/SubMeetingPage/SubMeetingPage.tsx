@@ -9,12 +9,14 @@ import './SubMeetingPage.css';
 
 function SubMeetingPage() {
   //   const { roomId } = useAppSelector((state) => state.waitingRoom);
-  const { memberId, nickname, gender } = useAppSelector((state) => state.user);
+  const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     memberId !== undefined ? memberId : 0,
     nickname !== undefined ? nickname : '',
     '1',
     gender !== undefined ? gender : '',
+    job !== undefined ? job : '',
+    birth !== undefined ? birth.split('-')[0] : '',
   );
 
   const me = useMemo(
@@ -36,8 +38,11 @@ function SubMeetingPage() {
               me.map((stream, index) => (
                 <UserVideo
                   signalOpen={false}
+                  userInfoOpen={false}
                   key={index}
                   nickname={stream.nickname}
+                  job={''}
+                  year={''}
                   streamManager={stream.streamManager}
                 />
               ))}
@@ -47,8 +52,11 @@ function SubMeetingPage() {
               other.map((stream, index) => (
                 <UserVideo
                   signalOpen={false}
+                  userInfoOpen={false}
                   key={index}
                   nickname={stream.nickname}
+                  job={''}
+                  year={''}
                   streamManager={stream.streamManager}
                 />
               ))}

@@ -13,6 +13,8 @@ import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.chat.dto.MemberEntryExitDto;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.GuideRepository;
+import signiel.heartsigniel.model.meeting.SignalService;
+import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
 import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
@@ -32,15 +34,17 @@ public class WebSocketController {
     private final ChatService chatService;
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
+
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService) {
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService, SignalService signalService) {
         this.operations = operations;
         this.privateRoomService = privateRoomService;
         this.guideRepository = guideRepository;
         this.chatService = chatService;
         this.questionRepository = questionRepository;
         this.questionService = questionService;
+        this.signalService = signalService;
     }
 
 
@@ -48,9 +52,10 @@ public class WebSocketController {
      * 유저 정보 오픈!!
      * @param roomId
      */
-    @MessageMapping("room/{roomId]/open")
+    @MessageMapping("room/{roomId}/open")
     public void openMembersInformation(@DestinationVariable Long roomId){
         String openInfo = "OPEN";
+        System.out.println("+++++++++++++ OPEN");
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
     }
 
@@ -119,17 +124,17 @@ public class WebSocketController {
      * @param roomId : 방 식별용
      * @param whisperMessage : receiverId, gender, content로 구성
      */
-    @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
-    public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
-        log.info("Whisper Complete");
-        log.info(whisperMessage.toString());
-        Long memId = Long.valueOf(whisperMessage.getMemberId());
-        whisperMessage.setStatus("OK");
-        log.info("detination : " + receiveMemberId);
-        log.info("receive" + String.valueOf(whisperMessage.getMemberId()));
-        log.info(whisperMessage.getReceiverId());
-        operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
-    }
+        @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
+            public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
+            log.info("Whisper Complete");
+            log.info(whisperMessage.toString());
+            Long memId = Long.valueOf(whisperMessage.getMemberId());
+            whisperMessage.setStatus("OK");
+            log.info("detination : " + receiveMemberId);
+            log.info("receive" + String.valueOf(whisperMessage.getMemberId()));
+            log.info(whisperMessage.getReceiverId());
+            operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
+        }
 
 
     /**
