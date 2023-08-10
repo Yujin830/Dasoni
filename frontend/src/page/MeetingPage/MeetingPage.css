@@ -26,3 +26,9 @@
   margin: 2rem 0 1.5rem;
   width: auto;
 }
+
+#meeting #audio-controls {
+  position: absolute;
+  top: 30px;
+  right: 1.2rem;
+}
