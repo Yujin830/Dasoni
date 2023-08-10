@@ -1,11 +1,15 @@
 package signiel.heartsigniel.model.member.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import signiel.heartsigniel.model.member.Member;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class MemberInfo {
 
     private Long memberId;
@@ -13,7 +17,6 @@ public class MemberInfo {
     private Long rating;
     private String gender;
     private String job;
-    private LocalDate birth;
 
     public MemberInfo(Member member){
         this.memberId = member.getMemberId();
@@ -21,7 +24,6 @@ public class MemberInfo {
         this.rating = member.getRating();
         this.gender = member.getGender();
         this.job = member.getJob();
-        this.birth = member.getBirth();
     }
 
 }
