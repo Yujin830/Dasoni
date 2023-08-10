@@ -33,6 +33,9 @@ public class WebSocketController {
     private final GuideRepository guideRepository;
     private final ChatService chatService;
     private final QuestionService questionService;
+    private final SignalService signalService;
+
+    private final SignalService signalService;
 
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
@@ -123,13 +126,16 @@ public class WebSocketController {
      */
         @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
             public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
-            log.info("Whisper Complete");
-            log.info(whisperMessage.toString());
-            Long memId = Long.valueOf(whisperMessage.getMemberId());
             whisperMessage.setStatus("OK");
-            log.info("detination : " + receiveMemberId);
-            log.info("receive" + String.valueOf(whisperMessage.getMemberId()));
-            log.info(whisperMessage.getReceiverId());
+            int sequence = 1;
+            int senderId = Integer.parseInt(whisperMessage.getMemberId());
+            int receiverId = Math.toIntExact(receiveMemberId);
+
+            SingleSignalRequest signalRequest = new SingleSignalRequest(sequence, senderId, receiverId);
+
+            log.info("signalRequest = " + signalRequest.toString());
+            signalService.storeSignalInRedis(roomId, signalRequest);
+
             operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
         }
 
