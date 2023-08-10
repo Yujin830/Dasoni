@@ -105,7 +105,7 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
           >
             <strong>{msg.senderNickname}</strong>
             {msg.content !== '상대방에게 마음이 전달되었어요.'
-              ? `익명 ${member.gender} : ${msg.content}`
+              ? `누군가 : ${msg.content}`
               : ` ${msg.content}`}
           </div>
         ))}

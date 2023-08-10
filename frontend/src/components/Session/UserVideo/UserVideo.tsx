@@ -5,15 +5,26 @@ import './UserVideo.css';
 import { useStream } from '../../../hooks/useStrem';
 import { useAppSelector } from '../../../app/hooks';
 import axios from 'axios';
+import InfoElement from '../../Element/InfoElement';
 
 interface UserVideoProps {
   streamManager: StreamManager;
   nickname: string;
   signalOpen: boolean;
+  userInfoOpen: boolean;
+  job: string;
+  year: string;
 }
 
 // 유저의 화상 화면을 보여주는 컴포넌트
-function UserVideo({ streamManager, nickname, signalOpen }: UserVideoProps) {
+function UserVideo({
+  streamManager,
+  nickname,
+  signalOpen,
+  userInfoOpen,
+  job,
+  year,
+}: UserVideoProps) {
   const { videoRef, speaking } = useStream(streamManager);
   const { roomId, roomType } = useAppSelector((state) => state.waitingRoom);
   const { memberId } = useAppSelector((state) => state.user);
@@ -61,6 +72,7 @@ function UserVideo({ streamManager, nickname, signalOpen }: UserVideoProps) {
           </span>
         </button>
       )}
+      {userInfoOpen && <InfoElement job={job} age={year} />}
     </OvVideo>
   );
 }

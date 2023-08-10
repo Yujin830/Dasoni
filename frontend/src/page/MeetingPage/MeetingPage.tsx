@@ -15,12 +15,14 @@ import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 
 function MeetingPage() {
   const { roomId } = useParams();
-  const { memberId, nickname, gender } = useAppSelector((state) => state.user);
+  const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     memberId !== undefined ? memberId : 0,
     nickname !== undefined ? nickname : '',
     roomId !== undefined ? roomId : '1',
     gender !== undefined ? gender : '',
+    job !== undefined ? job : '',
+    birth !== undefined ? birth.split('-')[0] : '',
   );
 
   const [guideMessage, setGuideMessage] = useState(
@@ -30,6 +32,8 @@ function MeetingPage() {
   const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
   const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
   const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
+  const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
+  const [userInfoOpen, setUserInfoOepn] = useState(false); // 유저 정보 보이기 / 안 보이기
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -46,13 +50,61 @@ function MeetingPage() {
         setIsQuestionTime(true);
       });
 
-      // TODO : 첫인상 투표 구독
+      // 유저 정보 공개 구독
+      client.subscribe(`/topic/room/${roomId}/open`, (res: any) => {
+        console.log(res.body);
+        setUserInfoOepn(true);
+      });
 
-      // TODO : 최종 투표 구독
+      // 최종 시그널 오픈 구독
       client.subscribe(`/topic/room/${roomId}/signal`, (res: any) => {
         console.log(res.body);
         setSignalOpen(true);
       });
+    },
+    onClientReady: (client) => {
+      const time: string[] = currentTime.split(':');
+      const minutes = time[0];
+      const seconds = time[1];
+      // console.log(client);
+      // console.log(`${minutes} ${seconds}`);
+
+      if (minutes === '05' && seconds === '00') {
+        client?.send(`/app/room/${roomId}/guide`, {}, '5');
+      }
+
+      // 랜덤 주제 1번
+      else if (minutes === '00' && seconds === '30') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '0');
+      }
+
+      // 가이드 - 정보 공개
+      else if (minutes === '00' && seconds === '20') {
+        client?.send(`/app/room/${roomId}/guide`, {}, '20');
+      }
+
+      // 유저 정보 공개
+      else if (minutes === '00' && seconds === '26') {
+        client?.send(`/app/room/${roomId}/open`);
+      }
+
+      // 랜덤 주제 2번
+      else if (minutes === '00' && seconds === '40') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '1');
+      }
+
+      // 랜덤 주제 3번
+      else if (minutes === '00' && seconds === '45') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '2');
+      }
+
+      // 가이드 - 최종 투표
+      else if (minutes === '00' && seconds === '50') {
+        client?.send(`/app/room/${roomId}/guide`, {}, '50');
+      }
+
+      // 최종 시그널 메세지 open send
+      else if (minutes === '00' && seconds === '55') client?.send(`/app/room/${roomId}/signal`);
     },
   });
 
@@ -95,7 +147,7 @@ function MeetingPage() {
 
   return (
     <div id="meeting">
-      <TimeDisplay client={client} roomId={roomId} />
+      <TimeDisplay currentTime={currentTime} setCurrentTime={setCurrentTime} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
 
       <div id="meeting-video-container">
@@ -106,7 +158,10 @@ function MeetingPage() {
               <UserVideo
                 streamManager={stream.streamManager}
                 nickname={stream.nickname}
+                job={stream.job}
+                year={stream.year}
                 signalOpen={false}
+                userInfoOpen={userInfoOpen}
                 key={index}
               />
             ))}
@@ -117,7 +172,10 @@ function MeetingPage() {
               <UserVideo
                 streamManager={stream.streamManager}
                 nickname={stream.nickname}
+                job={stream.job}
+                year={stream.year}
                 signalOpen={signalOpen}
+                userInfoOpen={userInfoOpen}
                 key={index}
               />
             ))}
