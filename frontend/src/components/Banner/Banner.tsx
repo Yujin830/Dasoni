@@ -3,15 +3,6 @@ import './Banner.css';
 import signal from '../../assets/image/white_signal.png';
 
 function Banner() {
-  // const introText = document.querySelectorAll('h2 span');
-
-  // let timer = 100;
-  // introText.forEach((item) => {
-  //   console.log(item);
-  //   item.animate()
-  //   //  = `fade 500ms ${(timer += 50)}ms forwards`;
-  // });
-
   return (
     <div id="banner">
       <div id="text-box">
