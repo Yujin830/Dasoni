@@ -5,7 +5,7 @@ import './WhisperChatRoom.css';
 import { useWebSocket } from '../../hooks/useWebSocket';
 
 interface ChatMessage {
-  senderNickname: string;
+  senderNickname: '';
   content: string;
   timestamp: Date;
   isUserMessage?: boolean;
@@ -105,7 +105,7 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
           >
             <strong>{msg.senderNickname}</strong>
             {msg.content !== '상대방에게 마음이 전달되었어요.'
-              ? ` : ${msg.content}`
+              ? `누군가 : ${msg.content}`
               : ` ${msg.content}`}
           </div>
         ))}

@@ -12,6 +12,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  z-index: 2;
 }
 
 .openroom-modal .header {
@@ -146,6 +147,23 @@ svg {
   font-size: 3vh;
   font-style: normal;
   font-weight: 700;
+}
+
+.openroommodal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: 0.5s;
+  opacity: 0;
+  visibility: hidden;
+}
+.openroommodal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
 }
 
 /* @media (max-width: 1024px) {

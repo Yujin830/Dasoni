@@ -2,22 +2,24 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
 
 export interface WaitingState {
-  roomId: number | undefined;
-  roomTitle: string | undefined;
-  isMaster: boolean | undefined;
-  megiAcceptable: boolean | undefined;
-  ratingLimit: number | undefined;
+  roomId: number;
+  roomType: string;
+  roomTitle: string;
+  isMaster: boolean;
+  megiAcceptable: boolean;
+  ratingLimit: number;
   helpModalVisible: boolean;
   openRoomModalVisible: boolean;
   waitingRoomMemberList: WaitingMember[];
 }
 
 const initialState: WaitingState = {
-  roomId: undefined,
-  roomTitle: undefined,
-  isMaster: undefined,
-  megiAcceptable: undefined,
-  ratingLimit: undefined,
+  roomId: 0,
+  roomType: 'private',
+  roomTitle: '',
+  isMaster: false,
+  megiAcceptable: false,
+  ratingLimit: 0,
   helpModalVisible: false,
   openRoomModalVisible: false,
   waitingRoomMemberList: [],
@@ -29,6 +31,9 @@ const waitingSlice = createSlice({
   reducers: {
     setWaitingRoomId(state, action) {
       state.roomId = action.payload;
+    },
+    setRoomType(state, action) {
+      state.roomType = action.payload;
     },
     setRoomTitle(state, action) {
       state.roomTitle = action.payload;
@@ -56,6 +61,7 @@ const waitingSlice = createSlice({
 
 export const {
   setWaitingRoomId,
+  setRoomType,
   setRoomTitle,
   setRatingLimit,
   setMaster,

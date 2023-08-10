@@ -6,7 +6,6 @@ import MyPage from './page/MyPage/MyPage';
 
 import MainPage from './page/MainPage/MainPage';
 import WaitingRoomPage from './page/WatingRoomPage/WatingRoomPage';
-
 import MeetingPage from './page/MeetingPage/MeetingPage';
 import RatingModal from './components/Modal/RatingModal/RatingModal';
 import ResultModal from './components/Modal/ResultModal/ResultModal';

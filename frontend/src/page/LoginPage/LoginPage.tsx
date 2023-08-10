@@ -121,6 +121,7 @@ function LoginPage() {
             <Button classes="login-btn" content="로그인" handleClick={handleLogin} />
             {/* isModalOpen 변수에 따라 ProfileModal 컴포넌트를 조건부 렌더링합니다 */}
             {isModalOpen && <ProfileModal onClose={() => setModalOpen(false)} />}
+            <div className={`profilemodal-overlay ${isModalOpen == true ? 'active' : ''}`}></div>
           </form>
           <p>
             아직 회원이 아니신가요?{' '}

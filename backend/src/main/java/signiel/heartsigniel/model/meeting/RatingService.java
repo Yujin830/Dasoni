@@ -12,12 +12,10 @@ import signiel.heartsigniel.model.roommember.RoomMemberRepository;
 import signiel.heartsigniel.model.meeting.code.RatingCode;
 import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.room.RoomRepository;
-import signiel.heartsigniel.model.room.code.RoomCode;
+
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RatingService {
@@ -28,6 +26,7 @@ public class RatingService {
     private final RedisTemplate<String, SignalMatchingResult> redisTemplate;
     private final SignalService signalService;
     private static final int K_FACTOR = 40;
+    private int defaultMemberSize = 6;
 
     public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, RedisTemplate<String, SignalMatchingResult> redisTemplate, SignalService signalService) {
         this.roomRepository = roomRepository;
@@ -38,69 +37,54 @@ public class RatingService {
     }
 
     public Response calculateTotalResult(Long roomId) {
-
         Room room = findRoomById(roomId);
-
         List<RoomMember> roomMembers = room.getRoomMembers();
         int roomMemberSize = roomMembers.size();
 
-        // 시그널 데이터들 레디스에서 추출
         List<SingleSignalRequest> singleSignalRequests = signalService.fetchAllSignalsForRoom(roomId);
-        System.out.println("나 이만큼이다" + singleSignalRequests.size());
-        for (SingleSignalRequest singleSignalRequest : singleSignalRequests){
-            System.out.println("보낸 사람 : " + singleSignalRequest.getSenderId());
-            System.out.println("받은 사람 : " + singleSignalRequest.getReceiverId());
-        }
-        // 유저 순서
-        int[] roomMemberSequence = makeRoomMemberSequence(roomMembers);
 
-        // 추출 데이터로 시그널 점수판 만들기
+        Map<Integer, Integer> roomMemberSequence = makeRoomMemberSequence(roomMembers);
+
         List<int[][]> signalBoards = makeSignalBoard(roomMemberSize, singleSignalRequests, roomMemberSequence);
-
-        // 1차원 배열로 순서대로 점수판 만들기
         int[] scoreBoard = calculatePersonalScore(singleSignalRequests, roomMembers, signalBoards);
-        for (int value : scoreBoard){
-            System.out.println(value);
-        }
-        // 점수 기준으로 순위대로 정렬
-        List<RoomMember> sortedRoomMembers = sortRoomMembersByScore(roomMembers, scoreBoard);
 
-        // 최종 성적 + 시그널 매칭된 유저 색출
+        List<RoomMember> sortedRoomMembers = sortRoomMembersByScore(roomMembers, scoreBoard);
         int[][] finalBoard = signalBoards.get(1);
         int[] mutuallySignaledList = isMutuallySignaled(finalBoard, roomMemberSequence);
 
         Long avgRating = calculateAvgRatingOfRoom(room);
-
         String roomType = room.getRoomType();
-        // 시그널 기록 레디스에 캐싱
-        for (int i = 0; i < roomMemberSize; i++){
-            System.out.println(mutuallySignaledList[i]);
 
-            if(mutuallySignaledList[i] != 0){
-                addMatchedMemberId((long) roomMemberSequence[i], (long) mutuallySignaledList[i]);
+        for (int i = 0; i < roomMemberSize; i++) {
+            if (mutuallySignaledList[i] != 0) {
+                addMatchedMemberId((long) i, (long) mutuallySignaledList[i]);
             }
         }
-        List<PersonalResult> personalResults = new ArrayList<>();
 
+        List<PersonalResult> personalResults = new ArrayList<>();
         for (int rank = 1; rank <= roomMemberSize; rank++) {
             RoomMember roomMember = sortedRoomMembers.get(rank - 1);
             Member member = roomMember.getMember();
             Long memberId = member.getMemberId();
             Long ratingChange = 0L;
-            if (roomType.equals("match")){
+            if (roomType.equals("match")) {
                 Long myRating = member.getRating();
                 ratingChange = calculateRatingChange(myRating, avgRating, rank, K_FACTOR, roomMemberSize);
                 saveMemberRating(member, myRating + ratingChange);
             }
-            int memberIndex = getIndexOfId(member.getMemberId().intValue(), roomMemberSequence);
-            int signalOpponent = mutuallySignaledList[memberIndex];
-            if(mutuallySignaledList[memberIndex] != 0){
+            int signalOpponent = mutuallySignaledList[roomMemberSequence.get(memberId.intValue())];
+            if (signalOpponent != 0) {
                 addMatchedMemberId(memberId, (long) signalOpponent);
+            }
+            if (roomMember.isSpecialUser()) {
+                ratingChange *= 2;
             }
             PersonalResult result = PersonalResult.of(roomMember, ratingChange, signalOpponent);
             personalResults.add(result);
         }
+
         TotalResultResponse totalResultResponse = TotalResultResponse.of(personalResults, roomId);
+        signalService.deleteAllSignalsForRoom(roomId);
         return Response.of(RatingCode.CALCULATION_SUCCESS, totalResultResponse);
     }
 
@@ -146,14 +130,14 @@ public class RatingService {
         return roomMembers;
     }
 
-    public int[] makeRoomMemberSequence(List<RoomMember> roomMembers){
-        int[] roomMemberSequence = new int[roomMembers.size()];
-
+    public Map<Integer, Integer> makeRoomMemberSequence(List<RoomMember> roomMembers){
+        Map<Integer, Integer> roomMemberSequence = new HashMap<>();
         for (int i = 0; i < roomMembers.size(); i++) {
-            roomMemberSequence[i] = (roomMembers.get(i).getMember().getMemberId()).intValue();// 시간 복잡도 고려한 수정 필요
+            roomMemberSequence.put(roomMembers.get(i).getMember().getMemberId().intValue(), i);
         }
         return roomMemberSequence;
     }
+
 
     public int[] calculatePersonalScore(List<SingleSignalRequest> singleSignalRequests, List<RoomMember> roomMembers, List<int[][]> signalBoards) {
 
@@ -235,15 +219,15 @@ public class RatingService {
         return memberRepository.save(member);
     }
 
-    public List<int [][]> makeSignalBoard(int roomMemberSize, List<SingleSignalRequest> singleSignalRequests, int[] roomMemberSequence){
-        List<int [][]> signalBoardList = new ArrayList<>();
+    public List<int[][]> makeSignalBoard(int roomMemberSize, List<SingleSignalRequest> singleSignalRequests, Map<Integer, Integer> roomMemberSequence){
+        List<int[][]> signalBoardList = new ArrayList<>();
 
         int[][] firstBoard = new int[roomMemberSize][roomMemberSize];
         int[][] finalBoard = new int[roomMemberSize][roomMemberSize];
 
         for(SingleSignalRequest singleSignalRequest : singleSignalRequests){
-            int senderIndex = getIndexOfId(singleSignalRequest.getSenderId(), roomMemberSequence);
-            int receiverIndex = getIndexOfId(singleSignalRequest.getReceiverId(), roomMemberSequence);
+            int senderIndex = roomMemberSequence.get(singleSignalRequest.getSenderId());
+            int receiverIndex = roomMemberSequence.get(singleSignalRequest.getReceiverId());
 
             // 첫인상 투표인 경우
             if(singleSignalRequest.getSignalSequence() == 1){
@@ -261,20 +245,19 @@ public class RatingService {
         return signalBoardList;
     }
 
-
     public String getMemberProfileImage (Long memberId){
             Member member = memberRepository.findById(memberId)
                     .orElseThrow(() -> new MemberNotFoundException("해당 유저를 찾을 수 없습니다."));
             return member.getProfileImageSrc();
         }
 
-    public int[] isMutuallySignaled (int[][] signalBoard, int[] roomMemberSequence){
+    public int[] isMutuallySignaled (int[][] signalBoard, Map<Integer, Integer>roomMemberSequence){
         int memberSize = signalBoard.length;
         int[] matchBoard = new int[memberSize]; // 인원수 + 1 만큼의
         for (int i = 0; i < memberSize; i++) {
             for (int j = 0; j < memberSize; j++) {
                 if (signalBoard[i][j] == 1 && signalBoard[j][i] == 1) {
-                    matchBoard[i] = roomMemberSequence[j];
+                    matchBoard[i] = roomMemberSequence.get(i);
                 }
             }
         }
@@ -287,7 +270,7 @@ public class RatingService {
         redisTemplate.opsForList().rightPush("member:" + memberId + ":matchHistory", signalMatchingResult);
 
         // 큐 크기 유지
-        while (redisTemplate.opsForList().size("member:" + memberId + ":matchHistory") > 6) {
+        while (redisTemplate.opsForList().size("member:" + memberId + ":matchHistory") > defaultMemberSize) {
             redisTemplate.opsForList().leftPop("member" + memberId + ":matchHistory");
         }
     }
@@ -302,12 +285,7 @@ public class RatingService {
         redisTemplate.delete("member:" + memberId + ":matchHistory");
     }
 
-    public int getIndexOfId(int id, int[] roomMemberSequence){
-        for(int i = 0; i < roomMemberSequence.length; i++){
-            if(roomMemberSequence[i] == id){
-                return i;
-            }
-        }
-        return -1; // ID not found
+    public int getIndexOfId(int id, Map<Integer, Integer> roomMemberSequence) {
+        return roomMemberSequence.getOrDefault(id, -1);
     }
 }

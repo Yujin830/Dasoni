@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
-import exp from 'constants';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export interface User {
@@ -51,10 +50,6 @@ const userSlice = createSlice({
         console.log(action.payload);
         return { ...state, ...action.payload };
       })
-      .addCase(signupAsync.fulfilled, (state, action) => {
-        // 회원가입 응답 처리 코드(회원가입 후, 필요한 정보를 state에 반영)
-        return { ...state, ...action.payload };
-      })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
         return { ...state, ...action.payload };
       });
@@ -75,31 +70,7 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
   };
 
   // 서버에 POST 요청 보내기
-  const response = await axios.post('/api/register', requestData);
-
-  // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
-  const data = response.data;
-  console.log('from 서버');
-  console.log(data);
-
-  // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
-  return {
-    memberId: data.memberId,
-    id: data.loginId,
-    nickname: data.nickname,
-    gender: data.gender,
-    birth: data.birth,
-    phoneNumber: data.phoneNumber,
-    meetingCount: data.meetingCount,
-    profileImageSrc: data.profileImageSrc,
-    job: data.job,
-    siDo: data.siDo,
-    guGun: data.guGun,
-
-    remainLife: data.remainLife,
-    black: data.black,
-    isFirst: data.isFirst,
-  };
+  await axios.post('/api/register', requestData);
 });
 
 // 회원 탈퇴

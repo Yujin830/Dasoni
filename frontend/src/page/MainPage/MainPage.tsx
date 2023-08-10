@@ -160,10 +160,7 @@ function MainPage() {
 
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
-      <Header
-        onModalToggle={handleHelpModalToggle}
-        // onOpenRoomModalToggle={handleOpenRoomModalToggle}
-      />
+      <Header onModalToggle={handleHelpModalToggle} />
       <Banner />
       <main>
         <div id="main-top">
@@ -215,6 +212,7 @@ function MainPage() {
                   maleAvgRating={room.maleAvgRating}
                   femaleAvgRating={room.femaleAvgRating}
                   megiAcceptable={room.megiAcceptable}
+                  ratingLimit={room.ratingLimit}
                 />
               ))
             : '존재하는 방이 없습니다.'}
@@ -249,9 +247,12 @@ function MainPage() {
       </main>
       {/* HelpModal 컴포넌트를 렌더링합니다. */}
       {helpModalVisible && <HelpModal onClose={handleHelpModalToggle} />}
-
+      <div className={`helpmodal-overlay ${helpModalVisible == true ? 'active' : ''}`}></div>
       {/* OpenRoomModal 컴포넌트를 렌더링합니다. */}
       {openRoomModalVisible && <OpenRoomModal onClose={handleOpenRoomModalToggle} />}
+      <div
+        className={`openroommodal-overlay ${openRoomModalVisible == true ? 'active' : ''}`}
+      ></div>
     </div>
   );
 }
