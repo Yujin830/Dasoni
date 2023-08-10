@@ -43,10 +43,10 @@
   box-sizing: border-box;
 }
 
-.video-box .speaking-box .speaking-signal.normal.speking::after {
+.video-box .speaking-box .speaking-signal::after.normal.speking {
   height: 0.3rem;
 }
 
-.video-box .speaking-box .speaking-signal.large.speking::after {
+.video-box .speaking-box .speaking-signal::after.large.speking {
   height: 0.5rem;
 }

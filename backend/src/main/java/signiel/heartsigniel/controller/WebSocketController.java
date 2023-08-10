@@ -56,7 +56,6 @@ public class WebSocketController {
     @MessageMapping("room/{roomId}/open")
     public void openMembersInformation(@DestinationVariable Long roomId){
         String openInfo = "OPEN";
-        System.out.println("+++++++++++++ OPEN");
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
     }
 
@@ -92,10 +91,8 @@ public class WebSocketController {
 
         try {
             List<Question> questionList = questionListPerRoom.get(roomId);
-            System.out.println(questionList.toString());
             int num = Integer.parseInt(numberStr);
             String question = questionList.get(num).getContent();
-            log.info(question);
             operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
         } catch (NumberFormatException e) {
             log.info(e.getMessage());
@@ -125,7 +122,6 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/chat")
     public void sendMessage(@DestinationVariable Long roomId, @Payload ChatMessage chatMessage) {
-        log.info("Sending Complete");
         chatService.addMessage(roomId, chatMessage);
         operations.convertAndSend("/topic/room/"+ roomId +"/chat", chatMessage);
     }
@@ -143,8 +139,6 @@ public class WebSocketController {
             int receiverId = Math.toIntExact(receiveMemberId);
 
             SingleSignalRequest signalRequest = new SingleSignalRequest(sequence, senderId, receiverId);
-
-            log.info("signalRequest = " + signalRequest.toString());
             signalService.storeSignalInRedis(roomId, signalRequest);
 
             operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
@@ -158,7 +152,6 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}")
     public void joinAndQuitRoom(@DestinationVariable Long roomId, @Payload MemberEntryExitDto memberEntryExitDto) {
-        log.info(memberEntryExitDto.toString());
 
         Long memberId = memberEntryExitDto.getMemberId();
         String type = memberEntryExitDto.getType();
