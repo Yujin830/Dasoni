@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
+import { ActivationState } from '@stomp/stompjs';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export interface User {
@@ -12,8 +13,8 @@ export interface User {
   birth?: string;
   phoneNumber?: string;
   job?: string;
-  siDo?: number;
-  guGun?: number;
+  siDo?: number | string;
+  guGun?: number | string;
   gender?: string;
   profileImageSrc?: string;
   rating?: number;
@@ -42,7 +43,14 @@ const initialState: User = {
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setSido(state, action) {
+      state.siDo = action.payload;
+    },
+    setGugun(state, action) {
+      state.guGun = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
@@ -98,8 +106,8 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   console.log(data);
 
   return {
-    siDo: modifyUser.siDo,
-    guGun: modifyUser.guGun,
+    // siDo: modifyUser.siDo,
+    // guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
   };
@@ -165,6 +173,8 @@ export const logout = () => {
 
 // 리덕스에 저장된 user 상태값을 export
 export const getUserInfo = (state: RootState) => state.user;
+
+export const { setSido, setGugun } = userSlice.actions;
 
 // 로그인 reducer export
 export default userSlice.reducer;
