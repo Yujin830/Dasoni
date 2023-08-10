@@ -31,7 +31,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -233,8 +232,6 @@ public class PrivateRoomService {
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
     }
 
-
-
     public Response roomInfo(Long roomId) {
         Room roomEntity = findRoomById(roomId);
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
@@ -331,6 +328,5 @@ public class PrivateRoomService {
         room.getRoomMembers().add(roomMember);
         roomRepository.save(room);
     }
-
 
 }

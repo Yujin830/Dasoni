@@ -1,6 +1,7 @@
 package signiel.heartsigniel.model.room;
 
 import org.springframework.stereotype.Service;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
@@ -52,6 +53,10 @@ public class MatchingRoomService {
             memberRepository.save(member);
             lifeService.useLife(member);
         }
+    }
+
+    public Response joinRoomAsSpecialUser(Long roomId, Long memberId){
+
     }
 
 }
