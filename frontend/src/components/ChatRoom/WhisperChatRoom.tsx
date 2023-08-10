@@ -112,6 +112,7 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
       </div>
       <form onSubmit={handleFormSubmit} className="chat-input">
         <select
+          className="diff-member-selector"
           value={whisperTarget || ''}
           onChange={(e) => setWhisperTarget(e.target.value || null)}
         >
