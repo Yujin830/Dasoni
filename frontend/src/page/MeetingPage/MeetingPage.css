@@ -14,6 +14,10 @@
 }
 
 #meeting .meeting-video-row:first-child {
+  margin-bottom: 1.5rem;
+}
+
+#meeting .meeting-video-row:first-child {
   margin-bottom: 1rem;
 }
 
