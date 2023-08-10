@@ -52,7 +52,7 @@ function MeetingPage() {
 
       // 첫인상 투표 구독
       client.subscribe(`/topic/room/${roomId}/firstSignal`, (res: any) => {
-        setIsQuestionTime(true);
+        setFirstSignal(true);
       });
 
       // 유저 정보 공개 구독
@@ -86,7 +86,6 @@ function MeetingPage() {
       // 첫인상 투표창 공개
       else if (minutes === '00' && seconds === '35') {
         client?.send(`/app/room/${roomId}/firstSignal`);
-        setFirstSignal(true);
       }
 
       // 가이드 - 정보 공개
