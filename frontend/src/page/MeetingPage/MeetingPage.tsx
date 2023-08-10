@@ -30,6 +30,7 @@ function MeetingPage() {
   const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
   const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
   const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
+  const [currentTime, setCurrentTime] = useState<string>('00:00'); // 타이머 state
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -53,6 +54,44 @@ function MeetingPage() {
         console.log(res.body);
         setSignalOpen(true);
       });
+    },
+    onClientReady: (client) => {
+      const time: string[] = currentTime.split(':');
+      const minutes = time[0];
+      const seconds = time[1];
+      // console.log(client);
+      // console.log(`${minutes} ${seconds}`);
+
+      if (minutes === '05' && seconds === '00') {
+        client?.send(`/app/room/${roomId}/guide`, {}, '5');
+      }
+
+      // 랜덤 주제 1번
+      else if (minutes === '00' && seconds === '30') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '0');
+      }
+
+      // 가이드 - 정보 공개
+      else if (minutes === '20' && seconds === '00') {
+        client?.send(`/app/room/${roomId}/guide`, {}, '20');
+      }
+
+      // 랜덤 주제 2번
+      else if (minutes === '00' && seconds === '40') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '1');
+      }
+
+      // 랜덤 주제 3번
+      else if (minutes === '00' && seconds === '45') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '2');
+      }
+
+      // 가이드 - 최종 투표
+      else if (minutes === '00' && seconds === '50') {
+        client?.send(`/app/room/${roomId}/guide`, {}, '50');
+      }
+      // 시그널 메세지 send
+      else if (minutes === '00' && seconds === '55') client?.send(`/app/room/${roomId}/signal`);
     },
   });
 
@@ -95,7 +134,7 @@ function MeetingPage() {
 
   return (
     <div id="meeting">
-      <TimeDisplay client={client} roomId={roomId} />
+      <TimeDisplay currentTime={currentTime} setCurrentTime={setCurrentTime} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
 
       <div id="meeting-video-container">
