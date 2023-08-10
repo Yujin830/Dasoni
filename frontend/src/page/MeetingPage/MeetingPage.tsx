@@ -79,47 +79,47 @@ function MeetingPage() {
       }
 
       // 가이드 - 첫인상 투표
-      else if (minutes === '00' && seconds === '20') {
+      else if (minutes === '00' && seconds === '30') {
         client?.send(`/app/room/${roomId}/guide`, {}, '5');
       }
 
       // 첫인상 투표창 공개
-      else if (minutes === '00' && seconds === '25') {
+      else if (minutes === '00' && seconds === '35') {
         client?.send(`/app/room/${roomId}/firstSignal`);
         setFirstSignal(true);
       }
 
       // 가이드 - 정보 공개
-      else if (minutes === '00' && seconds === '30') {
+      else if (minutes === '01' && seconds === '10') {
         client?.send(`/app/room/${roomId}/guide`, {}, '20');
       }
 
       // 유저 정보 공개
-      else if (minutes === '00' && seconds === '35') {
+      else if (minutes === '01' && seconds === '15') {
         client?.send(`/app/room/${roomId}/open`);
       }
 
       // 랜덤 주제 1번
-      else if (minutes === '00' && seconds === '40') {
+      else if (minutes === '01' && seconds === '25') {
         client?.send(`/app/room/${roomId}/questions`, {}, '0');
       }
       // 랜덤 주제 2번
-      else if (minutes === '00' && seconds === '50') {
+      else if (minutes === '01' && seconds === '50') {
         client?.send(`/app/room/${roomId}/questions`, {}, '1');
       }
 
       // 랜덤 주제 3번
-      else if (minutes === '00' && seconds === '55') {
+      else if (minutes === '02' && seconds === '15') {
         client?.send(`/app/room/${roomId}/questions`, {}, '2');
       }
 
       // 가이드 - 최종 투표
-      else if (minutes === '01' && seconds === '05') {
+      else if (minutes === '02' && seconds === '25') {
         client?.send(`/app/room/${roomId}/guide`, {}, '50');
       }
 
       // 최종 시그널 메세지 open send
-      else if (minutes === '01' && seconds === '10') client?.send(`/app/room/${roomId}/signal`);
+      else if (minutes === '02' && seconds === '30') client?.send(`/app/room/${roomId}/signal`);
     },
   });
 
@@ -148,7 +148,7 @@ function MeetingPage() {
     if (firstSignal) {
       setTimeout(() => {
         setFirstSignal(false);
-      }, 10000);
+      }, 30000);
     }
   }, [firstSignal]);
 
