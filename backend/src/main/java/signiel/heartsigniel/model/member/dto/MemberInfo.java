@@ -17,6 +17,8 @@ public class MemberInfo {
     private Long rating;
     private String gender;
     private String job;
+    private int meetingCount;
+    private String profileImageSrc;
 
     public MemberInfo(Member member){
         this.memberId = member.getMemberId();
@@ -24,6 +26,8 @@ public class MemberInfo {
         this.rating = member.getRating();
         this.gender = member.getGender();
         this.job = member.getJob();
+        this.meetingCount = member.getMeetingCount();
+        this.profileImageSrc = member.getProfileImageSrc();
     }
 
 }
