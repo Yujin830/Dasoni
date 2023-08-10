@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useOpenvidu } from '../../hooks/useOpenvidu';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MeetingPage.css';
 import { useAppSelector } from '../../app/hooks';
@@ -11,6 +11,7 @@ import Guide from '../../components/MeetingPage/Guide/Guide';
 import Question from '../../components/MeetingPage/Question/Question';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
+import axios from 'axios';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -35,7 +36,9 @@ function MeetingPage() {
   const [firstSignal, setFirstSignal] = useState(false); // 첫인상 투표 보이기 / 안 보이기
   const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
 
-  const client = useWebSocket({
+  const navigate = useNavigate();
+
+  useWebSocket({
     subscribe: (client) => {
       // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
@@ -150,6 +153,29 @@ function MeetingPage() {
       }, 30000);
     }
   }, [firstSignal]);
+
+  // 최종 투표 닫기
+  useEffect(() => {
+    if (signalOpen) {
+      setTimeout(async () => {
+        setSignalOpen(false);
+
+        const res = await axios.get(`/api/rooms/${roomId}/members/${memberId}`);
+        console.log(res);
+
+        if (res.status === 200) {
+          const data = res.data;
+          if (data.content.matchMemberId !== 0) {
+            navigate(`/sub-meeting/${roomId}`, { replace: true });
+          } else {
+            setGuideMessage(
+              '안타깝지만 마음이 이어지지 않았습니다.\n다음은 마음이 이어지기를 응원하겠습니다.\n이제 자유롭게 방을 나가셔도 됩니다',
+            );
+          }
+        }
+      }, 30000);
+    }
+  }, [signalOpen]);
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value));

@@ -36,6 +36,7 @@ function UserVideo({
   const dispatch = useDispatch();
 
   const handleSendSignal = async () => {
+    console.log(finalSignalReceiver);
     if (
       finalSignalReceiver === 0 &&
       confirm('한 번 선택하면 취소할 수 없습니다.\n이분에게 마음을 전하시겠습니까?')

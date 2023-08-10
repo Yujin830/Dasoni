@@ -14,6 +14,8 @@ import convertScoreToName from '../../utils/convertScoreToName';
 // BGM
 import song from '../../assets/music/lobby.mp3';
 import AudioController from '../../components/AudioController/AudioController';
+import { useDispatch } from 'react-redux';
+import { setFinalSignalReceiver } from '../../app/slices/meetingSlice';
 
 function WaitingRoomPage() {
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
@@ -24,6 +26,8 @@ function WaitingRoomPage() {
     waitingRoomInfo.waitingRoomMemberList,
   );
 
+  const dispatch = useDispatch();
+  dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
   const sameGenderMemberList = useMemo(
     () => memberList.filter((info) => info.member.gender === gender),
     [memberList],

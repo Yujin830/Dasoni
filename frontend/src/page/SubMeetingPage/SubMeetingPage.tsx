@@ -6,14 +6,15 @@ import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import ToolBar from '../../components/ToolBar/ToolBar';
 import './SubMeetingPage.css';
+import { useParams } from 'react-router';
 
 function SubMeetingPage() {
-  //   const { roomId } = useAppSelector((state) => state.waitingRoom);
+  const { roomId } = useParams();
   const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     memberId !== undefined ? memberId : 0,
     nickname !== undefined ? nickname : '',
-    '1',
+    roomId !== undefined ? roomId : '1',
     gender !== undefined ? gender : '',
     job !== undefined ? job : '',
     birth !== undefined ? birth.split('-')[0] : '',
