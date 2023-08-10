@@ -2,10 +2,14 @@ package signiel.heartsigniel.model.meeting.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import signiel.heartsigniel.model.roommember.RoomMember;
 import signiel.heartsigniel.model.roommember.dto.RoomMemberInfo;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class PersonalResult {
     private RoomMemberInfo roomMemberInfo;
     private Long ratingChange;

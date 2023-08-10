@@ -32,3 +32,9 @@
   top: 30px;
   right: 1.2rem;
 }
+
+#meeting .diff-member-selector {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #bdbdbd;
+}

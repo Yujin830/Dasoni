@@ -9,6 +9,7 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
+import signiel.heartsigniel.model.meeting.dto.PersonalResult;
 import signiel.heartsigniel.model.meeting.dto.SignalMatchingResult;
 import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
 
@@ -50,7 +51,8 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean RedisTemplate<String, SingleSignalRequest> singleSignalRequestRedisTemplate(RedisConnectionFactory connectionFactory){
+    @Bean
+    public RedisTemplate<String, SingleSignalRequest> singleSignalRequestRedisTemplate(RedisConnectionFactory connectionFactory){
         RedisTemplate<String, SingleSignalRequest> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
@@ -61,4 +63,18 @@ public class RedisConfig {
         template.setKeySerializer(new StringRedisSerializer());
         return template;
     }
+
+    @Bean
+    public RedisTemplate<String, PersonalResult> personalMeetingResultRedisTemplate(RedisConnectionFactory connectionFactory){
+        RedisTemplate<String, PersonalResult> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        Jackson2JsonRedisSerializer<PersonalResult> serializer = new Jackson2JsonRedisSerializer<>(PersonalResult.class);
+        serializer.setObjectMapper(new ObjectMapper());
+
+        template.setValueSerializer(serializer);
+        template.setKeySerializer(new StringRedisSerializer());
+        return template;
+    }
+
 }
