@@ -6,9 +6,10 @@ type FilledButtonProps = {
   style?: object;
   content: string;
   handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 };
 
-function FilledButton({ style, content, handleClick, classes }: FilledButtonProps) {
+function FilledButton({ style, content, handleClick, classes, disabled }: FilledButtonProps) {
   return (
     <button className={`btn ${classes}`} style={style} onClick={handleClick}>
       {content}

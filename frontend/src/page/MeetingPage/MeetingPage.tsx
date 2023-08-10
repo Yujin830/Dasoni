@@ -9,7 +9,6 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import TimeDisplay from '../../components/Element/TimeDisplay';
 import Guide from '../../components/MeetingPage/Guide/Guide';
 import Question from '../../components/MeetingPage/Question/Question';
-import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 
@@ -34,6 +33,7 @@ function MeetingPage() {
   const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
   const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
   const [userInfoOpen, setUserInfoOepn] = useState(false); // 유저 정보 보이기 / 안 보이기
+  const [firstSignal, setFirstSignal] = useState(false); // 첫인상 투표 보이기 / 안 보이기
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -47,6 +47,11 @@ function MeetingPage() {
       // 질문 구독
       client.subscribe(`/topic/room/${roomId}/questions`, (res: any) => {
         setQuestion(res.body);
+        setIsQuestionTime(true);
+      });
+
+      // 첫인상 투표 구독
+      client.subscribe(`/topic/room/${roomId}/firstSignal`, (res: any) => {
         setIsQuestionTime(true);
       });
 
@@ -73,38 +78,48 @@ function MeetingPage() {
         client?.send(`/app/room/${roomId}/guide`, {}, '5');
       }
 
-      // 랜덤 주제 1번
+      // 가이드 - 첫인상 투표
       else if (minutes === '00' && seconds === '30') {
-        client?.send(`/app/room/${roomId}/questions`, {}, '0');
+        client?.send(`/app/room/${roomId}/guide`, {}, '5');
+      }
+
+      // 첫인상 투표창 공개
+      else if (minutes === '00' && seconds === '35') {
+        client?.send(`/app/room/${roomId}/firstSignal`);
+        setFirstSignal(true);
       }
 
       // 가이드 - 정보 공개
-      else if (minutes === '00' && seconds === '20') {
+      else if (minutes === '01' && seconds === '10') {
         client?.send(`/app/room/${roomId}/guide`, {}, '20');
       }
 
       // 유저 정보 공개
-      else if (minutes === '00' && seconds === '26') {
+      else if (minutes === '01' && seconds === '15') {
         client?.send(`/app/room/${roomId}/open`);
       }
 
+      // 랜덤 주제 1번
+      else if (minutes === '01' && seconds === '25') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '0');
+      }
       // 랜덤 주제 2번
-      else if (minutes === '00' && seconds === '40') {
+      else if (minutes === '01' && seconds === '50') {
         client?.send(`/app/room/${roomId}/questions`, {}, '1');
       }
 
       // 랜덤 주제 3번
-      else if (minutes === '00' && seconds === '45') {
+      else if (minutes === '02' && seconds === '15') {
         client?.send(`/app/room/${roomId}/questions`, {}, '2');
       }
 
       // 가이드 - 최종 투표
-      else if (minutes === '00' && seconds === '50') {
+      else if (minutes === '02' && seconds === '25') {
         client?.send(`/app/room/${roomId}/guide`, {}, '50');
       }
 
       // 최종 시그널 메세지 open send
-      else if (minutes === '00' && seconds === '55') client?.send(`/app/room/${roomId}/signal`);
+      else if (minutes === '02' && seconds === '30') client?.send(`/app/room/${roomId}/signal`);
     },
   });
 
@@ -119,6 +134,7 @@ function MeetingPage() {
     }
   }, [volume, muted]);
 
+  // 가이드 닫기
   useEffect(() => {
     if (isShow) {
       setTimeout(() => {
@@ -126,6 +142,15 @@ function MeetingPage() {
       }, 5000);
     }
   }, [isShow]);
+
+  // 채팅 투표 닫기
+  useEffect(() => {
+    if (firstSignal) {
+      setTimeout(() => {
+        setFirstSignal(false);
+      }, 30000);
+    }
+  }, [firstSignal]);
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value));
@@ -193,7 +218,7 @@ function MeetingPage() {
           handleMuteToggle={handleMuteToggle}
           handleVolumeChange={handleVolumeChange}
         />
-        <WhisperChatRoom diffGenderMemberList={diffGenderMemberList} />
+        {firstSignal && <WhisperChatRoom diffGenderMemberList={diffGenderMemberList} />}
       </div>
     </div>
   );

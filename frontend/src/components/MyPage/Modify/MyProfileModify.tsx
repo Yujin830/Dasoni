@@ -30,7 +30,7 @@ function MyProfileModify({ setType }: any) {
   };
 
   const [modifyNickname, setModifyNickname] = useState(nickname);
-  const [modifySido, setModifySido] = useState(11);
+  const [modifySido, setModifySido] = useState(-1);
   const [modifyGugun, setModifyGugun] = useState(0);
   const [modifyJob, setModifyJob] = useState(job);
   const [modifyProfileSrc, setModifyProfileSrc] = useState(profileImageSrc);
@@ -50,8 +50,8 @@ function MyProfileModify({ setType }: any) {
     e.preventDefault();
     const modifiedData = {
       memberId: memberId,
-      sido: Number(modifySido),
-      gugun: Number(modifyGugun),
+      siDo: Number(modifySido),
+      guGun: Number(modifyGugun),
       job: modifyJob,
       nickname: modifyNickname,
       profileImageSrc: modifyProfileSrc,
@@ -59,6 +59,7 @@ function MyProfileModify({ setType }: any) {
     console.log(modifiedData);
 
     dispatch(modifyUserAsync(modifiedData));
+    setType('read');
   };
 
   return (
