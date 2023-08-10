@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
-import Header from '../../components/Header/Header';
 import titleLogo from '../../assets/image/title_img.png';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
 import WaitingMemberBox from '../../components/WatingMember/WaitingMember';
@@ -26,12 +25,12 @@ function WaitingRoomPage() {
   );
 
   const sameGenderMemberList = useMemo(
-    () => memberList.filter((member) => member.gender === gender),
+    () => memberList.filter((info) => info.member.gender === gender),
     [memberList],
   );
 
   const diffGenderMemberList = useMemo(
-    () => memberList.filter((member) => member.gender !== gender),
+    () => memberList.filter((info) => info.member.gender !== gender),
     [memberList],
   );
   const navigate = useNavigate();
@@ -42,7 +41,8 @@ function WaitingRoomPage() {
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const data = JSON.parse(res.body);
-        setMemberList(data.memberList);
+        console.log(data);
+        setMemberList(data.privateRoomInfo.roomMemberInfoList);
       });
 
       client.subscribe(`/topic/room/${roomId}/start`, (res: any) => {
@@ -124,28 +124,34 @@ function WaitingRoomPage() {
         <div id="waiting-room-body">
           <div id="member-list-box">
             <div className="waiting-room-content">
-              {sameGenderMemberList.map((member) => (
-                <WaitingMemberBox
-                  key={member.memberId}
-                  nickname={member.nickname}
-                  rating={member.rating}
-                  matchCnt={member.meetingCount}
-                  gender={member.gender}
-                  profileImageSrc={member.profileImageSrc}
-                />
-              ))}
+              {sameGenderMemberList.map((info) => {
+                console.log(info);
+                return (
+                  <WaitingMemberBox
+                    key={info.member.memberId}
+                    nickname={info.member.nickname}
+                    rating={info.member.rating}
+                    matchCnt={info.member.meetingCount}
+                    gender={info.member.gender}
+                    profileImageSrc={info.member.profileImageSrc}
+                  />
+                );
+              })}
             </div>
             <div className="waiting-room-content">
-              {diffGenderMemberList.map((member) => (
-                <WaitingMemberBox
-                  key={member.memberId}
-                  nickname={member.nickname}
-                  rating={member.rating}
-                  matchCnt={member.meetingCount}
-                  gender={member.gender}
-                  profileImageSrc={member.profileImageSrc}
-                />
-              ))}
+              {diffGenderMemberList.map((info) => {
+                console.log(info);
+                return (
+                  <WaitingMemberBox
+                    key={info.member.memberId}
+                    nickname={info.member.nickname}
+                    rating={info.member.rating}
+                    matchCnt={info.member.meetingCount}
+                    gender={info.member.gender}
+                    profileImageSrc={info.member.profileImageSrc}
+                  />
+                );
+              })}
             </div>
           </div>
           <ChatRoom />
