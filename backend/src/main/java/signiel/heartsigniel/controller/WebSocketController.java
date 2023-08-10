@@ -34,6 +34,7 @@ public class WebSocketController {
     private final QuestionService questionService;
 
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
+    private final SignalService signalService;
 
     public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService) {
         this.operations = operations;

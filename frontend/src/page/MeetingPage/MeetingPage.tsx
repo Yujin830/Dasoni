@@ -27,13 +27,13 @@ function MeetingPage() {
   const [guideMessage, setGuideMessage] = useState(
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
+  const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
   const [question, setQuestion] = useState(''); // 질문 저장
   const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
   const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
-  const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
-  const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
   const [userInfoOpen, setUserInfoOepn] = useState(false); // 유저 정보 보이기 / 안 보이기
   const [firstSignal, setFirstSignal] = useState(false); // 첫인상 투표 보이기 / 안 보이기
+  const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
 
   const client = useWebSocket({
     subscribe: (client) => {
