@@ -37,7 +37,7 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
     }
 
     // 랜덤 주제 1번
-    else if (minutes === '08' && seconds === '00') {
+    else if (minutes === '00' && seconds === '11') {
       client?.send(`/app/room/${roomId}/questions`, {}, '0');
     }
 

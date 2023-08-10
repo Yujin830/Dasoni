@@ -13,6 +13,8 @@ import signiel.heartsigniel.model.chat.dto.ChatMessage;
 import signiel.heartsigniel.model.chat.dto.MemberEntryExitDto;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.GuideRepository;
+import signiel.heartsigniel.model.meeting.SignalService;
+import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
 import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
@@ -32,16 +34,17 @@ public class WebSocketController {
     private final ChatService chatService;
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
-
+    private final SignalService signalService;
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService) {
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService, SignalService signalService) {
         this.operations = operations;
         this.privateRoomService = privateRoomService;
         this.guideRepository = guideRepository;
         this.chatService = chatService;
         this.questionRepository = questionRepository;
         this.questionService = questionService;
+        this.signalService = signalService;
     }
 
 
@@ -122,13 +125,12 @@ public class WebSocketController {
      */
         @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
             public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
-            log.info("Whisper Complete");
-            log.info(whisperMessage.toString());
-            Long memId = Long.valueOf(whisperMessage.getMemberId());
             whisperMessage.setStatus("OK");
-            log.info("detination : " + receiveMemberId);
-            log.info("receive" + String.valueOf(whisperMessage.getMemberId()));
-            log.info(whisperMessage.getReceiverId());
+            int senderMemberId = Integer.parseInt(whisperMessage.getMemberId());
+            int receiverMemberId = Math.toIntExact((receiveMemberId));
+            SingleSignalRequest singleSignalRequest = new SingleSignalRequest(1, senderMemberId, receiverMemberId);
+
+            signalService.storeSignalInRedis(roomId, singleSignalRequest);
             operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
         }
 
