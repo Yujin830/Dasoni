@@ -61,7 +61,17 @@ public class WebSocketController {
     }
 
     /**
-     * 시그널 보내기 시작!
+     * 첫 인상 투표 시작 메시지 전송.
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId}/firstSignal")
+    public void sendFirstSignal(@DestinationVariable Long roomId){
+        String firstMessage = "FIRST";
+        operations.convertAndSend("/topic/room/"+roomId + "/firstSignal", firstMessage);
+    }
+
+    /**
+     * 최종 시그널 보내기 시작!
      *
      * @param roomId
      */
