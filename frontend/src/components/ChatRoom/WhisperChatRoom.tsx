@@ -5,7 +5,7 @@ import './WhisperChatRoom.css';
 import { useWebSocket } from '../../hooks/useWebSocket';
 
 interface ChatMessage {
-  senderNickname: string;
+  senderNickname: '';
   content: string;
   timestamp: Date;
   isUserMessage?: boolean;

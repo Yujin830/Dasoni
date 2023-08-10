@@ -34,7 +34,7 @@ public class WebSocketController {
     private final ChatService chatService;
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
-    private final SignalService signalService;
+
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
     public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionRepository questionRepository, QuestionService questionService, SignalService signalService) {
@@ -52,9 +52,10 @@ public class WebSocketController {
      * 유저 정보 오픈!!
      * @param roomId
      */
-    @MessageMapping("room/{roomId]/open")
+    @MessageMapping("room/{roomId}/open")
     public void openMembersInformation(@DestinationVariable Long roomId){
         String openInfo = "OPEN";
+        System.out.println("+++++++++++++ OPEN");
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
     }
 
@@ -125,12 +126,13 @@ public class WebSocketController {
      */
         @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
             public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
+            log.info("Whisper Complete");
+            log.info(whisperMessage.toString());
+            Long memId = Long.valueOf(whisperMessage.getMemberId());
             whisperMessage.setStatus("OK");
-            int senderMemberId = Integer.parseInt(whisperMessage.getMemberId());
-            int receiverMemberId = Math.toIntExact((receiveMemberId));
-            SingleSignalRequest singleSignalRequest = new SingleSignalRequest(1, senderMemberId, receiverMemberId);
-
-            signalService.storeSignalInRedis(roomId, singleSignalRequest);
+            log.info("detination : " + receiveMemberId);
+            log.info("receive" + String.valueOf(whisperMessage.getMemberId()));
+            log.info(whisperMessage.getReceiverId());
             operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
         }
 
