@@ -247,9 +247,12 @@ function MainPage() {
       </main>
       {/* HelpModal 컴포넌트를 렌더링합니다. */}
       {helpModalVisible && <HelpModal onClose={handleHelpModalToggle} />}
-
+      <div className={`helpmodal-overlay ${helpModalVisible == true ? 'active' : ''}`}></div>
       {/* OpenRoomModal 컴포넌트를 렌더링합니다. */}
       {openRoomModalVisible && <OpenRoomModal onClose={handleOpenRoomModalToggle} />}
+      <div
+        className={`openroommodal-overlay ${openRoomModalVisible == true ? 'active' : ''}`}
+      ></div>
     </div>
   );
 }
