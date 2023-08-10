@@ -8,7 +8,6 @@ interface GuideProps {
 }
 
 function Guide({ guideMessage, isShow }: GuideProps) {
-  console.log('isShow', isShow);
   return (
     <div className={`guide ${isShow ? 'show' : ''}`}>
       <img src={guide_bg} alt="구름 이미지" />

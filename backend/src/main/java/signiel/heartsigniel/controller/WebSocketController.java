@@ -48,9 +48,10 @@ public class WebSocketController {
      * 유저 정보 오픈!!
      * @param roomId
      */
-    @MessageMapping("room/{roomId]/open")
+    @MessageMapping("room/{roomId}/open")
     public void openMembersInformation(@DestinationVariable Long roomId){
         String openInfo = "OPEN";
+        System.out.println("+++++++++++++ OPEN");
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
     }
 

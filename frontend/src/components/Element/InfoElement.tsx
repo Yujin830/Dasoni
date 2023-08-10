@@ -1,10 +1,10 @@
 import React from 'react';
 import './InfoElement.css';
 
-type InfoElementProps = {
+interface InfoElementProps {
   job: string;
-  age: number;
-};
+  age: string;
+}
 
 function InfoElement({ job, age }: InfoElementProps) {
   return (
