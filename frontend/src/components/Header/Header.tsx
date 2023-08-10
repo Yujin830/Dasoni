@@ -6,6 +6,9 @@ import { logout } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import heartRating from '../../assets/image/heart/heart_rating.png';
+import { useAppSelector } from '../../app/hooks';
+import RankAvartar from '../../components/Avarta/RankAvartar/RackAvartar';
+import ExpPointBar from '../../components/Element/ExpPointBar';
 
 interface HeaderProps {
   onModalToggle?: () => void;
@@ -31,11 +34,12 @@ function Header({ onModalToggle }: HeaderProps) {
 
   //사이드바 토글
   const [sideOpen, setSideopen] = useState(false);
-
   const ToggleSidebar = () => {
     sideOpen === true ? setSideopen(false) : setSideopen(true);
   };
 
+  // 사이드바 데이터 반영
+  const { rating, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
   return (
     <header className="header">
       <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
@@ -79,8 +83,18 @@ function Header({ onModalToggle }: HeaderProps) {
             </button>
           </div>
           <div className="sd-body">
-            <div className="sidebar-profile">이미지</div>
-            <div className="sidebar-rating">My Rating</div>
+            {/* <div className="sidebar-profile">
+              <img src={profileImageSrc} alt="프로필 이미지" />
+            </div>
+            <div className="sidebar-rating">My Rating</div> */}
+            <div className="sidebar-profile">
+              <RankAvartar src={profileImageSrc} point={rating} />
+            </div>
+
+            <div className="sidebar-rating">
+              <p className="title"> Signal</p>
+              <ExpPointBar percent={70} points={rating} />
+            </div>
             <div className="sidebar-heart">
               <h2>Rating Info</h2>
               <img className="heart-rating" src={heartRating} alt="하트 등급" />
