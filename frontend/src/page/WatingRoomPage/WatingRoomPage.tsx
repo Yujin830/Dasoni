@@ -70,11 +70,11 @@ function WaitingRoomPage() {
     try {
       const res = await axios.delete(`/api/rooms/${roomId}/members/${member.memberId}`);
 
-      const data = {
+      const quitData = {
         type: 'quit',
         memberId: member.memberId,
       };
-      client?.send(`/app/room/${roomId}`, {}, JSON.stringify(data));
+      client?.send(`/app/room/${roomId}`, {}, JSON.stringify(quitData));
       if (res.status === 200) {
         navigate('/main', { replace: true });
       }
@@ -111,10 +111,7 @@ function WaitingRoomPage() {
           </div>
           <div className="info">
             <span>메기 : {waitingRoomInfo.megiAcceptable ? 'Yes' : 'No'}</span>
-            <span>
-              Rank :
-              {convertScoreToName(waitingRoomInfo.ratingLimit ? waitingRoomInfo.ratingLimit : 0)}
-            </span>
+            <span>Rank :{convertScoreToName(waitingRoomInfo.ratingLimit)}</span>
           </div>
           <AudioController
             volume={volume}

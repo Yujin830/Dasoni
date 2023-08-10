@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { CompatClient } from '@stomp/stompjs';
+import React, { useEffect } from 'react';
 import './TimeDisplay.css';
 
 interface TimeDisplayProps {
-  client: CompatClient | undefined;
-  roomId: string | undefined;
+  currentTime: string;
+  setCurrentTime: (time: string) => void;
 }
 
-function TimeDisplay({ client, roomId }: TimeDisplayProps) {
-  const [currentTime, setCurrentTime] = useState<string>('00:00');
+function TimeDisplay({ currentTime, setCurrentTime }: TimeDisplayProps) {
   const startTime = new Date(); // 현재 시간을 시작 시간으로 설정
 
   useEffect(() => {
@@ -29,37 +27,6 @@ function TimeDisplay({ client, roomId }: TimeDisplayProps) {
       .padStart(2, '0');
     const seconds = (timeInSeconds % 60).toString().padStart(2, '0');
     // console.log(timeInSeconds);
-
-    // 웹 소켓 메세지 sending
-    // 가이드 - 첫인상 투표
-    if (minutes === '05' && seconds === '00') {
-      client?.send(`/app/room/${roomId}/guide`, {}, '5');
-    }
-
-    // 랜덤 주제 1번
-    else if (minutes === '08' && seconds === '00') {
-      client?.send(`/app/room/${roomId}/questions`, {}, '0');
-    }
-
-    // 가이드 - 정보 공개
-    else if (minutes === '20' && seconds === '00') {
-      client?.send(`/app/room/${roomId}/guide`, {}, '20');
-    }
-
-    // 랜덤 주제 2번
-    else if (minutes === '20' && seconds === '05') {
-      client?.send(`/app/room/${roomId}/questions`, {}, '1');
-    }
-
-    // 랜덤 주제 3번
-    else if (minutes === '40' && seconds === '00') {
-      client?.send(`/app/room/${roomId}/questions`, {}, '2');
-    }
-
-    // 가이드 - 최종 투표
-    else if (minutes === '50' && seconds === '00') {
-      client?.send(`/app/room/${roomId}/guide`, {}, '50');
-    }
     setCurrentTime(`${minutes}:${seconds}`);
   }
 

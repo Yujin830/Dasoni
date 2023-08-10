@@ -11,6 +11,11 @@
   color: #232323;
 }
 
+.header .header-mobile:hover {
+  font-weight: 600;
+  color: #ff257e;
+}
+
 .header .logo {
   width: 15%;
   display: flex;
@@ -135,18 +140,85 @@
   color: #ff257e;
 }
 
-/* .header .help,
-.header .btn {
-  cursor: pointer;
-} */
-
 .header a {
   text-decoration: none;
+}
+
+/*사이드바 css*/
+.sidebar {
+  width: 35%;
+  min-height: 100vh;
+  border-radius: 0px 12px 12px 0px;
+  background: #fff6f9;
+  box-shadow: 11px 0px 7px 0px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  top: 0;
+  left: -100%;
+  z-index: 2;
+  transition: 0.5s;
+}
+.sd-header button {
+  background-color: #fff6f9;
+  height: 100%;
+}
+.sidebar.active {
+  left: 0;
+}
+.sd-header {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 3vh;
+}
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: 0.5s;
+  opacity: 0;
+  visibility: hidden;
+}
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+.sd-body {
+  /* padding: 15px; */
+  height: calc(100vh - 4rem);
+  /* max-height: calc(100vh - 4rem); */
+  overflow-x: hidden;
+}
+.sd-body .sidebar-profile {
+  height: 35%;
+  background-color: red;
+}
+.sd-body .sidebar-rating {
+  height: 20%;
+  background-color: yellow;
+}
+.sd-body .sidebar-heart {
+  padding: 1vh;
+  text-align: center;
+  color: #ff257e;
+}
+.sd-body .sidebar-heart .heart-rating {
+  margin-top: 2vh;
+  width: 100%;
+  border: 1px solid #ff257e;
+  border-radius: 1rem;
 }
 
 @media (max-width: 430px) {
   .header .logo {
     width: 40%;
+  }
+  .header .header-mobile {
+    display: none;
   }
 }
 @media (max-width: 1024px) {
