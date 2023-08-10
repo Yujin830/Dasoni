@@ -10,6 +10,7 @@ import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.chat.dto.ChatMessageWithMember;
 import signiel.heartsigniel.model.chat.ChatService;
+import signiel.heartsigniel.model.chat.dto.ChatMessageWithRoomInfo;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.life.code.LifeCode;
 import signiel.heartsigniel.model.matching.MatchingService;
@@ -25,6 +26,7 @@ import signiel.heartsigniel.model.meeting.RatingService;
 import signiel.heartsigniel.model.room.code.RoomCode;
 import signiel.heartsigniel.model.room.dto.*;
 import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
+import signiel.heartsigniel.model.roommember.dto.RoomMemberInfo;
 import signiel.heartsigniel.model.roommember.exception.NotFoundRoomMemberException;
 
 import javax.transaction.Transactional;
@@ -208,32 +210,29 @@ public class PrivateRoomService {
     유저 목록 브로드캐스팅
      */
 
-    public void broadcastJoinMemberList(Long roomId, Long memberId){
-        ChatMessageWithMember chatMessage = new ChatMessageWithMember();
-        List<Member> membersInRoom = getMemberInRoom(roomId);
+    public void broadcastJoinMemberList(Long roomId, Long memberId) {
+        ChatMessageWithRoomInfo chatMessage = new ChatMessageWithRoomInfo();
+        Member member = findMemberById(memberId);
 
-        Optional<Member> memberOpt = memberRepository.findById(memberId);
+        Room roomEntity = findRoomById(roomId);
+        PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
+        chatMessage.setPrivateRoomInfo(privateRoomInfo);
 
-        Member member;
+        chatMessage.setSenderNickname("시스템 메시지");
+        chatMessage.setContent(member.getNickname() + "님이 입장하셨습니다.");
+        chatService.addMessage(roomId, chatMessage);
+        chatMessage.setPrivateRoomInfo(privateRoomInfo);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
 
-        if(memberOpt.isPresent()) {
-            member = memberOpt.get();
-            chatMessage.setSenderNickname(member.getNickname());
-            chatMessage.setContent("님이 입장하셨습니다.");
-            chatService.addMessage(roomId, chatMessage);
-            chatMessage.setMemberList(membersInRoom);
-            simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
-        }else{
-            log.info("널 값 입 니  다. ");
-        }
     }
     public void broadcastQuitMemberList(Long roomId, Long memberId){
-        ChatMessageWithMember chatMessage = new ChatMessageWithMember();
-        List<Member> membersInRoom = getMemberInRoom(roomId);
-        Member member = memberRepository.findById(memberId).get();
-        chatMessage.setSenderNickname(member.getNickname());
-        chatMessage.setContent("님이 퇴장하셨습니다.");
-        chatMessage.setMemberList(membersInRoom);
+        ChatMessageWithRoomInfo chatMessage = new ChatMessageWithRoomInfo();
+        Room roomEntity = findRoomById(roomId);
+        Member member = findMemberById(memberId);
+        PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
+        chatMessage.setPrivateRoomInfo(privateRoomInfo);
+        chatMessage.setContent(member.getNickname() + "님이 퇴장하셨습니다.");
+        chatMessage.setSenderNickname("시스템 메시지");
         chatService.addMessage(roomId, chatMessage);
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
     }
