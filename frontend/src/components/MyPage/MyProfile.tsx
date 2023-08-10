@@ -11,7 +11,6 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
   const { loginId, nickname, job, birth, siDo, guGun, profileImageSrc } = useAppSelector(
     (state) => state.user,
   );
-
   const user = useAppSelector((state) => state.user);
   // TODO : 최근 매칭된 다소니 리스트 조회 recentUserList로 state 변경
   const [recentUserList, setRecentUserList] = useState([]);
