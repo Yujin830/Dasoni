@@ -21,6 +21,13 @@ function Header({ onModalToggle }: HeaderProps) {
   const handleToggleFilter = () => {
     setIsOpen((prevState) => !prevState);
   };
+  const handleHelpClick = () => {
+    if (onModalToggle) {
+      onModalToggle();
+    }
+    setIsOpen(false);
+  };
+
   return (
     <header className="header">
       <button className="material-symbols-outlined">double_arrow</button>
@@ -40,7 +47,7 @@ function Header({ onModalToggle }: HeaderProps) {
             </button>
             <ul className={isOpen ? 'show' : ''}>
               <li id="help">
-                <button className="material-symbols-outlined" onClick={onModalToggle}>
+                <button className="material-symbols-outlined" onClick={handleHelpClick}>
                   help도움말
                 </button>
               </li>

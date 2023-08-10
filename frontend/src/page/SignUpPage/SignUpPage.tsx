@@ -127,9 +127,8 @@ function SignupPage() {
     };
     console.log(data);
     try {
-      const response = await dispatch(signupAsync(data)); // 회원가입 요청, 서버 응답 처리를 기다립니다.
+      await dispatch(signupAsync(data)); // 회원가입 요청, 서버 응답 처리를 기다립니다.
       console.log('회원가입 성공!');
-      console.log('회원 정보:', response.payload); // 회원가입 후 서버로부터 받은 응답 데이터를 출력합니다.
       navigate('/');
     } catch (error) {
       console.log('회원가입 실패:', error);
@@ -147,8 +146,7 @@ function SignupPage() {
       // 서버로 로그인 아이디 중복 체크 요청을 보냄
       const response = await axios.post(`/api/register/${loginId}`);
 
-      console.log('중복체크 성공');
-      console.log(response.status);
+      console.log('중복체크 성공', response.status);
 
       if (response.status === 200) {
         // 중복된 아이디인 경우
@@ -158,7 +156,7 @@ function SignupPage() {
         setIsIdAvailable(true);
       }
     } catch (error) {
-      console.log(error);
+      console.log('401에러면 중복체크됨', error);
       // 401에러로 인식함 -> 중복되지 않은 아이디
       setIsIdAvailable(true);
     }

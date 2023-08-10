@@ -160,10 +160,7 @@ function MainPage() {
 
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
-      <Header
-        onModalToggle={handleHelpModalToggle}
-        // onOpenRoomModalToggle={handleOpenRoomModalToggle}
-      />
+      <Header onModalToggle={handleHelpModalToggle} />
       <Banner />
       <main>
         <div id="main-top">
@@ -215,6 +212,7 @@ function MainPage() {
                   maleAvgRating={room.maleAvgRating}
                   femaleAvgRating={room.femaleAvgRating}
                   megiAcceptable={room.megiAcceptable}
+                  ratingLimit={room.ratingLimit}
                 />
               ))
             : '존재하는 방이 없습니다.'}
