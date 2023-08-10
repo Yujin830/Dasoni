@@ -1,13 +1,12 @@
 package signiel.heartsigniel.model.room;
 
-        import lombok.Data;
-        import lombok.NoArgsConstructor;
-        import signiel.heartsigniel.model.member.Member;
-        import signiel.heartsigniel.model.roommember.RoomMember;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import signiel.heartsigniel.model.roommember.RoomMember;
 
-        import javax.persistence.*;
-        import java.time.LocalDateTime;
-        import java.util.List;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
