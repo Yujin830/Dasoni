@@ -218,7 +218,7 @@ public class PrivateRoomService {
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
         chatMessage.setPrivateRoomInfo(privateRoomInfo);
 
-        chatMessage.setSenderNickname("시스템 메시지");
+//        chatMessage.setSenderNickname("시스템 메시지");
         chatMessage.setContent(member.getNickname() + "님이 입장하셨습니다.");
         chatService.addMessage(roomId, chatMessage);
         chatMessage.setPrivateRoomInfo(privateRoomInfo);
@@ -232,7 +232,7 @@ public class PrivateRoomService {
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
         chatMessage.setPrivateRoomInfo(privateRoomInfo);
         chatMessage.setContent(member.getNickname() + "님이 퇴장하셨습니다.");
-        chatMessage.setSenderNickname("시스템 메시지");
+//        chatMessage.setSenderNickname("시스템 메시지");
         chatService.addMessage(roomId, chatMessage);
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
     }
