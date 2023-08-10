@@ -121,13 +121,28 @@ function RoomBox({
 
         if (res.status === 200) {
           console.log('입장 성공');
-          dispatch(setWaitingMemberList([member]));
           dispatch(setRoomType('private'));
           dispatch(setWaitingRoomId(roomId));
           dispatch(setRoomTitle(title));
           dispatch(setMegiAcceptable(megiAcceptable));
           dispatch(setRatingLimit(ratingLimit));
           navigate(`/waiting-room/${roomId}`);
+
+          const waitingMember = {
+            member: {
+              memberId: member.memberId,
+              nickname: member.nickname,
+              gender: member.gender,
+              profileImageSrc: member.profileImageSrc,
+              rating: member.rating,
+              meetingCount: member.matchCnt,
+              job: member.job,
+            },
+            roomLeader: false,
+            specialUser: false,
+          };
+
+          dispatch(setWaitingMemberList([waitingMember]));
         }
       } catch (err) {
         console.error(err);
