@@ -10,7 +10,14 @@ export interface WaitingRoomInfoRes {
 }
 
 export interface WaitingMember {
+  member: WaitingMemberInfo; // 멤버 정보
+  roomLeader: boolean; // 방장 여부
+  specialUser: boolean; // 메기 여부
+}
+
+interface WaitingMemberInfo {
   memberId: number;
+  job: string;
   nickname: string;
   gender: string;
   profileImageSrc: string;
