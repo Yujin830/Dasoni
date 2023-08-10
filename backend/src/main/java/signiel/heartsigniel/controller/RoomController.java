@@ -16,6 +16,7 @@ import signiel.heartsigniel.model.room.PrivateRoomService;
 import signiel.heartsigniel.model.room.dto.PrivateRoomCreate;
 import signiel.heartsigniel.model.room.dto.PrivateRoomList;
 import signiel.heartsigniel.model.room.dto.StartRoomRequest;
+import signiel.heartsigniel.model.roommember.RoomMemberService;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -23,12 +24,13 @@ import signiel.heartsigniel.model.room.dto.StartRoomRequest;
 public class RoomController {
 
     private final PrivateRoomService privateRoomService;
-
+    private final RoomMemberService roomMemberService;
     private final SignalService signalService;
 
-    public RoomController(PrivateRoomService privateRoomService, SignalService signalService) {
+    public RoomController(PrivateRoomService privateRoomService, SignalService signalService, RoomMemberService roomMemberService) {
         this.privateRoomService = privateRoomService;
         this.signalService = signalService;
+        this.roomMemberService = roomMemberService;
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
@@ -101,6 +103,12 @@ public class RoomController {
     @PostMapping("/{roomId}/signals")
     public ResponseEntity<Response> storeSignalInRedis(@PathVariable Long roomId, @RequestBody SingleSignalRequest singleSignalRequest){
         Response response = signalService.storeSignalInRedis(roomId, singleSignalRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{roomId}/members/{memberId}")
+    public ResponseEntity<Response> getMemberMeetingResult(@PathVariable Long roomId, @PathVariable Long memberId){
+        Response response = roomMemberService.getMeetingResultForRoomMember(roomId, memberId);
         return ResponseEntity.ok(response);
     }
 

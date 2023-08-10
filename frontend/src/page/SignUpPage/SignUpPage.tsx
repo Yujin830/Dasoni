@@ -1,67 +1,14 @@
 import React, { useState } from 'react';
 import Button from '../../components/Button/FilledButton';
 import Input from '../../components/Input/NoLabelInput/NoLabelInput';
-// import IconLabelInput from '../../components/Input/IconLabelInput/IconLabelInput';
 import './SignUpPage.css';
 import logo from '../../assets/image/logo.png';
 import leftSignal from '../../assets/image/left_signal.png';
-
 import { useAppDispatch } from '../../app/hooks';
 import { signupAsync } from '../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-// const styles = {
-//   button: {
-//     width: '100%',
-//     height: '100%',
-//     flexShrink: '0',
-//     borderRadius: '1.25rem',
-//     background: '#EC5E98',
-//     color: '#FFF',
-//     fontSize: '2.5vh',
-//     fontStyle: 'normal',
-//     fontWeight: '700',
-//     margin: '0.5rem 0',
-//   },
-//   button2: {
-//     width: '100%',
-//     height: '100%',
-//     flexshrink: '0',
-//     borderRadius: '1rem',
-//     background: '#FFE8EF',
-//     color: '#555',
-//     fontSize: '2vh',
-//     fontStyle: 'normal',
-//     fontWeight: '700',
-//     // margin: '0.5rem 0',
-//   },
-//   input: {
-//     width: '60%',
-//     height: '80%',
-//     flexShrink: '0',
-//     borderRadius: '1.25rem',
-//     border: '3px solid #D9D9D9',
-//     background: '#FFF',
-//     color: '#898989',
-//     fontSize: '1rem',
-//     // margin: '0.5rem 0',
-//     padding: '0.5rem 0.7rem',
-//   },
-//   input2: {
-//     width: '40%',
-//     height: '80%',
-//     flexShrink: '0',
-//     borderRadius: '1.25rem',
-//     border: '3px solid #D9D9D9',
-//     background: '#FFF',
-//     color: '#898989',
-//     fontSize: '1rem',
-//     // margin: '0.5rem 0',
-//     padding: '0.5rem 0.7rem',
-//   },
-// };
 
 function SignupPage() {
   const [loginId, setloginId] = useState('');
@@ -73,8 +20,22 @@ function SignupPage() {
   const [passwordMatchMessage, setPasswordMatchMessage] = useState('');
   const [isIdAvailable, setIsIdAvailable] = useState(true);
   const [MulticheckClicked, setMulticheckClicked] = useState(false);
+  // const [canSubmit, setCanSubmit] = useState(false);
   const navigate = useNavigate();
 
+  const validateAllFields = (): boolean => {
+    return !!(
+      loginId &&
+      password &&
+      confirmPassword &&
+      birthdate &&
+      gender &&
+      phone &&
+      isIdAvailable &&
+      password === confirmPassword &&
+      MulticheckClicked
+    );
+  };
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newloginId = event.target.value;
     setloginId(newloginId);
@@ -117,6 +78,11 @@ function SignupPage() {
   const Signup = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    if (!validateAllFields()) {
+      alert('모든 정보를 올바르게 입력하거나 중복 체크를 해주세요.');
+      return;
+    }
+
     const data = {
       loginId: loginId,
       password: password,
@@ -125,9 +91,9 @@ function SignupPage() {
       gender: gender,
       phoneNumber: phone,
     };
-    console.log(data);
+
     try {
-      await dispatch(signupAsync(data)); // 회원가입 요청, 서버 응답 처리를 기다립니다.
+      await dispatch(signupAsync(data));
       console.log('회원가입 성공!');
       navigate('/');
     } catch (error) {
@@ -284,6 +250,7 @@ function SignupPage() {
             </div>
           </div>
         </div>
+
         <div className="button-signup">
           <div className="btn">
             <Button classes="signup-btn" content="가입하기" handleClick={Signup} />
