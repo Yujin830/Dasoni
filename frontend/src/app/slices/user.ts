@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
+import { ActivationState } from '@stomp/stompjs';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export interface User {
@@ -12,11 +13,11 @@ export interface User {
   birth?: string;
   phoneNumber?: string;
   job?: string;
-  siDo?: number;
-  guGun?: number;
+  siDo?: number | string;
+  guGun?: number | string;
   gender?: string;
   profileImageSrc?: string;
-  point?: number;
+  rating?: number;
   matchCnt?: number;
   isFirst?: number;
 }
@@ -32,24 +33,29 @@ const initialState: User = {
   job: '',
   siDo: 0,
   guGun: 0,
-  profileImageSrc: '',
+  profileImageSrc: 'null',
   isFirst: 0,
+  rating: 1000,
+  matchCnt: 0,
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setSido(state, action) {
+      state.siDo = action.payload;
+    },
+    setGugun(state, action) {
+      state.guGun = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
         console.log(action.payload);
-        return { ...state, ...action.payload };
-      })
-      .addCase(signupAsync.fulfilled, (state, action) => {
-        // 회원가입 응답 처리 코드(회원가입 후, 필요한 정보를 state에 반영)
         return { ...state, ...action.payload };
       })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
@@ -72,31 +78,16 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
   };
 
   // 서버에 POST 요청 보내기
-  const response = await axios.post('/api/register', requestData);
+  await axios.post('/api/register', requestData);
+});
 
-  // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
-  const data = response.data;
-  console.log('from 서버');
-  console.log(data);
-
-  // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
-  return {
-    memberId: data.memberId,
-    id: data.loginId,
-    nickname: data.nickname,
-    gender: data.gender,
-    birth: data.birth,
-    phoneNumber: data.phoneNumber,
-    meetingCount: data.meetingCount,
-    profileImageSrc: data.profileImageSrc,
-    job: data.job,
-    siDo: data.siDo,
-    guGun: data.guGun,
-
-    remainLife: data.remainLife,
-    black: data.black,
-    isFirst: data.isFirst,
-  };
+// 회원 탈퇴
+export const deleteUserAsync = createAsyncThunk('DELETE_USER', async (user: User) => {
+  const response = await axios.delete(`/api/users/${user.memberId}`);
+  console.log('회원탈퇴');
+  console.log(response);
+  localStorage.removeItem('jwtToken');
+  return {};
 });
 
 // 유저 정보 업데이트
@@ -115,10 +106,11 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   console.log(data);
 
   return {
-    siDo: modifyUser.siDo,
-    guGun: modifyUser.guGun,
+    // siDo: modifyUser.siDo,
+    // guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
+    profileImageSrc: modifyUser.profileImageSrc,
   };
 });
 
@@ -151,14 +143,14 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
       gender: data.gender,
       birth: data.birth,
       phoneNumber: data.phoneNumber,
-      meetingCount: data.meetingCount,
+      meetingCount: data.meetingCount || 0,
       profileImageSrc: data.profileImageSrc,
       job: data.job,
-      siDo: data.siDo,
-      guGun: data.guGun,
+      siDo: data.siDo || 0,
+      guGun: data.guGun || 0,
       // roles: data.roles,
       remainLife: data.remainLife,
-      rating: data.rating,
+      rating: data.rating || 1000,
       // token: data.token,
       black: data.black,
       isFirst: data.isFirst,
@@ -182,6 +174,8 @@ export const logout = () => {
 
 // 리덕스에 저장된 user 상태값을 export
 export const getUserInfo = (state: RootState) => state.user;
+
+export const { setSido, setGugun } = userSlice.actions;
 
 // 로그인 reducer export
 export default userSlice.reducer;

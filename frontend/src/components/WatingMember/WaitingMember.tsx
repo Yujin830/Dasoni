@@ -5,7 +5,7 @@ import RankAvartar from '../Avarta/RankAvartar/RackAvartar';
 import './WaitingMember.css';
 import { User } from '../../app/slices/user';
 
-function WaitingMember({ nickname, point, matchCnt, gender, profileImageSrc }: User) {
+function WaitingMember({ nickname, rating, matchCnt, gender, profileImageSrc }: User) {
   return (
     <div id="waiting-member">
       <div id="waiting-member-top">
@@ -13,21 +13,21 @@ function WaitingMember({ nickname, point, matchCnt, gender, profileImageSrc }: U
         <p>{nickname}</p>
       </div>
       <div id="waiting-member-contents">
-        <div id="profile">
-          <RankAvartar
-            point={point !== undefined ? point : 1000}
-            src={profileImageSrc !== undefined ? profileImageSrc : 'rank_profile.png'}
-          />
-        </div>
         <div id="info-box">
           <div id="signal">
             <span className="name">Signal</span>
-            <span className="info">{point}</span>
+            <span className="info">{rating}</span>
           </div>
           <div id="match">
             <span className="name">Match</span>
             <span className="info">{matchCnt}</span>
           </div>
+        </div>
+        <div id="profile">
+          <RankAvartar
+            point={rating !== undefined ? rating : 1000}
+            profileSrc={profileImageSrc !== undefined ? profileImageSrc : 'rank_profile.png'}
+          />
         </div>
       </div>
     </div>

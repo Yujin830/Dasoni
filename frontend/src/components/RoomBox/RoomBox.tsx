@@ -8,7 +8,14 @@ import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { setWaitingMemberList } from '../../app/slices/waitingSlice';
+import {
+  setMegiAcceptable,
+  setRatingLimit,
+  setRoomTitle,
+  setRoomType,
+  setWaitingMemberList,
+  setWaitingRoomId,
+} from '../../app/slices/waitingSlice';
 
 export type RoomBoxProps = {
   roomId: number; // room을 구분하는 id
@@ -18,6 +25,7 @@ export type RoomBoxProps = {
   maleAvgRating: number; // 참가한 남자 평균 레이팅
   femaleAvgRating: number; // 참가한 여자 평균 레이팅
   megiAcceptable: boolean; // 메기 입장 가능 여부
+  ratingLimit: number; // 랭크 제한
 };
 
 type GenderInfoProps = {
@@ -30,6 +38,7 @@ type GenderInfoProps = {
 const styles = {
   //FilledButton 컴포넌트 일반 style
   basic: {
+    width: 'auto',
     height: '2rem',
     borderRadius: '6rem',
     background: '#EC5E98',
@@ -41,6 +50,7 @@ const styles = {
   },
   //Filledbutton 컴포넌트 메기 입장 style
   megi: {
+    width: 'auto',
     height: '2rem',
     borderRadius: '6rem',
     background: '#ECC835',
@@ -52,6 +62,7 @@ const styles = {
   },
   //FilledButton 컴포넌트 disabled style
   disabled: {
+    width: 'auto',
     height: '2rem',
     borderRadius: '6rem',
     background: '#8B8B8B',
@@ -87,6 +98,7 @@ function RoomBox({
   maleAvgRating,
   femaleAvgRating,
   megiAcceptable,
+  ratingLimit,
 }: RoomBoxProps) {
   const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
   // TODO : isFull 확인하는 로직
@@ -109,8 +121,28 @@ function RoomBox({
 
         if (res.status === 200) {
           console.log('입장 성공');
-          dispatch(setWaitingMemberList([member]));
+          dispatch(setRoomType('private'));
+          dispatch(setWaitingRoomId(roomId));
+          dispatch(setRoomTitle(title));
+          dispatch(setMegiAcceptable(megiAcceptable));
+          dispatch(setRatingLimit(ratingLimit));
           navigate(`/waiting-room/${roomId}`);
+
+          const waitingMember = {
+            member: {
+              memberId: member.memberId,
+              nickname: member.nickname,
+              gender: member.gender,
+              profileImageSrc: member.profileImageSrc,
+              rating: member.rating,
+              meetingCount: member.matchCnt,
+              job: member.job,
+            },
+            roomLeader: false,
+            specialUser: false,
+          };
+
+          dispatch(setWaitingMemberList([waitingMember]));
         }
       } catch (err) {
         console.error(err);

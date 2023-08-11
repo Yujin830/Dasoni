@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../Modal.css';
 import './ProfileModal.css';
 import Input from '../../Input/BasicInput/BasicInput';
@@ -8,58 +8,46 @@ import { modifyUserAsync } from '../../../app/slices/user';
 import { useNavigate } from 'react-router-dom';
 import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
-const styles = {
-  button: {
-    width: '10rem',
-    height: '4rem',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '1.75rem',
-    fontStyle: 'normal',
-    fontWeight: '700',
-  },
-  input: {
-    width: '26rem',
-    height: '3rem',
-    flexShrink: '0',
-    borderRadius: '0.8rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-  },
-};
-
 interface ProfileModalProps {
   onClose: () => void;
 }
 
 function ProfileModal({ onClose }: ProfileModalProps) {
-  const [nickname, setNickname] = useState('');
-  const [job, setJob] = useState('');
-  const [modifySido, setModifySido] = useState(11); // "서울특별시"의 sidoCode인 "11"을 설정
-  const [modifyGugun, setModifyGugun] = useState(0); // 초기값은 빈 문자열
-  const { memberId, isFirst } = useAppSelector((state) => state.user);
+  const { memberId, profileImageSrc } = useAppSelector((state) => state.user);
+  const [nickname, setNickname] = useState<string>('');
+  const [job, setJob] = useState<string>('');
+  const [modifySido, setModifySido] = useState<number>(11);
+  const [modifyGugun, setModifyGugun] = useState<number>(0);
+  const [nickNameError, setNickNameError] = useState<string | null>(null);
+  const dispatch = useAppDispatch(); // Ensure you have this dispatch defined.
   const navigate = useNavigate();
 
   const handleChangeJob = (event: React.ChangeEvent<HTMLInputElement>) =>
     setJob(event.target.value);
 
-  const handleChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setNickname(event.target.value);
-  const handleSkip = () => {
-    onClose(); // 모달을 닫습니다.
-    navigate('/main'); // 건너뛰기 버튼을 누르면 MainPage로 이동합니다.
+  const handleChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setNickname(value);
+
+    if (value.length > 10) {
+      setNickNameError('닉네임은 10글자 이내로 입력해주세요');
+    } else {
+      setNickNameError(null);
+    }
   };
 
-  const dispatch = useAppDispatch();
+  const handleSkip = () => {
+    onClose();
+    navigate('/main');
+  };
 
   const AddProfile = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
+    if (!nickname || nickname.length > 10 || !job) {
+      window.alert('모든 내용를 올바르게 입력해주세요.');
+      return;
+    }
 
     const data = {
       memberId: memberId,
@@ -67,21 +55,20 @@ function ProfileModal({ onClose }: ProfileModalProps) {
       gugun: modifyGugun,
       job: job,
       nickname: nickname,
-      profileImageSrc: 'rank_profile.png',
+      profileImageSrc: 'null',
     };
+
     try {
       await dispatch(modifyUserAsync(data));
-      console.log('프로필 정보 추가');
-      console.log(data);
       onClose();
       navigate('/main');
     } catch (error) {
-      console.log('프로필 정보 추가 실패:', error);
+      console.error('프로필 정보 추가 실패:', error);
     }
   };
 
   return (
-    <div className="modal">
+    <div className="profile_modal">
       <div className="header">
         프로필 정보 추가
         <button className="pass-button" onClick={handleSkip}>
@@ -89,33 +76,44 @@ function ProfileModal({ onClose }: ProfileModalProps) {
         </button>
       </div>
       <div className="box">
-        <h3>이성에게 어필할 수 있는 나의 정보를 더 작성해주세요!</h3>
+        <h3>
+          이성에게 어필할 수 있는 <br className="mobile" /> 나의 정보를 더 작성해주세요!
+        </h3>
         <div className="inputbox">
           <div className="input nickname">
-            <label htmlFor="label nickname">닉네임</label>
             <Input
-              style={styles.input}
+              label="닉네임"
+              labelClass="profile-label"
+              classes="profile-input"
               type="text"
               value={nickname}
+              placeholer="닉네임을 입력해주세요 (10글자 이내)"
               handleChange={handleChangeNickname}
             />
           </div>
+          {nickNameError && <div className="nickname-error-message">{nickNameError}</div>}
           <div className="input job">
-            <label htmlFor="label job">직업</label>
-            <Input style={styles.input} type="text" value={job} handleChange={handleChangeJob} />
+            <Input
+              label="직업"
+              labelClass="profile-label"
+              classes="profile-input"
+              type="text"
+              value={job}
+              handleChange={handleChangeJob}
+              placeholer="직업을 입력해주세요"
+            />
           </div>
-
           <div className="input address">
             <AddressSelecter
               modifySido={modifySido}
               modifyGugun={modifyGugun}
               setModifySido={setModifySido}
               setModifyGugun={setModifyGugun}
-            />{' '}
+            />
           </div>
         </div>
         <div className="complete-button">
-          <Button style={styles.button} content="완료" handleClick={AddProfile} />
+          <Button classes="profile-complete-btn" content="완료" handleClick={AddProfile} />
         </div>
       </div>
     </div>

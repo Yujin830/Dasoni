@@ -1,15 +1,17 @@
 .guide {
-  width: 100%;
+  width: 90%;
   position: absolute;
   opacity: 0;
-  transition: opacity 0.5s;
+  transition: all 0.5s;
   z-index: 10;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  visibility: hidden;
 }
 .guide.show {
   opacity: 1;
+  visibility: visible;
   transition: opacity 0.5s;
 }
 

@@ -5,6 +5,10 @@ import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
 import { logout } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import heartRating from '../../assets/image/heart/heart_rating.png';
+import { useAppSelector } from '../../app/hooks';
+import RankAvartar from '../../components/Avarta/RankAvartar/RackAvartar';
+import ExpPointBar from '../../components/Element/ExpPointBar';
 
 interface HeaderProps {
   onModalToggle?: () => void;
@@ -21,9 +25,34 @@ function Header({ onModalToggle }: HeaderProps) {
   const handleToggleFilter = () => {
     setIsOpen((prevState) => !prevState);
   };
+  const handleHelpClick = () => {
+    if (onModalToggle) {
+      onModalToggle();
+    }
+    setIsOpen(false);
+  };
+
+  //사이드바 토글
+  const [sideOpen, setSideopen] = useState(false);
+  const ToggleSidebar = () => {
+    sideOpen === true ? setSideopen(false) : setSideopen(true);
+  };
+
+  // 사이드바 데이터 반영
+  const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  let imagedefault;
+  if (profileImageSrc == 'null') {
+    if (gender == 'female')
+      imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
+    else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
+  } else {
+    imagedefault = profileImageSrc;
+  }
   return (
     <header className="header">
-      <button className="material-symbols-outlined">double_arrow</button>
+      <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
+        double_arrow
+      </button>
       <Link className="logo" to="/main">
         <img src={logo} alt="다소니 로고 이미지"></img>
       </Link>
@@ -33,16 +62,14 @@ function Header({ onModalToggle }: HeaderProps) {
             <span className="material-symbols-outlined filled">favorite</span>
             <span className="material-symbols-outlined filled">favorite</span>
           </li>
-          <li>
-            <BasicAvartar src="default_profile.png" />
-          </li>
+          <BasicAvartar src="default_profile.png" />
           <div id="filter-menu">
             <button className="material-symbols-outlined" onClick={handleToggleFilter}>
               menu
             </button>
             <ul className={isOpen ? 'show' : ''}>
               <li id="help">
-                <button className="material-symbols-outlined" onClick={onModalToggle}>
+                <button className="material-symbols-outlined" onClick={handleHelpClick}>
                   help도움말
                 </button>
               </li>
@@ -56,6 +83,34 @@ function Header({ onModalToggle }: HeaderProps) {
           </div>
         </ul>
       </nav>
+      <div>
+        <div className={`sidebar ${sideOpen == true ? 'active' : ''}`}>
+          <div className="sd-header">
+            <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
+              keyboard_double_arrow_left
+            </button>
+          </div>
+          <div className="sd-body">
+            {/* <div className="sidebar-profile">
+              <img src={profileImageSrc} alt="프로필 이미지" />
+            </div>
+            <div className="sidebar-rating">My Rating</div> */}
+            <div className="sidebar-profile">
+              <RankAvartar profileSrc={imagedefault} point={rating} />
+            </div>
+
+            <div className="sidebar-rating">
+              {/* <p className="title"> Signal</p> */}
+              <ExpPointBar percent={70} points={rating} />
+            </div>
+            <div className="sidebar-heart">
+              <h2>Rating Info</h2>
+              <img className="heart-rating" src={heartRating} alt="하트 등급" />
+            </div>
+          </div>
+        </div>
+        <div className={`sidebar-overlay ${sideOpen == true ? 'active' : ''}`}></div>
+      </div>
     </header>
   );
 }

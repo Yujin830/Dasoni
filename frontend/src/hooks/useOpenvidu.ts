@@ -11,6 +11,8 @@ export const useOpenvidu = (
   nickname: string,
   meetingRoomId: string,
   gender: string,
+  job: string,
+  year: string,
 ) => {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [publisher, setPublisher] = useState<any>();
@@ -44,6 +46,8 @@ export const useOpenvidu = (
           memberId: data.memberId,
           nickname: data.nickname,
           gender: data.gender,
+          job: data.job,
+          year: data.year,
         },
       ]);
     });
@@ -51,7 +55,11 @@ export const useOpenvidu = (
     // 스트림 삭제 이벤트 구독
     // 스트림 삭제시 subscriber 삭제 >> 세션 참여자가 세션에 미디어 게시 멈출 때 발생
     session.on('streamDestroyed', (event) => {
-      deleteSubscriber(event.stream.streamManager);
+      event.preventDefault();
+
+      const data = JSON.parse(event.stream.connection.data);
+      console.log('data', data);
+      setSubscribers((prev) => prev.filter((it) => it.memberId !== data.memberId));
     });
 
     // 에러 발생시 이벤트 발생
@@ -65,8 +73,8 @@ export const useOpenvidu = (
         try {
           console.log(token);
           // 획득한 토큰으로 세션에 연결
-          await session.connect(token, JSON.stringify({ memberId, nickname, gender }));
-          // await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          await session.connect(token, JSON.stringify({ memberId, nickname, gender, job, year }));
+          await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           const devices: Device[] = await openVidu.getDevices(); // 사용 가능한 미디어 입력 장치 대한 정보 가져오기
           const videoDevices = devices.filter((device) => device.kind === 'videoinput'); // device.kind : device 종류 videoinput | audioinput
 
@@ -116,7 +124,7 @@ export const useOpenvidu = (
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => leaveSession());
-
+    console.log('나가기');
     return () => {
       window.removeEventListener('beforeunload', () => leaveSession());
     };
@@ -137,8 +145,8 @@ export const useOpenvidu = (
   );
 
   const streamList = useMemo(
-    () => [{ streamManager: publisher, memberId, nickname, gender }, ...subscribers],
-    [publisher, subscribers, memberId, nickname, gender],
+    () => [{ streamManager: publisher, memberId, nickname, gender, job, year }, ...subscribers],
+    [publisher, subscribers, memberId, nickname, gender, job, year],
   );
 
   return {
