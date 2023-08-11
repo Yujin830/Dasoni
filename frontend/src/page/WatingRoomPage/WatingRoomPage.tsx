@@ -130,35 +130,37 @@ function WaitingRoomPage() {
         </div>
         <div id="waiting-room-body">
           <div id="member-list-box">
-            <div className="waiting-room-content">
-              {sameGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
-            </div>
-            <div className="waiting-room-content">
-              {diffGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
+            <div className="waiting-member-container">
+              <div className="waiting-room-content">
+                {sameGenderMemberList.map((info) => {
+                  console.log(info);
+                  return (
+                    <WaitingMemberBox
+                      key={info.member.memberId}
+                      nickname={info.member.nickname}
+                      rating={info.member.rating}
+                      matchCnt={info.member.meetingCount}
+                      gender={info.member.gender}
+                      profileImageSrc={info.member.profileImageSrc}
+                    />
+                  );
+                })}
+              </div>
+              <div className="waiting-room-content">
+                {diffGenderMemberList.map((info) => {
+                  console.log(info);
+                  return (
+                    <WaitingMemberBox
+                      key={info.member.memberId}
+                      nickname={info.member.nickname}
+                      rating={info.member.rating}
+                      matchCnt={info.member.meetingCount}
+                      gender={info.member.gender}
+                      profileImageSrc={info.member.profileImageSrc}
+                    />
+                  );
+                })}
+              </div>
             </div>
           </div>
           <ChatRoom />
