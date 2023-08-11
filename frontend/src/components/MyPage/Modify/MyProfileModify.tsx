@@ -6,19 +6,6 @@ import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
 import { modifyUserAsync } from '../../../app/slices/user';
 
-// const input = {
-//   width: '26rem',
-//   height: '4rem',
-//   flexShrink: '0',
-//   borderRadius: '1.25rem',
-//   border: '3px solid #D9D9D9',
-//   background: '#FFF',
-//   color: '#898989',
-//   fontSize: '1.2rem',
-//   margin: '0.5rem 0',
-//   padding: '0.5rem 0.7rem',
-// };
-
 function MyProfileModify({ setType }: any) {
   const { loginId, nickname, job, memberId, profileImageSrc } = useAppSelector(
     (state) => state.user,

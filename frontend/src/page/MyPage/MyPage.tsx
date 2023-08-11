@@ -38,7 +38,9 @@ function SideBar({ percent, match, points, setType }: SideBarProps) {
     <div className="bar">
       <div className="mobile">
         <div className="top">
-          <RankAvartar profileSrc={imagedefault} point={points} />
+          <div className="imag-container">
+            <RankAvartar profileSrc={imagedefault} point={points} />
+          </div>
         </div>
         <div className="info">
           <div className="sidebar_signal">
@@ -53,8 +55,9 @@ function SideBar({ percent, match, points, setType }: SideBarProps) {
       </div>
       <div className="my-side-bar">
         <div className="top">
-          <RankAvartar profileSrc={imagedefault} point={points} />
-          <h3>나전문</h3>
+          <div className="imag-container">
+            <RankAvartar profileSrc={imagedefault} point={points} />
+          </div>
         </div>
         <div className="info">
           <div className="sidebar_signal">

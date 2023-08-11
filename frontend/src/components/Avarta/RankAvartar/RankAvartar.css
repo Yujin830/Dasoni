@@ -1,11 +1,13 @@
 .rank-avartar {
   height: 100%;
+  /* width: 100%; */
   position: relative;
 }
 
 .rank-avartar .profile {
   border-radius: 50%;
   height: 100%;
+  width: 100%;
 }
 
 .rank-avartar .rank {
