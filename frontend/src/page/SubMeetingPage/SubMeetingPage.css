@@ -19,11 +19,11 @@
 }
 
 #sub-meeting .video-container .me {
-  width: 30%;
+  width: 20%;
   margin: 1rem 0;
 }
 
 #sub-meeting .video-container .other {
-  width: 80%;
+  width: 40%;
   margin: 1rem 0;
 }

@@ -10,7 +10,6 @@ interface OvVideoProps {
 }
 
 function OvVideo({ nickname, children, speaking }: OvVideoProps) {
-  console.log(speaking);
   return (
     <div className="video-box">
       {children}
