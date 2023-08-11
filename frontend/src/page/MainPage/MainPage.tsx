@@ -287,7 +287,7 @@ function MainPage() {
       {/* {openQuickMatchingModalVisible && <MatchingModal onClose={handleOpenQuickMatchingToggle} />} */}
       {isModalOpen && <MatchingModal onClose={() => setModalOpen(false)} />}
       <div
-        className={`openroommodal-overlay ${openQuickMatchingModalVisible == true ? 'active' : ''}`}
+        className={`matchingmodal-overlay ${openQuickMatchingModalVisible == true ? 'active' : ''}`}
       ></div>
     </div>
   );
