@@ -1,9 +1,12 @@
 
 package signiel.heartsigniel.model.matching.queue;
 
+import lombok.ToString;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 public enum RatingQueue {
     MEGI_MALE_0_300("MALE_0_300", "male", 0L, 300L, "special"),
     MEGI_MALE_150_450("MALE_150_450", "male", 150L, 450L, "special"),

@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.matching;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import signiel.heartsigniel.model.roommember.exception.NotFoundRoomMemberExcepti
 import java.util.Optional;
 
 @Service
+@Slf4j
 @Transactional
 public class MatchingService {
 
@@ -70,6 +72,8 @@ public class MatchingService {
     }
 
     private Response checkAndMatchUsers(RatingQueue queue, String type) {
+
+        log.info(queue.toString());
         // 메기 매칭일 경우
         if(type.equals("special")){
             if (redisTemplate.opsForList().size(queue.getName()) >= 1){
