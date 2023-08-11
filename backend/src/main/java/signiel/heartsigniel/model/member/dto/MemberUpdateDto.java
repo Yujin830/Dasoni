@@ -10,5 +10,5 @@ public class MemberUpdateDto {
     private String job;
     private Long siDo;
     private Long guGun;
-    private String profileImageSrc;
+//    private String profileImageSrc;
 }
