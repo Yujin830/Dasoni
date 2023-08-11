@@ -168,8 +168,6 @@ function MainPage() {
   const matchFast = async () => {
     const memberId = member.memberId;
     const queueType = 'normal';
-    // const quick = await axios.get(`api/alarm/subscribe/${memberId}`);
-    // console.log('123' + quick);
 
     try {
       const res = await axios.post(`api/match/members/${memberId}/${queueType}`);

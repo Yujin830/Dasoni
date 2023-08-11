@@ -9,11 +9,11 @@ interface MatchingModalProps {
 
 const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
   const member = useAppSelector((state) => state.user);
+  const quick = axios.get(`api/alarm/subscribe/${member.memberId}`);
+  console.log('123' + quick);
 
   const handleCancel = async () => {
     try {
-      // 서버 API 요청을 이곳에 추가
-      // 예: await fetch('/api/cancel-matching');
       const res = await axios.delete(`/api/match/members/${member.memberId}`);
       console.log('status', res.data);
       onClose();
