@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.alarm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import signiel.heartsigniel.model.alarm.code.AlarmCode;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@Slf4j
 public class AlarmService {
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
@@ -36,8 +38,14 @@ public class AlarmService {
             sendEmitterMessage(roomMember, room.getId());
         }
 
+        log.info("SENDINGMESSAGE!!!!!!!");
+
+
+
         // TODO
         // -> 모인 6명을 meetingroom에 집어넣기.
+
+
     }
 
     private void sendEmitterMessage(RoomMember roomMember, Long roomId) {
