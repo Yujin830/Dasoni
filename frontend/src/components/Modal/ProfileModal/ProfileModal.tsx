@@ -41,7 +41,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
       gugun: modifyGugun,
       job: job,
       nickname: nickname,
-      profileImageSrc: profileImageSrc,
+      profileImageSrc: 'null',
     };
     try {
       await dispatch(modifyUserAsync(data));

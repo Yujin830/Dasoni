@@ -26,7 +26,7 @@ function WaitingMember({ nickname, rating, matchCnt, gender, profileImageSrc }: 
         <div id="profile">
           <RankAvartar
             point={rating !== undefined ? rating : 1000}
-            src={profileImageSrc !== undefined ? profileImageSrc : 'rank_profile.png'}
+            profileSrc={profileImageSrc !== undefined ? profileImageSrc : 'rank_profile.png'}
           />
         </div>
       </div>
