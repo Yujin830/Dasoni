@@ -139,6 +139,12 @@
   visibility: visible;
   z-index: 1;
 }
+.nickname-error-message {
+  color: red;
+  font-size: 12px; /* 폰트 크기를 줄입니다. */
+  margin-top: 5px; /* Input 요소 바로 밑에 띄우기 위해 상단 마진을 적용합니다. */
+  padding-left: 5px; /* 좌측 패딩을 약간 추가하여 메시지가 Input 요소와 동일한 시작 위치에 오도록 합니다. */
+}
 
 @media (max-width: 1024px) {
   .profile_modal {

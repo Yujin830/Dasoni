@@ -1,5 +1,7 @@
 package signiel.heartsigniel.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,11 +21,13 @@ import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
+@AllArgsConstructor
 @Slf4j
 public class WebSocketController {
 
@@ -33,17 +37,16 @@ public class WebSocketController {
     private final ChatService chatService;
     private final QuestionService questionService;
     private final SignalService signalService;
-
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService) {
-        this.operations = operations;
-        this.privateRoomService = privateRoomService;
-        this.guideRepository = guideRepository;
-        this.chatService = chatService;
-        this.questionService = questionService;
-        this.signalService = signalService;
-    }
+//    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService) {
+//        this.operations = operations;
+//        this.privateRoomService = privateRoomService;
+//        this.guideRepository = guideRepository;
+//        this.chatService = chatService;
+//        this.questionService = questionService;
+//        this.signalService = signalService;
+//    }
 
 
     /**
