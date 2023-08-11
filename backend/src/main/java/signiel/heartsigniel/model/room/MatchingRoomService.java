@@ -4,7 +4,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.life.LifeService;
-import signiel.heartsigniel.model.matching.MatchingService;
 import signiel.heartsigniel.model.matching.code.RoomQueueCode;
 import signiel.heartsigniel.model.matching.queue.RatingQueue;
 import signiel.heartsigniel.model.member.Member;
@@ -20,6 +19,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -68,27 +68,37 @@ public class MatchingRoomService {
         }
     }
 
-    public Response enqueueRoom(Long roomId){
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(()-> new NotFoundRoomException("해당 방을 찾을 수 없습니다."));
-        if(room.getRoomType().equals("private")){
-            return Response.of(RoomCode.INVALID_ROOM_TYPE, null);
+    public Response enqueueRoom(Long roomId) {
+        // Redis에서 해당 roomId의 요청이 진행 중인지 확인
+        Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
+
+        if (Boolean.TRUE.equals(isAbsent)) {
+            // 중복 요청이 아님. 처리 계속 진행
+            Room room = roomRepository.findById(roomId)
+                    .orElseThrow(() -> new NotFoundRoomException("해당 방을 찾을 수 없습니다."));
+            if (room.getRoomType().equals("private")) {
+                return Response.of(RoomCode.INVALID_ROOM_TYPE, null);
+            }
+            String roomQueueName = "ROOM_" + room.getRatingLimit();
+            redisTemplate.opsForList().rightPush(roomQueueName, roomId);
+            Response response = findSpecialUserAndMatchForRoom(room);
+            return response;
+        } else {
+            // 중복 요청. 처리 거부
+            return Response.of(RoomQueueCode.DUPLICATE_REQUEST, null);
         }
-        String roomQueueName = "ROOM_"+ room.getRatingLimit();
-        redisTemplate.opsForList().rightPush(roomQueueName, roomId);
-        Response response = findSpecialUserAndMatchForRoom(room);
-        return response;
     }
 
     public Response dequeueRoom(Long roomId){
-        String queueName = "ROOM_" + roomId;
+        Room room = findRoomById(roomId);
+        String queueName = "ROOM_" + room.getRatingLimit();
 
         Long removeCount = redisTemplate.opsForList().remove(queueName,1,roomId);
         if(removeCount==0){
             Response response = Response.of(RoomQueueCode.DEQUEUE_FAILED, null);
             return response;
         }
-        Response response = Response.of(RoomQueueCode.ENQUEUE_SUCCESS, null);
+        Response response = Response.of(RoomQueueCode.DEQUEUE_SUCCESS, null);
         return response;
     }
 
@@ -106,9 +116,9 @@ public class MatchingRoomService {
         Long roomLimitRating = room.getRatingLimit();
         RatingQueue maleQueue = RatingQueue.getMegiQueueByMedianRating(roomLimitRating, "male");
         RatingQueue femaleQueue = RatingQueue.getMegiQueueByMedianRating(roomLimitRating, "female");
-        Long maleMemberId = redisTemplate.opsForList().leftPop(maleQueue.getName());
-        Long femaleMemberId = redisTemplate.opsForList().leftPop(femaleQueue.getName());
-        if (maleMemberId != null || femaleMemberId != null){
+        Long maleMemberId = (maleQueue != null) ? redisTemplate.opsForList().leftPop(maleQueue.getName()) : null;
+        Long femaleMemberId = (femaleQueue != null) ? redisTemplate.opsForList().leftPop(femaleQueue.getName()) : null;
+        if (maleMemberId == null || femaleMemberId == null){
             return Response.of(RoomQueueCode.ENQUEUE_SUCCESS, null);
         }
         joinRoom(room, maleMemberId, true);

@@ -53,6 +53,7 @@ public class MatchingService {
             return Response.of(LifeCode.LACK_OF_LIFE, null);
         }
         RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender(), type);
+        System.out.println(queue.getName());
         redisTemplate.opsForList().rightPush(queue.getName(), memberId);
         markMemberInQueue(memberId, queue.getName());
 
