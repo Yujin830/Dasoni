@@ -39,7 +39,15 @@ function Header({ onModalToggle }: HeaderProps) {
   };
 
   // 사이드바 데이터 반영
-  const { rating, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  let imagedefault;
+  if (profileImageSrc == 'null') {
+    if (gender == 'female')
+      imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
+    else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
+  } else {
+    imagedefault = profileImageSrc;
+  }
   return (
     <header className="header">
       <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
@@ -88,11 +96,11 @@ function Header({ onModalToggle }: HeaderProps) {
             </div>
             <div className="sidebar-rating">My Rating</div> */}
             <div className="sidebar-profile">
-              <RankAvartar src={profileImageSrc} point={rating} />
+              <RankAvartar profileSrc={imagedefault} point={rating} />
             </div>
 
             <div className="sidebar-rating">
-              <p className="title"> Signal</p>
+              {/* <p className="title"> Signal</p> */}
               <ExpPointBar percent={70} points={rating} />
             </div>
             <div className="sidebar-heart">

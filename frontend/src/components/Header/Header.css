@@ -194,13 +194,18 @@
   overflow-x: hidden;
 }
 .sd-body .sidebar-profile {
-  height: 35%;
-  background-color: #ffd8e4;
-  border-bottom: 0.1rem solid #fff;
+  height: 40%;
+  background-color: #fff6f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .sd-body .sidebar-rating {
   height: 20%;
-  background-color: #ffd8e4;
+  background-color: #fff6f9;
+  margin: 0 4vh;
+  display: flex;
+  align-items: center;
 }
 .sd-body .sidebar-heart {
   padding: 1vh;
