@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.*;
@@ -50,9 +51,9 @@ public class MemberController {
     }
 
     @PatchMapping("/api/users/{memberId}")
-    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto
-            memberUpdateDto) {
-        return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto), HttpStatus.OK);
+    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestPart(value = "key", required = false) MemberUpdateDto
+            memberUpdateDto, @RequestPart(value = "file", required = true) MultipartFile file) {
+        return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto, file), HttpStatus.OK);
     }
 
     @PatchMapping("/api/users/{memberId}/password")
