@@ -104,6 +104,9 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   if (modifyUser.profileImage !== null && modifyUser.profileImage !== undefined) {
     fd.append('file', modifyUser.profileImage);
     fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+  } else if (modifyUser.profileImage == null && modifyUser.profileImage !== undefined) {
+    // fd.append('file', undefined);
+    fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
   }
 
   console.log('here', modifyUser);
