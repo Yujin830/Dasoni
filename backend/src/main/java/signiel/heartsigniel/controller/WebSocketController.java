@@ -35,9 +35,10 @@ public class WebSocketController {
     private final GuideRepository guideRepository;
     private final ChatService chatService;
     private final QuestionService questionService;
-    private final SignalService signalService;
-    private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
+    private final SignalService signalService;
+
+    private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
     /**
      * 유저 정보 오픈!!
