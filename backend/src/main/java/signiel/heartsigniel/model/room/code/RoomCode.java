@@ -25,7 +25,8 @@ public enum RoomCode implements ResponseCode {
     END_MEETING_SUCCESSFUL(1222, "미팅이 종료되었습니다."),
     ROOM_DELETED(1223, "방이 삭제되었습니다."),
     INSUFFICIENT_PARTICIPANTS(1224, "참가인원이 부족합니다."),
-    MIDWAY_EXIT(1225, "미팅 진행중에 퇴장하셨습니다.");
+    MIDWAY_EXIT(1225, "미팅 진행중에 퇴장하셨습니다."),
+    INVALID_ROOM_TYPE(1226, "사설방은 큐에 들어가지 않습니다.");
     ;
 
 

@@ -76,7 +76,7 @@ public class PrivateRoomService {
 
         Room room = createPrivateRoomObject(privateRoomCreateRequest);
 
-        RoomMember roomMember = roomMemberService.createRoomMember(member, room);
+        RoomMember roomMember = roomMemberService.createRoomMember(member, room, false);
         roomMemberService.assignRoomLeader(roomMember);
 
         roomRepository.save(room);
@@ -115,7 +115,7 @@ public class PrivateRoomService {
             return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE,  null);
         }
 
-        RoomMember roomMember = roomMemberService.createRoomMember(memberEntity, roomEntity);
+        RoomMember roomMember = roomMemberService.createRoomMember(memberEntity, roomEntity, false);
         addRoomMemberToRoom(roomEntity, roomMember);
 
         Response response = Response.of(RoomCode.SUCCESS_PARTICIPATE_ROOM, PrivateRoomInfo.of(roomEntity));

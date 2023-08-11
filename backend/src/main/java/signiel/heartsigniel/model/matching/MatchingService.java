@@ -20,6 +20,8 @@ import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.roommember.RoomMemberService;
 import signiel.heartsigniel.model.roommember.exception.NotFoundRoomMemberException;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class MatchingService {
@@ -42,7 +44,7 @@ public class MatchingService {
         this.lifeService = lifeService;
     }
 
-    public Response enqueueMember(Long memberId) {
+    public Response enqueueMember(Long memberId, String type) {
         Member member = findMemberById(memberId);
         if (isMemberInAnyQueue(memberId)){
             return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE, null);
@@ -50,11 +52,11 @@ public class MatchingService {
         if (lifeService.countRemainingLives(memberId) == 0){
             return Response.of(LifeCode.LACK_OF_LIFE, null);
         }
-        RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender());
+        RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender(), type);
         redisTemplate.opsForList().rightPush(queue.getName(), memberId);
         markMemberInQueue(memberId, queue.getName());
 
-        return checkAndMatchUsers(queue);
+        return checkAndMatchUsers(queue, type);
     }
 
     public Response dequeueMember(Long memberId) {
@@ -67,17 +69,40 @@ public class MatchingService {
         return Response.of(MatchingCode.DEQUEUE_SUCCESS, null);
     }
 
-    private Response checkAndMatchUsers(RatingQueue queue) {
+    private Response checkAndMatchUsers(RatingQueue queue, String type) {
+        // 메기 매칭일 경우
+        if(type.equals("special")){
+            if (redisTemplate.opsForList().size(queue.getName()) >= 1){
+                RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
+                // 상대 큐도 꽉차있을 경우
+                if(redisTemplate.opsForList().size(oppositeQueue.getName()) >= 1){
+                    Room matchingRoom = matchingRoomService.findRoomForSpecialUser(queue);
+                    // 해당 방이 없을 경우
+                    if (matchingRoom == null){
+                        return Response.of(MatchingCode.MATCHING_PENDING, null);
+                    }
+                    // 방이 있을 경우 가입
+                    Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
+                    Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
+                    matchingRoomService.joinRoom(matchingRoom, queueMemberId, true);
+                    matchingRoomService.joinRoom(matchingRoom,opponentQueueMemberId,true);
+                    unmarkMemberFromQueue(queueMemberId);
+                    unmarkMemberFromQueue(opponentQueueMemberId);
+                    alarmService.sendMatchCompleteMessage(matchingRoom);
+                    return Response.of(MatchingCode.MATCHING_SUCCESS, MatchingRoomInfo.of(matchingRoom));
+                }return Response.of(MatchingCode.MATCHING_PENDING, null);
+            }
+        }
         if (redisTemplate.opsForList().size(queue.getName()) >= 3) {
             RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
             if (redisTemplate.opsForList().size(oppositeQueue.getName()) >= 3) {
                 // 해당 큐와 상대 성별 큐에서 3명씩 팝해서 매칭(createRoom을 향후 Q1, Q2 넣도록 변경)
-                Room matchingRoom = matchingRoomService.createRoom();
+                Room matchingRoom = matchingRoomService.createRoom(queue);
                 for (int i = 0; i < 3; i++) {
                     Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
                     Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
-                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(queueMemberId), matchingRoom));
-                    matchingRoom.getRoomMembers().add(roomMemberService.createRoomMember(findMemberById(opponentQueueMemberId), matchingRoom));
+                    matchingRoomService.joinRoom(matchingRoom, queueMemberId, false);
+                    matchingRoomService.joinRoom(matchingRoom, opponentQueueMemberId, false);
                     unmarkMemberFromQueue(queueMemberId);
                     unmarkMemberFromQueue(opponentQueueMemberId);
                 }
@@ -87,12 +112,6 @@ public class MatchingService {
             }
         }
         return Response.of(MatchingCode.MATCHING_STARTED, queue);
-    }
-
-    private Response checkAndMatchSpecialUser(RatingQueue queue){
-        if (redisTemplate.opsForList().size(queue.getName())>=3) {
-
-        }
     }
 
     public Member findMemberById(Long targetMemberId){

@@ -36,12 +36,12 @@ public class RoomMember {
         private boolean isRoomLeader;
 
         @Builder
-        public static RoomMember of(Member member, Room room){
+        public static RoomMember of(Member member, Room room, boolean isSpecialUser){
                 RoomMember roomMember = new RoomMember();
                 roomMember.setRoomLeader(false);
                 roomMember.setMember(member);
                 roomMember.setScore(0);
-                roomMember.setSpecialUser(false);
+                roomMember.setSpecialUser(isSpecialUser);
                 roomMember.setRoom(room);
                 return roomMember;
         }
