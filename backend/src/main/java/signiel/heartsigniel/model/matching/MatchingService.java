@@ -89,6 +89,11 @@ public class MatchingService {
         return Response.of(MatchingCode.MATCHING_STARTED, queue);
     }
 
+    private Response checkAndMatchSpecialUser(RatingQueue queue){
+        if (redisTemplate.opsForList().size(queue.getName())>=3) {
+
+        }
+    }
 
     public Member findMemberById(Long targetMemberId){
         Member memberEntity =  memberRepository.findById(targetMemberId)

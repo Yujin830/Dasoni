@@ -3,6 +3,7 @@ package signiel.heartsigniel.model.room;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.life.LifeService;
+import signiel.heartsigniel.model.matching.MatchingService;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.roommember.RoomMember;
@@ -19,11 +20,13 @@ public class MatchingRoomService {
     private final RoomRepository roomRepository;
     private final LifeService lifeService;
     private final MemberRepository memberRepository;
+    private final MatchingService matchingService;
 
-    public MatchingRoomService(RoomRepository roomRepository, LifeService lifeService, MemberRepository memberRepository){
+    public MatchingRoomService(RoomRepository roomRepository, LifeService lifeService, MemberRepository memberRepository, MatchingService matchingService){
         this.roomRepository = roomRepository;
         this.memberRepository = memberRepository;
         this.lifeService = lifeService;
+        this.matchingService = matchingService;
     }
 
     public Room createRoom() {
