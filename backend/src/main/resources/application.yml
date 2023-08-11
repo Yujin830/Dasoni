@@ -1,6 +1,6 @@
 security:
   jwt:
-    secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+    secret: ${JWT_SECRET}
 
 #    header: Authorization
 #    secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
@@ -14,8 +14,8 @@ logging:
 cloud:
   aws:
     credentials:
-      access-key: AKIASUML2QGY2ZDUQV6P
-      secret-key: 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
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
     region:
       static: ap-northeast-2
     stack:
