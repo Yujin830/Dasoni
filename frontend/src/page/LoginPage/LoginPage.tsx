@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RootState } from '../../app/store';
 import { useAppSelector } from '../../app/hooks';
 import Button from '../../components/Button/FilledButton';
@@ -87,10 +87,18 @@ function LoginPage() {
     }
   };
 
+  const [fadeIn, setFadeIn] = useState(false);
+
+  useEffect(() => {
+    setFadeIn(true);
+  }, []);
+
   return (
     <div className="box">
       <div className="left-box">
-        <img className="signal left" src={leftSignal} alt="시그널 아이콘" />
+        <div className={`image-container ${fadeIn ? 'fade-in' : ''}`}>
+          <img className="signal left" src={leftSignal} alt="시그널 아이콘" />
+        </div>
         <div className="left-box-content">
           <div className="title">
             <h2>두근두근</h2>
