@@ -2,14 +2,16 @@ import React from 'react';
 import './Button.css';
 
 type FilledButtonProps = {
-  style: object;
+  classes?: string;
+  style?: object;
   content: string;
   handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 };
 
-function FilledButton({ style, content, handleClick }: FilledButtonProps) {
+function FilledButton({ style, content, handleClick, classes, disabled }: FilledButtonProps) {
   return (
-    <button className="btn" style={style} onClick={handleClick}>
+    <button className={`btn ${classes}`} style={style} onClick={handleClick}>
       {content}
     </button>
   );

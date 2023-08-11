@@ -15,9 +15,14 @@ import java.util.List;
 public class QuestionService {
     private final QuestionRepository questionRepository;
 
-    public Response pickRandomQuestion(){
-        Response response = Response.of(QuestionCode.SUCCESSFUL_QUESTIONS_SENT, questionRepository.randomQuestion());
-        return response;
 
+    public List<Question> sendQuestionList(){
+        List<Question> list = makeQuestionList();
+        return list;
+    }
+
+    public List<Question> makeQuestionList() {
+        List<Question> questionList = questionRepository.randomQuestion();
+        return questionList;
     }
 }

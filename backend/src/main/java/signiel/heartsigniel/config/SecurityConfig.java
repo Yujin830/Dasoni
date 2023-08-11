@@ -3,6 +3,7 @@ package signiel.heartsigniel.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
@@ -17,6 +18,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import signiel.heartsigniel.jwt.JwtAuthenticationFilter;
@@ -24,6 +26,7 @@ import signiel.heartsigniel.jwt.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -79,13 +82,24 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(PERMIT_SWAGGER_URL_ARRAY).permitAll()
                 // 회원가입과 로그인은 모두 승인
-                .antMatchers("/","/**","/app/**","/topic/**","/ws/**","/api/chat/**","/api/register/**", "/api/login", "/api/guide", "/api/warn/**", "/api/users/**", "/api/question", "/api/profile").permitAll()
+                .antMatchers("/","/**","/app/**","/topic/**","/ws/**","/api/chat/**","/api/register/**", "/api/login", "/api/guide", "/api/warn/**", "/api/users/**", "/api/question").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
                 .antMatchers("/api/rooms/**", "/api/match/**", "/api/alarm/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
                 // JWT 인증 필터 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .logout()
+                .logoutUrl("/api/logout")
+                .addLogoutHandler((request, response, authentication) -> {
+                            HttpSession session = request.getSession();
+                            if(session != null){
+                                session.invalidate();;
+                            }
+                        }
+                ).logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
+                .deleteCookies("JSESSIONID","remember-me")
+                .and()
                 // 에러 핸들링
                 .exceptionHandling()
                 .accessDeniedHandler(new AccessDeniedHandler() {

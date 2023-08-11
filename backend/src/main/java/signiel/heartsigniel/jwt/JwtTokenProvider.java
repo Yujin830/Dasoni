@@ -7,20 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import signiel.heartsigniel.jpa.JpaUserDetailsService;
 import signiel.heartsigniel.model.member.Authority;
 
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,28 +28,29 @@ public class JwtTokenProvider {
     private Key secretKey;
 
     // 만료시간 : 1Day
-    private final long exp = 1000L * 60 * 60 * 24;
+   private final long exp = 1000L * 60 * 60 * 24;
 
     private final JpaUserDetailsService userDetailsService;
+
 
     @PostConstruct
     protected void init() {
         secretKey = Keys.hmacShaKeyFor(salt.getBytes(StandardCharsets.UTF_8));
     }
 
-    // 토큰 생성
-//    public String createToken(String account, List<Authority> roles) {
+
     public String createToken(String loginId, List<Authority> roles) {
-//         Claims claims = Jwts.claims().setSubject(account);
         Claims claims = Jwts.claims().setSubject(loginId);
-        claims.put("roles", roles);
-        Date now = new Date();
+        claims.put("role", roles);
+       Date now = new Date();
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + exp))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .signWith(secretKey)
                 .compact();
+
     }
 
 
@@ -73,6 +70,8 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("Authorization");
     }
+
+
 
     // 토큰 검증
     public boolean validateToken(String token) {

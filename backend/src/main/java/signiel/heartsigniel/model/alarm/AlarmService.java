@@ -3,9 +3,8 @@ package signiel.heartsigniel.model.alarm;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import signiel.heartsigniel.model.alarm.code.AlarmCode;
-import signiel.heartsigniel.model.party.Party;
-import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.room.Room;
+import signiel.heartsigniel.model.roommember.RoomMember;
 
 import java.io.IOException;
 import java.util.Map;
@@ -32,18 +31,17 @@ public class AlarmService {
 
     public void sendMatchCompleteMessage(Room room) {
         // male party members
-        for (PartyMember member : room.getMaleParty().getMembers()) {
-            sendEmitterMessage(member, room.getVideoUrl());
+        // roomMember- > 6명이 모여있는 list.
+        for (RoomMember roomMember : room.getRoomMembers()) {
+            sendEmitterMessage(roomMember, room.getVideoUrl());
         }
 
-        // female party members
-        for (PartyMember member : room.getFemaleParty().getMembers()) {
-            sendEmitterMessage(member, room.getVideoUrl());
-        }
+        // TODO
+        // -> 모인 6명을 meetingroom에 집어넣기.
     }
 
-    private void sendEmitterMessage(PartyMember member, String videoUrl) {
-        SseEmitter emitter = this.emitters.get(member.getMember().getMemberId());
+    private void sendEmitterMessage(RoomMember roomMember, String videoUrl) {
+        SseEmitter emitter = this.emitters.get(roomMember.getMember().getMemberId());
 
         if (emitter != null) {
             try {

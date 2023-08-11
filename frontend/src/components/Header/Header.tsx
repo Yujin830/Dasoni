@@ -3,52 +3,114 @@ import logo from '../../assets/image/logo.png';
 import './Header.css';
 import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
 import { logout } from '../../app/slices/user';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import heartRating from '../../assets/image/heart/heart_rating.png';
+import { useAppSelector } from '../../app/hooks';
+import RankAvartar from '../../components/Avarta/RankAvartar/RackAvartar';
+import ExpPointBar from '../../components/Element/ExpPointBar';
 
 interface HeaderProps {
   onModalToggle?: () => void;
 }
 
-const handleLogout = () => {
-  logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
-  // 선택적으로, 로그아웃 후 로그인 페이지로 리다이렉트할 수 있습니다.
-  window.location.href = '/'; // 로그아웃 후 로그인 페이지로 리다이렉트합니다.
-};
-
 function Header({ onModalToggle }: HeaderProps) {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
+    navigate('/');
+  };
+  // 필터 버튼 토클
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggleFilter = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+  const handleHelpClick = () => {
+    if (onModalToggle) {
+      onModalToggle();
+    }
+    setIsOpen(false);
+  };
+
+  //사이드바 토글
+  const [sideOpen, setSideopen] = useState(false);
+  const ToggleSidebar = () => {
+    sideOpen === true ? setSideopen(false) : setSideopen(true);
+  };
+
+  // 사이드바 데이터 반영
+  const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  let imagedefault;
+  if (profileImageSrc == 'null') {
+    if (gender == 'female')
+      imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
+    else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
+  } else {
+    imagedefault = profileImageSrc;
+  }
   return (
     <header className="header">
-      <a className="logo" href="/">
+      <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
+        double_arrow
+      </button>
+      <Link className="logo" to="/main">
         <img src={logo} alt="다소니 로고 이미지"></img>
-      </a>
+      </Link>
       <nav className="nav">
-        <ul>
+        <ul id="nav-bar">
           <li>
             <span className="material-symbols-outlined filled">favorite</span>
             <span className="material-symbols-outlined filled">favorite</span>
           </li>
-
-          <li className="help">
-            <button
-              className="material-symbols-outlined"
-              onClick={onModalToggle} // MainPage의 handleModalToggle 함수를 호출
-            >
-              help
+          <BasicAvartar src="default_profile.png" />
+          <div id="filter-menu">
+            <button className="material-symbols-outlined" onClick={handleToggleFilter}>
+              menu
             </button>
-          </li>
-
-          <li>
-            <BasicAvartar src="default_profile.png" />
-          </li>
-          <li className="btn">
-            <a href="/" onClick={handleLogout}>
-              로그아웃
-            </a>
-          </li>
-          <li className="btn">
-            <a href="/mypage">마이페이지</a>
-          </li>
+            <ul className={isOpen ? 'show' : ''}>
+              <li id="help">
+                <button className="material-symbols-outlined" onClick={handleHelpClick}>
+                  help도움말
+                </button>
+              </li>
+              <li id="mypage">
+                <Link to="/mypage">마이페이지</Link>
+              </li>
+              <li id="logout">
+                <button onClick={handleLogout}>로그아웃</button>
+              </li>
+            </ul>
+          </div>
         </ul>
       </nav>
+      <div>
+        <div className={`sidebar ${sideOpen == true ? 'active' : ''}`}>
+          <div className="sd-header">
+            <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
+              keyboard_double_arrow_left
+            </button>
+          </div>
+          <div className="sd-body">
+            {/* <div className="sidebar-profile">
+              <img src={profileImageSrc} alt="프로필 이미지" />
+            </div>
+            <div className="sidebar-rating">My Rating</div> */}
+            <div className="sidebar-profile">
+              <RankAvartar profileSrc={imagedefault} point={rating} />
+            </div>
+
+            <div className="sidebar-rating">
+              {/* <p className="title"> Signal</p> */}
+              <ExpPointBar percent={70} points={rating} />
+            </div>
+            <div className="sidebar-heart">
+              <h2>Rating Info</h2>
+              <img className="heart-rating" src={heartRating} alt="하트 등급" />
+            </div>
+          </div>
+        </div>
+        <div className={`sidebar-overlay ${sideOpen == true ? 'active' : ''}`}></div>
+      </div>
     </header>
   );
 }

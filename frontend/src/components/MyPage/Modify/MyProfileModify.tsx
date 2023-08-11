@@ -6,19 +6,6 @@ import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 
 import { modifyUserAsync } from '../../../app/slices/user';
 
-const input = {
-  width: '26rem',
-  height: '4rem',
-  flexShrink: '0',
-  borderRadius: '1.25rem',
-  border: '3px solid #D9D9D9',
-  background: '#FFF',
-  color: '#898989',
-  fontSize: '1.2rem',
-  margin: '0.5rem 0',
-  padding: '0.5rem 0.7rem',
-};
-
 function MyProfileModify({ setType }: any) {
   const { loginId, nickname, job, memberId } = useAppSelector((state) => state.user);
 
@@ -28,10 +15,10 @@ function MyProfileModify({ setType }: any) {
   };
 
   const [modifyNickname, setModifyNickname] = useState(nickname);
-  const [modifySido, setModifySido] = useState(11);
+  const [modifySido, setModifySido] = useState(-1);
   const [modifyGugun, setModifyGugun] = useState(0);
   const [modifyJob, setModifyJob] = useState(job);
-  const [modifyProfileSrc, setModifyProfileSrc] = useState('');
+  const [modifyProfileImage, setModifyProfileImage] = useState<File | null>(null);
 
   const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setModifyNickname(e.target.value);
@@ -40,7 +27,9 @@ function MyProfileModify({ setType }: any) {
     setModifyJob(e.target.value);
   };
   const handleProfileSrcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setModifyProfileSrc(e.target.value);
+    if (e.target.files !== null) {
+      setModifyProfileImage(e.target.files[0]);
+    }
   };
 
   const dispatch = useAppDispatch();
@@ -48,15 +37,16 @@ function MyProfileModify({ setType }: any) {
     e.preventDefault();
     const modifiedData = {
       memberId: memberId,
-      sido: Number(modifySido),
-      gugun: Number(modifyGugun),
+      siDo: Number(modifySido),
+      guGun: Number(modifyGugun),
       job: modifyJob,
       nickname: modifyNickname,
-      profileImageSrc: modifyProfileSrc,
+      profileImage: modifyProfileImage,
     };
     console.log(modifiedData);
 
     dispatch(modifyUserAsync(modifiedData));
+    setType('read');
   };
 
   return (
@@ -68,33 +58,35 @@ function MyProfileModify({ setType }: any) {
         님의 개인정보
       </p>
       <div className="modify-form">
-        <BasicInput
-          style={input}
-          label="프로필"
-          type="file"
-          value={String(modifyProfileSrc)}
-          handleChange={handleProfileSrcChange}
-        />
-        <BasicInput
-          style={input}
-          label="닉네임"
-          type="text"
-          value={String(modifyNickname)}
-          handleChange={handleBirthChange}
-        />
-        <AddressSelecter
-          modifySido={modifySido}
-          modifyGugun={modifyGugun}
-          setModifySido={setModifySido}
-          setModifyGugun={setModifyGugun}
-        />
-        <BasicInput
-          style={input}
-          label="직업"
-          type="text"
-          value={String(modifyJob)}
-          handleChange={handleJobChange}
-        />
+        <div className="modiy_container">
+          <BasicInput
+            classes="info-input"
+            label="프로필"
+            type="file"
+            // value={String(modifyProfileSrc)}
+            handleChange={handleProfileSrcChange}
+          />
+          <BasicInput
+            classes="info-input"
+            label="닉네임"
+            type="text"
+            value={String(modifyNickname)}
+            handleChange={handleBirthChange}
+          />
+          <AddressSelecter
+            modifySido={modifySido}
+            modifyGugun={modifyGugun}
+            setModifySido={setModifySido}
+            setModifyGugun={setModifyGugun}
+          />
+          <BasicInput
+            classes="info-input"
+            label="직업"
+            type="text"
+            value={String(modifyJob)}
+            handleChange={handleJobChange}
+          />
+        </div>
       </div>
       <footer>
         <a className="btn modify" href="/" onClick={modifyUserProfile}>

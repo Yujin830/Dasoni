@@ -1,6 +1,6 @@
 security:
   jwt:
-    secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+    secret: "${JWT_SECRET}"
 
 #    header: Authorization
 #    secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
@@ -11,26 +11,18 @@ logging:
     org.hibernate.sql: debug
     org.hibernate.type: trace
 
+cloud:
+  aws:
+    credentials:
+      access-key: "${AWS_ACCESS_KEY}"
+      secret-key: "${AWS_SECRET_KEY}"
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 #servers:
 #  - url: http://i9a307.p.ssafy.io/
 #    description: Production server
 
----
-
-spring:
-  config:
-    activate:
-      on-profile: port_8081
-
-server:
-  port: 8081
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: port_8082
-
-server:
-  port: 8082
+# access-key와 secret-key는 반드시 gitignore 확인!!!!!!
+# 두번 확인 !!!!

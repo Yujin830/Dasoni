@@ -13,6 +13,8 @@ import {
   setRatingLimit,
   setRoomTitle,
   setWaitingRoomId,
+  setWaitingMemberList,
+  setRoomType,
 } from '../../../app/slices/waitingSlice';
 import convertScoreToName from '../../../utils/convertScoreToName';
 import { useAppSelector } from '../../../app/hooks';
@@ -21,44 +23,13 @@ interface OpenRoomModalProps {
   onClose: () => void;
 }
 
-const styles = {
-  button: {
-    width: '10rem',
-    height: '4rem',
-    flexShrink: '0',
-    borderRadius: '1.25rem',
-    background: '#EC5E98',
-    color: '#FFF',
-    fontSize: '1.75rem',
-    fontStyle: 'normal',
-    fontWeight: '700',
-  },
-  input: {
-    width: '34.125rem',
-    height: '4.125rem',
-    flexShrink: '0',
-    borderRadius: '0.8rem',
-    border: '3px solid #D9D9D9',
-    background: '#FFF',
-    color: '#898989',
-    fontSize: '1rem',
-    margin: '0.5rem 0',
-    padding: '0.5rem 0.7rem',
-    marginleft: 'auto',
-  },
-  //   checkbox: {
-  //     width: '2.125rem',
-  //     height: '2.125rem',
-  //     flexshrink: '0',
-  //   },
-};
-
 function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   const [roomTitle, setOpenRoomTitle] = useState('');
   const [megiAcceptable, setOpenMegiAcceptable] = useState(false);
   const [ratingLimit, setOpenRatingLimit] = useState<number>(0);
   const { roomId } = useParams();
-  const { memberId } = useAppSelector((state) => state.user);
+  // const { memberId } = useAppSelector((state) => state.user);
+  const member = useAppSelector((state) => state.user);
 
   const handleChangeRoomTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
     setOpenRoomTitle(event.target.value);
@@ -76,7 +47,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     event.preventDefault();
 
     const data = {
-      memberId: memberId,
+      memberId: member.memberId,
       title: roomTitle,
       megiAcceptable: megiAcceptable,
       ratingLimit: ratingLimit,
@@ -89,10 +60,26 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
     if (res.status === 200) {
       // 리덕스에 생성한 대기방 정보 저장
       dispatch(setWaitingRoomId(res.data.content.createdRoomId));
+      dispatch(setRoomType('private'));
       dispatch(setRoomTitle(data.title));
       dispatch(setMaster(false));
       dispatch(setRatingLimit(data.ratingLimit));
       dispatch(setMegiAcceptable(data.megiAcceptable));
+
+      const waitingMember = {
+        member: {
+          memberId: member.memberId,
+          nickname: member.nickname,
+          gender: member.gender,
+          profileImageSrc: member.profileImageSrc,
+          rating: member.rating,
+          meetingCount: member.matchCnt,
+          job: member.job,
+        },
+        roomLeader: true,
+        specialUser: false,
+      };
+      dispatch(setWaitingMemberList([waitingMember]));
 
       // TODO : 모달 닫기
       onClose();
@@ -105,33 +92,33 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       <div className="header">
         방만들기
         <div className="close-button">
-          <button onClick={onClose}>Close</button>
+          <button onClick={onClose}>X</button>
         </div>
       </div>
       <div className="box">
         <div className="box-content">
           <NoLabelInput
-            style={styles.input}
+            classes="box-title-content"
             type="text"
             value={roomTitle}
             handleChange={handleChangeRoomTitle}
             placeholer="방 제목을 입력하세요."
           />
-          <h1>메기 설정</h1>
+          <h2>메기 설정</h2>
           <div className="megi">
             <div className="megi-allowed">
               <label
                 htmlFor="megiAcceptableCheckbox"
                 style={{ display: 'flex', alignItems: 'center' }}
               >
-                <div className="allowed" style={{ marginRight: '8px' }}>
+                <div className="allowed" style={{ marginRight: '1vh' }}>
                   메기 입장 가능
                 </div>
                 {megiAcceptable ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="34"
-                    height="34"
+                    width="10"
+                    height="10"
                     viewBox="0 0 34 34"
                     fill="none"
                   >
@@ -214,7 +201,7 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
               />
             </div>
           </div>
-          <h1>랭크 제한 설정</h1>
+          <h2>랭크 제한 설정</h2>
           <div className="rank-content">
             <select className="select-rank" value={ratingLimit} onChange={handleChangeRatingLimit}>
               <option value="">랭크를 선택하세요.</option>
@@ -226,12 +213,13 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
               <option value="2000">빨강</option>
               <option value="2500">무지개</option>
             </select>
-            <p>{`${convertScoreToName(ratingLimit)}하트 이상만 만나기`}</p>
+            {/* <p>{`${convertScoreToName(ratingLimit)}하트 이상만 만나기`}</p> */}
+            <p> 하트 이상만 만나기</p>
           </div>
-          <div className="modal-background" />
+          {/* <div className="modal-background" /> */}
         </div>
         <div className="openroom-button">
-          <Button style={styles.button} content="개설하기" handleClick={OpenRoom} />
+          <Button classes="openroom-btn" content="개설하기" handleClick={OpenRoom} />
         </div>
       </div>
     </div>

@@ -1,14 +1,25 @@
 .mypage main {
-  margin: 1rem;
+  margin: 2vh 1vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 3vh;
+}
+.bar {
+  width: 20%;
+}
+.bar .mobile {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .my-side-bar {
+  display: flex;
+  flex-direction: column;
   border-radius: 1rem;
   border: 3px solid #d9d9d9;
-  min-width: 25%;
-  width: 30%;
   height: calc(100vh - 7rem);
   box-sizing: border-box;
 }
@@ -18,44 +29,47 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.5vh 0;
   border-bottom: 2px solid #d9d9d9;
   width: 100%;
-  height: 18rem;
-  margin-bottom: 0.5rem;
+  height: 50%;
 }
-
-.my-side-bar .header h3 {
-  margin-top: 1rem;
+.top .imag-container {
+  width: 90%;
+  height: auto;
 }
-
 .my-side-bar .info {
-  padding: 0 0.8rem;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
 }
 
-.my-side-bar .info .title {
+.bar .title {
   color: #232323;
   font-size: 1.2rem;
+  margin-left: 1vh;
+  margin-top: 1vh;
 }
 
-.my-side-bar .signal {
-  margin-bottom: 2.5rem;
-}
-
-.my-side-bar .match {
-  margin-bottom: 1rem;
+.sidebar_signal {
+  height: 50%;
   border-bottom: 2px solid #d9d9d9;
 }
 
-.my-side-bar .match h3 {
-  font-size: 3rem;
+.sidebar_match {
+  height: 50%;
+  border-bottom: 2px solid #d9d9d9;
+}
+
+.sidebar_match h3 {
+  font-size: 6vh;
   text-align: center;
   font-weight: 600;
   color: #ff257e;
-  padding-bottom: 1rem;
 }
 
 .my-side-bar .footer {
+  height: 10%;
   color: #061386;
   font-size: 1rem;
   display: flex;
@@ -72,7 +86,7 @@
   border-radius: 1rem;
   border: 3px solid #d9d9d9;
   min-width: 28%;
-  width: 68%;
+  width: 55%;
   height: calc(100vh - 7rem);
   font-size: 1.2rem;
   box-sizing: border-box;
@@ -81,6 +95,7 @@
 .mypage .content #user {
   color: #232323;
   padding: 0.8rem 1rem;
+  height: 5%;
 }
 
 .mypage .content #name {
@@ -93,6 +108,7 @@
   font-size: 1rem;
   width: 100%;
   border-spacing: 0;
+  height: 15%;
 }
 
 .mypage .content table tr:first-child td {
@@ -109,12 +125,13 @@
 }
 
 .mypage .content table td.name {
-  padding: 0.25rem 1.5rem;
+  padding: 1vh;
   width: 20%;
+  text-align: center;
 }
 
 .mypage .content table td.info {
-  padding: 0.25rem 1.5rem;
+  padding: 1vh;
   width: 80%;
 }
 
@@ -128,39 +145,109 @@
 }
 
 .mypage #recent-matched-user-box {
-  padding: 1.2rem;
+  height: 60%;
+  width: 100%;
+  margin-top: 1vh;
+  text-align: center;
+  color: palevioletred;
   border-bottom: 1px solid #232323;
   position: relative;
   display: flex;
+  flex-direction: column;
+}
+.recent-matched-title {
+  height: 8%;
 }
 
 .mypage #recent-matched-user-box p {
-  font-size: 1rem;
+  font-size: 3vh;
   font-weight: 600;
 }
 
 .mypage #matched-user-list {
-  display: flex;
-  justify-content: space-around;
-  margin: 0.5rem 0;
-  flex-wrap: wrap;
-  width: 80%;
+  text-align: center;
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 50% 50%;
+  height: 90%;
+}
+
+.mypage #matched-user-list p {
+  font-size: 2vh;
+  font-weight: 400;
+  margin-left: 1vh;
 }
 
 .mypage .content footer {
-  text-align: right;
-  padding: 0.5rem;
+  width: 100%;
+  /* height: 10%; */
+  display: flex;
+  /* margin-top: 1vh; */
 }
 .mypage .content footer a {
-  font-size: 1rem;
+  font-size: 2.2vh;
   text-decoration: none;
-  margin-right: 1.5rem;
 }
 
 .mypage .content footer a.modify {
+  width: 50%;
+  text-align: center;
   color: #061386;
+  margin: auto;
 }
 
 .mypage .content footer a.remove {
+  width: 50%;
+  text-align: center;
   color: #970808;
+  margin: auto;
+}
+
+@media (max-width: 430px) {
+  .mypage .my-side-bar {
+    display: none;
+  }
+  .mypage .content {
+    width: 100%;
+  }
+  .bar {
+    width: 100%;
+    height: 30vh;
+  }
+  .bar .top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  .bar .title {
+    margin-top: 0.5vh;
+  }
+  .mypage .content footer a.mobile {
+    width: 33%;
+    color: #061386;
+    text-align: center;
+    margin: auto;
+  }
+  .mypage .content footer a.modify {
+    width: 33%;
+  }
+  .mypage .content footer a.remove {
+    width: 33%;
+  }
+  .mypage main {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 430px) {
+  .mypage .content footer .mobile {
+    display: none;
+  }
+  .mypage .mobile {
+    display: none;
+  }
 }

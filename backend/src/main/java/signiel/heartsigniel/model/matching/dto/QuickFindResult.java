@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class QuickFindResult {
-    private Long partyMemberId;
+    private Long roomMemberId;
 
     @Builder
     public QuickFindResult(Long partyMemberId){
-        this.partyMemberId = partyMemberId;
+        this.roomMemberId = partyMemberId;
     }
 }

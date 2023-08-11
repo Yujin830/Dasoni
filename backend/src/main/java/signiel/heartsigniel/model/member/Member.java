@@ -56,10 +56,14 @@ public class Member {
     private String job;
 
     @Column(name = "si_do")
-    private int siDo;
+    private Long siDo;
 
     @Column(name = "gu_gun")
-    private int guGun;
+    private Long guGun;
+
+    @Column(name = "is_first")
+    private Long isFirst;
+
 
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -70,4 +74,5 @@ public class Member {
         this.roles = role;
         role.forEach(o->o.setMember(this));
     }
+
 }

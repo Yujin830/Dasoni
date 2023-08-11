@@ -3,7 +3,8 @@ import '../input.css';
 import './FilledLabelInput.css';
 
 type FiledLabelProps = {
-  style: object;
+  classes?: string;
+  style?: object;
   label: string;
   type: string;
   value: string;
@@ -11,12 +12,20 @@ type FiledLabelProps = {
   placeholer: string;
 };
 
-function FiledLabelInput({ style, label, type, value, handleChange, placeholer }: FiledLabelProps) {
+function FiledLabelInput({
+  style,
+  label,
+  type,
+  value,
+  handleChange,
+  placeholer,
+  classes,
+}: FiledLabelProps) {
   return (
     <div className="input-box">
-      <label className="label filled-bg">{label}</label>
+      <label className="filled-bg">{label}</label>
       <input
-        className="input"
+        className={`input ${classes}`}
         style={style}
         type={type}
         value={value}
