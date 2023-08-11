@@ -31,8 +31,8 @@ public class RoomMemberService {
         this.roomRepository = roomRepository;
     }
 
-    public RoomMember createRoomMember(Member member, Room room){
-        RoomMember roomMember = RoomMember.of(member, room);
+    public RoomMember createRoomMember(Member member, Room room, boolean isSpecialUser){
+        RoomMember roomMember = RoomMember.of(member, room, isSpecialUser);
         return roomMemberRepository.save(roomMember);
     }
 
