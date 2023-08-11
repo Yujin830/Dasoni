@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import TimeDisplay from '../../components/Element/TimeDisplay';
 import { useAppSelector } from '../../app/hooks';
 import { useOpenvidu } from '../../hooks/useOpenvidu';
@@ -6,7 +6,9 @@ import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import ToolBar from '../../components/ToolBar/ToolBar';
 import './SubMeetingPage.css';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+import { useWebSocket } from '../../hooks/useWebSocket';
+import Guide from '../../components/MeetingPage/Guide/Guide';
 
 function SubMeetingPage() {
   const { roomId } = useParams();
@@ -20,6 +22,53 @@ function SubMeetingPage() {
     birth !== undefined ? birth.split('-')[0] : '',
   );
 
+  const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
+  const [guideMessage, setGuideMessage] = useState(
+    '서로의 마음이 닿은 여러분, 이제 마음을 확인하며 둘만의 즐거운 시간 보내기 바랍니다',
+  );
+  const [isClose, setIsClose] = useState(false);
+  const [isShow, setIsShow] = useState(true);
+  const navigate = useNavigate();
+
+  useWebSocket({
+    subscribe: (client) => {
+      // 서브 세션 방 종료
+      client.subscribe(`/topic/room/${roomId}/subClose`, (res: any) => {
+        console.log(res.body);
+        setGuideMessage('3초 후 세션이 종료됩니다.');
+        setIsClose(true);
+        setIsShow(true);
+      });
+    },
+    onClientReady: (client) => {
+      const time: string[] = currentTime.split(':');
+      const minutes = time[0];
+      const seconds = time[1];
+
+      if (minutes === '03' && seconds === '40') {
+        client?.send(`/app/room/${roomId}/subClose`);
+      }
+    },
+  });
+
+  // 가이드 닫기
+  useEffect(() => {
+    if (isShow) {
+      setTimeout(() => {
+        setIsShow(false);
+      }, 3000);
+    }
+  }, [isShow]);
+
+  // 세션 종료하기
+  useEffect(() => {
+    if (isClose) {
+      setTimeout(() => {
+        navigate('/main', { replace: true });
+      }, 3000);
+    }
+  }, [isClose]);
+
   const me = useMemo(
     () => streamList.filter((stream: any) => stream.gender === gender),
     [streamList],
@@ -32,6 +81,8 @@ function SubMeetingPage() {
 
   return (
     <div id="sub-meeting">
+      <TimeDisplay currentTime={currentTime} setCurrentTime={setCurrentTime} />
+      <Guide isShow={isShow} guideMessage={guideMessage} />
       <div className="container">
         <div className="video-container">
           <div className="video-row me">
