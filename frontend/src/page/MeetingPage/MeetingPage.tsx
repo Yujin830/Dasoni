@@ -12,6 +12,8 @@ import Question from '../../components/MeetingPage/Question/Question';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 import axios from 'axios';
+import { setRating } from '../../app/slices/user';
+import { setMatchMemberId, setRatingChange } from '../../app/slices/meetingSlice';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -194,6 +196,10 @@ function MeetingPage() {
 
     const data = res.data;
     if (data.content.matchMemberId !== 0) {
+      // 미팅 결과 저장
+      setRating(data.content.roomMemberInfo.member.rating); // 변경 후 레이팅 저장
+      setRatingChange(data.content.ratingChange); // 레이팅 변화값 저장
+      setMatchMemberId(data.content.matchMemberId); // 매칭된 상대방 저장
       navigate(`/sub-meeting/${roomId}`, { replace: true });
     } else {
       setGuideMessage(
