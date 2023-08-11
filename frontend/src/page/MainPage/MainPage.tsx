@@ -10,9 +10,14 @@ import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
-import { setHelpModalVisible, setOpenRoomModalVisible } from '../../app/slices/waitingSlice';
+import {
+  setHelpModalVisible,
+  setOpenQuickMatchingModalVisible,
+  setOpenRoomModalVisible,
+} from '../../app/slices/waitingSlice';
 import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
-
+import { useAppSelector } from '../../app/hooks';
+import MatchingModal from '../../components/Modal/MatchingModal/MatchingModal';
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
 import SkeletonElement from '../../components/SkeletonElement/SkeletonElement';
@@ -30,6 +35,9 @@ function MainPage() {
   const openRoomModalVisible = useSelector(
     (state: RootState) => state.waitingRoom.openRoomModalVisible,
   );
+  const openQuickMatchingModalVisible = useSelector(
+    (state: RootState) => state.waitingRoom.openQuickMatchingModalVisible,
+  );
 
   // Toggle HelpModal visibility
   const handleHelpModalToggle = () => {
@@ -39,6 +47,12 @@ function MainPage() {
   const handleOpenRoomModalToggle = () => {
     dispatch(setOpenRoomModalVisible(!openRoomModalVisible));
   };
+
+  const handleOpenQuickMatchingToggle = () => {
+    dispatch(setOpenQuickMatchingModalVisible(!openQuickMatchingModalVisible));
+  };
+
+  const [isModalOpen, setModalOpen] = useState(false);
 
   // 필터 버튼 토클
   const [isOpen, setIsOpen] = useState(false);
@@ -147,9 +161,25 @@ function MainPage() {
     }
   };
 
+  const member = useAppSelector((state) => state.user);
+
   // 빠른 매칭 모달 open
-  const matchFast = () => {
-    alert('빠른 매칭 진행 중');
+  const matchFast = async () => {
+    const memberId = member.memberId;
+
+    try {
+      const res = await axios.post(`api/match/members/${memberId}`);
+
+      if (res.status === 200) {
+        console.log('빠른 매치 응답 : ', res.data);
+        setModalOpen(true);
+      } else {
+        alert('빠른 매칭 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.log('빠른 매칭 오류', error);
+      alert('빠른 매칭 중 오류가 발생했습니다.');
+    }
   };
 
   // 새로고침 버튼 클릭
@@ -252,6 +282,12 @@ function MainPage() {
       {openRoomModalVisible && <OpenRoomModal onClose={handleOpenRoomModalToggle} />}
       <div
         className={`openroommodal-overlay ${openRoomModalVisible == true ? 'active' : ''}`}
+      ></div>
+      {/* MatchingModal 컴포넌트를 렌더링합니다. */}
+      {/* {openQuickMatchingModalVisible && <MatchingModal onClose={handleOpenQuickMatchingToggle} />} */}
+      {isModalOpen && <MatchingModal onClose={() => setModalOpen(false)} />}
+      <div
+        className={`openroommodal-overlay ${openQuickMatchingModalVisible == true ? 'active' : ''}`}
       ></div>
     </div>
   );

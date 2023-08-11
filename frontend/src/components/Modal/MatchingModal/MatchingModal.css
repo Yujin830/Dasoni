@@ -1,0 +1,93 @@
+/* Modal Overlay */
+.matching-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal */
+.matching-modal {
+  position: relative;
+  width: 60%;
+  height: 80%;
+  border-radius: 10px;
+  background: #f7f7f8;
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  overflow: hidden;
+}
+
+/* Modal Header */
+.matching-modal .header {
+  padding-left: 20px;
+  width: 100%;
+  height: 10%;
+  background: #f3efff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #232323;
+  font-family: Roboto;
+  font-size: 2vh;
+  font-weight: 500;
+}
+
+/* Modal Box */
+.matching-modal .box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+  width: 100%;
+}
+
+/* Modal Content */
+.matching-modal .box-content {
+  width: 100%;
+  height: 65%;
+  background: #ececec;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* Box Title Content */
+.box-title-content {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Cancel Button */
+.close-button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  color: #fff;
+  background-color: #ff6b6b;
+  border-radius: 8px;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
+  font-size: 1rem;
+}
+
+.close-button:hover {
+  background-color: #ff4040;
+  transform: scale(1.05);
+}
