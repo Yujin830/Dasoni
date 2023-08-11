@@ -33,7 +33,7 @@ const initialState: User = {
   job: '',
   siDo: 0,
   guGun: 0,
-  profileImageSrc: '',
+  profileImageSrc: 'null',
   isFirst: 0,
   rating: 1000,
   matchCnt: 0,
@@ -110,6 +110,7 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
     // guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
+    profileImageSrc: modifyUser.profileImageSrc,
   };
 });
 

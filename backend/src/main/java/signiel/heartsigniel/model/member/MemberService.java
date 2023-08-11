@@ -90,6 +90,7 @@ public class MemberService {
                     .phoneNumber(request.getPhoneNumber())
                     .rating(1000L)
                     .isFirst(0L)
+                    .profileImageSrc("null")
                     .build();
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));

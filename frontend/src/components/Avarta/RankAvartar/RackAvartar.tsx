@@ -3,13 +3,13 @@ import './RankAvartar.css';
 import { useAppSelector } from '../../../app/hooks';
 
 type RankAvartarProps = {
-  src: string | undefined;
+  profileSrc: string | undefined;
   point: number | undefined;
 };
 
-function RankAvartar({ src, point }: RankAvartarProps) {
-  const { profileImageSrc } = useAppSelector((state) => state.user);
-  const [profileImg, setProfileImg] = useState('');
+function RankAvartar({ profileSrc, point }: RankAvartarProps) {
+  // const { profileImageSrc } = useAppSelector((state) => state.user);
+  // const [profileImg, setProfileImg] = useState('');
   const [rankImg, setRankImg] = useState('');
 
   const parsePointToRankImage = (point: number) => {
@@ -24,26 +24,19 @@ function RankAvartar({ src, point }: RankAvartarProps) {
     return rank + '.png';
   };
 
-  const loadImage = (imageName: string, type: string) => {
-    if (type === 'profile') {
-      import(`../../../assets/image/${imageName}`).then((image) => {
-        setProfileImg(image.default);
-      });
-    } else {
-      import(`../../../assets/image/heart/${imageName}`).then((image) => {
-        setRankImg(image.default);
-      });
-    }
+  const loadImage = (imageName: string) => {
+    import(`../../../assets/image/heart/${imageName}`).then((image) => {
+      setRankImg(image.default);
+    });
   };
 
   useEffect(() => {
-    loadImage(src || '', 'profile');
-    if (point !== undefined) loadImage(parsePointToRankImage(point), 'rank');
+    if (point !== undefined) loadImage(parsePointToRankImage(point));
   }, []);
 
   return (
     <span className="rank-avartar">
-      <img className="profile" src={profileImageSrc} alt="아바타 이미지" />
+      <img className="profile" src={profileSrc} alt="아바타 이미지" />
       <img className="rank" src={rankImg} alt="랭크 하트 이미지" />
     </span>
   );
