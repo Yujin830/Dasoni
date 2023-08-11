@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useOpenvidu } from '../../hooks/useOpenvidu';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import UserVideo from '../../components/Session/UserVideo/UserVideo';
 import './MeetingPage.css';
 import { useAppSelector } from '../../app/hooks';
@@ -11,6 +11,7 @@ import Guide from '../../components/MeetingPage/Guide/Guide';
 import Question from '../../components/MeetingPage/Question/Question';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
+import axios from 'axios';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -27,12 +28,16 @@ function MeetingPage() {
   const [guideMessage, setGuideMessage] = useState(
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
+  const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
   const [question, setQuestion] = useState(''); // 질문 저장
   const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
   const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
-  const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
-  const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
   const [userInfoOpen, setUserInfoOepn] = useState(false); // 유저 정보 보이기 / 안 보이기
+  const [firstSignal, setFirstSignal] = useState(false); // 첫인상 투표 보이기 / 안 보이기
+  const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
+  const [requestResult, setRequestResult] = useState(false); // 최종 개인 결과 요청 가능 / 요청 불가능
+
+  const navigate = useNavigate();
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -49,6 +54,11 @@ function MeetingPage() {
         setIsQuestionTime(true);
       });
 
+      // 첫인상 투표 구독
+      client.subscribe(`/topic/room/${roomId}/firstSignal`, (res: any) => {
+        setFirstSignal(true);
+      });
+
       // 유저 정보 공개 구독
       client.subscribe(`/topic/room/${roomId}/open`, (res: any) => {
         console.log(res.body);
@@ -59,6 +69,12 @@ function MeetingPage() {
       client.subscribe(`/topic/room/${roomId}/signal`, (res: any) => {
         console.log(res.body);
         setSignalOpen(true);
+      });
+
+      // 최종 개인 결과 요청 가능 구독
+      client.subscribe(`/topic/room/${roomId}/requestResult`, (res: any) => {
+        console.log(res.body);
+        setRequestResult(true);
       });
     },
     onClientReady: (client) => {
@@ -72,38 +88,47 @@ function MeetingPage() {
         client?.send(`/app/room/${roomId}/guide`, {}, '5');
       }
 
-      // 랜덤 주제 1번
+      // 가이드 - 첫인상 투표
       else if (minutes === '00' && seconds === '30') {
-        client?.send(`/app/room/${roomId}/questions`, {}, '0');
+        client?.send(`/app/room/${roomId}/guide`, {}, '5');
+      }
+
+      // 첫인상 투표창 공개
+      else if (minutes === '00' && seconds === '35') {
+        client?.send(`/app/room/${roomId}/firstSignal`);
       }
 
       // 가이드 - 정보 공개
-      else if (minutes === '00' && seconds === '20') {
+      else if (minutes === '01' && seconds === '10') {
         client?.send(`/app/room/${roomId}/guide`, {}, '20');
       }
 
       // 유저 정보 공개
-      else if (minutes === '00' && seconds === '26') {
+      else if (minutes === '01' && seconds === '15') {
         client?.send(`/app/room/${roomId}/open`);
       }
 
+      // 랜덤 주제 1번
+      else if (minutes === '01' && seconds === '25') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '0');
+      }
       // 랜덤 주제 2번
-      else if (minutes === '00' && seconds === '40') {
+      else if (minutes === '01' && seconds === '50') {
         client?.send(`/app/room/${roomId}/questions`, {}, '1');
       }
 
       // 랜덤 주제 3번
-      else if (minutes === '00' && seconds === '45') {
+      else if (minutes === '02' && seconds === '15') {
         client?.send(`/app/room/${roomId}/questions`, {}, '2');
       }
 
       // 가이드 - 최종 투표
-      else if (minutes === '00' && seconds === '50') {
+      else if (minutes === '02' && seconds === '25') {
         client?.send(`/app/room/${roomId}/guide`, {}, '50');
       }
 
       // 최종 시그널 메세지 open send
-      else if (minutes === '00' && seconds === '55') client?.send(`/app/room/${roomId}/signal`);
+      else if (minutes === '02' && seconds === '30') client?.send(`/app/room/${roomId}/signal`);
     },
   });
 
@@ -118,6 +143,7 @@ function MeetingPage() {
     }
   }, [volume, muted]);
 
+  // 가이드 닫기
   useEffect(() => {
     if (isShow) {
       setTimeout(() => {
@@ -125,6 +151,56 @@ function MeetingPage() {
       }, 5000);
     }
   }, [isShow]);
+
+  // 채팅 투표 닫기
+  useEffect(() => {
+    if (firstSignal) {
+      setTimeout(() => {
+        setFirstSignal(false);
+      }, 30000);
+    }
+  }, [firstSignal]);
+
+  // 최종 투표 닫기 & 전체 미팅 결과 계산 요청
+  const { waitingRoomMemberList } = useAppSelector((state) => state.waitingRoom);
+  useEffect(() => {
+    if (signalOpen) {
+      setTimeout(async () => {
+        setSignalOpen(false);
+
+        // 방장이면 전체 결과 서버로 조회
+        if (waitingRoomMemberList[0].roomLeader) {
+          const res = await axios.delete(`/api/rooms/${roomId}`);
+          console.log(res.data);
+          if (res.data.status.code === 7000) {
+            client?.send(`/app/room/${roomId}/requestResult`);
+          }
+        }
+      }, 30000);
+    }
+  }, [signalOpen]);
+
+  // 개인 투표 결과 요청 실행
+  useEffect(() => {
+    if (requestResult) {
+      requestPersonalResult();
+    }
+  }, [requestResult]);
+
+  // 개인 투표 결과 요청
+  const requestPersonalResult = async () => {
+    const res = await axios.get(`/api/rooms/${roomId}/members/${memberId}`);
+    console.log(res.data);
+
+    const data = res.data;
+    if (data.content.matchMemberId !== 0) {
+      navigate(`/sub-meeting/${roomId}`, { replace: true });
+    } else {
+      setGuideMessage(
+        '안타깝지만 마음이 이어지지 않았습니다.\n다음은 마음이 이어지기를 응원하겠습니다.\n이제 자유롭게 방을 나가셔도 됩니다',
+      );
+    }
+  };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value));
@@ -192,7 +268,7 @@ function MeetingPage() {
           handleMuteToggle={handleMuteToggle}
           handleVolumeChange={handleVolumeChange}
         />
-        <WhisperChatRoom diffGenderMemberList={diffGenderMemberList} />
+        {firstSignal && <WhisperChatRoom diffGenderMemberList={diffGenderMemberList} />}
       </div>
     </div>
   );

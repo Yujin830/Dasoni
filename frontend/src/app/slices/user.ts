@@ -20,6 +20,7 @@ export interface User {
   rating?: number;
   matchCnt?: number;
   isFirst?: number;
+  profileImage?: File | null;
 }
 
 // 초기상태를 선언
@@ -33,7 +34,7 @@ const initialState: User = {
   job: '',
   siDo: 0,
   guGun: 0,
-  profileImageSrc: '',
+  profileImageSrc: 'null',
   isFirst: 0,
   rating: 1000,
   matchCnt: 0,
@@ -97,10 +98,20 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
     guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
-    profileImageSrc: modifyUser.profileImageSrc,
   };
+
+  const fd = new FormData();
+  if (modifyUser.profileImage !== null && modifyUser.profileImage !== undefined) {
+    fd.append('file', modifyUser.profileImage);
+    fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+  }
+
   console.log('here', modifyUser);
-  const response = await axios.patch(`/api/users/${modifyUser.memberId}`, requestData);
+  const response = await axios.patch(`/api/users/${modifyUser.memberId}`, fd, {
+    headers: {
+      'Content-Type': `multipart/form-data`,
+    },
+  });
   const data = response.data;
   console.log('from 서버');
   console.log(data);
@@ -110,6 +121,7 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
     // guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
+    profileImageSrc: data,
   };
 });
 

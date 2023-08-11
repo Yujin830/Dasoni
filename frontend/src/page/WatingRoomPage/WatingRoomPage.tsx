@@ -17,7 +17,6 @@ import AudioController from '../../components/AudioController/AudioController';
 
 function WaitingRoomPage() {
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
-
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const { gender } = useAppSelector((state) => state.user);
   const [memberList, setMemberList] = useState<WaitingMember[]>(
@@ -101,6 +100,13 @@ function WaitingRoomPage() {
     setMuted((prevMuted) => !prevMuted);
   };
 
+  const currentUserId = member.memberId;
+  // memberList에서 방장(memberList에서 roomLeader가 true인)인지 여부를 확인하는 함수
+  const isRoomLeaderInMemberList = (info: any) => {
+    console.log(info);
+    return info.roomLeader && info.member.memberId === currentUserId;
+  };
+
   return (
     <div id="waiting-page">
       <main id="waiting-room-box">
@@ -157,7 +163,10 @@ function WaitingRoomPage() {
           <ChatRoom />
         </div>
         <div id="waiting-room-footer">
-          <FilledButton content="시작하기" classes="btn start-btn" handleClick={handleStartBtn} />
+          {/* "시작하기" 버튼을 방장인 경우에만 렌더링 */}
+          {memberList.some(isRoomLeaderInMemberList) && (
+            <FilledButton content="시작하기" classes="btn start-btn" handleClick={handleStartBtn} />
+          )}
           <FilledButton content="나가기" classes="btn exit-btn" handleClick={handleExitBtn} />
         </div>
       </main>

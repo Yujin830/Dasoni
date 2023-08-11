@@ -20,17 +20,27 @@ type SideBarProps = {
 };
 
 function SideBar({ percent, match, points, setType }: SideBarProps) {
-  const { rating, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  const { rating, matchCnt, gender, profileImageSrc } = useAppSelector((state) => state.user);
   const changePw = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setType('changePw');
   };
+  let imagedefault;
+  if (profileImageSrc == 'null') {
+    if (gender == 'female')
+      imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
+    else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
+  } else {
+    imagedefault = profileImageSrc;
+  }
 
   return (
     <div className="bar">
       <div className="mobile">
         <div className="top">
-          <RankAvartar src={profileImageSrc} point={points} />
+          <div className="imag-container">
+            <RankAvartar profileSrc={imagedefault} point={points} />
+          </div>
         </div>
         <div className="info">
           <div className="sidebar_signal">
@@ -45,8 +55,9 @@ function SideBar({ percent, match, points, setType }: SideBarProps) {
       </div>
       <div className="my-side-bar">
         <div className="top">
-          <RankAvartar src={profileImageSrc} point={points} />
-          <h3>나전문</h3>
+          <div className="imag-container">
+            <RankAvartar profileSrc={imagedefault} point={points} />
+          </div>
         </div>
         <div className="info">
           <div className="sidebar_signal">
@@ -72,7 +83,7 @@ function MyPage() {
   const [type, setType] = useState('read');
   const dispatch = useDispatch();
   const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
-  const { rating, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  const { rating, matchCnt } = useAppSelector((state) => state.user);
   const handleHelpModalToggle = () => {
     dispatch(setHelpModalVisible(!helpModalVisible));
   };
