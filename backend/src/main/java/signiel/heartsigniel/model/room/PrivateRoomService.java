@@ -31,7 +31,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -77,7 +76,7 @@ public class PrivateRoomService {
 
         Room room = createPrivateRoomObject(privateRoomCreateRequest);
 
-        RoomMember roomMember = roomMemberService.createRoomMember(member, room);
+        RoomMember roomMember = roomMemberService.createRoomMember(member, room, false);
         roomMemberService.assignRoomLeader(roomMember);
 
         roomRepository.save(room);
@@ -116,7 +115,7 @@ public class PrivateRoomService {
             return Response.of(MatchingCode.ALREADY_IN_MATCHING_QUEUE,  null);
         }
 
-        RoomMember roomMember = roomMemberService.createRoomMember(memberEntity, roomEntity);
+        RoomMember roomMember = roomMemberService.createRoomMember(memberEntity, roomEntity, false);
         addRoomMemberToRoom(roomEntity, roomMember);
 
         Response response = Response.of(RoomCode.SUCCESS_PARTICIPATE_ROOM, PrivateRoomInfo.of(roomEntity));
@@ -233,8 +232,6 @@ public class PrivateRoomService {
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
     }
 
-
-
     public Response roomInfo(Long roomId) {
         Room roomEntity = findRoomById(roomId);
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);
@@ -331,6 +328,5 @@ public class PrivateRoomService {
         room.getRoomMembers().add(roomMember);
         roomRepository.save(room);
     }
-
 
 }
