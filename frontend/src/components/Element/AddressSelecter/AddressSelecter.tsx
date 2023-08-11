@@ -31,12 +31,17 @@ type RegCode = {
 const sidos: Sido[] = [
   {
     sidoId: -1,
-    sidoName: '선택해주세요',
+    sidoName: '선택하세요',
     sidoCode: -1,
   },
 ];
-
-const guguns: Gugun[] = [];
+const guguns: Gugun[] = [
+  {
+    gugunId: 0,
+    gugunName: '선택하세요',
+    gugunCode: 0,
+  },
+];
 
 const mountCount = 1;
 
@@ -96,20 +101,23 @@ function AddressSelecter({
       );
 
       const data: RegCode[] = res.data.regcodes;
-      let gugunId = 1; // Start with 0 and increment for each entry
-      const newGugunList: Gugun[] = data.slice(1).map((item: RegCode) => ({
-        gugunId: gugunId++,
+      let gugunId = 0; // Start with 0 and increment for each entry
+      const newGugunList: Gugun[] = data.slice().map((item: RegCode) => ({
+        gugunId: ++gugunId,
         gugunName: item.name.split(' ')[1],
         gugunCode: Number(item.code),
       }));
 
-      const firstData = {
-        gugunId: 0,
-        gugunName: '선택해주세요',
-        gugunCode: 0,
-      };
-      newGugunList.unshift(firstData);
       setGugnList(newGugunList);
+      setModifyGugun(0);
+    } else {
+      setGugnList([
+        {
+          gugunId: 0,
+          gugunName: '선택하세요',
+          gugunCode: 0,
+        },
+      ]);
       setModifyGugun(0);
     }
   };
