@@ -10,6 +10,7 @@ import MeetingPage from './page/MeetingPage/MeetingPage';
 import RatingModal from './components/Modal/RatingModal/RatingModal';
 import ResultModal from './components/Modal/ResultModal/ResultModal';
 import SubMeetingPage from './page/SubMeetingPage/SubMeetingPage';
+import ResultPage from './page/ResultPage/ResultPage';
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -27,6 +28,7 @@ function App() {
           <Route path="/waiting-room/:roomId" element={<WaitingRoomPage />}></Route>
           <Route path="/meeting/:roomId" element={<MeetingPage />}></Route>
           <Route path="/sub-meeting/:roomId" element={<SubMeetingPage />}></Route>
+          <Route path="/result" element={<ResultPage />}></Route>
           <Route path="/signup" element={<SignUpPage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/test" element={<ResultModal onClose={handleCloseModal} />} />{' '}

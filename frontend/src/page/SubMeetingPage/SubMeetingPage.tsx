@@ -45,7 +45,7 @@ function SubMeetingPage() {
       const minutes = time[0];
       const seconds = time[1];
 
-      if (minutes === '03' && seconds === '40') {
+      if (minutes === '00' && seconds === '40') {
         client?.send(`/app/room/${roomId}/subClose`);
       }
     },
@@ -64,7 +64,7 @@ function SubMeetingPage() {
   useEffect(() => {
     if (isClose) {
       setTimeout(() => {
-        navigate('/main', { replace: true });
+        navigate('/result', { replace: true });
       }, 3000);
     }
   }, [isClose]);
