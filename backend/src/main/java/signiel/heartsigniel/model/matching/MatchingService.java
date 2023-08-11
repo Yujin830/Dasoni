@@ -55,6 +55,7 @@ public class MatchingService {
             return Response.of(LifeCode.LACK_OF_LIFE, null);
         }
         RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender(), type);
+        log.info("queue = " + queue.toString());
         redisTemplate.opsForList().rightPush(queue.getName(), memberId);
         markMemberInQueue(memberId, queue.getName());
 
@@ -73,7 +74,7 @@ public class MatchingService {
 
     private Response checkAndMatchUsers(RatingQueue queue, String type) {
 
-        log.info(queue.toString());
+        log.info("checkAndMatchUsers()" + queue.toString());
         // 메기 매칭일 경우
         if(type.equals("special")){
             if (redisTemplate.opsForList().size(queue.getName()) >= 1){
