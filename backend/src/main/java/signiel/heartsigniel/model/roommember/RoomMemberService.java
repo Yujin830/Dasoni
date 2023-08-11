@@ -53,20 +53,21 @@ public class RoomMemberService {
 
     public Response getMeetingResultForRoomMember(Long roomId, Long memberId){
         // 방의 시작 시간 조회
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NotFoundRoomException("해당 방을 찾을 수 없습니다."));
-        LocalDateTime startTime = room.getStartTime();
-        LocalDateTime now = LocalDateTime.now();
-
-        // 현재 시간과 시작 시간의 차이 계산
-        Duration duration = Duration.between(startTime, now);
-
-        // 50분 미만이면 중도 퇴장에 대한 응답 반환
-        if (duration.toMinutes() < 50) {
-            return Response.of(RoomCode.MIDWAY_EXIT, null);
-        }
+//        Room room = roomRepository.findById(roomId)
+//                .orElseThrow(() -> new NotFoundRoomException("해당 방을 찾을 수 없습니다."));
+//       LocalDateTime startTime = room.getStartTime();
+//       LocalDateTime now = LocalDateTime.now();
+//
+//       // 현재 시간과 시작 시간의 차이 계산
+//       Duration duration = Duration.between(startTime, now);
+//
+//       // 50분 미만이면 중도 퇴장에 대한 응답 반환
+//       if (duration.toMinutes() < 50) {
+//           return Response.of(RoomCode.MIDWAY_EXIT, null);
+//       }
 
         // 그렇지 않으면 개인 결과 조회
+        // System.out.println("======================" + memberId + " " + roomId);
         PersonalResult personalResult = ratingService.getAndDeletePersonalResultFromRedis(memberId, roomId);
         return Response.of(RoomMemberCode.FETCH_MEETING_RESULT_SUCCESS, personalResult);
     }

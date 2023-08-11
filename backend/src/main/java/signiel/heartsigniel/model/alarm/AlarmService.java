@@ -31,9 +31,13 @@ public class AlarmService {
 
     public void sendMatchCompleteMessage(Room room) {
         // male party members
+        // roomMember- > 6명이 모여있는 list.
         for (RoomMember roomMember : room.getRoomMembers()) {
             sendEmitterMessage(roomMember, room.getId());
         }
+
+        // TODO
+        // -> 모인 6명을 meetingroom에 집어넣기.
     }
 
     private void sendEmitterMessage(RoomMember roomMember, Long roomId) {

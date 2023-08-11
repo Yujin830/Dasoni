@@ -10,6 +10,7 @@ export interface WaitingState {
   ratingLimit: number;
   helpModalVisible: boolean;
   openRoomModalVisible: boolean;
+  openQuickMatchingModalVisible: boolean;
   waitingRoomMemberList: WaitingMember[];
 }
 
@@ -22,6 +23,7 @@ const initialState: WaitingState = {
   ratingLimit: 0,
   helpModalVisible: false,
   openRoomModalVisible: false,
+  openQuickMatchingModalVisible: false,
   waitingRoomMemberList: [],
 };
 
@@ -56,6 +58,9 @@ const waitingSlice = createSlice({
     setWaitingMemberList(state, action) {
       state.waitingRoomMemberList = action.payload;
     },
+    setOpenQuickMatchingModalVisible(state, action: PayloadAction<boolean>) {
+      state.openQuickMatchingModalVisible = action.payload;
+    },
   },
 });
 
@@ -69,6 +74,7 @@ export const {
   setHelpModalVisible,
   setOpenRoomModalVisible,
   setWaitingMemberList,
+  setOpenQuickMatchingModalVisible,
 } = waitingSlice.actions;
 
 export default waitingSlice.reducer;

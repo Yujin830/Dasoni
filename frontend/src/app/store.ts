@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import userReducer from './slices/user';
 import waitingReducer from './slices/waitingSlice';
+import meetingReducer from './slices/meetingSlice';
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     waitingRoom: waitingReducer,
+    meetingRoom: meetingReducer,
   },
 });
 

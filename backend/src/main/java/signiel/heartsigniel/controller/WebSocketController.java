@@ -1,5 +1,6 @@
 package signiel.heartsigniel.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import signiel.heartsigniel.model.question.QuestionRepository;
 @RestController
 @Slf4j
 public class WebSocketController {
@@ -48,7 +48,6 @@ public class WebSocketController {
         this.signalService =signalService;
     }
 
-
     /**
      * 유저 정보 오픈!!
      * @param roomId
@@ -56,12 +55,42 @@ public class WebSocketController {
     @MessageMapping("room/{roomId}/open")
     public void openMembersInformation(@DestinationVariable Long roomId){
         String openInfo = "OPEN";
-        System.out.println("+++++++++++++ OPEN");
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
     }
 
+
     /**
-     * 시그널 보내기 시작!
+     * 최종 개인 결과 요청 오픈
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId}/requestResult")
+    public void openMembersResultRequest(@DestinationVariable Long roomId){
+        String requestInfo = "requestResult";
+        operations.convertAndSend("/topic/room/" + roomId +"/requestResult", requestInfo);
+    }
+
+    /**
+     * 서브 세션방 종료
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId}/subClose")
+    public void closeSubSession(@DestinationVariable Long roomId){
+        String closeInfo = "close";
+        operations.convertAndSend("/topic/room/" + roomId +"/subClose", closeInfo);
+    }
+
+    /**
+     * 첫 인상 투표 시작 메시지 전송.
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId}/firstSignal")
+    public void sendFirstSignal(@DestinationVariable Long roomId){
+        String firstMessage = "FIRST";
+        operations.convertAndSend("/topic/room/"+roomId + "/firstSignal", firstMessage);
+    }
+
+    /**
+     * 최종 시그널 보내기 시작!
      *
      * @param roomId
      */
@@ -82,10 +111,8 @@ public class WebSocketController {
 
         try {
             List<Question> questionList = questionListPerRoom.get(roomId);
-            System.out.println(questionList.toString());
             int num = Integer.parseInt(numberStr);
             String question = questionList.get(num).getContent();
-            log.info(question);
             operations.convertAndSend("/topic/room/" + roomId + "/questions", question);
         } catch (NumberFormatException e) {
             log.info(e.getMessage());
@@ -115,7 +142,6 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/chat")
     public void sendMessage(@DestinationVariable Long roomId, @Payload ChatMessage chatMessage) {
-        log.info("Sending Complete");
         chatService.addMessage(roomId, chatMessage);
         operations.convertAndSend("/topic/room/"+ roomId +"/chat", chatMessage);
     }
@@ -133,8 +159,6 @@ public class WebSocketController {
             int receiverId = Math.toIntExact(receiveMemberId);
 
             SingleSignalRequest signalRequest = new SingleSignalRequest(sequence, senderId, receiverId);
-
-            log.info("signalRequest = " + signalRequest.toString());
             signalService.storeSignalInRedis(roomId, signalRequest);
 
             operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
@@ -148,7 +172,6 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}")
     public void joinAndQuitRoom(@DestinationVariable Long roomId, @Payload MemberEntryExitDto memberEntryExitDto) {
-        log.info(memberEntryExitDto.toString());
 
         Long memberId = memberEntryExitDto.getMemberId();
         String type = memberEntryExitDto.getType();

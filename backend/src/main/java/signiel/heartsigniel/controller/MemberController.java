@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.*;
@@ -50,9 +51,9 @@ public class MemberController {
     }
 
     @PatchMapping("/api/users/{memberId}")
-    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto
-            memberUpdateDto) {
-        return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto), HttpStatus.OK);
+    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestPart(value = "key", required = false) MemberUpdateDto
+            memberUpdateDto, @RequestPart(value = "file", required = true) MultipartFile file) {
+        return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto, file), HttpStatus.OK);
     }
 
     @PatchMapping("/api/users/{memberId}/password")
@@ -78,15 +79,17 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("api/image")
+    @PostMapping("/api/users/{memberId}/image")
     @ResponseStatus(HttpStatus.OK)
-    public List<String> saveImage(@ModelAttribute ImageSaveDto imageSaveDto){
-        return imageService.saveImages(imageSaveDto);
+    public String saveImage(@PathVariable Long memberId, @ModelAttribute MultipartFile image){
+
+//        return imageService.saveImage(image);
+        return memberService.updateProfileImage(memberId,image);
     }
     // S3에 저장된 이미지 삭제 로직, 이미지 파일의 확장자까지 정확하게 입력해야 삭제 가능
     // S3에 저장되지 않은 이미지 파일의 이름으로 요청하여도 오류 발생 X
     // test용으로 requestParam으로 함 ( 나중엔 member 테이블에서 받아오기 )
-    @DeleteMapping("api/image")
+    @DeleteMapping("/api/image")
     @ResponseStatus(HttpStatus.OK)
     public void deleteImage(@RequestParam("fileName") String fileName){
         imageService.deleteImage(fileName);
