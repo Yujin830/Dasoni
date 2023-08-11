@@ -143,6 +143,8 @@ public class MemberService {
             member.setRoles(list);
         }
 
+        System.out.println(file.getContentType());
+
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
         member.setSiDo(memberUpdateDto.getSiDo());
