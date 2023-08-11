@@ -35,10 +35,11 @@ function MeetingPage() {
   const [userInfoOpen, setUserInfoOepn] = useState(false); // 유저 정보 보이기 / 안 보이기
   const [firstSignal, setFirstSignal] = useState(false); // 첫인상 투표 보이기 / 안 보이기
   const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
+  const [requestResult, setRequestResult] = useState(false); // 최종 개인 결과 요청 가능 / 요청 불가능
 
   const navigate = useNavigate();
 
-  useWebSocket({
+  const client = useWebSocket({
     subscribe: (client) => {
       // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
@@ -68,6 +69,12 @@ function MeetingPage() {
       client.subscribe(`/topic/room/${roomId}/signal`, (res: any) => {
         console.log(res.body);
         setSignalOpen(true);
+      });
+
+      // 최종 개인 결과 요청 가능 구독
+      client.subscribe(`/topic/room/${roomId}/requestResult`, (res: any) => {
+        console.log(res.body);
+        setRequestResult(true);
       });
     },
     onClientReady: (client) => {
@@ -154,28 +161,46 @@ function MeetingPage() {
     }
   }, [firstSignal]);
 
-  // 최종 투표 닫기
+  // 최종 투표 닫기 & 전체 미팅 결과 계산 요청
+  const { waitingRoomMemberList } = useAppSelector((state) => state.waitingRoom);
   useEffect(() => {
     if (signalOpen) {
       setTimeout(async () => {
         setSignalOpen(false);
 
-        const res = await axios.get(`/api/rooms/${roomId}/members/${memberId}`);
-        console.log(res);
-
-        if (res.status === 200) {
-          const data = res.data;
-          if (data.content.matchMemberId !== 0) {
-            navigate(`/sub-meeting/${roomId}`, { replace: true });
-          } else {
-            setGuideMessage(
-              '안타깝지만 마음이 이어지지 않았습니다.\n다음은 마음이 이어지기를 응원하겠습니다.\n이제 자유롭게 방을 나가셔도 됩니다',
-            );
+        // 방장이면 전체 결과 서버로 조회
+        if (waitingRoomMemberList[0].roomLeader) {
+          const res = await axios.delete(`/api/rooms/${roomId}`);
+          console.log(res.data);
+          if (res.data.status.code === 7000) {
+            client?.send(`/app/room/${roomId}/requestResult`);
           }
         }
       }, 30000);
     }
   }, [signalOpen]);
+
+  // 개인 투표 결과 요청 실행
+  useEffect(() => {
+    if (requestResult) {
+      requestPersonalResult();
+    }
+  }, [requestResult]);
+
+  // 개인 투표 결과 요청
+  const requestPersonalResult = async () => {
+    const res = await axios.get(`/api/rooms/${roomId}/members/${memberId}`);
+    console.log(res.data);
+
+    const data = res.data;
+    if (data.content.matchMemberId !== 0) {
+      navigate(`/sub-meeting/${roomId}`, { replace: true });
+    } else {
+      setGuideMessage(
+        '안타깝지만 마음이 이어지지 않았습니다.\n다음은 마음이 이어지기를 응원하겠습니다.\n이제 자유롭게 방을 나가셔도 됩니다',
+      );
+    }
+  };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value));

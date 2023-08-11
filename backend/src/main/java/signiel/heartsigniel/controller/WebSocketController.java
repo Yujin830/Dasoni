@@ -1,5 +1,6 @@
 package signiel.heartsigniel.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
+@AllArgsConstructor
 @Slf4j
 public class WebSocketController {
 
@@ -33,18 +35,8 @@ public class WebSocketController {
     private final ChatService chatService;
     private final QuestionService questionService;
     private final SignalService signalService;
-
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
-    private final SignalService signalService;
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService) {
-        this.operations = operations;
-        this.privateRoomService = privateRoomService;
-        this.guideRepository = guideRepository;
-        this.chatService = chatService;
-        this.questionService = questionService;
-        this.signalService = signalService;
-    }
 
 
     /**
@@ -55,6 +47,27 @@ public class WebSocketController {
     public void openMembersInformation(@DestinationVariable Long roomId){
         String openInfo = "OPEN";
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
+    }
+
+
+    /**
+     * 최종 개인 결과 요청 오픈
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId}/requestResult")
+    public void openMembersResultRequest(@DestinationVariable Long roomId){
+        String requestInfo = "requestResult";
+        operations.convertAndSend("/topic/room/" + roomId +"/requestResult", requestInfo);
+    }
+
+    /**
+     * 서브 세션방 종료
+     * @param roomId
+     */
+    @MessageMapping("room/{roomId}/subClose")
+    public void closeSubSession(@DestinationVariable Long roomId){
+        String closeInfo = "close";
+        operations.convertAndSend("/topic/room/" + roomId +"/subClose", closeInfo);
     }
 
     /**

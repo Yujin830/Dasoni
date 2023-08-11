@@ -71,7 +71,7 @@ public class RatingService {
             }
             int signalOpponent = mutuallySignaledList[roomMemberSequence.get(memberId.intValue())];
             if (signalOpponent != 0) {
-                addMatchedMemberId(memberId, (long) signalOpponent, sortedRoomMembers.get(rank).getMember().getProfileImageSrc());
+                addMatchedMemberId(memberId, (long) signalOpponent, sortedRoomMembers.get(rank-1).getMember().getProfileImageSrc());
             }
             if (roomMember.isSpecialUser()) {
                 ratingChange *= 2;
