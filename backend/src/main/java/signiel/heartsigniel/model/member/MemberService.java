@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
 import signiel.heartsigniel.model.life.LifeService;
@@ -134,7 +135,7 @@ public class MemberService {
         return true;
     }
 
-    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) {
+    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto, MultipartFile file) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
 
@@ -146,11 +147,13 @@ public class MemberService {
             member.setRoles(list);
         }
 
+        System.out.println(file.getContentType());
+
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
         member.setSiDo(memberUpdateDto.getSiDo());
         member.setGuGun(memberUpdateDto.getGuGun());
-        member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
+//        member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
 
         memberRepository.save(member);
         return "OK";
