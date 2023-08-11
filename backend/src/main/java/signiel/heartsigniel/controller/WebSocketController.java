@@ -40,7 +40,6 @@ public class WebSocketController {
 
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
-
     /**
      * 유저 정보 오픈!!
      * @param roomId
