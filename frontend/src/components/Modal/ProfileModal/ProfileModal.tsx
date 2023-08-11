@@ -45,7 +45,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
     event.preventDefault();
 
     if (!nickname || nickname.length > 10 || !job) {
-      window.alert('모든 필드를 올바르게 입력해주세요.');
+      window.alert('모든 내용를 올바르게 입력해주세요.');
       return;
     }
 
