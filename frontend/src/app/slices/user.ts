@@ -121,7 +121,7 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
     // guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
-    // profileImageSrc: modifyUser.profileImageSrc,
+    profileImageSrc: data,
   };
 });
 
