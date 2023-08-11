@@ -10,15 +10,7 @@
 #meeting .meeting-video-row {
   display: grid;
   grid-template-columns: 0.5fr 0.5fr 0.5fr;
-  gap: 1.5rem;
-}
-
-#meeting .meeting-video-row:first-child {
-  margin-bottom: 1.5rem;
-}
-
-#meeting .meeting-video-row:first-child {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 #meeting .chat-room {
