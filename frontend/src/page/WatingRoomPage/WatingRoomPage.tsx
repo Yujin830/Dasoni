@@ -14,6 +14,7 @@ import convertScoreToName from '../../utils/convertScoreToName';
 // BGM
 import song from '../../assets/music/lobby.mp3';
 import AudioController from '../../components/AudioController/AudioController';
+import Loading01 from '../../components/Loading/Loading';
 
 function WaitingRoomPage() {
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
@@ -42,6 +43,7 @@ function WaitingRoomPage() {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const data = JSON.parse(res.body);
         console.log(data);
+        setIsLoading(false);
         setMemberList(data.privateRoomInfo.roomMemberInfoList);
       });
 
@@ -105,6 +107,7 @@ function WaitingRoomPage() {
   // memberList에서 방장(memberList에서 roomLeader가 true인)인지 여부를 확인하는 함수
   const isRoomLeaderInMemberList = (info: any) => {
     console.log(info);
+    console.log(client);
     return info.roomLeader && info.member.memberId === currentUserId;
   };
 
@@ -128,41 +131,49 @@ function WaitingRoomPage() {
             handleVolumeChange={handleVolumeChange}
           />
         </div>
-        <div id="waiting-room-body">
-          <div id="member-list-box">
-            <div className="waiting-room-content">
-              {sameGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
+        {/* 로딩 중일 때 스켈레톤 UI를 표시합니다. */}
+        {isLoading ? (
+          <Loading01 />
+        ) : (
+          // 로딩이 완료되면 실제 대기방 UI를 렌더링합니다.
+          <>
+            <div id="waiting-room-body">
+              <div id="member-list-box">
+                <div className="waiting-room-content">
+                  {sameGenderMemberList.map((info) => {
+                    console.log(info);
+                    return (
+                      <WaitingMemberBox
+                        key={info.member.memberId}
+                        nickname={info.member.nickname}
+                        rating={info.member.rating}
+                        matchCnt={info.member.meetingCount}
+                        gender={info.member.gender}
+                        profileImageSrc={info.member.profileImageSrc}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="waiting-room-content">
+                  {diffGenderMemberList.map((info) => {
+                    console.log(info);
+                    return (
+                      <WaitingMemberBox
+                        key={info.member.memberId}
+                        nickname={info.member.nickname}
+                        rating={info.member.rating}
+                        matchCnt={info.member.meetingCount}
+                        gender={info.member.gender}
+                        profileImageSrc={info.member.profileImageSrc}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              <ChatRoom />
             </div>
-            <div className="waiting-room-content">
-              {diffGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
-            </div>
-          </div>
-          <ChatRoom />
-        </div>
+          </>
+        )}
         <div id="waiting-room-footer">
           {/* "시작하기" 버튼을 방장인 경우에만 렌더링 */}
           {memberList.some(isRoomLeaderInMemberList) && (

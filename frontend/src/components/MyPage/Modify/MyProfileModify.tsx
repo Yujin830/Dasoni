@@ -7,8 +7,8 @@ import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 import { modifyUserAsync } from '../../../app/slices/user';
 
 function MyProfileModify({ setType }: any) {
-  const { loginId, nickname, job, memberId } = useAppSelector((state) => state.user);
-
+  const { loginId, nickname, job, memberId, siDo, guGun } = useAppSelector((state) => state.user);
+  console.log(nickname, job);
   const cancleModify = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setType('read');
