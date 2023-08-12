@@ -62,7 +62,9 @@ function Header({ onModalToggle }: HeaderProps) {
             <span className="material-symbols-outlined filled">favorite</span>
             <span className="material-symbols-outlined filled">favorite</span>
           </li>
-          <BasicAvartar src="default_profile.png" />
+          <li>
+            <BasicAvartar src={imagedefault} />
+          </li>
           <div id="filter-menu">
             <button className="material-symbols-outlined" onClick={handleToggleFilter}>
               menu
