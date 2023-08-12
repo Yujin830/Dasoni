@@ -20,9 +20,9 @@ function Header({ onModalToggle }: HeaderProps) {
     logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
     navigate('/');
   };
-  // 필터 버튼 토클
+  // 메뉴 버튼 토클
   const [isOpen, setIsOpen] = useState(false);
-  const handleToggleFilter = () => {
+  const handleToggleMenu = () => {
     setIsOpen((prevState) => !prevState);
   };
   const handleHelpClick = () => {
@@ -31,6 +31,8 @@ function Header({ onModalToggle }: HeaderProps) {
     }
     setIsOpen(false);
   };
+
+  //
 
   //사이드바 토글
   const [sideOpen, setSideopen] = useState(false);
@@ -66,7 +68,7 @@ function Header({ onModalToggle }: HeaderProps) {
             <BasicAvartar src={imagedefault} />
           </li>
           <div id="filter-menu">
-            <button className="material-symbols-outlined" onClick={handleToggleFilter}>
+            <button className="material-symbols-outlined" onClick={handleToggleMenu}>
               menu
             </button>
             <ul className={isOpen ? 'show' : ''}>
