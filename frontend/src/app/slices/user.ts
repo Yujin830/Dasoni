@@ -20,6 +20,7 @@ export interface User {
   rating?: number;
   matchCnt?: number;
   isFirst?: number;
+  remainLife?: number;
 }
 
 // 초기상태를 선언
@@ -37,6 +38,7 @@ const initialState: User = {
   isFirst: 0,
   rating: 1000,
   matchCnt: 0,
+  remainLife: 2,
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export

@@ -43,6 +43,23 @@
   cursor: pointer;
 }
 
+.header .material-symbols-outlined {
+  color: #ff257e;
+}
+
+.header .material-symbols-outlined.filled {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+  color: #ff257e;
+}
+
+.header a {
+  text-decoration: none;
+}
+
 /* .header #profile {
   width: 20%;
 } */
@@ -135,18 +152,6 @@
   border-top: 1px solid #ec5e98;
 }
 /* ---------------------------- */
-.header .material-symbols-outlined.filled {
-  font-variation-settings:
-    'FILL' 1,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 48;
-  color: #ff257e;
-}
-
-.header a {
-  text-decoration: none;
-}
 
 /*사이드바 css*/
 .sidebar {

@@ -16,6 +16,7 @@ interface HeaderProps {
 
 function Header({ onModalToggle }: HeaderProps) {
   const navigate = useNavigate();
+  const { remainLife } = useAppSelector((state) => state.user);
   const handleLogout = () => {
     logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
     navigate('/');
@@ -32,7 +33,31 @@ function Header({ onModalToggle }: HeaderProps) {
     setIsOpen(false);
   };
 
-  //
+  // 라이프 UI 생성
+  const drawLife = () => {
+    const spendLife = 2 - (remainLife || 2);
+
+    const lives = [];
+    // 소비한 목숨 draw
+    for (let i = 0; i < spendLife; i++) {
+      lives.push(
+        <span key={`spend-${i}`} className="material-symbols-outlined">
+          favorite
+        </span>,
+      );
+    }
+
+    // 남은 목숨 draw
+    for (let i = 0; i < (remainLife || 2); i++) {
+      lives.push(
+        <span key={`remain-${i}`} className="material-symbols-outlined filled">
+          favorite
+        </span>,
+      );
+    }
+
+    return lives;
+  };
 
   //사이드바 토글
   const [sideOpen, setSideopen] = useState(false);
@@ -60,10 +85,7 @@ function Header({ onModalToggle }: HeaderProps) {
       </Link>
       <nav className="nav">
         <ul id="nav-bar">
-          <li>
-            <span className="material-symbols-outlined filled">favorite</span>
-            <span className="material-symbols-outlined filled">favorite</span>
-          </li>
+          <li>{drawLife()}</li>
           <li>
             <BasicAvartar src={imagedefault} />
           </li>
