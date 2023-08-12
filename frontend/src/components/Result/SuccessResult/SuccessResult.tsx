@@ -1,5 +1,6 @@
 import React from 'react';
 import RankAvartar from '../../Avarta/RankAvartar/RackAvartar';
+import './SuccessResult.css';
 
 interface SuccessResultProps {
   profileSrc: string | undefined;
@@ -12,7 +13,7 @@ function SuccessResult({ profileSrc, rating, otherProfileSrc, otherRating }: Suc
   return (
     <div id="success-result">
       <RankAvartar profileSrc={profileSrc} point={rating} />
-      <span className="material-symbols-outlined">favorite</span>
+      <span className="material-symbols-outlined heart">favorite</span>
       <RankAvartar profileSrc={otherProfileSrc} point={otherRating} />
     </div>
   );

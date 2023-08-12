@@ -1,0 +1,10 @@
+#success-result {
+  width: 100%;
+}
+
+#success-result .heart {
+  color: #ff5c5c;
+  font-size: 4rem;
+  margin: 0 2.5rem;
+  transition: all 0.5s;
+}
