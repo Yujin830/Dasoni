@@ -12,45 +12,36 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
   const member = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const eventSource = new EventSource(`api/alarm/subscribe/${member.memberId}`);
-  console.log('멤버아이디 ', member.memberId);
 
-  eventSource.addEventListener('match', (event) => {
-    const { data: receivedConnectData } = event;
-    console.log('connect!!', receivedConnectData);
-
-    const res = event.data;
-    const parseData = JSON.parse(res);
-    console.log(parseData.roomId);
-    console.log(parseData.status);
-    console.log(parseData.readyState);
+  eventSource.addEventListener('match', (event: MessageEvent) => {
+    const parseData = JSON.parse(event.data);
 
     if (parseData.status === 'OK') {
-      console.log('Matched Room ID:', parseData.roomId);
-      alert(`매칭 완료! 방 ID: ${parseData.roomId}. 3초 후에 방으로 이동합니다.`);
-
+      const confirmMsg = `매칭 완료! 3초 후에 방으로 이동합니다.`;
       setTimeout(() => {
-        navigate(`/meeting/${parseData.roomId}`, { replace: true });
-        eventSource.close();
-        onClose();
+        window.confirm(confirmMsg);
+        navigateToMeetingRoom(parseData.roomId);
       }, 3000);
-    } else {
-      console.log(res.message);
     }
-    console.log(eventSource.readyState);
   });
+
+  const navigateToMeetingRoom = (roomId: string) => {
+    navigate(`/meeting/${roomId}`, { replace: true });
+    eventSource.close();
+    onClose();
+  };
 
   eventSource.onopen = () => {
     console.log('onopen', eventSource.readyState);
   };
 
-  eventSource.onerror = (event: any) => {
+  eventSource.onerror = (event: Event) => {
     console.error('SSE error:', event);
   };
 
   const handleCancel = async () => {
     try {
-      const res = await axios.delete(`/api/match/members/${member.memberId}`);
-      console.log('status', res.data);
+      await axios.delete(`/api/match/members/${member.memberId}`);
       onClose();
     } catch (error) {
       console.error('Error canceling the matching:', error);
@@ -59,7 +50,7 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
 
   useEffect(() => {
     return () => {
-      eventSource.close(); // 컴포넌트 언마운트 시 SSE 연결 종료
+      eventSource.close();
     };
   }, []);
 
