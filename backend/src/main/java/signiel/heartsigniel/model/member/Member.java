@@ -56,10 +56,10 @@ public class Member {
     private String job;
 
     @Column(name = "si_do")
-    private Long siDo;
+    private String siDo;
 
     @Column(name = "gu_gun")
-    private Long guGun;
+    private String guGun;
 
     @Column(name = "is_first")
     private Long isFirst;
