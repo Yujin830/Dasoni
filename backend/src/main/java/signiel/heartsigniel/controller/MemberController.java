@@ -41,8 +41,13 @@ public class MemberController {
     }
 
     @PostMapping("/api/register/{loginId}")
-    public ResponseEntity<String> getMember(@PathVariable String loginId) {
+    public ResponseEntity<String> checkMember(@PathVariable String loginId) {
         return new ResponseEntity<>(memberService.checkDuplicateId(loginId), HttpStatus.OK);
+    }
+
+    @PostMapping("/api/users/{memberId}")
+    public ResponseEntity<SignResponse> getMember(@PathVariable Long memberId) {
+        return new ResponseEntity<>(memberService.memberInfo(memberId), HttpStatus.OK);
     }
 
     @DeleteMapping("/api/users/{memberId}")
