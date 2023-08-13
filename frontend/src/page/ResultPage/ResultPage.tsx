@@ -22,11 +22,11 @@ function ResultPage() {
   }, []);
 
   const setResult = async () => {
+    // 매칭 성공 / 실패 확인
     if (resultOfRoomMember.matchMemberId !== 0) {
       setSuccess(true);
 
       // TODO : 매칭된 상대방 정보 가져오기
-      // TODO : 하트 가져오기
     }
   };
 
