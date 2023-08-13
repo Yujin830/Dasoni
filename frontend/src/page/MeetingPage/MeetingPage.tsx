@@ -12,13 +12,15 @@ import Question from '../../components/MeetingPage/Question/Question';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 import axios from 'axios';
-import { setRating } from '../../app/slices/user';
+import { setRating, setRemainLife } from '../../app/slices/user';
 import { setMatchMemberId, setRatingChange } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
 
 function MeetingPage() {
   const { roomId } = useParams();
-  const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
+  const { memberId, nickname, gender, job, birth, remainLife } = useAppSelector(
+    (state) => state.user,
+  );
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     memberId !== undefined ? memberId : 0,
     nickname !== undefined ? nickname : '',
@@ -202,6 +204,7 @@ function MeetingPage() {
       dispatch(setRating(data.content.roomMemberInfo.member.rating)); // 변경 후 레이팅 저장
       dispatch(setRatingChange(data.content.ratingChange)); // 레이팅 변화값 저장
       dispatch(setMatchMemberId(data.content.matchMemberId)); // 매칭된 상대방 저장
+      if (remainLife !== undefined) dispatch(setRemainLife(remainLife - 1)); // 라이프 감소
       navigate(`/sub-meeting/${roomId}`, { replace: true });
     } else {
       setGuideMessage(

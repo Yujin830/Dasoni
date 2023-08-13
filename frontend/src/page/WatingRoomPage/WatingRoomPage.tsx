@@ -64,8 +64,8 @@ function WaitingRoomPage() {
   const handleStartBtn = async () => {
     alert('미팅이 3초 후 시작됩니다');
     // 미팅방 시작 시 목숨 감소
-    const res = await axios.patch(`/api/rooms/${roomId}`, {});
-    console.log(res.data);
+    // const res = await axios.patch(`/api/rooms/${roomId}`, {});
+    // console.log(res.data);
 
     client?.send(`/app/room/${roomId}/start`);
   };
@@ -135,34 +135,28 @@ function WaitingRoomPage() {
         <div id="waiting-room-body">
           <div id="member-list-box">
             <div className="waiting-room-content">
-              {sameGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
+              {sameGenderMemberList.map((info) => (
+                <WaitingMemberBox
+                  key={info.member.memberId}
+                  nickname={info.member.nickname}
+                  rating={info.member.rating}
+                  matchCnt={info.member.meetingCount}
+                  gender={info.member.gender}
+                  profileImageSrc={info.member.profileImageSrc}
+                />
+              ))}
             </div>
             <div className="waiting-room-content">
-              {diffGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
+              {diffGenderMemberList.map((info) => (
+                <WaitingMemberBox
+                  key={info.member.memberId}
+                  nickname={info.member.nickname}
+                  rating={info.member.rating}
+                  matchCnt={info.member.meetingCount}
+                  gender={info.member.gender}
+                  profileImageSrc={info.member.profileImageSrc}
+                />
+              ))}
             </div>
           </div>
           <ChatRoom />

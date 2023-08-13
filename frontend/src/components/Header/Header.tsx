@@ -35,25 +35,26 @@ function Header({ onModalToggle }: HeaderProps) {
 
   // 라이프 UI 생성
   const drawLife = () => {
-    const spendLife = 2 - (remainLife || 2);
-
     const lives = [];
-    // 소비한 목숨 draw
-    for (let i = 0; i < spendLife; i++) {
-      lives.push(
-        <span key={`spend-${i}`} className="material-symbols-outlined">
-          favorite
-        </span>,
-      );
-    }
+    if (remainLife !== undefined) {
+      const spendLife = 2 - remainLife;
+      // 소비한 목숨 draw
+      for (let i = 0; i < spendLife; i++) {
+        lives.push(
+          <span key={`spend-${i}`} className="material-symbols-outlined">
+            favorite
+          </span>,
+        );
+      }
 
-    // 남은 목숨 draw
-    for (let i = 0; i < (remainLife || 2); i++) {
-      lives.push(
-        <span key={`remain-${i}`} className="material-symbols-outlined filled">
-          favorite
-        </span>,
-      );
+      // 남은 목숨 draw
+      for (let i = 0; i < remainLife; i++) {
+        lives.push(
+          <span key={`remain-${i}`} className="material-symbols-outlined filled">
+            favorite
+          </span>,
+        );
+      }
     }
 
     return lives;

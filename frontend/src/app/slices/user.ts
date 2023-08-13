@@ -55,6 +55,9 @@ const userSlice = createSlice({
     setRating(state, action) {
       state.rating = action.payload;
     },
+    setRemainLife(state, action) {
+      state.remainLife = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -180,7 +183,7 @@ export const logout = () => {
 // 리덕스에 저장된 user 상태값을 export
 export const getUserInfo = (state: RootState) => state.user;
 
-export const { setSido, setGugun, setRating } = userSlice.actions;
+export const { setSido, setGugun, setRating, setRemainLife } = userSlice.actions;
 
 // 로그인 reducer export
 export default userSlice.reducer;
