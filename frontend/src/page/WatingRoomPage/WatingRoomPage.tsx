@@ -61,8 +61,12 @@ function WaitingRoomPage() {
     },
   });
 
-  const handleStartBtn = () => {
+  const handleStartBtn = async () => {
     alert('미팅이 3초 후 시작됩니다');
+    // 미팅방 시작 시 목숨 감소
+    const res = await axios.patch(`/api/rooms/${roomId}`, {});
+    console.log(res.data);
+
     client?.send(`/app/room/${roomId}/start`);
   };
 
