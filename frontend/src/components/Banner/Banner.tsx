@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Banner.css';
 import signal from '../../assets/image/white_signal.png';
+import SnowingHearts from './SnowingHearts';
 
 function Banner() {
   return (
     <div id="banner">
+      {/* <div id="am"> */}
+      {/* </div> */}
       <div id="text-box">
+        <SnowingHearts />
         <h2>
           <span className="t1">첫</span>
           <span className="t2">인</span>
