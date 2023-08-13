@@ -150,9 +150,9 @@ public class PrivateRoomService {
         return response;
     }
 
-    public Response startRoom(Long roomId, Long roomLeaderId){
-        RoomMember roomLeader = findRoomMemberById(roomLeaderId);
-        Room roomEntity = findRoomById(roomId);
+    public Response startRoom(StartRoomRequest startRoomRequest){
+        RoomMember roomLeader = findRoomMemberById(startRoomRequest.getRoomLeaderId());
+        Room roomEntity = findRoomById(startRoomRequest.getRoomId());
 
         if(!roomLeader.isRoomLeader()){
             return Response.of(RoomMemberCode.NOT_ROOM_LEADER, null);
