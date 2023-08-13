@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class StartRoomRequest {
-    private Long roomLeaderPartyMemberId;
+    private Long roomLeaderId;
     private Long roomId;
 }
