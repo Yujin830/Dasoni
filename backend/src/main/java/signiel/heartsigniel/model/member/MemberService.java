@@ -107,6 +107,27 @@ public class MemberService {
         return "이미 존재하는 아이디입니다.";
     }
 
+    public SignResponse memberInfo(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 없습니다."));
+
+        return SignResponse.builder()
+                .memberId(member.getMemberId())
+                .loginId(member.getLoginId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .birth(member.getBirth())
+                .phoneNumber(member.getPhoneNumber())
+                .isBlack(member.isBlack())
+                .rating(member.getRating())
+                .meetingCount(member.getMeetingCount())
+                .profileImageSrc(member.getProfileImageSrc())
+                .job(member.getJob())
+                .siDo(member.getSiDo())
+                .guGun(member.getGuGun())
+                .build();
+    }
+
     public String deleteUserInfo(Long memberId) {
         memberRepository.deleteById(memberId);
         return "OK";
