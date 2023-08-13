@@ -110,8 +110,8 @@ function RoomBox({
   // 입장하기
   const onClickEnter = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (isFull) {
-      alert('더 이상 입장 할 수 없습니다.');
+    if (member.remainLife === 0) {
+      alert('오늘은 모든 라이프를 소진하여 더 이상 입장할 수 없습니다.');
       return;
     } else {
       console.log('입장하기');

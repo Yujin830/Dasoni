@@ -46,6 +46,12 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   const OpenRoom = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    // 남은 라이프 확인
+    if (member.remainLife === 0) {
+      alert('오늘은 모든 라이프를 소진하여 더 이상 입장할 수 없습니다.');
+      return;
+    }
+
     const data = {
       memberId: member.memberId,
       title: roomTitle,
