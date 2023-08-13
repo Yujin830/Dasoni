@@ -94,6 +94,7 @@ export const deleteUserAsync = createAsyncThunk('DELETE_USER', async (user: User
 // 유저 정보 업데이트
 export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser: User) => {
   const requestData = {
+    profileImageSrc: modifyUser.profileImageSrc,
     siDo: modifyUser.siDo,
     guGun: modifyUser.guGun,
     job: modifyUser.job,
@@ -120,8 +121,8 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   console.log(data);
 
   return {
-    // siDo: modifyUser.siDo,
-    // guGun: modifyUser.guGun,
+    siDo: modifyUser.siDo,
+    guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
     profileImageSrc: data,
