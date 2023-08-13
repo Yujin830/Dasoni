@@ -3,6 +3,7 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 import { useParams } from 'react-router';
 import { useAppSelector } from '../../app/hooks';
 import './ChatRoom.css';
+import Loading01 from '../Loading/Loading';
 
 interface ChatMessage {
   senderNickname: string;
@@ -17,9 +18,13 @@ const ChatRoom: React.FC = () => {
   const { roomId } = useParams();
   const messageRef = useRef<HTMLDivElement | null>(null);
   const member = useAppSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
 
   const client = useWebSocket({
     subscribe: (client) => {
+      setIsLoading(false);
+      console.log('로딩완료');
+
       // 기존의 채팅 메시지에 대한 구독
       client.subscribe(`/topic/room/${roomId}/chat`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
@@ -54,6 +59,7 @@ const ChatRoom: React.FC = () => {
 
   const sendMessage = () => {
     if (newMessage && client?.connected) {
+      console.log(client.connected);
       client.send(
         `/app/room/${roomId}/chat`,
         {},
@@ -76,24 +82,33 @@ const ChatRoom: React.FC = () => {
 
   return (
     <div className="chat-room">
-      <div className="message-container" ref={messageRef}>
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
-          >
-            {msg.content.includes(`입장하셨습니다.`) || msg.content.includes(`퇴장하셨습니다.`) ? (
-              <>
-                <strong>{msg.senderNickname} </strong> {msg.content}
-              </>
-            ) : (
-              <>
-                <strong>{msg.senderNickname} : </strong> {msg.content}
-              </>
-            )}
+      {/* 로딩 중일 때 스켈레톤 UI를 표시합니다. */}
+      {isLoading ? (
+        <Loading01 />
+      ) : (
+        // 로딩이 완료되면 실제 대기방 UI를 렌더링합니다.
+        <>
+          <div className="message-container" ref={messageRef}>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
+              >
+                {msg.content.includes(`입장하셨습니다.`) ||
+                msg.content.includes(`퇴장하셨습니다.`) ? (
+                  <>
+                    <strong>{msg.senderNickname} </strong> {msg.content}
+                  </>
+                ) : (
+                  <>
+                    <strong>{msg.senderNickname} : </strong> {msg.content}
+                  </>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
       <form onSubmit={handleFormSubmit} className="chat-input">
         <input value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
         <button type="submit">보내기</button>
