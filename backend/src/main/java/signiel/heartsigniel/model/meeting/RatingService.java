@@ -290,8 +290,8 @@ public class RatingService {
     }
 
     // 매칭 히스토리 삭제
-    public void deleteMatchingHistory (Long memberId){
-        redisTemplate.delete("member:" + memberId + ":matchHistory");
+    public void deleteMatchingHistory (Long memberId, MatchingHistoryRequest matchingHistoryRequest){
+        redisTemplate.opsForList().remove("member" + memberId + ":matchHistory", 1, matchingHistoryRequest.getDeleteTargetMemberId());
     }
 
     // Redis에 PersonalResult 객체를 저장
