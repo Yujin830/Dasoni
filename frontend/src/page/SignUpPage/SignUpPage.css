@@ -220,6 +220,10 @@
   width: 18%;
   height: 80%;
   float: right;
+  /* margin-right: 1rem; */
+}
+
+.signup-btn {
   margin-right: 1rem;
 }
 

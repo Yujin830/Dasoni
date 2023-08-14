@@ -20,7 +20,7 @@ function MyProfileModify({ setType }: any) {
   const [modifyJob, setModifyJob] = useState(job);
   const [modifyProfileImage, setModifyProfileImage] = useState<File | null>(null);
 
-  const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setModifyNickname(e.target.value);
   };
   const handleJobChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +37,8 @@ function MyProfileModify({ setType }: any) {
     e.preventDefault();
     const modifiedData = {
       memberId: memberId,
-      siDo: Number(modifySido),
-      guGun: Number(modifyGugun),
+      siDo: modifySido,
+      guGun: modifyGugun,
       job: modifyJob,
       nickname: modifyNickname,
       profileImage: modifyProfileImage,
@@ -71,7 +71,7 @@ function MyProfileModify({ setType }: any) {
             label="닉네임"
             type="text"
             value={String(modifyNickname)}
-            handleChange={handleBirthChange}
+            handleChange={handleNicknameChange}
           />
           <AddressSelecter
             modifySido={modifySido}
