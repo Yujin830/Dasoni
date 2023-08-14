@@ -14,16 +14,18 @@ public class PersonalResult {
     private RoomMemberInfo roomMemberInfo;
     private Long ratingChange;
     private int matchMemberId = 0;
+    private Long remainLife;
 
-    public PersonalResult (RoomMember roomMember, Long ratingChange, int matchedMemberId){
+    public PersonalResult (RoomMember roomMember, Long ratingChange, int matchedMemberId, Long remainLife){
         this.roomMemberInfo = new RoomMemberInfo(roomMember);
         this.ratingChange = ratingChange;
         this.matchMemberId = matchedMemberId;
+        this.remainLife = remainLife;
     }
 
     @Builder
-    public static PersonalResult of(RoomMember roomMember, Long ratingChange, int matchMemberId){
-        return new PersonalResult(roomMember, ratingChange, matchMemberId);
+    public static PersonalResult of(RoomMember roomMember, Long ratingChange, int matchMemberId, Long remainLife){
+        return new PersonalResult(roomMember, ratingChange, matchMemberId, remainLife);
     }
 }
 

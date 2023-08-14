@@ -1,6 +1,5 @@
 package signiel.heartsigniel.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,15 +17,14 @@ import signiel.heartsigniel.model.meeting.SignalService;
 import signiel.heartsigniel.model.meeting.dto.SingleSignalRequest;
 import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
+import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-@AllArgsConstructor
 @Slf4j
 public class WebSocketController {
 
@@ -35,10 +33,38 @@ public class WebSocketController {
     private final GuideRepository guideRepository;
     private final ChatService chatService;
     private final QuestionService questionService;
-
     private final SignalService signalService;
+    private final MatchingRoomService matchingRoomService;
+
+
 
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
+
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService, MatchingRoomService matchingRoomService) {
+        this.operations = operations;
+        this.privateRoomService = privateRoomService;
+        this.guideRepository = guideRepository;
+        this.chatService = chatService;
+        this.questionService = questionService;
+        this.signalService = signalService;
+        this.matchingRoomService = matchingRoomService;
+    }
+
+    /**
+     * 메기 입장 가능!
+     */
+
+    @MessageMapping("room/{roomId}/megi")
+    public void canJoinMegi(@DestinationVariable Long roomId, String msg){
+        log.info("inQueueRoom1!!");
+
+        String megi = msg;
+        log.info(msg);
+        matchingRoomService.enqueueRoom(roomId);
+        log.info("inQueueRoom2!!");
+
+        operations.convertAndSend("/topic/room/" + roomId + "/megi", megi);
+    }
 
 
     /**
@@ -48,6 +74,7 @@ public class WebSocketController {
     @MessageMapping("room/{roomId}/open")
     public void openMembersInformation(@DestinationVariable Long roomId){
         String openInfo = "OPEN";
+        log.info("open");
         operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
     }
 

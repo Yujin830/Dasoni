@@ -13,6 +13,7 @@ export interface WaitingMember {
   member: WaitingMemberInfo; // 멤버 정보
   roomLeader: boolean; // 방장 여부
   specialUser: boolean; // 메기 여부
+  roomMemberId: number; // 방에 있는 멤버의 Id
 }
 
 interface WaitingMemberInfo {

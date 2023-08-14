@@ -20,6 +20,7 @@ export interface User {
   rating?: number;
   matchCnt?: number;
   isFirst?: number;
+  remainLife?: number;
   profileImage?: File | null;
 }
 
@@ -28,16 +29,17 @@ const initialState: User = {
   memberId: 0,
   loginId: '',
   password: '',
-  nickname: '',
+  nickname: '닉네임',
   birth: '',
   phoneNumber: '',
-  job: '',
-  siDo: 0,
-  guGun: 0,
+  job: '선택해 주세요',
+  siDo: '선택해',
+  guGun: '주세요',
   profileImageSrc: 'null',
   isFirst: 0,
   rating: 1000,
   matchCnt: 0,
+  remainLife: 2,
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
@@ -51,6 +53,18 @@ const userSlice = createSlice({
     setGugun(state, action) {
       state.guGun = action.payload;
     },
+    setRating(state, action) {
+      state.rating = action.payload;
+    },
+    setRemainLife(state, action) {
+      state.remainLife = action.payload;
+    },
+    setMeetingCount(state, action) {
+      state.matchCnt = action.payload;
+    },
+    setProfileImageSrc(state, action) {
+      state.profileImageSrc = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -60,6 +74,7 @@ const userSlice = createSlice({
         return { ...state, ...action.payload };
       })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
+        console.log(action.payload);
         return { ...state, ...action.payload };
       });
   },
@@ -94,17 +109,19 @@ export const deleteUserAsync = createAsyncThunk('DELETE_USER', async (user: User
 // 유저 정보 업데이트
 export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser: User) => {
   const requestData = {
+    profileImageSrc: modifyUser.profileImageSrc,
     siDo: modifyUser.siDo,
     guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
   };
+  console.log(requestData);
 
   const fd = new FormData();
   if (modifyUser.profileImage !== null && modifyUser.profileImage !== undefined) {
     fd.append('file', modifyUser.profileImage);
-    fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
   }
+  fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
 
   console.log('here', modifyUser);
   const response = await axios.patch(`/api/users/${modifyUser.memberId}`, fd, {
@@ -140,7 +157,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
     const data = response.data;
     console.log('from 서버');
     console.log(data);
-
+    localStorage.removeItem('jwtToken');
     // 서버에서 받은 토큰을 localstorage에 저장
     localStorage.setItem('jwtToken', data.token);
     // axios 호출시마다 토큰을 header에 포함하도록 설정
@@ -150,15 +167,15 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
     return {
       memberId: data.memberId,
       loginId: data.loginId,
-      nickname: data.nickname,
+      nickname: data.nickname || '닉네임',
       gender: data.gender,
       birth: data.birth,
       phoneNumber: data.phoneNumber,
       meetingCount: data.meetingCount || 0,
       profileImageSrc: data.profileImageSrc,
-      job: data.job,
-      siDo: data.siDo || 0,
-      guGun: data.guGun || 0,
+      job: data.job || '선택해 주세요',
+      siDo: data.siDo || '선택해',
+      guGun: data.guGun || '주세요',
       // roles: data.roles,
       remainLife: data.remainLife,
       rating: data.rating || 1000,
@@ -186,7 +203,8 @@ export const logout = () => {
 // 리덕스에 저장된 user 상태값을 export
 export const getUserInfo = (state: RootState) => state.user;
 
-export const { setSido, setGugun } = userSlice.actions;
+export const { setSido, setGugun, setRating, setRemainLife, setMeetingCount, setProfileImageSrc } =
+  userSlice.actions;
 
 // 로그인 reducer export
 export default userSlice.reducer;

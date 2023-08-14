@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import logo from '../../assets/image/logo.png';
 import './Header.css';
 import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
-import { logout } from '../../app/slices/user';
+import { logout, setProfileImageSrc } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import heartRating from '../../assets/image/heart/heart_rating.png';
 import { useAppSelector } from '../../app/hooks';
 import RankAvartar from '../../components/Avarta/RankAvartar/RackAvartar';
 import ExpPointBar from '../../components/Element/ExpPointBar';
+import { useDispatch } from 'react-redux';
 
 interface HeaderProps {
   onModalToggle?: () => void;
@@ -16,13 +17,16 @@ interface HeaderProps {
 
 function Header({ onModalToggle }: HeaderProps) {
   const navigate = useNavigate();
+  const { remainLife } = useAppSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
     logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
     navigate('/');
   };
-  // 필터 버튼 토클
+  // 메뉴 버튼 토클
   const [isOpen, setIsOpen] = useState(false);
-  const handleToggleFilter = () => {
+  const handleToggleMenu = () => {
     setIsOpen((prevState) => !prevState);
   };
   const handleHelpClick = () => {
@@ -30,6 +34,33 @@ function Header({ onModalToggle }: HeaderProps) {
       onModalToggle();
     }
     setIsOpen(false);
+  };
+
+  // 라이프 UI 생성
+  const drawLife = () => {
+    const lives = [];
+    if (remainLife !== undefined) {
+      const spendLife = 2 - remainLife;
+      // 소비한 목숨 draw
+      for (let i = 0; i < spendLife; i++) {
+        lives.push(
+          <span key={`spend-${i}`} className="material-symbols-outlined">
+            favorite
+          </span>,
+        );
+      }
+
+      // 남은 목숨 draw
+      for (let i = 0; i < remainLife; i++) {
+        lives.push(
+          <span key={`remain-${i}`} className="material-symbols-outlined filled">
+            favorite
+          </span>,
+        );
+      }
+    }
+
+    return lives;
   };
 
   //사이드바 토글
@@ -40,13 +71,21 @@ function Header({ onModalToggle }: HeaderProps) {
 
   // 사이드바 데이터 반영
   const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
-  let imagedefault;
+
+  // 프로필 이미지 설정 안했을 때 default 이미지 설정
   if (profileImageSrc == 'null') {
     if (gender == 'female')
-      imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
-    else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
-  } else {
-    imagedefault = profileImageSrc;
+      dispatch(
+        setProfileImageSrc(
+          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg',
+        ),
+      );
+    else
+      dispatch(
+        setProfileImageSrc(
+          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg',
+        ),
+      );
   }
   return (
     <header className="header">
@@ -58,13 +97,13 @@ function Header({ onModalToggle }: HeaderProps) {
       </Link>
       <nav className="nav">
         <ul id="nav-bar">
-          <li>
-            <span className="material-symbols-outlined filled">favorite</span>
-            <span className="material-symbols-outlined filled">favorite</span>
-          </li>
-          <BasicAvartar src="default_profile.png" />
+          <li>{drawLife()}</li>
+          {/* <li>
+            <BasicAvartar src={imagedefault} />
+          </li> */}
+
           <div id="filter-menu">
-            <button className="material-symbols-outlined" onClick={handleToggleFilter}>
+            <button className="material-symbols-outlined" onClick={handleToggleMenu}>
               menu
             </button>
             <ul className={isOpen ? 'show' : ''}>
@@ -96,7 +135,7 @@ function Header({ onModalToggle }: HeaderProps) {
             </div>
             <div className="sidebar-rating">My Rating</div> */}
             <div className="sidebar-profile">
-              <RankAvartar profileSrc={imagedefault} point={rating} />
+              <RankAvartar profileSrc={profileImageSrc} point={rating} />
             </div>
 
             <div className="sidebar-rating">

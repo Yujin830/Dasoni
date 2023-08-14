@@ -25,9 +25,10 @@ public class LifeService {
         deleteExpirationTimeStamp(member.getMemberId());
 
         // 남은 목숨 있을 경우 목숨 사용
-        if (countRemainingLives(member.getMemberId()) <=1){
+        if (countRemainingLives(member.getMemberId()) >=1){
             Life life = Life.builder()
                     .member(member)
+                    .useDate(LocalDate.now())
                     .build();
 
             lifeRepository.save(life);
