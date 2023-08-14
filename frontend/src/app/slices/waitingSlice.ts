@@ -6,10 +6,10 @@ export interface WaitingState {
   roomType: string;
   roomTitle: string;
   isMaster: boolean;
-  megiAcceptable: boolean;
   ratingLimit: number;
   helpModalVisible: boolean;
   openRoomModalVisible: boolean;
+  openQuickMatchingModalVisible: boolean;
   waitingRoomMemberList: WaitingMember[];
 }
 
@@ -18,10 +18,10 @@ const initialState: WaitingState = {
   roomType: 'private',
   roomTitle: '',
   isMaster: false,
-  megiAcceptable: false,
   ratingLimit: 0,
   helpModalVisible: false,
   openRoomModalVisible: false,
+  openQuickMatchingModalVisible: false,
   waitingRoomMemberList: [],
 };
 
@@ -41,9 +41,6 @@ const waitingSlice = createSlice({
     setMaster(state, action) {
       state.isMaster = action.payload;
     },
-    setMegiAcceptable(state, action) {
-      state.megiAcceptable = action.payload;
-    },
     setRatingLimit(state, action) {
       state.ratingLimit = action.payload;
     },
@@ -56,6 +53,9 @@ const waitingSlice = createSlice({
     setWaitingMemberList(state, action) {
       state.waitingRoomMemberList = action.payload;
     },
+    setOpenQuickMatchingModalVisible(state, action: PayloadAction<boolean>) {
+      state.openQuickMatchingModalVisible = action.payload;
+    },
   },
 });
 
@@ -65,10 +65,10 @@ export const {
   setRoomTitle,
   setRatingLimit,
   setMaster,
-  setMegiAcceptable,
   setHelpModalVisible,
   setOpenRoomModalVisible,
   setWaitingMemberList,
+  setOpenQuickMatchingModalVisible,
 } = waitingSlice.actions;
 
 export default waitingSlice.reducer;

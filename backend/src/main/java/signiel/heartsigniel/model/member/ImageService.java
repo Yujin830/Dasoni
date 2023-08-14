@@ -20,17 +20,16 @@ public class ImageService {
     private final AmazonS3Client amazonS3Client;
     private final ImageRepo imageRepo;
 
-    // 혹시 모르니 여러 파일을 업로드 할 수 있게 했음, 하나만 업로드도 가능 
-    @Transactional
-    public List<String> saveImages(ImageSaveDto saveDto) {
-        List<String> resultList = new ArrayList<>();
-
-        for(MultipartFile multipartFile : saveDto.getImages()) {
-            String value = saveImage(multipartFile);
-            resultList.add(value);
-        }
-        return resultList;
-    }
+//    // 혹시 모르니 여러 파일을 업로드 할 수 있게 했음, 하나만 업로드도 가능
+//    @Transactional
+//    public List<String> saveImages(ImageSaveDto saveDto) {
+//        List<String> resultList = new ArrayList<>();
+//        for(MultipartFile multipartFile : saveDto.getImages()) {
+//            String value = saveImage(multipartFile);
+//            resultList.add(value);
+//        }
+//        return resultList;
+//    }
     @Transactional
     public String saveImage(MultipartFile multipartFile) {
         String originalName = multipartFile.getOriginalFilename();
@@ -65,6 +64,7 @@ public class ImageService {
     // 삭제는 S3에 저장된 이름을 통해 삭제되도록 함
     @Transactional
     public void deleteImage(String filename){
+        imageRepo.delete(imageRepo.findImageByStoredName(filename));
         amazonS3Client.deleteObject(bucketName, filename);
     }
 }
