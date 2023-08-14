@@ -30,7 +30,9 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
 
   const handleExitBtn = async () => {
     if (confirm('미팅 중 퇴장 시 패널티를 받습니다.\n정말 나가시겠습니까?')) {
-      if (remainLife !== undefined) dispatch(setRemainLife(remainLife - 1)); // 라이프 감소
+      // TODO : 중간 탈주 시 라이프 감소
+      // TODO : 중간 탈주 시 미팅 카운트 증가
+      // if (remainLife !== undefined) dispatch(setRemainLife(remainLife - 1)); // 라이프 감소
       await axios.delete(`/api/rooms/${roomId}/members/${memberId}`);
       navigate('/result', { replace: true });
     }

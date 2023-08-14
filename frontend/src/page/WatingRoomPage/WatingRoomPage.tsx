@@ -14,6 +14,8 @@ import convertScoreToName from '../../utils/convertScoreToName';
 // BGM
 import song from '../../assets/music/lobby.mp3';
 import AudioController from '../../components/AudioController/AudioController';
+import { useDispatch } from 'react-redux';
+import { setWaitingMemberList } from '../../app/slices/waitingSlice';
 
 function WaitingRoomPage() {
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
@@ -34,14 +36,21 @@ function WaitingRoomPage() {
     [memberList],
   );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { roomId } = useParams();
   const member = useAppSelector((state) => state.user);
+  const { waitingRoomMemberList } = useAppSelector((state) => state.waitingRoom);
 
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const data = JSON.parse(res.body);
         console.log(data);
+        data.privateRoomInfo.roomMemberInfoList.map((roomMemberInfo: any) => {
+          if (roomMemberInfo.member.memberId === member.memberId) {
+            dispatch(setWaitingMemberList([roomMemberInfo]));
+          }
+        });
         setMemberList(data.privateRoomInfo.roomMemberInfoList);
       });
 
@@ -62,12 +71,19 @@ function WaitingRoomPage() {
   });
 
   const handleStartBtn = async () => {
-    alert('미팅이 3초 후 시작됩니다');
-    // 미팅방 시작 시 목숨 감소
-    // const res = await axios.patch(`/api/rooms/${roomId}`, {});
-    // console.log(res.data);
+    // 미팅방 시작 시 목숨 감소, 매치 수 증가
+    if (waitingRoomMemberList[0].roomLeader) {
+      const res = await axios.patch(`/api/rooms/${roomId}`, {
+        roomLeaderId: waitingRoomMemberList[0].roomMemberId,
+        roomId: roomId,
+      });
+      console.log(res.data);
 
-    client?.send(`/app/room/${roomId}/start`);
+      if (res.data.status.code !== 1224) {
+        alert('미팅이 3초 후 시작됩니다');
+        client?.send(`/app/room/${roomId}/start`);
+      }
+    }
   };
 
   const handleExitBtn = async () => {

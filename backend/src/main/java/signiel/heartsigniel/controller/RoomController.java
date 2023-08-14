@@ -89,8 +89,8 @@ public class RoomController {
 
     @PatchMapping("/{roomId}")
     public ResponseEntity<Response> startMeetingRoom(@PathVariable Long roomId, @RequestBody StartRoomRequest startRoomRequest){
-        Long roomLeaderPartyMemberId = startRoomRequest.getRoomLeaderPartyMemberId();
-        Response response = privateRoomService.startRoom(roomId, roomLeaderPartyMemberId);
+        Long roomLeaderId = startRoomRequest.getRoomLeaderId();
+        Response response = privateRoomService.startRoom(roomId, roomLeaderId);
         return ResponseEntity.ok(response);
     }
 

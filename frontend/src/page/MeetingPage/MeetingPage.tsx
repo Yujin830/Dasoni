@@ -12,7 +12,7 @@ import Question from '../../components/MeetingPage/Question/Question';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 import axios from 'axios';
-import { setRating, setRemainLife } from '../../app/slices/user';
+import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
 import { setMatchMemberId, setRatingChange } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
 
@@ -204,7 +204,8 @@ function MeetingPage() {
       dispatch(setRating(data.content.roomMemberInfo.member.rating)); // 변경 후 레이팅 저장
       dispatch(setRatingChange(data.content.ratingChange)); // 레이팅 변화값 저장
       dispatch(setMatchMemberId(data.content.matchMemberId)); // 매칭된 상대방 저장
-      if (remainLife !== undefined) dispatch(setRemainLife(remainLife - 1)); // 라이프 감소
+      dispatch(setMeetingCount(data.content.roomMemberInfo.member.meetingCount)); // 미팅 카운트 증가
+      dispatch(setRemainLife(data.content.remainLife)); // 라이프 감소
       navigate(`/sub-meeting/${roomId}`, { replace: true });
     } else {
       setGuideMessage(
