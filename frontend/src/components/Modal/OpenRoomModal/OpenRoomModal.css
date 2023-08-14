@@ -140,6 +140,7 @@
   font-size: 2.5vh;
   font-weight: 700;
   background-color: #ffd8e4;
+  color: black;
 }
 .close-button button:hover {
   color: red;
@@ -170,6 +171,7 @@
   }
   .openroom-modal .openroom-btn {
     /* margin-right: 2vh; */
+    width: 40%;
     height: 100%;
     font-size: 2vh;
     /* margin-bottom: 2vh; */

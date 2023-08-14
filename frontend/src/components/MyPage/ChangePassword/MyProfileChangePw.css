@@ -48,6 +48,7 @@
   height: 10vh;
 }
 .mypage .changePw-box .confirm-btn {
+  color: black;
   border-radius: 0.625rem;
   background: #ec5e98;
   width: 14vh;
@@ -59,6 +60,7 @@
 }
 
 .mypage .changePw-box .cancel-btn {
+  color: black;
   border-radius: 0.625rem;
   background: #898989;
   width: 14vh;
@@ -67,6 +69,16 @@
   left: 0;
   margin-top: 1rem;
   font-size: 2vh;
+}
+
+.mypage .changePw-box .confirm-btn:hover {
+  color: white;
+  background: #b0064d;
+}
+
+.mypage .changePw-box .cancel-btn:hover {
+  color: white;
+  background: #5c5b5b;
 }
 
 .mypage .changePw-box .confirm-changePw .alert,

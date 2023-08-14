@@ -5,29 +5,6 @@ import FilledButton from '../../Button/FilledButton';
 import axios from 'axios';
 import { useAppSelector } from '../../../app/hooks';
 
-// const styles = {
-//   input: {
-//     height: '3rem',
-//     flexShrink: '0',
-//     borderRadius: '1.25rem',
-//     border: '3px solid #D9D9D9',
-//     background: '#FFF',
-//     color: '#898989',
-//     fontSize: '1rem',
-//     margin: '0.5rem 0',
-//     padding: '0.5rem 0.7rem',
-//   },
-//   button: {
-//     borderRadius: '0.625rem',
-//     background: '#EC5E98',
-//     width: '7rem',
-//     height: '3rem',
-//     position: 'absolute',
-//     right: 0,
-//     marginTop: '1rem',
-//   },
-// };
-
 // 현재 비밀번호 확인 컴포넌트 :: 이중 인증 목적
 function CheckCurrentPw({ setIsCorrect, memberId, setType }: any) {
   const [currentPw, setCurrentPw] = useState('');

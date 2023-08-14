@@ -243,6 +243,7 @@
 }
 
 .gender-man {
+  color: black;
   display: flex;
   width: 50%;
   height: 100%;
@@ -259,6 +260,7 @@
 }
 
 .gender-woman {
+  color: black;
   display: flex;
   width: 50%;
   font-size: 2.2vh;
@@ -367,5 +369,6 @@
     width: 6%;
     height: 3vh;
     border: white;
+    background-color: white;
   }
 }

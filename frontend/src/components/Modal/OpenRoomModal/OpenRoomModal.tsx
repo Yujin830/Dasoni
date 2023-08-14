@@ -95,7 +95,9 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       <div className="header">
         방만들기
         <div className="close-button">
-          <button onClick={onClose}>X</button>
+          <button className="close-btn" onClick={onClose}>
+            X
+          </button>
         </div>
       </div>
       <div className="box">
