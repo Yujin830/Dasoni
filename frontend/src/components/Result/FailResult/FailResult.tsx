@@ -1,5 +1,6 @@
 import React from 'react';
 import RankAvartar from '../../Avarta/RankAvartar/RackAvartar';
+import './FailResult.css';
 
 interface FailResult {
   profileSrc: string | undefined;
@@ -7,7 +8,7 @@ interface FailResult {
 
 function FailResult({ profileSrc }: FailResult) {
   return (
-    <div id="faile-result">
+    <div id="fail-result">
       <RankAvartar profileSrc={profileSrc} point={-1} />
     </div>
   );
