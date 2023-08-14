@@ -16,7 +16,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
   const { memberId, profileImageSrc } = useAppSelector((state) => state.user);
   const [nickname, setNickname] = useState<string>('');
   const [job, setJob] = useState<string>('');
-  const [modifySido, setModifySido] = useState<number>(11);
+  const [modifySido, setModifySido] = useState<number>(-1);
   const [modifyGugun, setModifyGugun] = useState<number>(0);
   const [nickNameError, setNickNameError] = useState<string | null>(null);
   const dispatch = useAppDispatch(); // Ensure you have this dispatch defined.

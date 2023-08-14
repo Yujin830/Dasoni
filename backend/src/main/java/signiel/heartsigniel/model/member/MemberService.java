@@ -175,8 +175,8 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        if(file!=null) return member.getProfileImageSrc();
-        else return "null";
+        return member.getProfileImageSrc();
+//        else return "null";
     }
 
     public String updateProfileImage(Long memberId, MultipartFile image){
