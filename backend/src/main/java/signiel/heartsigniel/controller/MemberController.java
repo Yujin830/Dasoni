@@ -99,5 +99,4 @@ public class MemberController {
     public void deleteImage(@RequestParam("fileName") String fileName){
         imageService.deleteImage(fileName);
     }
-
 }
