@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.room;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.dto.Response;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
+@Slf4j
 public class MatchingRoomService {
 
     private final RoomRepository roomRepository;
@@ -53,6 +55,7 @@ public class MatchingRoomService {
     }
 
     public void startRoom(Room room){
+        log.info("StartRoom!!!!");
         room.setStartTime(LocalDateTime.now());
         useLifeAndIncreaseMeetingCount(room);
         roomRepository.save(room);

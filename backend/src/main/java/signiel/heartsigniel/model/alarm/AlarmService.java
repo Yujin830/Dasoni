@@ -1,5 +1,6 @@
 package signiel.heartsigniel.model.alarm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import signiel.heartsigniel.model.alarm.code.AlarmCode;
@@ -7,10 +8,13 @@ import signiel.heartsigniel.model.room.Room;
 import signiel.heartsigniel.model.roommember.RoomMember;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AlarmService {
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
@@ -33,22 +37,24 @@ public class AlarmService {
         // male party members
         // roomMember- > 6명이 모여있는 list.
         for (RoomMember roomMember : room.getRoomMembers()) {
-            sendEmitterMessage(roomMember, room.getId());
+            sendEmitterMessage(roomMember, room);
         }
 
-        // TODO
-        // -> 모인 6명을 meetingroom에 집어넣기.
     }
 
-    private void sendEmitterMessage(RoomMember roomMember, Long roomId) {
+    private void sendEmitterMessage(RoomMember roomMember, Room room) {
         SseEmitter emitter = this.emitters.get(roomMember.getMember().getMemberId());
 
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().name("match").data(roomId));
+                // roomId와 메시지 정보를 함께 전송
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("status", "OK");
+                responseData.put("roomId", room.getId());
+                emitter.send(SseEmitter.event().name("match").data(responseData));
                 emitter.complete();
+
             } catch (IOException e) {
-                // Emit a send failure error
                 emitter.completeWithError(new RuntimeException(AlarmCode.ALARM_SEND_FAIL.getMessage()));
             }
         }

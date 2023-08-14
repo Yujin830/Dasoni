@@ -1,6 +1,5 @@
 package signiel.heartsigniel.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -45,8 +44,9 @@ public class WebSocketController {
         this.guideRepository = guideRepository;
         this.chatService = chatService;
         this.questionService = questionService;
-        this.signalService =signalService;
+        this.signalService = signalService;
     }
+
 
     /**
      * 유저 정보 오픈!!

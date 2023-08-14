@@ -167,9 +167,10 @@ function MainPage() {
   // 빠른 매칭 모달 open
   const matchFast = async () => {
     const memberId = member.memberId;
+    const queueType = 'normal';
 
     try {
-      const res = await axios.post(`api/match/members/${memberId}`);
+      const res = await axios.post(`api/match/members/${memberId}/${queueType}`);
 
       if (res.status === 200) {
         console.log('빠른 매치 응답 : ', res.data);
