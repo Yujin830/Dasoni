@@ -6,8 +6,6 @@ import SnowingHearts from './SnowingHearts';
 function Banner() {
   return (
     <div id="banner">
-      {/* <div id="am"> */}
-      {/* </div> */}
       <div id="text-box">
         <SnowingHearts />
         <h2>

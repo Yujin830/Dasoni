@@ -6,7 +6,7 @@ const SnowingHearts: React.FC = () => {
 
   useEffect(() => {
     const snowflakeInterval = setInterval(() => {
-      const numFlakes = Math.floor(Math.random() * 10) + 10;
+      const numFlakes = Math.floor(Math.random() * 15) + 15;
       const newSnowflakes: JSX.Element[] = [];
 
       for (let i = 0; i < numFlakes; i++) {

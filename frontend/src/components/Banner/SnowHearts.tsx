@@ -4,7 +4,7 @@ import styled, { keyframes } from 'styled-components';
 const snowflakeAnimation = keyframes`
   0% {
     transform: translateY(-20vh) translateX(calc(100vw * var(--x)));
-    opacity: 0.5;
+    opacity: 0;
   }
   100% {
     transform: translateY(80vh) translateX(calc(100vw * var(--x)));
