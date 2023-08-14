@@ -20,26 +20,18 @@ type SideBarProps = {
 };
 
 function SideBar({ percent, match, points, setType }: SideBarProps) {
-  const { rating, matchCnt, gender, profileImageSrc } = useAppSelector((state) => state.user);
+  const { rating, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
   const changePw = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setType('changePw');
   };
-  let imagedefault;
-  if (profileImageSrc == null) {
-    if (gender == 'female')
-      imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
-    else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
-  } else {
-    imagedefault = profileImageSrc;
-  }
 
   return (
     <div className="bar">
       <div className="mobile">
         <div className="top">
           <div className="imag-container">
-            <RankAvartar profileSrc={imagedefault} point={points} />
+            <RankAvartar profileSrc={profileImageSrc} point={points} />
           </div>
         </div>
         <div className="info">
@@ -56,7 +48,7 @@ function SideBar({ percent, match, points, setType }: SideBarProps) {
       <div className="my-side-bar">
         <div className="top">
           <div className="imag-container">
-            <RankAvartar profileSrc={imagedefault} point={points} />
+            <RankAvartar profileSrc={profileImageSrc} point={points} />
           </div>
         </div>
         <div className="info">

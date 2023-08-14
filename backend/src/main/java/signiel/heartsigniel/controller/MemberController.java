@@ -45,7 +45,7 @@ public class MemberController {
         return new ResponseEntity<>(memberService.checkDuplicateId(loginId), HttpStatus.OK);
     }
 
-    @PostMapping("/api/users/{memberId}")
+    @GetMapping("/api/users/{memberId}")
     public ResponseEntity<SignResponse> getMember(@PathVariable Long memberId) {
         return new ResponseEntity<>(memberService.memberInfo(memberId), HttpStatus.OK);
     }

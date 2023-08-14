@@ -4,6 +4,12 @@ export interface ResultOfMeetingMember {
   matchMemberId: number; // 매칭된 memberId , 매칭 안되면 0
 }
 
+export interface matchMemberInfo {
+  memberId: number;
+  profileImageSrc: string;
+  rating: number;
+}
+
 interface MeetingRoomMemberInfo {
   roomMemberId: number;
   member: MeetingMemberInfo;

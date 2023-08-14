@@ -14,7 +14,8 @@ function RankAvartar({ profileSrc, point }: RankAvartarProps) {
 
   const parsePointToRankImage = (point: number) => {
     let rank = '';
-    if (point < 100) rank = 'white';
+    if (point < 0) rank = 'black';
+    else if (point < 100) rank = 'white';
     else if (point < 300) rank = 'yellow';
     else if (point < 700) rank = 'green';
     else if (point < 1500) rank = 'purple';

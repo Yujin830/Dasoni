@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import logo from '../../assets/image/logo.png';
 import './Header.css';
 import BasicAvartar from '../Avarta/BasicAvatar/BasicAvartar';
-import { logout } from '../../app/slices/user';
+import { logout, setProfileImageSrc } from '../../app/slices/user';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import heartRating from '../../assets/image/heart/heart_rating.png';
 import { useAppSelector } from '../../app/hooks';
 import RankAvartar from '../../components/Avarta/RankAvartar/RackAvartar';
 import ExpPointBar from '../../components/Element/ExpPointBar';
+import { useDispatch } from 'react-redux';
 
 interface HeaderProps {
   onModalToggle?: () => void;
@@ -16,6 +17,8 @@ interface HeaderProps {
 
 function Header({ onModalToggle }: HeaderProps) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
     logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
     navigate('/');
@@ -40,13 +43,21 @@ function Header({ onModalToggle }: HeaderProps) {
 
   // 사이드바 데이터 반영
   const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
-  let imagedefault;
+
+  // 프로필 이미지 설정 안했을 때 default 이미지 설정
   if (profileImageSrc == 'null') {
     if (gender == 'female')
-      imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
-    else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
-  } else {
-    imagedefault = profileImageSrc;
+      dispatch(
+        setProfileImageSrc(
+          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg',
+        ),
+      );
+    else
+      dispatch(
+        setProfileImageSrc(
+          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg',
+        ),
+      );
   }
   return (
     <header className="header">
@@ -96,7 +107,7 @@ function Header({ onModalToggle }: HeaderProps) {
             </div>
             <div className="sidebar-rating">My Rating</div> */}
             <div className="sidebar-profile">
-              <RankAvartar profileSrc={imagedefault} point={rating} />
+              <RankAvartar profileSrc={profileImageSrc} point={rating} />
             </div>
 
             <div className="sidebar-rating">

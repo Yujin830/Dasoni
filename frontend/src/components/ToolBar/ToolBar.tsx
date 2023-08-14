@@ -26,8 +26,7 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
 
   const handleExitBtn = async () => {
     if (confirm('미팅 중 퇴장 시 패널티를 받습니다.\n정말 나가시겠습니까?')) {
-      await axios.delete(`/api/rooms/${roomId}/members/${memberId}`);
-      navigate('/main', { replace: true });
+      navigate('/result', { replace: true });
     }
   };
 

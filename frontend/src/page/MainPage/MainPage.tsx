@@ -22,7 +22,6 @@ import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
 import SkeletonElement from '../../components/SkeletonElement/SkeletonElement';
 import SkeletonMainPage from './SkeletonMainPage';
-import { setFinalSignalReceiver } from '../../app/slices/meetingSlice';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
@@ -208,8 +207,6 @@ function MainPage() {
     console.log('새로고침');
     getWaitingRoomList();
   };
-
-  dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
 
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>

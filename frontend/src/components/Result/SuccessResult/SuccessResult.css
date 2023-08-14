@@ -1,0 +1,14 @@
+#success-result {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+#success-result .heart {
+  color: #ff5c5c;
+  font-size: 4rem;
+  margin: 0 2.5rem;
+  transition: all 0.5s;
+}

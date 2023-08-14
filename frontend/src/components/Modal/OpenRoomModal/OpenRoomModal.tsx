@@ -62,7 +62,6 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       dispatch(setWaitingRoomId(res.data.content.createdRoomId));
       dispatch(setRoomType('private'));
       dispatch(setRoomTitle(data.title));
-      dispatch(setMaster(false));
       dispatch(setRatingLimit(data.ratingLimit));
       dispatch(setMegiAcceptable(data.megiAcceptable));
 

@@ -12,6 +12,9 @@ import Question from '../../components/MeetingPage/Question/Question';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 import axios from 'axios';
+import { setRating } from '../../app/slices/user';
+import { setMatchMemberId, setRatingChange } from '../../app/slices/meetingSlice';
+import { useDispatch } from 'react-redux';
 
 function MeetingPage() {
   const { roomId } = useParams();
@@ -38,6 +41,7 @@ function MeetingPage() {
   const [requestResult, setRequestResult] = useState(false); // 최종 개인 결과 요청 가능 / 요청 불가능
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -194,6 +198,10 @@ function MeetingPage() {
 
     const data = res.data;
     if (data.content.matchMemberId !== 0) {
+      // 미팅 결과 저장
+      dispatch(setRating(data.content.roomMemberInfo.member.rating)); // 변경 후 레이팅 저장
+      dispatch(setRatingChange(data.content.ratingChange)); // 레이팅 변화값 저장
+      dispatch(setMatchMemberId(data.content.matchMemberId)); // 매칭된 상대방 저장
       navigate(`/sub-meeting/${roomId}`, { replace: true });
     } else {
       setGuideMessage(
