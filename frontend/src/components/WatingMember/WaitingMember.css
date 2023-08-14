@@ -8,16 +8,21 @@
   padding: 1rem;
   box-sizing: border-box;
   height: 100%;
-  width: 100%;
+  /* width: calc((70vw - 7rem) / 3); */
+}
+
+#waiting-member #waiting-member-top {
+  display: flex;
+  flex-direction: row;
 }
 
 #waiting-member #waiting-member-top .item {
-  width: 20%;
+  width: 25%;
 }
 
 #waiting-member #waiting-member-top p {
-  width: 80%;
-  font-size: 2vh;
+  width: 75%;
+  font-size: 3vh;
 }
 
 #waiting-member #waiting-member-contents {
@@ -30,6 +35,11 @@
   width: 50%;
   height: 100%;
   margin-left: 1vh;
+}
+
+#waiting-member #waiting-member-contents #profile .rank-avatar {
+  width: 100%;
+  height: auto;
 }
 
 #waiting-member #waiting-member-contents #info-box {
@@ -70,8 +80,6 @@
     width: 60%;
     height: 100%;
   }
-}
-@media (max-width: 768px) {
   #waiting-member #waiting-member-contents #profile {
     display: none;
   }
