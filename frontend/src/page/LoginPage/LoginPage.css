@@ -16,10 +16,14 @@
 
 .signal.left {
   right: -1rem;
+  width: 0;
+  animation: wipeAnimation 1.5s forwards;
 }
 
 .signal.right {
   left: 0;
+  width: 0;
+  animation: wipeAnimation 1.5s forwards 0.5s;
 }
 
 .left-box {
@@ -35,6 +39,16 @@
   align-items: center;
   position: relative;
 }
+
+@keyframes wipeAnimation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 15rem;
+  }
+}
+
 .left-box-content {
   display: flex;
   flex-direction: column;

@@ -2,6 +2,7 @@ package signiel.heartsigniel.model.room;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.roommember.RoomMember;
 
 import javax.persistence.*;
@@ -25,8 +26,6 @@ public class Room {
     private String title;
     @Column
     private LocalDateTime startTime;
-    @Column
-    private String videoUrl;
     @Column
     private boolean megiAcceptable;
 
@@ -69,4 +68,5 @@ public class Room {
         }
         return memberCountByGender(gender) >0? avgRating/memberCountByGender(gender) : 0;
     }
+
 }

@@ -9,7 +9,6 @@ import { useAppSelector } from '../../app/hooks';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import {
-  setMegiAcceptable,
   setRatingLimit,
   setRoomTitle,
   setRoomType,
@@ -24,7 +23,6 @@ export type RoomBoxProps = {
   femaleMemberCount: number; // 현재 여자 참가인원
   maleAvgRating: number; // 참가한 남자 평균 레이팅
   femaleAvgRating: number; // 참가한 여자 평균 레이팅
-  megiAcceptable: boolean; // 메기 입장 가능 여부
   ratingLimit: number; // 랭크 제한
 };
 
@@ -75,7 +73,6 @@ const styles = {
 };
 
 const FULL_COUNT = 3; // 최대 가능 인원수
-const MEGI_FULL_COUNT = 4; // 메가 참여 가능 방 최대 가능 인원수
 
 // 성별 정보 컴포넌트
 function GenderInfo({ genderIcon, genderCount, genderAvgRank, fullCount }: GenderInfoProps) {
@@ -97,7 +94,6 @@ function RoomBox({
   femaleMemberCount,
   maleAvgRating,
   femaleAvgRating,
-  megiAcceptable,
   ratingLimit,
 }: RoomBoxProps) {
   const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
@@ -110,8 +106,8 @@ function RoomBox({
   // 입장하기
   const onClickEnter = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (isFull) {
-      alert('더 이상 입장 할 수 없습니다.');
+    if (member.remainLife === 0) {
+      alert('오늘은 모든 라이프를 소진하여 더 이상 입장할 수 없습니다.');
       return;
     } else {
       console.log('입장하기');
@@ -124,7 +120,6 @@ function RoomBox({
           dispatch(setRoomType('private'));
           dispatch(setWaitingRoomId(roomId));
           dispatch(setRoomTitle(title));
-          dispatch(setMegiAcceptable(megiAcceptable));
           dispatch(setRatingLimit(ratingLimit));
           navigate(`/waiting-room/${roomId}`);
 
@@ -157,15 +152,7 @@ function RoomBox({
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
-        {megiAcceptable && femaleMemberCount + maleAvgRating === 2 * FULL_COUNT ? (
-          <FilledButton
-            style={isFull ? styles.disabled : styles.megi}
-            content="메기 입장하기"
-            handleClick={onClickEnter}
-          />
-        ) : null}
-
-        {!megiAcceptable && femaleMemberCount + maleMemberCount < 2 * FULL_COUNT ? (
+        {femaleMemberCount + maleMemberCount < 2 * FULL_COUNT ? (
           <FilledButton
             style={isFull ? styles.disabled : styles.basic}
             content="입장하기"
@@ -178,13 +165,13 @@ function RoomBox({
           genderIcon={maleIcon}
           genderCount={maleMemberCount}
           genderAvgRank={maleAvgRating}
-          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
+          fullCount={FULL_COUNT}
         />
         <GenderInfo
           genderIcon={femaleIcon}
           genderCount={femaleMemberCount}
           genderAvgRank={femaleAvgRating}
-          fullCount={megiAcceptable ? MEGI_FULL_COUNT : FULL_COUNT}
+          fullCount={FULL_COUNT}
         />
       </div>
     </div>

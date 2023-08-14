@@ -14,10 +14,12 @@ import convertScoreToName from '../../utils/convertScoreToName';
 // BGM
 import song from '../../assets/music/lobby.mp3';
 import AudioController from '../../components/AudioController/AudioController';
+import { useDispatch } from 'react-redux';
+import { setWaitingMemberList } from '../../app/slices/waitingSlice';
+import Loading01 from '../../components/Loading/Loading';
 
 function WaitingRoomPage() {
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
-
   const waitingRoomInfo = useAppSelector((state) => state.waitingRoom);
   const { gender } = useAppSelector((state) => state.user);
   const [memberList, setMemberList] = useState<WaitingMember[]>(
@@ -34,14 +36,22 @@ function WaitingRoomPage() {
     [memberList],
   );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { roomId } = useParams();
   const member = useAppSelector((state) => state.user);
+  const { waitingRoomMemberList } = useAppSelector((state) => state.waitingRoom);
 
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const data = JSON.parse(res.body);
         console.log(data);
+        data.privateRoomInfo.roomMemberInfoList.map((roomMemberInfo: any) => {
+          if (roomMemberInfo.member.memberId === member.memberId) {
+            dispatch(setWaitingMemberList([roomMemberInfo]));
+          }
+        });
+        setIsLoading(false);
         setMemberList(data.privateRoomInfo.roomMemberInfoList);
       });
 
@@ -61,9 +71,20 @@ function WaitingRoomPage() {
     },
   });
 
-  const handleStartBtn = () => {
-    alert('미팅이 3초 후 시작됩니다');
-    client?.send(`/app/room/${roomId}/start`);
+  const handleStartBtn = async () => {
+    // 미팅방 시작 시 목숨 감소, 매치 수 증가
+    if (waitingRoomMemberList[0].roomLeader) {
+      const res = await axios.patch(`/api/rooms/${roomId}`, {
+        roomLeaderId: waitingRoomMemberList[0].roomMemberId,
+        roomId: roomId,
+      });
+      console.log(res.data);
+
+      if (res.data.status.code !== 1224) {
+        alert('미팅이 3초 후 시작됩니다');
+        client?.send(`/app/room/${roomId}/start`);
+      }
+    }
   };
 
   const handleExitBtn = async () => {
@@ -105,6 +126,7 @@ function WaitingRoomPage() {
   // memberList에서 방장(memberList에서 roomLeader가 true인)인지 여부를 확인하는 함수
   const isRoomLeaderInMemberList = (info: any) => {
     console.log(info);
+    console.log(client);
     return info.roomLeader && info.member.memberId === currentUserId;
   };
 
@@ -117,7 +139,6 @@ function WaitingRoomPage() {
             {waitingRoomInfo.roomTitle}
           </div>
           <div className="info">
-            <span>메기 : {waitingRoomInfo.megiAcceptable ? 'Yes' : 'No'}</span>
             <span>Rank :{convertScoreToName(waitingRoomInfo.ratingLimit)}</span>
           </div>
           <AudioController
@@ -128,41 +149,49 @@ function WaitingRoomPage() {
             handleVolumeChange={handleVolumeChange}
           />
         </div>
-        <div id="waiting-room-body">
-          <div id="member-list-box">
-            <div className="waiting-room-content">
-              {sameGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
+        {/* 로딩 중일 때 스켈레톤 UI를 표시합니다. */}
+        {isLoading ? (
+          <Loading01 />
+        ) : (
+          // 로딩이 완료되면 실제 대기방 UI를 렌더링합니다.
+          <>
+            <div id="waiting-room-body">
+              <div id="member-list-box">
+                <div className="waiting-room-content">
+                  {sameGenderMemberList.map((info) => {
+                    console.log(info);
+                    return (
+                      <WaitingMemberBox
+                        key={info.member.memberId}
+                        nickname={info.member.nickname}
+                        rating={info.member.rating}
+                        matchCnt={info.member.meetingCount}
+                        gender={info.member.gender}
+                        profileImageSrc={info.member.profileImageSrc}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="waiting-room-content">
+                  {diffGenderMemberList.map((info) => {
+                    console.log(info);
+                    return (
+                      <WaitingMemberBox
+                        key={info.member.memberId}
+                        nickname={info.member.nickname}
+                        rating={info.member.rating}
+                        matchCnt={info.member.meetingCount}
+                        gender={info.member.gender}
+                        profileImageSrc={info.member.profileImageSrc}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              <ChatRoom />
             </div>
-            <div className="waiting-room-content">
-              {diffGenderMemberList.map((info) => {
-                console.log(info);
-                return (
-                  <WaitingMemberBox
-                    key={info.member.memberId}
-                    nickname={info.member.nickname}
-                    rating={info.member.rating}
-                    matchCnt={info.member.meetingCount}
-                    gender={info.member.gender}
-                    profileImageSrc={info.member.profileImageSrc}
-                  />
-                );
-              })}
-            </div>
-          </div>
-          <ChatRoom />
-        </div>
+          </>
+        )}
         <div id="waiting-room-footer">
           {/* "시작하기" 버튼을 방장인 경우에만 렌더링 */}
           {memberList.some(isRoomLeaderInMemberList) && (

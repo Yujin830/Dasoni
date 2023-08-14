@@ -8,12 +8,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import signiel.heartsigniel.common.code.CommonCode;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
 import signiel.heartsigniel.model.life.LifeService;
+import signiel.heartsigniel.model.member.dto.LifeAndMeetingCountResponse;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
+import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
 
 
 import java.util.*;
@@ -107,6 +111,27 @@ public class MemberService {
         return "이미 존재하는 아이디입니다.";
     }
 
+    public SignResponse memberInfo(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 없습니다."));
+
+        return SignResponse.builder()
+                .memberId(member.getMemberId())
+                .loginId(member.getLoginId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .birth(member.getBirth())
+                .phoneNumber(member.getPhoneNumber())
+                .isBlack(member.isBlack())
+                .rating(member.getRating())
+                .meetingCount(member.getMeetingCount())
+                .profileImageSrc(member.getProfileImageSrc())
+                .job(member.getJob())
+                .siDo(member.getSiDo())
+                .guGun(member.getGuGun())
+                .build();
+    }
+
     public String deleteUserInfo(Long memberId) {
         memberRepository.deleteById(memberId);
         return "OK";
@@ -135,7 +160,6 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
 
-
         if(member.getJob()==null){
             List<Authority> list = member.getRoles();
             for(Authority authority:list)
@@ -143,16 +167,20 @@ public class MemberService {
             member.setRoles(list);
         }
 
-        System.out.println(file.getContentType());
+        System.out.println("======================="+file);
+//        System.out.println(file.getContentType());
 
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
         member.setSiDo(memberUpdateDto.getSiDo());
         member.setGuGun(memberUpdateDto.getGuGun());
-        member.setProfileImageSrc(imageService.saveImage(file));
+        if(file!=null)
+            member.setProfileImageSrc(imageService.saveImage(file));
 
         memberRepository.save(member);
+
         return member.getProfileImageSrc();
+//        else return "null";
     }
 
     public String updateProfileImage(Long memberId, MultipartFile image){
@@ -178,6 +206,22 @@ public class MemberService {
             memberRepository.save(member);
             return "Changed OK";
         }
+    }
+
+    public Response getMemberLifeAndMeetingCount(Long memberId){
+        Long remainLife = getMemberRemainLife(memberId);
+        int meetingCount = getMemberMeetingCount(memberId);
+        Response response = Response.of(CommonCode.GOOD_REQUEST, LifeAndMeetingCountResponse.of(remainLife, meetingCount));
+        return response;
+    }
+
+    public int getMemberMeetingCount(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MemberNotFoundException("해당 유저를 찾지 못하였습니다."));
+        return member.getMeetingCount();
+    }
+    public Long getMemberRemainLife(Long memberId){
+        return lifeService.countRemainingLives(memberId);
     }
 
 }
