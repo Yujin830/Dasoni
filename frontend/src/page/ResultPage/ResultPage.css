@@ -68,6 +68,10 @@
   width: 80%;
 }
 
+#result-page #faile-result .rank-avartar {
+  width: 80%;
+}
+
 @media (max-width: 1200px) {
   #result-page main #title-box .title {
     font-size: 2.5rem;

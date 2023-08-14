@@ -9,6 +9,12 @@ import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
 import './ResultPage.css';
 import { matchMemberInfo } from '../../apis/response/meetingRoomRes';
+import {
+  setFinalSignalReceiver,
+  setMatchMemberId,
+  setRatingChange,
+} from '../../app/slices/meetingSlice';
+import { useDispatch } from 'react-redux';
 
 function ResultPage() {
   const [success, setSuccess] = useState(false);
@@ -21,12 +27,18 @@ function ResultPage() {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setResult();
   }, []);
 
   const setResult = async () => {
+    // 정보 초기화
+    dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
+    dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
+    dispatch(setMatchMemberId(0)); // 매칭된 상대 memberId 초기화
+
     if (resultOfRoomMember.matchMemberId !== 0) {
       setSuccess(true);
 
