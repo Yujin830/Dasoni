@@ -49,7 +49,7 @@
 #main #filter-box {
   width: 4rem;
   position: relative;
-  /* margin-right: 1.5rem; */
+  margin-right: 1.5rem;
 }
 
 #main #filter-box .filter-btn {
@@ -274,6 +274,9 @@
   }
   .btn span.content-box .material-symbols-outlined {
     font-size: 2.5vh;
+  }
+  #main #filter-box {
+    margin-right: 0;
   }
 }
 @media (max-width: 390px) {
