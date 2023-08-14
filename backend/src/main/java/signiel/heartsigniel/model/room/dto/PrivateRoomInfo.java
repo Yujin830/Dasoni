@@ -15,7 +15,6 @@ public class PrivateRoomInfo {
     private Long roomId;
     private String title;
     private String roomType;
-    private String videoUrl;
     private Long ratingLimit;
     private LocalDateTime startTime;
     private boolean megiAcceptable;
@@ -25,7 +24,6 @@ public class PrivateRoomInfo {
         this.roomId = roomEntity.getId();
         this.title = roomEntity.getTitle();
         this.roomType = roomEntity.getRoomType();
-        this.videoUrl = roomEntity.getVideoUrl();
         this.ratingLimit = roomEntity.getRatingLimit();
         this.startTime = roomEntity.getStartTime();
         this.megiAcceptable = roomEntity.isMegiAcceptable();
