@@ -106,11 +106,8 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   const fd = new FormData();
   if (modifyUser.profileImage !== null && modifyUser.profileImage !== undefined) {
     fd.append('file', modifyUser.profileImage);
-    fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
-  } else if (modifyUser.profileImage == null && modifyUser.profileImage !== undefined) {
-    // fd.append('file', undefined);
-    fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
   }
+  fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
 
   console.log('here', modifyUser);
   const response = await axios.patch(`/api/users/${modifyUser.memberId}`, fd, {
