@@ -15,7 +15,6 @@ import axios from 'axios';
 import { setRating } from '../../app/slices/user';
 import { setMatchMemberId, setRatingChange } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
-
 function MeetingPage() {
   const { roomId } = useParams();
   const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
@@ -80,6 +79,11 @@ function MeetingPage() {
         console.log(res.body);
         setRequestResult(true);
       });
+
+      client.subscribe(`/topic/room/${roomId}/megi`, (res: any) => {
+        console.log(res.body);
+        setRequestResult(true);
+      });
     },
     onClientReady: (client) => {
       const time: string[] = currentTime.split(':');
@@ -107,13 +111,18 @@ function MeetingPage() {
         client?.send(`/app/room/${roomId}/guide`, {}, '20');
       }
 
+      // 메기 입장
+      else if (minutes === '01' && seconds === '11') {
+        client?.send(`/app/room/${roomId}/megi`, {}, 'megigo');
+      }
+
       // 유저 정보 공개
-      else if (minutes === '01' && seconds === '15') {
+      else if (minutes === '01' && seconds === '35') {
         client?.send(`/app/room/${roomId}/open`);
       }
 
       // 랜덤 주제 1번
-      else if (minutes === '01' && seconds === '25') {
+      else if (minutes === '01' && seconds === '40') {
         client?.send(`/app/room/${roomId}/questions`, {}, '0');
       }
       // 랜덤 주제 2번
@@ -161,7 +170,7 @@ function MeetingPage() {
     if (firstSignal) {
       setTimeout(() => {
         setFirstSignal(false);
-      }, 30000);
+      }, 20000);
     }
   }, [firstSignal]);
 

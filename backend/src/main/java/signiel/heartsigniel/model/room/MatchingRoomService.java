@@ -72,6 +72,7 @@ public class MatchingRoomService {
     }
 
     public Response enqueueRoom(Long roomId) {
+        log.info("enqueuRoom called");
         // Redis에서 해당 roomId의 요청이 진행 중인지 확인
         Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
 
