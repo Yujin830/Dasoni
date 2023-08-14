@@ -1,9 +1,5 @@
 package signiel.heartsigniel.model.member;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
@@ -11,17 +7,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
-import signiel.heartsigniel.model.life.Life;
-import signiel.heartsigniel.model.life.LifeRepository;
 
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -31,12 +25,15 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final LifeService lifeService;
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, LifeService lifeService){
+    private final ImageService imageService;
+    private final ImageRepo imageRepo;
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, LifeService lifeService, ImageService imageService, ImageRepo imageRepo){
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.lifeService = lifeService;
+        this.imageService = imageService;
+        this.imageRepo = imageRepo;
     }
 
 
@@ -110,6 +107,27 @@ public class MemberService {
         return "이미 존재하는 아이디입니다.";
     }
 
+    public SignResponse memberInfo(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 없습니다."));
+
+        return SignResponse.builder()
+                .memberId(member.getMemberId())
+                .loginId(member.getLoginId())
+                .nickname(member.getNickname())
+                .gender(member.getGender())
+                .birth(member.getBirth())
+                .phoneNumber(member.getPhoneNumber())
+                .isBlack(member.isBlack())
+                .rating(member.getRating())
+                .meetingCount(member.getMeetingCount())
+                .profileImageSrc(member.getProfileImageSrc())
+                .job(member.getJob())
+                .siDo(member.getSiDo())
+                .guGun(member.getGuGun())
+                .build();
+    }
+
     public String deleteUserInfo(Long memberId) {
         memberRepository.deleteById(memberId);
         return "OK";
@@ -134,7 +152,7 @@ public class MemberService {
         return true;
     }
 
-    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto) {
+    public String updateMember(Long memberId, MemberUpdateDto memberUpdateDto, MultipartFile file) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
 
@@ -146,16 +164,41 @@ public class MemberService {
             member.setRoles(list);
         }
 
+        System.out.println(file.getContentType());
+
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
         member.setSiDo(memberUpdateDto.getSiDo());
         member.setGuGun(memberUpdateDto.getGuGun());
-        member.setProfileImageSrc(memberUpdateDto.getProfileImageSrc());
+        member.setProfileImageSrc(imageService.saveImage(file));
 
         memberRepository.save(member);
-        return "OK";
+        return member.getProfileImageSrc();
     }
 
+    public String updateProfileImage(Long memberId, MultipartFile image){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
 
+        if(member.getJob()==null){
+            List<Authority> list = member.getRoles();
+            for(Authority authority:list)
+                authority.setName("ROLE_USER");
+            member.setRoles(list);
+        }
+
+        if(member.getProfileImageSrc() == "null"){
+            member.setProfileImageSrc(imageService.saveImage(image));
+            memberRepository.save(member);
+            return "Update OK";
+        }else{
+//            Image memberImage = imageRepo.findImageByAccessUrl(member.getProfileImageSrc());
+//            System.out.println("memberImage : "+ memberImage.getOriginName());
+//            imageService.deleteImage(memberImage.getStoredName());
+            member.setProfileImageSrc(imageService.saveImage(image));
+            memberRepository.save(member);
+            return "Changed OK";
+        }
+    }
 
 }

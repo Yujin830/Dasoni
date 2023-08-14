@@ -20,6 +20,7 @@ export interface User {
   rating?: number;
   matchCnt?: number;
   isFirst?: number;
+  profileImage?: File | null;
 }
 
 // 초기상태를 선언
@@ -96,24 +97,38 @@ export const deleteUserAsync = createAsyncThunk('DELETE_USER', async (user: User
 // 유저 정보 업데이트
 export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser: User) => {
   const requestData = {
+    profileImageSrc: modifyUser.profileImageSrc,
     siDo: modifyUser.siDo,
     guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
-    profileImageSrc: modifyUser.profileImageSrc,
   };
+
+  const fd = new FormData();
+  if (modifyUser.profileImage !== null && modifyUser.profileImage !== undefined) {
+    fd.append('file', modifyUser.profileImage);
+    fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+  } else if (modifyUser.profileImage == null && modifyUser.profileImage !== undefined) {
+    // fd.append('file', undefined);
+    fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+  }
+
   console.log('here', modifyUser);
-  const response = await axios.patch(`/api/users/${modifyUser.memberId}`, requestData);
+  const response = await axios.patch(`/api/users/${modifyUser.memberId}`, fd, {
+    headers: {
+      'Content-Type': `multipart/form-data`,
+    },
+  });
   const data = response.data;
   console.log('from 서버');
   console.log(data);
 
   return {
-    // siDo: modifyUser.siDo,
-    // guGun: modifyUser.guGun,
+    siDo: modifyUser.siDo,
+    guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
-    profileImageSrc: modifyUser.profileImageSrc,
+    profileImageSrc: data,
   };
 });
 
@@ -132,7 +147,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
     const data = response.data;
     console.log('from 서버');
     console.log(data);
-
+    localStorage.removeItem('jwtToken');
     // 서버에서 받은 토큰을 localstorage에 저장
     localStorage.setItem('jwtToken', data.token);
     // axios 호출시마다 토큰을 header에 포함하도록 설정

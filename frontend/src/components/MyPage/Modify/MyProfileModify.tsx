@@ -7,10 +7,8 @@ import AddressSelecter from '../../Element/AddressSelecter/AddressSelecter';
 import { modifyUserAsync } from '../../../app/slices/user';
 
 function MyProfileModify({ setType }: any) {
-  const { loginId, nickname, job, memberId, profileImageSrc } = useAppSelector(
-    (state) => state.user,
-  );
-
+  const { loginId, nickname, job, memberId, siDo, guGun } = useAppSelector((state) => state.user);
+  console.log(nickname, job);
   const cancleModify = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setType('read');
@@ -20,7 +18,7 @@ function MyProfileModify({ setType }: any) {
   const [modifySido, setModifySido] = useState(-1);
   const [modifyGugun, setModifyGugun] = useState(0);
   const [modifyJob, setModifyJob] = useState(job);
-  const [modifyProfileSrc, setModifyProfileSrc] = useState(profileImageSrc);
+  const [modifyProfileImage, setModifyProfileImage] = useState<File | null>(null);
 
   const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setModifyNickname(e.target.value);
@@ -29,7 +27,9 @@ function MyProfileModify({ setType }: any) {
     setModifyJob(e.target.value);
   };
   const handleProfileSrcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setModifyProfileSrc(e.target.value);
+    if (e.target.files !== null) {
+      setModifyProfileImage(e.target.files[0]);
+    }
   };
 
   const dispatch = useAppDispatch();
@@ -41,7 +41,7 @@ function MyProfileModify({ setType }: any) {
       guGun: Number(modifyGugun),
       job: modifyJob,
       nickname: modifyNickname,
-      profileImageSrc: modifyProfileSrc,
+      profileImage: modifyProfileImage,
     };
     console.log(modifiedData);
 

@@ -3,8 +3,8 @@ import { Device, OpenVidu } from 'openvidu-browser';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // 서버 주소를 환경에 따라 설정
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4443';
-const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
+const APPLICATION_SERVER_URL = 'https://i9a307.p.ssafy.io:8443';
+const OPENVIDU_SERVER_SECRET = 'signiel';
 
 export const useOpenvidu = (
   memberId: number,

@@ -33,19 +33,19 @@ public class AlarmService {
         // male party members
         // roomMember- > 6명이 모여있는 list.
         for (RoomMember roomMember : room.getRoomMembers()) {
-            sendEmitterMessage(roomMember, room.getVideoUrl());
+            sendEmitterMessage(roomMember, room.getId());
         }
 
         // TODO
         // -> 모인 6명을 meetingroom에 집어넣기.
     }
 
-    private void sendEmitterMessage(RoomMember roomMember, String videoUrl) {
+    private void sendEmitterMessage(RoomMember roomMember, Long roomId) {
         SseEmitter emitter = this.emitters.get(roomMember.getMember().getMemberId());
 
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().name("match").data("화상채팅방 구현하면 고"));
+                emitter.send(SseEmitter.event().name("match").data(roomId));
                 emitter.complete();
             } catch (IOException e) {
                 // Emit a send failure error
