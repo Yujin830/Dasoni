@@ -26,6 +26,7 @@
   align-items: center;
   padding: 0 1rem;
   box-sizing: border-box;
+  margin-bottom: auto;
 }
 
 #waiting-page #waiting-room-top .title {

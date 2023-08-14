@@ -187,9 +187,9 @@ function MainPage() {
   //메기 매칭
   const megiMatch = async () => {
     const memberId = member.memberId;
-
+    const queueType = 'special';
     try {
-      const res = await axios.post(`api/match/members/${memberId}/special`);
+      const res = await axios.post(`api/match/members/${memberId}/${queueType}`);
 
       if (res.status === 200) {
         console.log('메기 매치 응답 : ', res.data);
