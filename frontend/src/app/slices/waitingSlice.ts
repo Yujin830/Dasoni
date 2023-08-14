@@ -6,7 +6,6 @@ export interface WaitingState {
   roomType: string;
   roomTitle: string;
   isMaster: boolean;
-  megiAcceptable: boolean;
   ratingLimit: number;
   helpModalVisible: boolean;
   openRoomModalVisible: boolean;
@@ -19,7 +18,6 @@ const initialState: WaitingState = {
   roomType: 'private',
   roomTitle: '',
   isMaster: false,
-  megiAcceptable: false,
   ratingLimit: 0,
   helpModalVisible: false,
   openRoomModalVisible: false,
@@ -42,9 +40,6 @@ const waitingSlice = createSlice({
     },
     setMaster(state, action) {
       state.isMaster = action.payload;
-    },
-    setMegiAcceptable(state, action) {
-      state.megiAcceptable = action.payload;
     },
     setRatingLimit(state, action) {
       state.ratingLimit = action.payload;
@@ -70,7 +65,6 @@ export const {
   setRoomTitle,
   setRatingLimit,
   setMaster,
-  setMegiAcceptable,
   setHelpModalVisible,
   setOpenRoomModalVisible,
   setWaitingMemberList,
