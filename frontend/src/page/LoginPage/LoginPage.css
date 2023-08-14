@@ -143,6 +143,9 @@
   font-weight: 700;
   margin: 0.5rem 0;
 }
+.right-box-content .login-btn:hover {
+  background: #d43873;
+}
 
 @media (max-width: 800px) {
   .left-box {
