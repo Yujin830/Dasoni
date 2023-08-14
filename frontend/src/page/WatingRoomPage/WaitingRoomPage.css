@@ -63,13 +63,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 #waiting-page .waiting-room-content {
+  width: 90%;
+  /* height: 25%; */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
-  margin: 2rem 2rem 1.5rem;
+  margin: 2rem 1.5rem 2rem;
 }
 
 #waiting-page #waiting-room-footer {

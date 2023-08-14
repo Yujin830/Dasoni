@@ -7,7 +7,7 @@ import { User } from '../../app/slices/user';
 
 function WaitingMember({ nickname, rating, matchCnt, gender, profileImageSrc }: User) {
   let imagedefault;
-  if (profileImageSrc == 'null') {
+  if (profileImageSrc === 'null') {
     if (gender == 'female')
       imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
     else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
@@ -35,7 +35,6 @@ function WaitingMember({ nickname, rating, matchCnt, gender, profileImageSrc }: 
             <span className="name">Match</span>
             <span className="info">{matchCnt}</span>
           </div>
-          <p>{nickname}</p>
         </div>
         <div id="profile">
           <RankAvartar point={rating !== undefined ? rating : 1000} profileSrc={imagedefault} />
