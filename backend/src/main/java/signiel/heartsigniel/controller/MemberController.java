@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.meeting.dto.MatchingHistoryRequest;
 import signiel.heartsigniel.model.member.*;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
@@ -75,8 +76,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/api/users/{memberId}/history")
-    public ResponseEntity<Response> deleteMatchingHistory(@PathVariable Long memberId){
-        ratingService.deleteMatchingHistory(memberId);
+    public ResponseEntity<Response> deleteMatchingHistory(@PathVariable Long memberId, @RequestBody MatchingHistoryRequest matchingHistoryRequest){
+        ratingService.deleteMatchingHistory(memberId, matchingHistoryRequest);
         Response response = Response.of(CommonCode.GOOD_REQUEST, null);
         return ResponseEntity.ok(response);
     }
