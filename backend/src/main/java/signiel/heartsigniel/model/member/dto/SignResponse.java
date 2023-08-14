@@ -38,9 +38,9 @@ public class SignResponse {
 
     private String job;
 
-    private String siDo;
+    private Long siDo;
 
-    private String guGun;
+    private Long guGun;
 
     private Long isFirst;
 

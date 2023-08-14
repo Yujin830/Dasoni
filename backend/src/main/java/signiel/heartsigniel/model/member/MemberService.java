@@ -156,7 +156,6 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new UsernameNotFoundException("회원 정보가 없습니다."));
 
-
         if(member.getJob()==null){
             List<Authority> list = member.getRoles();
             for(Authority authority:list)
@@ -164,16 +163,20 @@ public class MemberService {
             member.setRoles(list);
         }
 
-        System.out.println(file.getContentType());
+        System.out.println("======================="+file);
+//        System.out.println(file.getContentType());
 
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
         member.setSiDo(memberUpdateDto.getSiDo());
         member.setGuGun(memberUpdateDto.getGuGun());
-        member.setProfileImageSrc(imageService.saveImage(file));
+        if(file!=null)
+            member.setProfileImageSrc(imageService.saveImage(file));
 
         memberRepository.save(member);
-        return member.getProfileImageSrc();
+
+        if(file!=null) return member.getProfileImageSrc();
+        else return "null";
     }
 
     public String updateProfileImage(Long memberId, MultipartFile image){

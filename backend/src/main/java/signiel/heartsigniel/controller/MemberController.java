@@ -56,9 +56,8 @@ public class MemberController {
     }
 
     @PatchMapping("/api/users/{memberId}")
-    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestPart(value = "key", required = false) MemberUpdateDto
+    public ResponseEntity<String> updateMember(@PathVariable Long memberId, @RequestPart(value="key", required = true) MemberUpdateDto
             memberUpdateDto, @RequestPart(value = "file", required = false) MultipartFile file) {
-        System.out.println(memberId);
         return new ResponseEntity<>(memberService.updateMember(memberId, memberUpdateDto, file), HttpStatus.OK);
     }
 

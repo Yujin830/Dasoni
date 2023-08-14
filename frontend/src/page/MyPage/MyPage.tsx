@@ -26,7 +26,7 @@ function SideBar({ percent, match, points, setType }: SideBarProps) {
     setType('changePw');
   };
   let imagedefault;
-  if (profileImageSrc == 'null') {
+  if (profileImageSrc == null) {
     if (gender == 'female')
       imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
     else imagedefault = 'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';

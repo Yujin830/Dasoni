@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberUpdateDto {
     private String nickname;
     private String job;
-    private String siDo;
-    private String guGun;
+    private Long siDo;
+    private Long guGun;
 //    private String profileImageSrc;
 }
