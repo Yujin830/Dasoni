@@ -35,6 +35,7 @@ const ChatRoom: React.FC = () => {
       // 입장 및 퇴장 메시지에 대한 구독 추가
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
+        console.log(chatMessage);
         // 메시지 내용이 입장이나 퇴장 메시지인 경우에만 처리
         if (
           chatMessage.content.includes(`입장하셨습니다.`) ||
