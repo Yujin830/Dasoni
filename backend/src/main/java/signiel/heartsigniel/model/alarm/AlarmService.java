@@ -53,6 +53,7 @@ public class AlarmService {
                 responseData.put("roomId", room.getId());
                 emitter.send(SseEmitter.event().name("match").data(responseData));
                 emitter.complete();
+
             } catch (IOException e) {
                 emitter.completeWithError(new RuntimeException(AlarmCode.ALARM_SEND_FAIL.getMessage()));
             }

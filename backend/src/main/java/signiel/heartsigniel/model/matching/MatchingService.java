@@ -22,6 +22,9 @@ import signiel.heartsigniel.model.roommember.RoomMemberService;
 import signiel.heartsigniel.model.roommember.exception.NotFoundRoomMemberException;
 
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -35,6 +38,7 @@ public class MatchingService {
     private final RoomMemberService roomMemberService;
     private AlarmService alarmService;
     private LifeService lifeService;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public MatchingService(MemberRepository memberRepository, RoomMemberService roomMemberService, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService, LifeService lifeService){
         this.memberRepository = memberRepository;
@@ -94,8 +98,11 @@ public class MatchingService {
                     matchingRoomService.joinRoom(matchingRoom,opponentQueueMemberId,true);
                     unmarkMemberFromQueue(queueMemberId);
                     unmarkMemberFromQueue(opponentQueueMemberId);
-                    alarmService.sendMatchCompleteMessage(matchingRoom);
+                    scheduler.schedule(() -> {
+                        alarmService.sendMatchCompleteMessage(matchingRoom);
+                    }, 1000, TimeUnit.MILLISECONDS);
                     return Response.of(MatchingCode.MATCHING_SUCCESS, MatchingRoomInfo.of(matchingRoom));
+
                 }return Response.of(MatchingCode.MATCHING_PENDING, null);
             }
         }
@@ -117,7 +124,9 @@ public class MatchingService {
                     unmarkMemberFromQueue(opponentQueueMemberId);
                 }
                 matchingRoomService.startRoom(matchingRoom);
-                alarmService.sendMatchCompleteMessage(matchingRoom);
+                scheduler.schedule(() -> {
+                    alarmService.sendMatchCompleteMessage(matchingRoom);
+                }, 1000, TimeUnit.MILLISECONDS);
                 return Response.of(MatchingCode.MATCHING_SUCCESS, MatchingRoomInfo.of(matchingRoom));
             }
         }
