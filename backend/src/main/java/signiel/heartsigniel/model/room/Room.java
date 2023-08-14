@@ -27,8 +27,6 @@ public class Room {
     @Column
     private LocalDateTime startTime;
     @Column
-    private String videoUrl;
-    @Column
     private boolean megiAcceptable;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
