@@ -38,33 +38,34 @@ function ResultPage() {
     if (resultOfRoomMember.matchMemberId !== 0) {
       setSuccess(true);
 
-    // 정보 초기화
-    dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
-    dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
-    dispatch(setMatchMemberId(0)); // 매칭된 상대 memberId 초기화
+      // 정보 초기화
+      dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
+      dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
+      dispatch(setMatchMemberId(0)); // 매칭된 상대 memberId 초기화
 
-    if (resultOfRoomMember.matchMemberId !== 0) {
-      setSuccess(true);
+      if (resultOfRoomMember.matchMemberId !== 0) {
+        setSuccess(true);
 
-      // 매칭된 상대방 정보 가져오기
-      try {
-        const res = await axios.get(`/api/users/${resultOfRoomMember.matchMemberId}`);
-        console.log(res.data);
+        // 매칭된 상대방 정보 가져오기
+        try {
+          const res = await axios.get(`/api/users/${resultOfRoomMember.matchMemberId}`);
+          console.log(res.data);
 
-        if (res.status === 200) {
-          // 상대가 기본 이미지일 경우 default 이미지 적용
-          if (res.data.profileImageSrc === null) {
-            if (res.data.gender === 'female')
-              res.data.profileImageSrc =
-                'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
-            else
-              res.data.profileImageSrc =
-                'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
+          if (res.status === 200) {
+            // 상대가 기본 이미지일 경우 default 이미지 적용
+            if (res.data.profileImageSrc === null) {
+              if (res.data.gender === 'female')
+                res.data.profileImageSrc =
+                  'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
+              else
+                res.data.profileImageSrc =
+                  'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
+            }
+            setMatchMember(res.data);
           }
-          setMatchMember(res.data);
+        } catch (err) {
+          console.error(err);
         }
-      } catch (err) {
-        console.error(err);
       }
     }
   };
