@@ -3,6 +3,8 @@ import './MatchingModal.css';
 import axios from 'axios';
 import { useAppSelector } from '../../../app/hooks';
 import { useNavigate } from 'react-router';
+// import * as Loader from 'react-loader-spinner';
+import { Hearts } from 'react-loader-spinner';
 
 interface MatchingModalProps {
   onClose: () => void;
@@ -55,18 +57,14 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
   }, []);
 
   return (
-    <div className="openroommodal-overlay active">
-      <div className="openroom-modal">
-        <div className="header">매칭중</div>
-        <div className="box">
-          <div className="box-content">
-            <div className="box-title-content">현재 매칭중입니다.</div>
-            <div className="openroom-button">
-              <button className="close-button" onClick={handleCancel}>
-                매칭 취소
-              </button>
-            </div>
-          </div>
+    <div className="matchingmodal-overlay active">
+      <div className="matching-modal">
+        <h2>매칭중...</h2>
+        <Hearts color="red" />
+        <div className="matching-button">
+          <button className="close-button" onClick={handleCancel}>
+            매칭 취소
+          </button>
         </div>
       </div>
     </div>
