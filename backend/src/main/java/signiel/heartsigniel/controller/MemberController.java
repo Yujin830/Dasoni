@@ -8,13 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.member.*;
-import signiel.heartsigniel.model.member.dto.ImageSaveDto;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
 import signiel.heartsigniel.model.meeting.RatingService;
-
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -91,6 +88,13 @@ public class MemberController {
 //        return imageService.saveImage(image);
         return memberService.updateProfileImage(memberId,image);
     }
+
+    @GetMapping("/api/members/{memberId}")
+    public ResponseEntity<Response> getMemberMeetingInfo(@PathVariable Long memberId){
+        Response response = memberService.getMemberLifeAndMeetingCount(memberId);
+        return ResponseEntity.ok(response);
+    }
+
     // S3에 저장된 이미지 삭제 로직, 이미지 파일의 확장자까지 정확하게 입력해야 삭제 가능
     // S3에 저장되지 않은 이미지 파일의 이름으로 요청하여도 오류 발생 X
     // test용으로 requestParam으로 함 ( 나중엔 member 테이블에서 받아오기 )

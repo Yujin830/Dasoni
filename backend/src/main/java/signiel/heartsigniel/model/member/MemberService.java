@@ -8,12 +8,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import signiel.heartsigniel.common.code.CommonCode;
+import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.jwt.JwtTokenProvider;
 
 import signiel.heartsigniel.model.life.LifeService;
+import signiel.heartsigniel.model.member.dto.LifeAndMeetingCountResponse;
 import signiel.heartsigniel.model.member.dto.MemberUpdateDto;
 import signiel.heartsigniel.model.member.dto.SignRequest;
 import signiel.heartsigniel.model.member.dto.SignResponse;
+import signiel.heartsigniel.model.member.exception.MemberNotFoundException;
 
 
 import java.util.*;
@@ -199,6 +203,22 @@ public class MemberService {
             memberRepository.save(member);
             return "Changed OK";
         }
+    }
+
+    public Response getMemberLifeAndMeetingCount(Long memberId){
+        Long remainLife = getMemberRemainLife(memberId);
+        int meetingCount = getMemberMeetingCount(memberId);
+        Response response = Response.of(CommonCode.GOOD_REQUEST, LifeAndMeetingCountResponse.of(remainLife, meetingCount));
+        return response;
+    }
+
+    public int getMemberMeetingCount(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MemberNotFoundException("해당 유저를 찾지 못하였습니다."));
+        return member.getMeetingCount();
+    }
+    public Long getMemberRemainLife(Long memberId){
+        return lifeService.countRemainingLives(memberId);
     }
 
 }
