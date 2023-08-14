@@ -295,7 +295,7 @@ function MainPage() {
               handleClick={handleOpenRoomModalToggle}
             />
             <FilledButton classes="fast-match-btn" content="빠른 매칭" handleClick={matchFast} />
-            <FilledButton classes="megi-match-btn" content="메기 입장" handleClick={megiMatch} />
+            <FilledButton classes="megi-match-btn" content="메기 매칭" handleClick={megiMatch} />
           </div>
         </div>
       </main>

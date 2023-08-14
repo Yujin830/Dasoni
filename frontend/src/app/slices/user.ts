@@ -60,6 +60,7 @@ const userSlice = createSlice({
         return { ...state, ...action.payload };
       })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
+        console.log(action.payload);
         return { ...state, ...action.payload };
       });
   },
@@ -100,6 +101,7 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
     job: modifyUser.job,
     nickname: modifyUser.nickname,
   };
+  console.log(requestData);
 
   const fd = new FormData();
   if (modifyUser.profileImage !== null && modifyUser.profileImage !== undefined) {
@@ -121,8 +123,8 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   console.log(data);
 
   return {
-    siDo: modifyUser.siDo,
-    guGun: modifyUser.guGun,
+    // siDo: modifyUser.siDo,
+    // guGun: modifyUser.guGun,
     job: modifyUser.job,
     nickname: modifyUser.nickname,
     profileImageSrc: data,
