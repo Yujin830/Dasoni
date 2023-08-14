@@ -99,7 +99,8 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
         </div>
       </div>
       <div className="box">
-        <div className="box-content">
+        <div className="room_title">
+          <h2>방 제목 설정</h2>
           <NoLabelInput
             classes="box-title-content"
             type="text"
@@ -107,25 +108,21 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
             handleChange={handleChangeRoomTitle}
             placeholer="방 제목을 입력하세요."
           />
-          <div>
-            <h2>랭크 제한 설정</h2>
-            <div className="rank-content">
-              <select
-                className="select-rank"
-                value={ratingLimit}
-                onChange={handleChangeRatingLimit}
-              >
-                <option value="">랭크를 선택하세요.</option>
-                <option value="0">하얀</option>
-                <option value="300">노랑</option>
-                <option value="500">초록</option>
-                <option value="1000">보라</option>
-                <option value="1500">파랑</option>
-                <option value="2000">빨강</option>
-                <option value="2500">무지개</option>
-              </select>
-              <p> 하트 이상만 만나기</p>
-            </div>
+        </div>
+        <div className="rank_limit">
+          <h2>랭크 제한 설정</h2>
+          <div className="rank-content">
+            <select className="select-rank" value={ratingLimit} onChange={handleChangeRatingLimit}>
+              <option value="">랭크를 선택하세요.</option>
+              <option value="0">하얀</option>
+              <option value="300">노랑</option>
+              <option value="500">초록</option>
+              <option value="1000">보라</option>
+              <option value="1500">파랑</option>
+              <option value="2000">빨강</option>
+              <option value="2500">무지개</option>
+            </select>
+            <p> 하트 이상만 만나기</p>
           </div>
         </div>
         <div className="openroom-button">
