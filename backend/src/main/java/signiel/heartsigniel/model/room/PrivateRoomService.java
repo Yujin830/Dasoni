@@ -150,15 +150,15 @@ public class PrivateRoomService {
         return response;
     }
 
-    public Response startRoom(StartRoomRequest startRoomRequest){
+    public Response startRoom(StartRoomRequest startRoomRequest, Long roomId){
         RoomMember roomLeader = findRoomMemberById(startRoomRequest.getRoomLeaderId());
-        Room roomEntity = findRoomById(startRoomRequest.getRoomId());
+        Room roomEntity = findRoomById(roomId);
 
         if(!roomLeader.isRoomLeader()){
             return Response.of(RoomMemberCode.NOT_ROOM_LEADER, null);
         }
 
-        if(roomEntity.roomMemberCount() < 6){
+        if(roomEntity.roomMemberCount() < 2){
             return Response.of(RoomCode.INSUFFICIENT_PARTICIPANTS, null);
         }
 
