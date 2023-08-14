@@ -119,7 +119,6 @@ function WaitingRoomPage() {
             {waitingRoomInfo.roomTitle}
           </div>
           <div className="info">
-            <span>메기 : {waitingRoomInfo.megiAcceptable ? 'Yes' : 'No'}</span>
             <span>Rank :{convertScoreToName(waitingRoomInfo.ratingLimit)}</span>
           </div>
           <AudioController

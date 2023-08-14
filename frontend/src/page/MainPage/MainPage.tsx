@@ -121,9 +121,6 @@ function MainPage() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const createRoom = () => {
-  //   console.log('방 만들기');
-  // };
 
   // 방목록 페이지 넘기기
   const nextRoomList = async () => {
@@ -262,7 +259,6 @@ function MainPage() {
                   femaleMemberCount={room.femaleMemberCount}
                   maleAvgRating={room.maleAvgRating}
                   femaleAvgRating={room.femaleAvgRating}
-                  megiAcceptable={room.megiAcceptable}
                   ratingLimit={room.ratingLimit}
                 />
               ))
