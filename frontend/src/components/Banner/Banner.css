@@ -1,12 +1,26 @@
 #banner {
   width: 100%;
   height: 15rem;
+  background-size: cover;
   background-color: #ffd8e4;
   color: #ec5e98;
   font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+  /* flex-direction: column; */
+}
+
+#banner #am {
+  width: 100%;
+  height: 0;
+  /* background-color: red; */
+}
+
+#banner .snow {
+  top: 0;
 }
 
 #banner .highlight {
