@@ -14,33 +14,6 @@ import { Link } from 'react-router-dom';
 import ProfileModal from '../../components/Modal/ProfileModal/ProfileModal';
 import { useNavigate } from 'react-router-dom';
 
-// const styles = {
-//   button: {
-//     width: '40%',
-//     height: '6vh',
-//     flexShrink: '0',
-//     borderRadius: '1.25rem',
-//     background: '#EC5E98',
-//     color: '#FFF',
-//     fontSize: '3vh',
-//     fontStyle: 'normal',
-//     fontWeight: '700',
-//     margin: '0.5rem 0',
-//   },
-//   input: {
-//     width: '80%',
-//     height: '8vh',
-//     flexShrink: '0',
-//     borderRadius: '1.25rem',
-//     border: '3px solid #D9D9D9',
-//     background: '#FFF',
-//     color: '#898989',
-//     fontSize: '1rem',
-//     margin: '0.5rem 0',
-//     padding: '0.5rem 0.7rem',
-//   },
-// };
-
 function LoginPage() {
   const [loginId, setloginId] = useState('');
   const [password, setPassword] = useState('');
