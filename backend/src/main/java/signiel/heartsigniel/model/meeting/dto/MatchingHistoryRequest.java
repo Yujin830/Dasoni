@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class MatchingHistoryRequest {
-    private Long deleteTargetMemberId;
+    private int targetIndex;
 }
