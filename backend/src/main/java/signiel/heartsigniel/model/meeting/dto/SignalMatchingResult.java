@@ -9,6 +9,8 @@ public class SignalMatchingResult {
     private Long opponentId;
     private String profileImageUrl;
 
+    public SignalMatchingResult() {}
+
     public SignalMatchingResult(Long memberId, Long opponentId, String profileImageUrl){
         this.memberId = memberId;
         this.opponentId = opponentId;

@@ -6,30 +6,22 @@ import ExpPointBar from '../Element/ExpPointBar';
 import user, { deleteUserAsync } from '../../app/slices/user';
 import { useAppDispatch } from '../../app/hooks';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 function MyProfile({ setType }: { setType: (type: string) => void }) {
-  const { loginId, nickname, job, birth, siDo, guGun, profileImageSrc } = useAppSelector(
+  const { memberId, loginId, nickname, job, birth, siDo, guGun, gender } = useAppSelector(
     (state) => state.user,
   );
   console.log(siDo, guGun);
   const user = useAppSelector((state) => state.user);
-  // TODO : 최근 매칭된 다소니 리스트 조회 recentUserList로 state 변경
   const [recentUserList, setRecentUserList] = useState([]);
-  const faketUserList = [
-    { profileImg: 'rank_profile.png', userId: 1 },
-    { profileImg: 'rank_profile.png', userId: 2 },
-    { profileImg: 'rank_profile.png', userId: 3 },
-    { profileImg: 'rank_profile.png', userId: 4 },
-    { profileImg: 'rank_profile.png', userId: 5 },
-    { profileImg: 'rank_profile.png', userId: 6 },
-  ];
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const deleteUser = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (window.confirm(`탈퇴하면 복구할 수 없습니다.\n정말 탈퇴하시겠습니까?`)) {
       try {
-        // TODO : 회원 탈퇴 API 개발
+        // TODO : 회원 탈퇴
         await dispatch(deleteUserAsync(user));
         alert(`탈퇴 되었습니다.`);
         // location : 로그인 화면으로 이동
@@ -52,12 +44,18 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
   };
 
   useEffect(() => {
-    // TODO : 최근 매칭된 다소니 리스트 조회 API 개발
-    // 예시 사용법:
-    // fetchRecentUserList().then((data) => {
-    //   setRecentUserList(data);
-    // });
+    getRecentMatchedMemberList();
   }, []);
+
+  // 최근 매칭된 다소니 리스트 조회
+  const getRecentMatchedMemberList = async () => {
+    const res = await axios.get(`/api/users/${memberId}/history`);
+    console.log(res.data);
+
+    if (res.status === 200) {
+      setRecentUserList(res.data.content);
+    }
+  };
 
   return (
     <div className="content">
@@ -91,8 +89,12 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
         </div>
         <div id="matched-user-list">
           {recentUserList.length > 0 ? (
-            faketUserList.map((user) => (
-              <RecentMatchAvartar key={user.userId} src={user.profileImg} />
+            recentUserList.map((member: any) => (
+              <RecentMatchAvartar
+                key={member.opponentId}
+                src={member.profileImageUrl}
+                gender={gender === 'male' ? 'female' : 'male'}
+              />
             ))
           ) : (
             <p>최근 매칭된 다소니가 없습니다</p>

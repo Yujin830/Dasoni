@@ -3,19 +3,19 @@ import './RecentMatchAvartar.css';
 
 type recentMatchAvartar = {
   src: string;
+  gender: string;
 };
 
-function RecentMatchAvartar({ src }: recentMatchAvartar) {
+function RecentMatchAvartar({ src, gender }: recentMatchAvartar) {
   const [profileImg, setProfileImg] = useState('');
 
-  const loadImage = (imageName: string) => {
-    import(`../../../assets/image/${imageName}`).then((image) => {
-      setProfileImg(image.default);
-    });
-  };
-
   useEffect(() => {
-    loadImage(src);
+    // 상대가 기본 이미지일 경우 default 이미지 적용
+    if (src === 'null') {
+      if (gender === 'female')
+        setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg');
+      else setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg');
+    }
   }, []);
 
   return (
