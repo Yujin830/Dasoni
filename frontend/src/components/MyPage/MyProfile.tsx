@@ -14,7 +14,7 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
   );
   console.log(siDo, guGun);
   const user = useAppSelector((state) => state.user);
-  const [recentUserList, setRecentUserList] = useState([]);
+  const [recentUserList, setRecentUserList] = useState<any[]>([]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const deleteUser = async (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -92,6 +92,7 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
             recentUserList.map((member: any, index) => (
               <RecentMatchAvartar
                 key={member.opponentId}
+                matchedMemberId={member.opponentId}
                 src={member.profileImageUrl}
                 matchedMemberIndex={index}
                 gender={gender === 'male' ? 'female' : 'male'}

@@ -7,14 +7,16 @@ type recentMatchAvartar = {
   src: string;
   gender: string;
   matchedMemberIndex: number;
-  recentUserList: never[];
-  setRecentUserList: (newMemberList: never[]) => void;
+  matchedMemberId: number;
+  recentUserList: any[];
+  setRecentUserList: (newMemberList: any[]) => void;
 };
 
 function RecentMatchAvartar({
   src,
   gender,
   matchedMemberIndex,
+  matchedMemberId,
   recentUserList,
   setRecentUserList,
 }: recentMatchAvartar) {
@@ -53,7 +55,7 @@ function RecentMatchAvartar({
       alert('기록이 삭제되었습니다');
 
       const newMacthMemberList = recentUserList.filter(
-        (member: any) => member.opponentId !== matchedMemberIndex,
+        (member: any) => member.opponentId !== matchedMemberId,
       );
 
       setRecentUserList(newMacthMemberList);
@@ -66,7 +68,7 @@ function RecentMatchAvartar({
       if (gender === 'female')
         setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg');
       else setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg');
-    }
+    } else setProfileImg(src);
   }, []);
 
   return (
