@@ -13,7 +13,7 @@ import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 import axios from 'axios';
 import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
-import { setMatchMemberId, setRatingChange } from '../../app/slices/meetingSlice';
+import { setMatchMemberId, setRatingChange, setMeetingRoomId } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
 function MeetingPage() {
   const { roomId } = useParams();
@@ -28,7 +28,6 @@ function MeetingPage() {
     job !== undefined ? job : '',
     birth !== undefined ? birth.split('-')[0] : '',
   );
-
   const [guideMessage, setGuideMessage] = useState(
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
@@ -84,7 +83,6 @@ function MeetingPage() {
 
       client.subscribe(`/topic/room/${roomId}/megi`, (res: any) => {
         console.log(res.body);
-        setRequestResult(true);
       });
     },
     onClientReady: (client) => {
@@ -151,6 +149,10 @@ function MeetingPage() {
   // Volume and Mute Controls
   const [volume, setVolume] = useState(1);
   const [muted, setMuted] = useState(false);
+  useEffect(() => {
+    dispatch(setMeetingRoomId(roomId));
+  }, [roomId, dispatch]);
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
