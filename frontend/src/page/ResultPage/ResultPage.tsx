@@ -53,7 +53,7 @@ function ResultPage() {
 
           if (res.status === 200) {
             // 상대가 기본 이미지일 경우 default 이미지 적용
-            if (res.data.profileImageSrc === null) {
+            if (res.data.profileImageSrc === 'null') {
               if (res.data.gender === 'female')
                 res.data.profileImageSrc =
                   'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';

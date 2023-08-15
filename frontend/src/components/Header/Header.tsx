@@ -73,7 +73,7 @@ function Header({ onModalToggle }: HeaderProps) {
   const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
 
   // 프로필 이미지 설정 안했을 때 default 이미지 설정
-  if (profileImageSrc == 'null') {
+  if (profileImageSrc == null) {
     if (gender == 'female')
       dispatch(
         setProfileImageSrc(
