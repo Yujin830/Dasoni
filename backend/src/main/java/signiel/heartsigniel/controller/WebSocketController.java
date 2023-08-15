@@ -220,4 +220,24 @@ public class WebSocketController {
     }
 
 
+    /***
+     * 매칭된 상대와 채팅
+     * @param whisperMessage : receiverId, gender, content로 구성
+     */
+    @MessageMapping("mypage/chat/{chattingMemberId}")
+    public void MathchChatting(@DestinationVariable Long chattingMemberId, @Payload WhisperMessage whisperMessage) {
+        System.out.println("match chatting");
+        System.out.println("chattingMemberId " + chattingMemberId);
+        System.out.println("whisperMessage " + whisperMessage);
+        whisperMessage.setStatus("OK");
+        int sequence = 1;
+        int senderId = Integer.parseInt(whisperMessage.getMemberId());
+        int receiverId = Math.toIntExact(chattingMemberId);
+
+        SingleSignalRequest signalRequest = new SingleSignalRequest(sequence, senderId, receiverId);
+//        signalService.storeSignalInRedis(roomId, signalRequest);
+
+        operations.convertAndSend("/queue/mypage/chat/"+ chattingMemberId + "/" + whisperMessage.getMemberId(), whisperMessage);
+    }
+
 }
