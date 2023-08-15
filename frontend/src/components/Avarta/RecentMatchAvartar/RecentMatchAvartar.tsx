@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './RecentMatchAvartar.css';
 import axios from 'axios';
 import { useAppSelector } from '../../../app/hooks';
+import ChatRoom from '../../ChatRoom/ChatRoom';
 
 type recentMatchAvartar = {
   src: string;
@@ -10,6 +11,7 @@ type recentMatchAvartar = {
   matchedMemberId: number;
   recentUserList: any[];
   setRecentUserList: (newMemberList: any[]) => void;
+  setIsChattingOpen: (state: any) => void;
 };
 
 function RecentMatchAvartar({
@@ -19,9 +21,10 @@ function RecentMatchAvartar({
   matchedMemberId,
   recentUserList,
   setRecentUserList,
+  setIsChattingOpen,
 }: recentMatchAvartar) {
-  const [profileImg, setProfileImg] = useState('');
-  const [isHover, setIsHover] = useState(false);
+  const [profileImg, setProfileImg] = useState(''); // 상대방 프로필 이미지
+  const [isHover, setIsHover] = useState(false); // 프로필이미지에 마우스 올림 / 내림
   const { memberId } = useAppSelector((state) => state.user);
 
   // 마우스 올렸을 때, 삭제 버튼 보이기
@@ -54,10 +57,10 @@ function RecentMatchAvartar({
     if (res.status === 200) {
       alert('기록이 삭제되었습니다');
 
+      // 기존 매칭된 멤버 리스트에서 삭제된 멤버만 제거
       const newMacthMemberList = recentUserList.filter(
         (member: any) => member.opponentId !== matchedMemberId,
       );
-
       setRecentUserList(newMacthMemberList);
     }
   };
@@ -70,6 +73,11 @@ function RecentMatchAvartar({
       else setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg');
     } else setProfileImg(src);
   }, []);
+
+  // 채팅 토글
+  const handleTogleChatting = () => {
+    setIsChattingOpen((prev: any) => !prev);
+  };
 
   return (
     <div
@@ -84,7 +92,9 @@ function RecentMatchAvartar({
         <span className="material-symbols-outlined">close</span>
       </button>
       <img className="profile" src={profileImg} alt="아바타 이미지" />
-      <span className="material-symbols-outlined chat">send</span>
+      <button className="chat" onClick={handleTogleChatting}>
+        <span className="material-symbols-outlined">send</span>
+      </button>
     </div>
   );
 }

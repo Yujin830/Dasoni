@@ -42,9 +42,13 @@
   position: absolute;
   bottom: 1vh;
   right: 1vh;
-  padding: 0.3vh;
+  padding: 0.2rem;
   color: #232323;
   cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-variation-settings:
     'FILL' 1,
     'wght' 400,

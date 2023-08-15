@@ -204,6 +204,14 @@
   margin: auto;
 }
 
+.mypage .content .chat-room {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: auto;
+  height: 50vh;
+}
+
 @media (max-width: 430px) {
   .mypage .my-side-bar {
     display: none;
