@@ -101,6 +101,7 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
                 gender={gender === 'male' ? 'female' : 'male'}
                 recentUserList={recentUserList}
                 setRecentUserList={setRecentUserList}
+                isChattingOpen={isChattingOpen}
                 setIsChattingOpen={setIsChattingOpen}
               />
             ))

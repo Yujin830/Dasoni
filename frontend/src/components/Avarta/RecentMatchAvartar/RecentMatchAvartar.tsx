@@ -9,6 +9,7 @@ type recentMatchAvartar = {
   gender: string;
   matchedMemberIndex: number;
   matchedMemberId: number;
+  isChattingOpen: boolean;
   recentUserList: any[];
   setRecentUserList: (newMemberList: any[]) => void;
   setIsChattingOpen: (state: any) => void;
@@ -19,6 +20,7 @@ function RecentMatchAvartar({
   gender,
   matchedMemberIndex,
   matchedMemberId,
+  isChattingOpen,
   recentUserList,
   setRecentUserList,
   setIsChattingOpen,
@@ -93,7 +95,11 @@ function RecentMatchAvartar({
       </button>
       <img className="profile" src={profileImg} alt="아바타 이미지" />
       <button className="chat" onClick={handleTogleChatting}>
-        <span className="material-symbols-outlined">send</span>
+        {!isChattingOpen ? (
+          <span className="material-symbols-outlined">send</span>
+        ) : (
+          <span className="material-symbols-outlined">close</span>
+        )}
       </button>
     </div>
   );
