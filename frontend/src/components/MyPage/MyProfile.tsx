@@ -89,11 +89,14 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
         </div>
         <div id="matched-user-list">
           {recentUserList.length > 0 ? (
-            recentUserList.map((member: any) => (
+            recentUserList.map((member: any, index) => (
               <RecentMatchAvartar
                 key={member.opponentId}
                 src={member.profileImageUrl}
+                matchedMemberIndex={index}
                 gender={gender === 'male' ? 'female' : 'male'}
+                recentUserList={recentUserList}
+                setRecentUserList={setRecentUserList}
               />
             ))
           ) : (

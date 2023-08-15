@@ -10,6 +10,30 @@
   height: 100%;
 }
 
+.recent-match-avartar .close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border-radius: 50%;
+  background-color: #fff;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  cursor: pointer;
+}
+
+.recent-match-avartar .close.on-mouse {
+  display: flex;
+}
+
+.recent-match-avartar .close:hover {
+  background-color: #232323;
+  color: #fff;
+}
+
 .recent-match-avartar .chat {
   background-color: #fff;
   border-radius: 50%;
