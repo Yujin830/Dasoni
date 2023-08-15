@@ -1,0 +1,16 @@
+#match-chat-room {
+  position: relative;
+}
+
+#match-chat-room .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#match-chat-room .close-btn:hover {
+  color: #ff257e;
+}
