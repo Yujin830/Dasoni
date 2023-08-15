@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ToolBar.css';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import { setMeetingCount, setRemainLife } from '../../app/slices/user';
@@ -15,7 +15,7 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
   const [micStatus, setMicStatus] = useState(true);
   const [cameraStatus, setCameraStatus] = useState(true);
   const navigate = useNavigate();
-  const { roomId } = useAppSelector((state) => state.waitingRoom);
+  const { roomId } = useAppSelector((state) => state.meetingRoom);
   const { memberId, remainLife } = useAppSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -37,6 +37,8 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
       dispatch(setMeetingCount(res.data.content.meetingCount));
 
       // 대기방 나가기 처리
+      console.log('나가기 roomId', roomId);
+      console.log('나가기 memmemberId', memberId);
       await axios.delete(`/api/rooms/${roomId}/members/${memberId}`);
 
       // 메인으로 이동

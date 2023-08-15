@@ -1,4 +1,5 @@
 export interface ResultOfMeetingMember {
+  roomId: number;
   roomMemberInfo: MeetingRoomMemberInfo;
   ratingChange: number; // 레이팅 변화값
   matchMemberId: number; // 매칭된 memberId , 매칭 안되면 0
