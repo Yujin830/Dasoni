@@ -2,8 +2,10 @@ package signiel.heartsigniel.model.meeting.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class SignalMatchingResult {
     private Long memberId;
     private Long opponentId;
