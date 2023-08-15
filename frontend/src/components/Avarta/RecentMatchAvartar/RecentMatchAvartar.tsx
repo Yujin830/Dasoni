@@ -98,7 +98,7 @@ function RecentMatchAvartar({
         {!isChattingOpen ? (
           <span className="material-symbols-outlined">send</span>
         ) : (
-          <span className="material-symbols-outlined">close</span>
+          <span className="material-symbols-outlined">cancel_schedule_send</span>
         )}
       </button>
     </div>
