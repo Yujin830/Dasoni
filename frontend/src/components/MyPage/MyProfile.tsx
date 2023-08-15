@@ -7,7 +7,6 @@ import user, { deleteUserAsync } from '../../app/slices/user';
 import { useAppDispatch } from '../../app/hooks';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
-import ChatRoom from '../ChatRoom/ChatRoom';
 
 function MyProfile({ setType }: { setType: (type: string) => void }) {
   const { memberId, loginId, nickname, job, birth, siDo, guGun, gender } = useAppSelector(
@@ -16,7 +15,6 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
   console.log(siDo, guGun);
   const user = useAppSelector((state) => state.user);
   const [recentUserList, setRecentUserList] = useState<any[]>([]);
-  const [isChattingOpen, setIsChattingOpen] = useState(false); // 채팅 열기/ 닫기
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -101,8 +99,6 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
                 gender={gender === 'male' ? 'female' : 'male'}
                 recentUserList={recentUserList}
                 setRecentUserList={setRecentUserList}
-                isChattingOpen={isChattingOpen}
-                setIsChattingOpen={setIsChattingOpen}
               />
             ))
           ) : (
@@ -121,7 +117,6 @@ function MyProfile({ setType }: { setType: (type: string) => void }) {
           회원 탈퇴
         </a>
       </footer>
-      {isChattingOpen && <ChatRoom />}
     </div>
   );
 }

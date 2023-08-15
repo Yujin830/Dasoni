@@ -2,17 +2,15 @@ import React, { useEffect, useState } from 'react';
 import './RecentMatchAvartar.css';
 import axios from 'axios';
 import { useAppSelector } from '../../../app/hooks';
-import ChatRoom from '../../ChatRoom/ChatRoom';
+import MatchChatRoom from '../../ChatRoom/MatchChatRoom/MatchChatRoom';
 
 type recentMatchAvartar = {
   src: string;
   gender: string;
   matchedMemberIndex: number;
   matchedMemberId: number;
-  isChattingOpen: boolean;
   recentUserList: any[];
   setRecentUserList: (newMemberList: any[]) => void;
-  setIsChattingOpen: (state: any) => void;
 };
 
 function RecentMatchAvartar({
@@ -20,13 +18,12 @@ function RecentMatchAvartar({
   gender,
   matchedMemberIndex,
   matchedMemberId,
-  isChattingOpen,
   recentUserList,
   setRecentUserList,
-  setIsChattingOpen,
 }: recentMatchAvartar) {
   const [profileImg, setProfileImg] = useState(''); // 상대방 프로필 이미지
   const [isHover, setIsHover] = useState(false); // 프로필이미지에 마우스 올림 / 내림
+  const [sendBtn, setSendBtn] = useState(false); // 채팅 메세지 send / close
   const { memberId } = useAppSelector((state) => state.user);
 
   // 마우스 올렸을 때, 삭제 버튼 보이기
@@ -67,6 +64,11 @@ function RecentMatchAvartar({
     }
   };
 
+  // 채팅 토글
+  const handleTogleChatting = () => {
+    setSendBtn((prev) => !prev);
+  };
+
   useEffect(() => {
     // 상대가 기본 이미지일 경우 default 이미지 적용
     if (src === 'null') {
@@ -75,11 +77,6 @@ function RecentMatchAvartar({
       else setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg');
     } else setProfileImg(src);
   }, []);
-
-  // 채팅 토글
-  const handleTogleChatting = () => {
-    setIsChattingOpen((prev: any) => !prev);
-  };
 
   return (
     <div
@@ -95,12 +92,13 @@ function RecentMatchAvartar({
       </button>
       <img className="profile" src={profileImg} alt="아바타 이미지" />
       <button className="chat" onClick={handleTogleChatting}>
-        {!isChattingOpen ? (
+        {!sendBtn ? (
           <span className="material-symbols-outlined">send</span>
         ) : (
           <span className="material-symbols-outlined">cancel_schedule_send</span>
         )}
       </button>
+      {sendBtn && <MatchChatRoom chattingMemberId={matchedMemberId} setSendBtn={setSendBtn} />}
     </div>
   );
 }
