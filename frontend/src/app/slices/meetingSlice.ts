@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export interface MeetingState {
+  roomId: number;
+}
+
 interface MeetingResult {
   ratingChange: number;
   matchMemberId: number;
@@ -10,7 +14,8 @@ interface MeetingSignalState {
   resultOfRoomMember: MeetingResult;
 }
 
-const meetingInitialState: MeetingSignalState = {
+const meetingInitialState: MeetingSignalState & MeetingState = {
+  roomId: 0,
   finalSignalReceiver: 0,
   resultOfRoomMember: {
     ratingChange: 0,
@@ -22,6 +27,9 @@ const meetingSlice = createSlice({
   name: 'meetingRoom',
   initialState: meetingInitialState,
   reducers: {
+    setMeetingRoomId(state, action) {
+      state.roomId = action.payload;
+    },
     setFinalSignalReceiver(state, action) {
       state.finalSignalReceiver = action.payload;
     },
@@ -34,6 +42,7 @@ const meetingSlice = createSlice({
   },
 });
 
-export const { setFinalSignalReceiver, setRatingChange, setMatchMemberId } = meetingSlice.actions;
+export const { setMeetingRoomId, setFinalSignalReceiver, setRatingChange, setMatchMemberId } =
+  meetingSlice.actions;
 
 export default meetingSlice.reducer;
