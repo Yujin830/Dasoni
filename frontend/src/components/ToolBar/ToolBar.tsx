@@ -3,8 +3,9 @@ import './ToolBar.css';
 import { useNavigate, useParams } from 'react-router';
 import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
-import { setMeetingCount, setRemainLife } from '../../app/slices/user';
+import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
 import { useDispatch } from 'react-redux';
+import { setRatingChange } from '../../app/slices/meetingSlice';
 
 interface ToolBarProps {
   onChangeCameraStatus: (status: boolean) => void;
@@ -16,7 +17,7 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
   const [cameraStatus, setCameraStatus] = useState(true);
   const navigate = useNavigate();
   const { roomId } = useAppSelector((state) => state.meetingRoom);
-  const { memberId, remainLife } = useAppSelector((state) => state.user);
+  const { memberId, rating } = useAppSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -30,11 +31,13 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
 
   const handleExitBtn = async () => {
     if (confirm('미팅 중 퇴장 시 패널티를 받습니다.\n정말 나가시겠습니까?')) {
-      // 라이프 감소, 미팅 수 증가
+      // 라이프 감소, 미팅 수 증가, 레이팅 마이너스
       const res = await axios.get(`/api/members/${memberId}`);
       console.log(res.data);
       dispatch(setRemainLife(res.data.content.remainLife));
       dispatch(setMeetingCount(res.data.content.meetingCount));
+      dispatch(setRatingChange(-100)); // 레이팅 변화값 저장
+      if (rating !== undefined) dispatch(setRating(rating - 100));
 
       // 대기방 나가기 처리
       console.log('나가기 roomId', roomId);
