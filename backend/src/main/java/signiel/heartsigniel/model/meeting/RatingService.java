@@ -2,8 +2,10 @@ package signiel.heartsigniel.model.meeting;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.life.LifeService;
+import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.meeting.dto.*;
@@ -290,8 +292,16 @@ public class RatingService {
     }
 
     // 매칭 히스토리 삭제
-    public void deleteMatchingHistory (Long memberId){
-        redisTemplate.delete("member:" + memberId + ":matchHistory");
+    public Response deleteMatchingHistory (Long memberId, MatchingHistoryRequest matchingHistoryRequest){
+        SignalMatchingResult result = redisTemplate.opsForList().index("member:" + memberId + ":matchHistory", matchingHistoryRequest.getTargetIndex());
+        if (result != null) {
+            redisTemplate.opsForList().remove("member:" + memberId + ":matchHistory", 1, result);
+            Response response = Response.of(CommonCode.GOOD_REQUEST, null);
+            return response;
+        }
+
+        return Response.of(CommonCode.BAD_REQUEST, null);
+
     }
 
     // Redis에 PersonalResult 객체를 저장

@@ -124,6 +124,8 @@ public class PrivateRoomService {
     }
 
     public Response quitRoom(Long memberId, Long roomId) {
+        log.info("memberId" + memberId);
+
         MemberAndRoomOfService memberAndRoomEntity = findEntityById(memberId, roomId);
 
         Member memberEntity = memberAndRoomEntity.getMember();

@@ -35,7 +35,7 @@ const initialState: User = {
   job: '선택해 주세요',
   siDo: '선택해',
   guGun: '주세요',
-  profileImageSrc: 'null',
+  profileImageSrc: '',
   isFirst: 0,
   rating: 1000,
   matchCnt: 0,
