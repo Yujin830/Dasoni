@@ -70,8 +70,9 @@ function MyProfileModify({ setType }: any) {
             classes="info-input"
             label="닉네임"
             type="text"
-            value={String(modifyNickname)}
+            value=""
             handleChange={handleNicknameChange}
+            placeholer="선택하세요"
           />
           <AddressSelecter
             modifySido={modifySido}
@@ -83,8 +84,9 @@ function MyProfileModify({ setType }: any) {
             classes="info-input"
             label="직업"
             type="text"
-            value={String(modifyJob)}
+            value=""
             handleChange={handleJobChange}
+            placeholer="선택하세요"
           />
         </div>
       </div>
