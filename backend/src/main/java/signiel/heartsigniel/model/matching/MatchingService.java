@@ -35,16 +35,14 @@ public class MatchingService {
     private final MatchingRoomService matchingRoomService;
     private final RoomMemberRepository roomMemberRepository;
     private final RedisTemplate<String, Long> redisTemplate;
-    private final RoomMemberService roomMemberService;
     private AlarmService alarmService;
     private LifeService lifeService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public MatchingService(MemberRepository memberRepository, RoomMemberService roomMemberService, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService, LifeService lifeService){
+    public MatchingService(MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService, LifeService lifeService){
         this.memberRepository = memberRepository;
         this.matchingRoomService = matchingRoomService;
         this.roomMemberRepository = roomMemberRepository;
-        this.roomMemberService = roomMemberService;
         this.redisTemplate = redisTemplate;
         this.alarmService = alarmService;
         this.lifeService = lifeService;
@@ -91,7 +89,7 @@ public class MatchingService {
                     }
                     // 방이 있을 경우 가입
                     Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
-                    log.info("queueMemebrId= " + queueMemberId);
+                    log.info("queueMemberId= " + queueMemberId);
                     Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
                     matchingRoomService.joinRoom(matchingRoom, queueMemberId, true);
                     matchingRoomService.joinRoom(matchingRoom,opponentQueueMemberId,true);
