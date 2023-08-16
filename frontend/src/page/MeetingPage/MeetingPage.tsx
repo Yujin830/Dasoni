@@ -31,6 +31,7 @@ function MeetingPage() {
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
   const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
+  const [startSec, setStartSec] = useState(''); // 서버에서 받아온 시작 시간
   const [question, setQuestion] = useState(''); // 질문 저장
   const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
   const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
@@ -152,29 +153,21 @@ function MeetingPage() {
     dispatch(setMeetingRoomId(roomId));
   }, [roomId, dispatch]);
 
-  const calculateElapsedTime = (elapsedSeconds: number): string => {
-    const minutes = Math.floor(elapsedSeconds / 60);
-    const seconds = elapsedSeconds % 60;
-
-    const minutesStr = String(minutes).padStart(2, '0');
-    const secondsStr = String(seconds).padStart(2, '0');
-
-    return `${minutesStr}:${secondsStr}`;
-  };
+  // 서버 시간으로 타이머 설정
   useEffect(() => {
-    const fetchElapsedTime = async () => {
-      try {
-        const response = await axios.get<string>(`/api/rooms/${roomId}/elapsedTime`);
-        const elapsedSeconds = parseInt(response.data, 10);
-        console.log('시간', elapsedSeconds);
-        setCurrentTime(calculateElapsedTime(elapsedSeconds));
-      } catch (error) {
-        console.error('Failed to fetch elapsed time:', error);
-      }
-    };
-
     fetchElapsedTime();
   }, []);
+
+  const fetchElapsedTime = async () => {
+    try {
+      const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
+      console.log('시간', response.data);
+      console.log('시간', Number(response.data));
+      setStartSec(response.data);
+    } catch (error) {
+      console.error('Failed to fetch elapsed time:', error);
+    }
+  };
 
   useEffect(() => {
     if (audioRef.current) {
@@ -269,7 +262,7 @@ function MeetingPage() {
 
   return (
     <div id="meeting">
-      <TimeDisplay currentTime={currentTime} setCurrentTime={setCurrentTime} />
+      <TimeDisplay currentTime={currentTime} startSec={startSec} setCurrentTime={setCurrentTime} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
 
       <div id="meeting-video-container">

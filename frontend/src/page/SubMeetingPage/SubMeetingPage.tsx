@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import Guide from '../../components/MeetingPage/Guide/Guide';
 import AudioController from '../../components/AudioController/AudioController';
+import axios from 'axios';
 
 function SubMeetingPage() {
   const { roomId } = useParams();
@@ -24,6 +25,7 @@ function SubMeetingPage() {
   );
 
   const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
+  const [startSec, setStartSec] = useState(''); // 서버에서 받아온 시작 시간
   const [guideMessage, setGuideMessage] = useState(
     '서로의 마음이 닿은 여러분, 이제 마음을 확인하며 둘만의 즐거운 시간 보내기 바랍니다',
   );
@@ -42,6 +44,24 @@ function SubMeetingPage() {
       audioRef.current.muted = muted;
     }
   }, [volume, muted]);
+
+  useEffect(() => {
+    fetchElapsedTime();
+  }, []);
+
+  const fetchElapsedTime = async () => {
+    try {
+      const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
+      // const elapsedSeconds = parseInt(response.data, 10);
+      console.log('시간', response.data);
+      console.log('시간', Number(response.data));
+      setStartSec(response.data);
+      // console.log('시간', elapsedSeconds);
+      // calculateElapsedTime(elapsedSeconds);
+    } catch (error) {
+      console.error('Failed to fetch elapsed time:', error);
+    }
+  };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value));
@@ -102,7 +122,7 @@ function SubMeetingPage() {
 
   return (
     <div id="sub-meeting">
-      <TimeDisplay currentTime={currentTime} setCurrentTime={setCurrentTime} />
+      <TimeDisplay currentTime={currentTime} startSec={startSec} setCurrentTime={setCurrentTime} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
       <div className="container">
         <div className="video-container">
