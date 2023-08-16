@@ -90,11 +90,11 @@
 ## 👋 팀 소개
 <br>
 
-| **강한(팀장**) | **이명우** | **권현우** | **김유진** | **김선희** | **민경현** |
-| --- | --- |--- | --- |--- | --- |
+| **강한(팀장**) | **이명우** | **권현우**                                             | **김유진** | **김선희** | **민경현** |
+| --- | --- |-----------------------------------------------------| --- |--- | --- |
 | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend <br> DevOps</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:pink">Frontend</p> | <p align="left" style="color:pink">Frontend</p> |
-| WebSocket <br> 채팅,매칭,알람 서비스 | 매칭, 레이팅 알고리즘 <br> REST API | CI/CD <br> 프로필 사진 API  |  |  |
-|  | [@Fishphobiagg](https://github.com/Fishphobiagg) |  |  |  |  |
+| WebSocket <br> 채팅,매칭,알람 서비스 | 매칭, 레이팅 알고리즘 <br> REST API | CI/CD <br> 프로필 사진 API                               |  |  |
+|  | [@Fishphobiagg](https://github.com/Fishphobiagg) | [@mycodeisnoob](https://github.com/mycodeisnoob)    |  |  |  |
 <br>
 
 ## 🍳 프로젝트
