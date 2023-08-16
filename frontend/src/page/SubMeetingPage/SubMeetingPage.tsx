@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import TimeDisplay from '../../components/Element/TimeDisplay';
 import { useAppSelector } from '../../app/hooks';
 import { useOpenvidu } from '../../hooks/useOpenvidu';
@@ -9,6 +9,7 @@ import './SubMeetingPage.css';
 import { useNavigate, useParams } from 'react-router';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import Guide from '../../components/MeetingPage/Guide/Guide';
+import AudioController from '../../components/AudioController/AudioController';
 
 function SubMeetingPage() {
   const { roomId } = useParams();
@@ -30,6 +31,25 @@ function SubMeetingPage() {
   const [isShow, setIsShow] = useState(true);
   const navigate = useNavigate();
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Volume and Mute Controls
+  const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      audioRef.current.muted = muted;
+    }
+  }, [volume, muted]);
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(e.target.value));
+  };
+  const handleMuteToggle = () => {
+    setMuted((prevMuted) => !prevMuted);
+  };
+
   useWebSocket({
     subscribe: (client) => {
       // 서브 세션 방 종료
@@ -40,6 +60,7 @@ function SubMeetingPage() {
         setIsShow(true);
       });
     },
+
     onClientReady: (client) => {
       const time: string[] = currentTime.split(':');
       const minutes = time[0];
@@ -116,6 +137,15 @@ function SubMeetingPage() {
           <ToolBar
             onChangeCameraStatus={onChangeCameraStatus}
             onChangeMicStatus={onChangeMicStatus}
+          />
+        </div>
+        <div>
+          <AudioController
+            volume={volume}
+            muted={muted}
+            songName="submeeting"
+            handleMuteToggle={handleMuteToggle}
+            handleVolumeChange={handleVolumeChange}
           />
         </div>
         <ChatRoom />
