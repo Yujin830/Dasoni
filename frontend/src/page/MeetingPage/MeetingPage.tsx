@@ -15,8 +15,10 @@ import axios from 'axios';
 import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
 import { setMatchMemberId, setRatingChange, setMeetingRoomId } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router';
 
 function MeetingPage() {
+  const location = useLocation();
   const { roomId } = useParams();
   const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
@@ -38,6 +40,8 @@ function MeetingPage() {
   const [firstSignal, setFirstSignal] = useState(false); // 첫인상 투표 보이기 / 안 보이기
   const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
   const [requestResult, setRequestResult] = useState(false); // 최종 개인 결과 요청 가능 / 요청 불가능
+  const [isMegiFlag, setIsMegiFlag] = useState(false);
+  const [hasSentMegiMessage, setHasSentMegiMessage] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -45,6 +49,11 @@ function MeetingPage() {
   const client = useWebSocket({
     subscribe: (client) => {
       // 가이드 구독
+      client.subscribe(`/topic/room/${roomId}/megiEnterMessage`, (res: any) => {
+        console.log('enterMegi!!!');
+        console.log(res.body);
+      });
+
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
         setGuideMessage(res.body);
         setIsShow(true);
@@ -111,7 +120,7 @@ function MeetingPage() {
       }
 
       // 메기 입장
-      else if (minutes === '01' && seconds === '11') {
+      else if (minutes === '01' && seconds === '15') {
         client?.send(`/app/room/${roomId}/megi`, {}, 'megigo');
       }
 
@@ -141,6 +150,12 @@ function MeetingPage() {
 
       // 최종 시그널 메세지 open send
       else if (minutes === '02' && seconds === '30') client?.send(`/app/room/${roomId}/signal`);
+
+      if (isMegiFlag && !hasSentMegiMessage) {
+        // 원하는 로직 실행
+        client?.send(`/app/room/${roomId}/megiEnterMessage`);
+        setHasSentMegiMessage(true);
+      }
     },
   });
 
@@ -161,6 +176,18 @@ function MeetingPage() {
 
     return `${minutesStr}:${secondsStr}`;
   };
+
+  useEffect(() => {
+    if (location.state?.isMegi) {
+      console.log('isMegi?', location.state.isMegi);
+      console.log('isMegi is true', roomId);
+      setIsMegiFlag(true);
+
+      // 예) 특정 알림 표시, 데이터 요청 등의 로직
+    } else {
+      console.log('ismegi?', location.state.isMegi);
+    }
+  }, [location.state]);
   useEffect(() => {
     const fetchElapsedTime = async () => {
       try {
