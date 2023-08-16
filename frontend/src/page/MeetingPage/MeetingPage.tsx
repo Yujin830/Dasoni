@@ -81,7 +81,13 @@ function MeetingPage() {
         setRequestResult(true);
       });
 
+      // 메기 입장 가능 결과 구독
       client.subscribe(`/topic/room/${roomId}/megi`, (res: any) => {
+        console.log(res.body);
+      });
+
+      // 메기 입장 완료 구독
+      client.subscribe(`/topic/room/${roomId}/megiEnter`, (res: any) => {
         console.log(res.body);
       });
     },
@@ -111,7 +117,7 @@ function MeetingPage() {
         client?.send(`/app/room/${roomId}/guide`, {}, '20');
       }
 
-      // 메기 입장
+      // 메기 입장 가능 전송
       else if (minutes === '01' && seconds === '11') {
         client?.send(`/app/room/${roomId}/megi`, {}, 'megigo');
       }
