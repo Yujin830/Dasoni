@@ -46,6 +46,11 @@
   z-index: 1;
 }
 
+.swiper {
+  height: 100%;
+  width: 80%;
+}
+
 @media (max-width: 1024px) {
   .modal {
     width: 80%;
