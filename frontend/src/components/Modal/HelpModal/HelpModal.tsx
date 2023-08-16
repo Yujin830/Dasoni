@@ -9,7 +9,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 import './HelpModal.css';
 import '../Modal.css';
-// SwiperCore.use([Pagination, Navigation]);
+
 interface HelpModalProps {
   onClose: () => void;
 }
