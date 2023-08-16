@@ -26,19 +26,18 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
   const { memberId } = useAppSelector((state) => state.user);
   const messageRef = useRef<HTMLDivElement | null>(null);
   const member = useAppSelector((state) => state.user);
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
+  const [isLoading, setIsLoading] = useState(false);
 
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}/chat`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
-        setIsLoading(false);
+        // setIsLoading(false); 귓속말 웹소켓 연결되는 타이밍이 언젠지 못잡겠음
         setMessages((messages) => [...messages, chatMessage]);
       });
 
       client.subscribe(`/topic/room/${roomId}/whisper/${memberId}`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
-        // setIsLoading(false);
         console.log('chatmessage', chatMessage);
         setMessages((messages) => [...messages, chatMessage]);
       });
@@ -101,10 +100,10 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
 
   return (
     <div className="chat-room">
+      {/* 로딩 중일 때 스켈레톤 UI를 표시합니다. */}
       {isLoading ? (
         <Loading01 />
       ) : (
-        // 로딩이 완료되면 실제 대기방 UI를 렌더링합니다.
         <>
           <div className="message-container" ref={messageRef}>
             {messages.map((msg, index) => (
@@ -119,30 +118,31 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
               </div>
             ))}
           </div>
+
+          <form onSubmit={handleFormSubmit} className="chat-input">
+            <select
+              className="diff-member-selector"
+              value={whisperTarget || ''}
+              onChange={(e) => setWhisperTarget(e.target.value || null)}
+            >
+              <option value="">귓속말 대상 선택</option>
+              {diffGenderMemberList.map((member, index) => (
+                <option key={index} value={member.memberId}>
+                  {member.nickname}
+                </option>
+              ))}
+            </select>
+            <input
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              disabled={chatDisabled}
+            />
+            <button type="submit" disabled={chatDisabled || !whisperTarget}>
+              보내기
+            </button>
+          </form>
         </>
       )}
-      <form onSubmit={handleFormSubmit} className="chat-input">
-        <select
-          className="diff-member-selector"
-          value={whisperTarget || ''}
-          onChange={(e) => setWhisperTarget(e.target.value || null)}
-        >
-          <option value="">귓속말 대상 선택</option>
-          {diffGenderMemberList.map((member, index) => (
-            <option key={index} value={member.memberId}>
-              {member.nickname}
-            </option>
-          ))}
-        </select>
-        <input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          disabled={chatDisabled}
-        />
-        <button type="submit" disabled={chatDisabled || !whisperTarget}>
-          보내기
-        </button>
-      </form>
     </div>
   );
 }

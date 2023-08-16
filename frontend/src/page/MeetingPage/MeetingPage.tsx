@@ -15,6 +15,7 @@ import axios from 'axios';
 import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
 import { setMatchMemberId, setRatingChange, setMeetingRoomId } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
+
 function MeetingPage() {
   const { roomId } = useParams();
   const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
