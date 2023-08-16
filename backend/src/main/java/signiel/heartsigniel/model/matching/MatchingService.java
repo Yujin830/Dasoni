@@ -81,8 +81,6 @@ public class MatchingService {
         if(type.equals("special")){
             if (redisTemplate.opsForList().size(queue.getName()) >= 1){
                 RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
-
-
                 // 상대 큐도 꽉차있을 경우
                 if(redisTemplate.opsForList().size(oppositeQueue.getName()) >= 1){
                     Room matchingRoom = matchingRoomService.findRoomForSpecialUser(queue);

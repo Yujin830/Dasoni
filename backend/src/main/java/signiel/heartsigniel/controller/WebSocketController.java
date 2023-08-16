@@ -57,6 +57,12 @@ public class WebSocketController {
     }
 
 
+    @MessageMapping("room/{roomId}/megiEnterMessage")
+    public void megiEnterMessage(@DestinationVariable Long roomId){
+        String msg = "메기입장";
+        log.info(msg);
+        operations.convertAndSend("/topic/room/"+roomId+"/megiEnterMessage", msg);
+    }
     @MessageMapping("room/{roomId}/setTime")
     public void sendTime(@DestinationVariable Long roomId){
         Room room = roomRepository.findById(roomId).get();
