@@ -37,8 +37,6 @@ public class WebSocketController {
     private final SignalService signalService;
     private final MatchingRoomService matchingRoomService;
 
-
-
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
     public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService, MatchingRoomService matchingRoomService) {
@@ -56,7 +54,7 @@ public class WebSocketController {
      */
 
     @MessageMapping("room/{roomId}/megi")
-    public void canJoinMegi(@DestinationVariable Long roomId, String msg){
+    public void canJoinMegi(@DestinationVariable Long roomId, String msg) {
         log.info("inQueueRoom1!!");
 
         String megi = msg;
@@ -70,44 +68,48 @@ public class WebSocketController {
 
     /**
      * 유저 정보 오픈!!
+     *
      * @param roomId
      */
     @MessageMapping("room/{roomId}/open")
-    public void openMembersInformation(@DestinationVariable Long roomId){
+    public void openMembersInformation(@DestinationVariable Long roomId) {
         String openInfo = "OPEN";
         log.info("open");
-        operations.convertAndSend("/topic/room/" + roomId +"/open", openInfo);
+        operations.convertAndSend("/topic/room/" + roomId + "/open", openInfo);
     }
 
 
     /**
      * 최종 개인 결과 요청 오픈
+     *
      * @param roomId
      */
     @MessageMapping("room/{roomId}/requestResult")
-    public void openMembersResultRequest(@DestinationVariable Long roomId){
+    public void openMembersResultRequest(@DestinationVariable Long roomId) {
         String requestInfo = "requestResult";
-        operations.convertAndSend("/topic/room/" + roomId +"/requestResult", requestInfo);
+        operations.convertAndSend("/topic/room/" + roomId + "/requestResult", requestInfo);
     }
 
     /**
      * 서브 세션방 종료
+     *
      * @param roomId
      */
     @MessageMapping("room/{roomId}/subClose")
-    public void closeSubSession(@DestinationVariable Long roomId){
+    public void closeSubSession(@DestinationVariable Long roomId) {
         String closeInfo = "close";
-        operations.convertAndSend("/topic/room/" + roomId +"/subClose", closeInfo);
+        operations.convertAndSend("/topic/room/" + roomId + "/subClose", closeInfo);
     }
 
     /**
      * 첫 인상 투표 시작 메시지 전송.
+     *
      * @param roomId
      */
     @MessageMapping("room/{roomId}/firstSignal")
-    public void sendFirstSignal(@DestinationVariable Long roomId){
+    public void sendFirstSignal(@DestinationVariable Long roomId) {
         String firstMessage = "FIRST";
-        operations.convertAndSend("/topic/room/"+roomId + "/firstSignal", firstMessage);
+        operations.convertAndSend("/topic/room/" + roomId + "/firstSignal", firstMessage);
     }
 
     /**
@@ -141,7 +143,6 @@ public class WebSocketController {
     }
 
 
-
     /**
      * 시작 시 가이드 메시지 출력하기 위한 메소드.
      *
@@ -149,9 +150,9 @@ public class WebSocketController {
      * @param visibleTime : 시간, 내용 받아오기용.
      */
     @MessageMapping("room/{roomId}/guide")
-    public void sendGuideMessage(@DestinationVariable Long roomId, @Payload Long visibleTime){
+    public void sendGuideMessage(@DestinationVariable Long roomId, @Payload Long visibleTime) {
         String content = guideRepository.findByVisibleTime(visibleTime).get().getContent();
-        operations.convertAndSend("/topic/room/"+roomId+"/guide", content);
+        operations.convertAndSend("/topic/room/" + roomId + "/guide", content);
     }
 
 
@@ -164,7 +165,7 @@ public class WebSocketController {
     @MessageMapping("room/{roomId}/chat")
     public void sendMessage(@DestinationVariable Long roomId, @Payload ChatMessage chatMessage) {
         chatService.addMessage(roomId, chatMessage);
-        operations.convertAndSend("/topic/room/"+ roomId +"/chat", chatMessage);
+        operations.convertAndSend("/topic/room/" + roomId + "/chat", chatMessage);
     }
 
     /***
@@ -172,18 +173,18 @@ public class WebSocketController {
      * @param roomId : 방 식별용
      * @param whisperMessage : receiverId, gender, content로 구성
      */
-        @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
-            public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId ,@Payload WhisperMessage whisperMessage) {
-            whisperMessage.setStatus("OK");
-            int sequence = 1;
-            int senderId = Integer.parseInt(whisperMessage.getMemberId());
-            int receiverId = Math.toIntExact(receiveMemberId);
+    @MessageMapping("room/{roomId}/whisper/{receiveMemberId}")
+    public void whisperChatting(@DestinationVariable Long roomId, @DestinationVariable Long receiveMemberId, @Payload WhisperMessage whisperMessage) {
+        whisperMessage.setStatus("OK");
+        int sequence = 1;
+        int senderId = Integer.parseInt(whisperMessage.getMemberId());
+        int receiverId = Math.toIntExact(receiveMemberId);
 
-            SingleSignalRequest signalRequest = new SingleSignalRequest(sequence, senderId, receiverId);
-            signalService.storeSignalInRedis(roomId, signalRequest);
+        SingleSignalRequest signalRequest = new SingleSignalRequest(sequence, senderId, receiverId);
+        signalService.storeSignalInRedis(roomId, signalRequest);
 
-            operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId , whisperMessage);
-        }
+        operations.convertAndSend("/topic/room/" + roomId + "/whisper/" + receiveMemberId, whisperMessage);
+    }
 
 
     /**
@@ -206,20 +207,20 @@ public class WebSocketController {
 
     /**
      * 시작 버튼 누를 시 StartMessage를 보내서 방 전체 인원을 MeetingRoom으로 보냄.
+     *
      * @param roomId : 방 식별용
      */
     @MessageMapping("room/{roomId}/start")
-    public void sendStartMessage(@DestinationVariable Long roomId){
+    public void sendStartMessage(@DestinationVariable Long roomId) {
         List<Question> questionList = questionService.makeQuestionList(); // 랜덤 질문 리스트 생성,
         questionListPerRoom.put(roomId, questionList);
         privateRoomService.sendStartMessage(roomId);
     }
 
     @GetMapping("/api/room/{roomId}/messages")
-    public List<ChatMessage> getChatMessages(@PathVariable Long roomId){
+    public List<ChatMessage> getChatMessages(@PathVariable Long roomId) {
         return chatService.getMessages(roomId);
     }
-
 
 
     /***
@@ -228,7 +229,7 @@ public class WebSocketController {
      */
     @MessageMapping("mypage/chat/{chattingMemberId}")
     public void mathchChatting(@DestinationVariable Long chattingMemberId, @Payload MatchMemberMessage matchMemberMessage) {
-        operations.convertAndSend("/queue/mypage/chat/"+ chattingMemberId + "/" + matchMemberMessage.getMemberId(), matchMemberMessage);
-        operations.convertAndSend("/queue/mypage/chat/"+ matchMemberMessage.getMemberId() + "/" + chattingMemberId, matchMemberMessage);
+        operations.convertAndSend("/queue/mypage/chat/" + chattingMemberId + "/" + matchMemberMessage.getMemberId(), matchMemberMessage);
+        operations.convertAndSend("/queue/mypage/chat/" + matchMemberMessage.getMemberId() + "/" + chattingMemberId, matchMemberMessage);
     }
 }

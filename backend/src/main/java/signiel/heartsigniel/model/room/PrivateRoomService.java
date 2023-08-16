@@ -243,6 +243,13 @@ public class PrivateRoomService {
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
     }
 
+
+    //미팅 방 시간 갱신을 위한 메서드
+    public LocalDateTime getRoomStartTime(Long roomId){
+        Room room = roomRepository.findById(roomId).get();
+        return room.getStartTime();
+    }
+
     public Response roomInfo(Long roomId) {
         Room roomEntity = findRoomById(roomId);
         PrivateRoomInfo privateRoomInfo = PrivateRoomInfo.of(roomEntity);

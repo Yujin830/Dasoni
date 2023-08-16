@@ -152,6 +152,30 @@ function MeetingPage() {
     dispatch(setMeetingRoomId(roomId));
   }, [roomId, dispatch]);
 
+  const calculateElapsedTime = (elapsedSeconds: number): string => {
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+
+    const minutesStr = String(minutes).padStart(2, '0');
+    const secondsStr = String(seconds).padStart(2, '0');
+
+    return `${minutesStr}:${secondsStr}`;
+  };
+  useEffect(() => {
+    const fetchElapsedTime = async () => {
+      try {
+        const response = await axios.get<string>(`/api/rooms/${roomId}/elapsedTime`);
+        const elapsedSeconds = parseInt(response.data, 10);
+
+        setCurrentTime(calculateElapsedTime(elapsedSeconds));
+      } catch (error) {
+        console.error('Failed to fetch elapsed time:', error);
+      }
+    };
+
+    fetchElapsedTime();
+  }, []);
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
