@@ -74,12 +74,12 @@ public class MatchingService {
     }
 
     private Response checkAndMatchUsers(RatingQueue queue, String type) {
-
-        log.info("sizecheck = " + redisTemplate.opsForList().size(queue.getName()));
         // 메기 매칭일 경우
         if(type.equals("special")){
             if (redisTemplate.opsForList().size(queue.getName()) >= 1){
                 RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
+
+
                 // 상대 큐도 꽉차있을 경우
                 if(redisTemplate.opsForList().size(oppositeQueue.getName()) >= 1){
                     Room matchingRoom = matchingRoomService.findRoomForSpecialUser(queue);
@@ -89,7 +89,6 @@ public class MatchingService {
                     }
                     // 방이 있을 경우 가입
                     Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
-                    log.info("queueMemberId= " + queueMemberId);
                     Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
                     matchingRoomService.joinRoom(matchingRoom, queueMemberId, true);
                     matchingRoomService.joinRoom(matchingRoom,opponentQueueMemberId,true);
@@ -103,18 +102,17 @@ public class MatchingService {
                 }return Response.of(MatchingCode.MATCHING_PENDING, null);
             }
         }
-        if (redisTemplate.opsForList().size(queue.getName()) >= 3) {
+        if (redisTemplate.opsForList().size(queue.getName()) >= 1) {
             RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
             log.info("oppositeQueue" + oppositeQueue.toString());
-            if (redisTemplate.opsForList().size(oppositeQueue.getName()) >= 3) {
+            if (redisTemplate.opsForList().size(oppositeQueue.getName()) >= 1) {
                 // 해당 큐와 상대 성별 큐에서 3명씩 팝해서 매칭(createRoom을 향후 Q1, Q2 넣도록 변경)
                 Room matchingRoom = matchingRoomService.createRoom(queue);
-                for (int i = 0; i < 3; i++) {
-                    Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
-                    log.info("queuememberId = " + queueMemberId);
-                    Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
 
-                    log.info("opponentQueueMemberId = " + queueMemberId);
+                // 방의 리더 체크
+                for (int i = 0; i < 1; i++) {
+                    Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
+                    Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
                     matchingRoomService.joinRoom(matchingRoom, queueMemberId, false);
                     matchingRoomService.joinRoom(matchingRoom, opponentQueueMemberId, false);
                     unmarkMemberFromQueue(queueMemberId);

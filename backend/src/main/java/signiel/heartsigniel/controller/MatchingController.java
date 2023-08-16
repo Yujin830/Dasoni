@@ -37,11 +37,16 @@ public class MatchingController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/rooms/{roomId}")
-    public ResponseEntity<Response> enqueueRoomToRedis(@PathVariable Long roomId){
-        Response response = matchingRoomService.enqueueRoom(roomId);
-        return ResponseEntity.ok(response);
-    }
+    /**
+     * 시간 체크해서 메기가 입장 가능한 방을 큐에 등록.
+     * @param roomId
+     * @return
+     */
+//    @PostMapping("/rooms/{roomId}")
+//    public ResponseEntity<Response> enqueueRoomToRedis(@PathVariable Long roomId){
+//        Response response = matchingRoomService.enqueueRoom(roomId);
+//        return ResponseEntity.ok(response);
+//    }
 
     @DeleteMapping("/rooms/{roomId}")
     public ResponseEntity<Response> dequeueRoomToRedis(@PathVariable Long roomId){

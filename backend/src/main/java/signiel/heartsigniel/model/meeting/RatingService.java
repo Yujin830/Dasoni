@@ -2,7 +2,10 @@ package signiel.heartsigniel.model.meeting;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import signiel.heartsigniel.common.code.CommonCode;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.life.LifeService;
+import signiel.heartsigniel.model.matching.code.MatchingCode;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.member.MemberRepository;
 import signiel.heartsigniel.model.meeting.dto.*;
@@ -26,16 +29,18 @@ public class RatingService {
     private final RedisTemplate<String, SignalMatchingResult> redisTemplate;
     private final RedisTemplate<String, PersonalResult> personalResultRedisTemplate;
     private final SignalService signalService;
+    private final LifeService lifeService;
     private static final int K_FACTOR = 40;
     private int defaultMemberSize = 6;
 
-    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, RedisTemplate<String, SignalMatchingResult> redisTemplate, SignalService signalService, RedisTemplate<String, PersonalResult> personalResultRedisTemplate) {
+    public RatingService(RoomRepository roomRepository, MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, RedisTemplate<String, SignalMatchingResult> redisTemplate, SignalService signalService, RedisTemplate<String, PersonalResult> personalResultRedisTemplate, LifeService lifeService) {
         this.roomRepository = roomRepository;
         this.memberRepository = memberRepository;
         this.roomMemberRepository = roomMemberRepository;
         this.redisTemplate = redisTemplate;
         this.signalService = signalService;
         this.personalResultRedisTemplate = personalResultRedisTemplate;
+        this.lifeService = lifeService;
     }
 
     @Transactional
@@ -76,7 +81,9 @@ public class RatingService {
             if (roomMember.isSpecialUser()) {
                 ratingChange *= 2;
             }
-            PersonalResult personalResult = PersonalResult.of(roomMember, ratingChange, signalOpponent);
+            Long remainLifeOfUsers = lifeService.countRemainingLives(memberId);
+            System.out.println("내 심장의 개수... " + remainLifeOfUsers + "개...");
+            PersonalResult personalResult = PersonalResult.of(roomMember, ratingChange, signalOpponent,remainLifeOfUsers);
             personalResults.add(personalResult);
             savePersonalResultToRedis(memberId, roomId, personalResult);
         }
@@ -285,8 +292,16 @@ public class RatingService {
     }
 
     // 매칭 히스토리 삭제
-    public void deleteMatchingHistory (Long memberId){
-        redisTemplate.delete("member:" + memberId + ":matchHistory");
+    public Response deleteMatchingHistory (Long memberId, MatchingHistoryRequest matchingHistoryRequest){
+        SignalMatchingResult result = redisTemplate.opsForList().index("member:" + memberId + ":matchHistory", matchingHistoryRequest.getTargetIndex());
+        if (result != null) {
+            redisTemplate.opsForList().remove("member:" + memberId + ":matchHistory", 1, result);
+            Response response = Response.of(CommonCode.GOOD_REQUEST, null);
+            return response;
+        }
+
+        return Response.of(CommonCode.BAD_REQUEST, null);
+
     }
 
     // Redis에 PersonalResult 객체를 저장

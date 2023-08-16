@@ -20,6 +20,7 @@ export interface User {
   rating?: number;
   matchCnt?: number;
   isFirst?: number;
+  remainLife?: number;
   profileImage?: File | null;
 }
 
@@ -34,10 +35,11 @@ const initialState: User = {
   job: '선택해 주세요',
   siDo: '선택해',
   guGun: '주세요',
-  profileImageSrc: 'null',
+  profileImageSrc: '',
   isFirst: 0,
   rating: 1000,
   matchCnt: 0,
+  remainLife: 2,
 };
 
 // 액션, 리듀서를 한 번에 만들어주는 createSlice 생성, export
@@ -53,6 +55,12 @@ const userSlice = createSlice({
     },
     setRating(state, action) {
       state.rating = action.payload;
+    },
+    setRemainLife(state, action) {
+      state.remainLife = action.payload;
+    },
+    setMeetingCount(state, action) {
+      state.matchCnt = action.payload;
     },
     setProfileImageSrc(state, action) {
       state.profileImageSrc = action.payload;
@@ -195,7 +203,8 @@ export const logout = () => {
 // 리덕스에 저장된 user 상태값을 export
 export const getUserInfo = (state: RootState) => state.user;
 
-export const { setSido, setGugun, setRating, setProfileImageSrc } = userSlice.actions;
+export const { setSido, setGugun, setRating, setRemainLife, setMeetingCount, setProfileImageSrc } =
+  userSlice.actions;
 
 // 로그인 reducer export
 export default userSlice.reducer;

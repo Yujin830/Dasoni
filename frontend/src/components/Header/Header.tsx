@@ -17,15 +17,16 @@ interface HeaderProps {
 
 function Header({ onModalToggle }: HeaderProps) {
   const navigate = useNavigate();
+  const { remainLife } = useAppSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     logout(); // 로그아웃 함수를 호출하여 토큰을 삭제하고 Redux 상태를 초기화합니다.
     navigate('/');
   };
-  // 필터 버튼 토클
+  // 메뉴 버튼 토클
   const [isOpen, setIsOpen] = useState(false);
-  const handleToggleFilter = () => {
+  const handleToggleMenu = () => {
     setIsOpen((prevState) => !prevState);
   };
   const handleHelpClick = () => {
@@ -35,6 +36,33 @@ function Header({ onModalToggle }: HeaderProps) {
     setIsOpen(false);
   };
 
+  // 라이프 UI 생성
+  const drawLife = () => {
+    const lives = [];
+    if (remainLife !== undefined) {
+      const spendLife = 2 - remainLife;
+      // 소비한 목숨 draw
+      for (let i = 0; i < spendLife; i++) {
+        lives.push(
+          <span key={`spend-${i}`} className="material-symbols-outlined">
+            favorite
+          </span>,
+        );
+      }
+
+      // 남은 목숨 draw
+      for (let i = 0; i < remainLife; i++) {
+        lives.push(
+          <span key={`remain-${i}`} className="material-symbols-outlined filled">
+            favorite
+          </span>,
+        );
+      }
+    }
+
+    return lives;
+  };
+
   //사이드바 토글
   const [sideOpen, setSideopen] = useState(false);
   const ToggleSidebar = () => {
@@ -42,23 +70,8 @@ function Header({ onModalToggle }: HeaderProps) {
   };
 
   // 사이드바 데이터 반영
-  const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  const { rating, profileImageSrc } = useAppSelector((state) => state.user);
 
-  // 프로필 이미지 설정 안했을 때 default 이미지 설정
-  if (profileImageSrc == 'null') {
-    if (gender == 'female')
-      dispatch(
-        setProfileImageSrc(
-          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg',
-        ),
-      );
-    else
-      dispatch(
-        setProfileImageSrc(
-          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg',
-        ),
-      );
-  }
   return (
     <header className="header">
       <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
@@ -69,13 +82,13 @@ function Header({ onModalToggle }: HeaderProps) {
       </Link>
       <nav className="nav">
         <ul id="nav-bar">
-          <li>
-            <span className="material-symbols-outlined filled">favorite</span>
-            <span className="material-symbols-outlined filled">favorite</span>
-          </li>
-          {/* <BasicAvartar src="default_profile.png" /> */}
+          <li>{drawLife()}</li>
+          {/* <li>
+            <BasicAvartar src={imagedefault} />
+          </li> */}
+
           <div id="filter-menu">
-            <button className="material-symbols-outlined" onClick={handleToggleFilter}>
+            <button className="material-symbols-outlined" onClick={handleToggleMenu}>
               menu
             </button>
             <ul className={isOpen ? 'show' : ''}>

@@ -15,6 +15,7 @@ import {
   setRatingChange,
 } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
+import SnowingHearts from '../../components/Banner/SnowingHearts';
 
 function ResultPage() {
   const [success, setSuccess] = useState(false);
@@ -34,33 +35,29 @@ function ResultPage() {
   }, []);
 
   const setResult = async () => {
-    // 정보 초기화
-    dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
-    dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
-    dispatch(setMatchMemberId(0)); // 매칭된 상대 memberId 초기화
-
+    // 매칭 성공 / 실패 확인
     if (resultOfRoomMember.matchMemberId !== 0) {
       setSuccess(true);
 
-      // 매칭된 상대방 정보 가져오기
-      try {
-        const res = await axios.get(`/api/users/${resultOfRoomMember.matchMemberId}`);
-        console.log(res.data);
+      // 정보 초기화
+      dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
+      dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
+      dispatch(setMatchMemberId(0)); // 매칭된 상대 memberId 초기화
 
-        if (res.status === 200) {
-          // 상대가 기본 이미지일 경우 default 이미지 적용
-          if (res.data.profileImageSrc === null) {
-            if (res.data.gender === 'female')
-              res.data.profileImageSrc =
-                'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg';
-            else
-              res.data.profileImageSrc =
-                'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg';
+      if (resultOfRoomMember.matchMemberId !== 0) {
+        setSuccess(true);
+
+        // 매칭된 상대방 정보 가져오기
+        try {
+          const res = await axios.get(`/api/users/${resultOfRoomMember.matchMemberId}`);
+          console.log(res.data);
+
+          if (res.status === 200) {
+            setMatchMember(res.data);
           }
-          setMatchMember(res.data);
+        } catch (err) {
+          console.error(err);
         }
-      } catch (err) {
-        console.error(err);
       }
     }
   };
@@ -72,8 +69,9 @@ function ResultPage() {
   return (
     <div id="result-page">
       <Header />
-      <Banner />
+      {/* <Banner /> */}
       <main>
+        <SnowingHearts />
         <div id="title-box">
           <h2 className="title">매칭 결과</h2>
           <h3 className="title-msg">
@@ -92,7 +90,9 @@ function ResultPage() {
             <FailResult profileSrc={profileImageSrc} />
           )}
         </div>
-        <h3 className="result-rating">{resultOfRoomMember.ratingChange} point</h3>
+        <div className="show-rating">
+          <h3 className="result-rating">{resultOfRoomMember.ratingChange} point</h3>
+        </div>
         <div className="buttons">
           <FilledButton content="메인으로" classes="to-main-btn" handleClick={handleClose} />
         </div>

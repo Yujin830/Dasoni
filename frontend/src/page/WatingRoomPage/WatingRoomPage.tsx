@@ -14,6 +14,8 @@ import convertScoreToName from '../../utils/convertScoreToName';
 // BGM
 import song from '../../assets/music/lobby.mp3';
 import AudioController from '../../components/AudioController/AudioController';
+import { useDispatch } from 'react-redux';
+import { setWaitingMemberList } from '../../app/slices/waitingSlice';
 import Loading01 from '../../components/Loading/Loading';
 
 function WaitingRoomPage() {
@@ -34,14 +36,21 @@ function WaitingRoomPage() {
     [memberList],
   );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { roomId } = useParams();
   const member = useAppSelector((state) => state.user);
+  const { waitingRoomMemberList } = useAppSelector((state) => state.waitingRoom);
 
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const data = JSON.parse(res.body);
         console.log(data);
+        data.privateRoomInfo.roomMemberInfoList.map((roomMemberInfo: any) => {
+          if (roomMemberInfo.member.memberId === member.memberId) {
+            dispatch(setWaitingMemberList([roomMemberInfo]));
+          }
+        });
         setIsLoading(false);
         setMemberList(data.privateRoomInfo.roomMemberInfoList);
       });
@@ -62,9 +71,20 @@ function WaitingRoomPage() {
     },
   });
 
-  const handleStartBtn = () => {
-    alert('미팅이 3초 후 시작됩니다');
-    client?.send(`/app/room/${roomId}/start`);
+  const handleStartBtn = async () => {
+    // 미팅방 시작 시 목숨 감소, 매치 수 증가
+    if (waitingRoomMemberList[0].roomLeader) {
+      const res = await axios.patch(`/api/rooms/${roomId}`, {
+        roomLeaderId: waitingRoomMemberList[0].roomMemberId,
+        roomId: roomId,
+      });
+      console.log(res.data);
+
+      if (res.data.status.code !== 1224) {
+        alert('미팅이 3초 후 시작됩니다');
+        client?.send(`/app/room/${roomId}/start`);
+      }
+    }
   };
 
   const handleExitBtn = async () => {
@@ -119,7 +139,6 @@ function WaitingRoomPage() {
             {waitingRoomInfo.roomTitle}
           </div>
           <div className="info">
-            <span>메기 : {waitingRoomInfo.megiAcceptable ? 'Yes' : 'No'}</span>
             <span>Rank :{convertScoreToName(waitingRoomInfo.ratingLimit)}</span>
           </div>
           <AudioController

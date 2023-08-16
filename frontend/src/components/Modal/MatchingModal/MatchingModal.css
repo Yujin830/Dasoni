@@ -23,88 +23,73 @@
 /* Modal */
 .matching-modal {
   position: relative;
-  width: 40%;
-  height: 55%;
-  border-radius: 1rem;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 50%;
   background: #fff;
   box-shadow: 0px 4px 10px 8px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-/* Modal Header */
-.matching-modal .header {
-  height: 12%;
-  background: #ffd8e4;
-  display: flex;
+  justify-content: center;
   align-items: center;
-  padding-left: 2%;
-  font-size: 3vh;
-  font-weight: 500;
-  color: #232323;
-  border-radius: 1rem 1rem 0rem 0rem;
-}
-
-/* Modal Content */
-.matching-modal .box-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  padding: 2% 10%;
-}
-
-.matching-modal .box-title-content {
-  width: 100%;
   text-align: center;
-  border: 3px solid #d9d9d9;
-  padding: 0.5rem 0.7rem;
-  border-radius: 0.8rem;
-  color: #898989;
-  font-size: 1rem;
+}
+
+.matching-modal svg {
+  width: 100%;
+  margin-right: 0;
 }
 
 /* Button Styling */
-.matching-modal .openroom-button {
+.matching-modal .matching-button {
   display: flex;
   justify-content: center;
-  width: 100%;
-  margin-bottom: 2vh;
+  align-items: center;
+  /* margin-bottom: 2vh; */
 }
 
 .matching-modal .close-button {
-  padding: 1vh 3vh;
+  /* padding: 1vh 3vh; */
+  /* margin-top: 3vh; */
   background-color: #ffd8e4;
+  color: black;
   border: none;
   border-radius: 1rem;
-  font-size: 2.5vh;
-  font-weight: 700;
+  font-size: 2vh;
+  font-weight: 600;
   transition: background-color 0.3s;
 }
 
 .matching-modal .close-button:hover {
-  background-color: #ec5e98;
+  background-color: gray;
   color: #fff;
   cursor: pointer;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-  .matching-modal {
-    width: 60%;
+.matching-modal h2 {
+  animation: typing 3s infinite;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@keyframes typing {
+  0% {
+    opacity: 0;
+    width: 0;
+  }
+  100% {
+    opacity: 1;
+    width: 100%;
   }
 }
 
 @media (max-width: 426px) {
   .matching-modal {
-    width: 85%;
-    height: 50%;
+    width: 10rem;
+    height: 10rem;
   }
-  .matching-modal .header {
-    font-size: 2.5vh;
+  .matching-modal h2 {
+    font-size: 3vh;
   }
   .matching-modal .close-button {
     font-size: 2vh;

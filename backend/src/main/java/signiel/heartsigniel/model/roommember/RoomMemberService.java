@@ -28,6 +28,13 @@ public class RoomMemberService {
         return roomMemberRepository.save(roomMember);
     }
 
+    // 메서드 오버로딩 , 매칭방 리더 만들어주기용.
+    public RoomMember createRoomMember(Member member, Room room, boolean isSpecialUser, boolean isRoomLeader){
+        RoomMember roomMember = RoomMember.of(member, room, isSpecialUser);
+        roomMember.setRoomLeader(isRoomLeader);
+        return roomMemberRepository.save(roomMember);
+    }
+
     public RoomMember findRoomMemberByRoomIdAndMemberId(Long roomId, Long memberId){
         RoomMember roomMember = roomMemberRepository.findRoomMemberByRoom_IdAndMember_MemberId(roomId, memberId)
                 .orElseThrow(() -> new NotFoundRoomMemberException("해당 유저를 찾을 수 없습니다."));

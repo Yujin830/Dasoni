@@ -9,7 +9,6 @@ import { useNavigate, useParams } from 'react-router';
 import axios from 'axios';
 import {
   setMaster,
-  setMegiAcceptable,
   setRatingLimit,
   setRoomTitle,
   setWaitingRoomId,
@@ -46,6 +45,12 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
   const OpenRoom = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    // 남은 라이프 확인
+    if (member.remainLife === 0) {
+      alert('오늘은 모든 라이프를 소진하여 더 이상 입장할 수 없습니다.');
+      return;
+    }
+
     const data = {
       memberId: member.memberId,
       title: roomTitle,
@@ -63,7 +68,6 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       dispatch(setRoomType('private'));
       dispatch(setRoomTitle(data.title));
       dispatch(setRatingLimit(data.ratingLimit));
-      dispatch(setMegiAcceptable(data.megiAcceptable));
 
       const waitingMember = {
         member: {
@@ -91,11 +95,14 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
       <div className="header">
         방만들기
         <div className="close-button">
-          <button onClick={onClose}>X</button>
+          <button className="close-btn" onClick={onClose}>
+            X
+          </button>
         </div>
       </div>
       <div className="box">
-        <div className="box-content">
+        <div className="room_title">
+          <h2>방 제목 설정</h2>
           <NoLabelInput
             classes="box-title-content"
             type="text"
@@ -103,103 +110,8 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
             handleChange={handleChangeRoomTitle}
             placeholer="방 제목을 입력하세요."
           />
-          <h2>메기 설정</h2>
-          <div className="megi">
-            <div className="megi-allowed">
-              <label
-                htmlFor="megiAcceptableCheckbox"
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
-                <div className="allowed" style={{ marginRight: '1vh' }}>
-                  메기 입장 가능
-                </div>
-                {megiAcceptable ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="34"
-                    height="34"
-                    viewBox="0 0 34 34"
-                    fill="none"
-                  >
-                    <path
-                      d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.486 30.6 3.4 24.514 3.4 17C3.4 9.486 9.486 3.4 17 3.4C24.514 3.4 30.6 9.486 30.6 17C30.6 24.514 24.514 30.6 17 30.6Z"
-                      fill="#A45097"
-                    />
-                    <path
-                      d="M17 25.5C21.6944 25.5 25.5 21.6944 25.5 17C25.5 12.3056 21.6944 8.5 17 8.5C12.3056 8.5 8.5 12.3056 8.5 17C8.5 21.6944 12.3056 25.5 17 25.5Z"
-                      fill="#A45097"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="34"
-                    height="34"
-                    viewBox="0 0 34 34"
-                    fill="none"
-                  >
-                    <path
-                      d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.486 30.6 3.4 24.514 3.4 17C3.4 9.486 9.486 3.4 17 3.4C24.514 3.4 30.6 9.486 30.6 17C30.6 24.514 24.514 30.6 17 30.6Z"
-                      fill="#A45097"
-                    />
-                  </svg>
-                )}
-              </label>
-              <input
-                type="checkbox"
-                id="megiAcceptableCheckbox"
-                checked={megiAcceptable}
-                onChange={handleChangeMegiAcceptable}
-              />
-            </div>
-            <div className="megi-banned">
-              <label
-                htmlFor="megiUnacceptableCheckbox"
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
-                <div className="banned" style={{ marginRight: '8px' }}>
-                  메기 입장 불가
-                </div>
-                {!megiAcceptable ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="34"
-                    height="34"
-                    viewBox="0 0 34 34"
-                    fill="none"
-                  >
-                    <path
-                      d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.486 30.6 3.4 24.514 3.4 17C3.4 9.486 9.486 3.4 17 3.4C24.514 3.4 30.6 9.486 30.6 17C30.6 24.514 24.514 30.6 17 30.6Z"
-                      fill="#A45097"
-                    />
-                    <path
-                      d="M17 25.5C21.6944 25.5 25.5 21.6944 25.5 17C25.5 12.3056 21.6944 8.5 17 8.5C12.3056 8.5 8.5 12.3056 8.5 17C8.5 21.6944 12.3056 25.5 17 25.5Z"
-                      fill="#A45097"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="34"
-                    height="34"
-                    viewBox="0 0 34 34"
-                    fill="none"
-                  >
-                    <path
-                      d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.486 30.6 3.4 24.514 3.4 17C3.4 9.486 9.486 3.4 17 3.4C24.514 3.4 30.6 9.486 30.6 17C30.6 24.514 24.514 30.6 17 30.6Z"
-                      fill="#A45097"
-                    />
-                  </svg>
-                )}
-              </label>
-              <input
-                type="checkbox"
-                id="megiUnacceptableCheckbox"
-                checked={!megiAcceptable}
-                onChange={() => setOpenMegiAcceptable(!megiAcceptable)}
-              />
-            </div>
-          </div>
+        </div>
+        <div className="rank_limit">
           <h2>랭크 제한 설정</h2>
           <div className="rank-content">
             <select className="select-rank" value={ratingLimit} onChange={handleChangeRatingLimit}>
@@ -212,10 +124,8 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
               <option value="2000">빨강</option>
               <option value="2500">무지개</option>
             </select>
-            {/* <p>{`${convertScoreToName(ratingLimit)}하트 이상만 만나기`}</p> */}
             <p> 하트 이상만 만나기</p>
           </div>
-          {/* <div className="modal-background" /> */}
         </div>
         <div className="openroom-button">
           <Button classes="openroom-btn" content="개설하기" handleClick={OpenRoom} />

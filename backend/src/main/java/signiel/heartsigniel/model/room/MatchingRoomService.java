@@ -78,6 +78,7 @@ public class MatchingRoomService {
     }
 
     public Response enqueueRoom(Long roomId) {
+        log.info("enqueuRoom called");
         // Redis에서 해당 roomId의 요청이 진행 중인지 확인
         Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
 
@@ -142,7 +143,18 @@ public class MatchingRoomService {
     public void joinRoom(Room room, Long memberId, boolean isSpecialUser){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 유저를 찾을 수 없습니다."));
-        RoomMember roomMember = roomMemberService.createRoomMember(member, room, isSpecialUser);
+
+        boolean isRoomLeader = false; // 기본값은 false
+
+        // 방에 리더가 없는지 확인
+        boolean hasLeader = room.getRoomMembers().stream().anyMatch(RoomMember::isRoomLeader);
+
+        // 방에 리더가 없고, 멤버가 없는 경우 첫 번째 멤버로 판단
+        if (!hasLeader && room.getRoomMembers().isEmpty()) {
+            isRoomLeader = true;
+        }
+
+        RoomMember roomMember = roomMemberService.createRoomMember(member, room, isSpecialUser, isRoomLeader);
         room.getRoomMembers().add(roomMember);
         roomRepository.save(room);
     }

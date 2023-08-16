@@ -12,13 +12,14 @@ import Question from '../../components/MeetingPage/Question/Question';
 import AudioController from '../../components/AudioController/AudioController';
 import WhisperChatRoom from '../../components/ChatRoom/WhisperChatRoom';
 import axios from 'axios';
-import { setRating } from '../../app/slices/user';
-import { setMatchMemberId, setRatingChange } from '../../app/slices/meetingSlice';
+import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
+import { setMatchMemberId, setRatingChange, setMeetingRoomId } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
-
 function MeetingPage() {
   const { roomId } = useParams();
-  const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
+  const { memberId, nickname, gender, job, birth, remainLife } = useAppSelector(
+    (state) => state.user,
+  );
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     memberId !== undefined ? memberId : 0,
     nickname !== undefined ? nickname : '',
@@ -27,7 +28,6 @@ function MeetingPage() {
     job !== undefined ? job : '',
     birth !== undefined ? birth.split('-')[0] : '',
   );
-
   const [guideMessage, setGuideMessage] = useState(
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
@@ -80,6 +80,10 @@ function MeetingPage() {
         console.log(res.body);
         setRequestResult(true);
       });
+
+      client.subscribe(`/topic/room/${roomId}/megi`, (res: any) => {
+        console.log(res.body);
+      });
     },
     onClientReady: (client) => {
       const time: string[] = currentTime.split(':');
@@ -107,13 +111,18 @@ function MeetingPage() {
         client?.send(`/app/room/${roomId}/guide`, {}, '20');
       }
 
+      // 메기 입장
+      else if (minutes === '01' && seconds === '11') {
+        client?.send(`/app/room/${roomId}/megi`, {}, 'megigo');
+      }
+
       // 유저 정보 공개
-      else if (minutes === '01' && seconds === '15') {
+      else if (minutes === '01' && seconds === '35') {
         client?.send(`/app/room/${roomId}/open`);
       }
 
       // 랜덤 주제 1번
-      else if (minutes === '01' && seconds === '25') {
+      else if (minutes === '01' && seconds === '40') {
         client?.send(`/app/room/${roomId}/questions`, {}, '0');
       }
       // 랜덤 주제 2번
@@ -141,6 +150,10 @@ function MeetingPage() {
   const [volume, setVolume] = useState(1);
   const [muted, setMuted] = useState(false);
   useEffect(() => {
+    dispatch(setMeetingRoomId(roomId));
+  }, [roomId, dispatch]);
+
+  useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
       audioRef.current.muted = muted;
@@ -161,7 +174,7 @@ function MeetingPage() {
     if (firstSignal) {
       setTimeout(() => {
         setFirstSignal(false);
-      }, 30000);
+      }, 20000);
     }
   }, [firstSignal]);
 
@@ -202,6 +215,8 @@ function MeetingPage() {
       dispatch(setRating(data.content.roomMemberInfo.member.rating)); // 변경 후 레이팅 저장
       dispatch(setRatingChange(data.content.ratingChange)); // 레이팅 변화값 저장
       dispatch(setMatchMemberId(data.content.matchMemberId)); // 매칭된 상대방 저장
+      dispatch(setMeetingCount(data.content.roomMemberInfo.member.meetingCount)); // 미팅 카운트 증가
+      dispatch(setRemainLife(data.content.remainLife)); // 라이프 감소
       navigate(`/sub-meeting/${roomId}`, { replace: true });
     } else {
       setGuideMessage(

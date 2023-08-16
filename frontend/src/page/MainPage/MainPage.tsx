@@ -121,9 +121,6 @@ function MainPage() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const createRoom = () => {
-  //   console.log('방 만들기');
-  // };
 
   // 방목록 페이지 넘기기
   const nextRoomList = async () => {
@@ -187,9 +184,9 @@ function MainPage() {
   //메기 매칭
   const megiMatch = async () => {
     const memberId = member.memberId;
-
+    const queueType = 'special';
     try {
-      const res = await axios.post(`api/match/members/${memberId}/special`);
+      const res = await axios.post(`api/match/members/${memberId}/${queueType}`);
 
       if (res.status === 200) {
         console.log('메기 매치 응답 : ', res.data);
@@ -262,7 +259,6 @@ function MainPage() {
                   femaleMemberCount={room.femaleMemberCount}
                   maleAvgRating={room.maleAvgRating}
                   femaleAvgRating={room.femaleAvgRating}
-                  megiAcceptable={room.megiAcceptable}
                   ratingLimit={room.ratingLimit}
                 />
               ))

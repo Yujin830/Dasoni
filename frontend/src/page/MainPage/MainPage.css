@@ -49,7 +49,7 @@
 #main #filter-box {
   width: 4rem;
   position: relative;
-  /* margin-right: 1.5rem; */
+  margin-right: 1.5rem;
 }
 
 #main #filter-box .filter-btn {
@@ -57,6 +57,10 @@
   height: 2.5rem;
   border-radius: 6.25rem;
   background: rgba(238, 114, 165, 0.5);
+}
+
+#main #filter-box .filter-btn .content-box {
+  color: black;
 }
 
 #main #filter-box ul {
@@ -147,6 +151,9 @@
   font-size: 3vh;
   font-weight: 600;
 }
+#main #room-footer #btn-box .create-room-btn:hover {
+  background: #e4b725;
+}
 
 #main #room-footer #btn-box .fast-match-btn {
   width: 20%;
@@ -157,6 +164,10 @@
   font-size: 3vh;
   font-weight: 600;
 }
+#main #room-footer #btn-box .fast-match-btn:hover {
+  background: #d43873;
+}
+
 #main #room-footer #btn-box .megi-match-btn {
   width: 20%;
   height: 100%;
@@ -165,6 +176,9 @@
   color: #fff;
   font-size: 3vh;
   font-weight: 600;
+}
+#main #room-footer #btn-box .megi-match-btn:hover {
+  background: #00979c;
 }
 
 #main #room-footer #btn-box button:first-child {
@@ -189,6 +203,11 @@
   background: #ffe8ef;
   color: #555;
   font-size: 2vh;
+}
+
+#main #room-footer #pagenationBtn-box .page-btn:hover {
+  background: #f2bccc;
+  color: black;
 }
 
 #main #room-footer #pagenationBtn-box button:first-child {
@@ -275,9 +294,21 @@
   .btn span.content-box .material-symbols-outlined {
     font-size: 2.5vh;
   }
+  #main #filter-box {
+    margin-right: 0;
+  }
 }
 @media (max-width: 390px) {
   #main #room-footer #pagenationBtn-box .page-btn {
     width: 25%;
+  }
+  #main #room-footer #btn-box .create-room-btn {
+    font-size: 2.3vh;
+  }
+  #main #room-footer #btn-box .fast-match-btn {
+    font-size: 2.3vh;
+  }
+  #main #room-footer #btn-box .megi-match-btn {
+    font-size: 2.3vh;
   }
 }

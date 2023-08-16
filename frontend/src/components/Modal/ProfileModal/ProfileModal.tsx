@@ -19,11 +19,21 @@ function ProfileModal({ onClose }: ProfileModalProps) {
   const [modifySido, setModifySido] = useState<number>(-1);
   const [modifyGugun, setModifyGugun] = useState<number>(0);
   const [nickNameError, setNickNameError] = useState<string | null>(null);
+  const [jobError, setJobError] = useState<string | null>(null);
+
   const dispatch = useAppDispatch(); // Ensure you have this dispatch defined.
   const navigate = useNavigate();
 
-  const handleChangeJob = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setJob(event.target.value);
+  const handleChangeJob = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setJob(value);
+
+    if (value.length > 6) {
+      setJobError('직업은 6글자 이내로 입력해주세요');
+    } else {
+      setJobError(null);
+    }
+  };
 
   const handleChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -45,7 +55,12 @@ function ProfileModal({ onClose }: ProfileModalProps) {
     event.preventDefault();
 
     if (!nickname || nickname.length > 10 || !job) {
-      window.alert('모든 내용를 올바르게 입력해주세요.');
+      window.alert('닉네임이 너무 깁니다.');
+      return;
+    }
+
+    if (!job || job.length > 10 || !job) {
+      window.alert('직업이 너무 깁니다.');
       return;
     }
 
@@ -103,6 +118,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
               placeholer="직업을 입력해주세요"
             />
           </div>
+          {jobError && <div className="nickname-error-message">{jobError}</div>}
           <div className="input address">
             <AddressSelecter
               modifySido={modifySido}

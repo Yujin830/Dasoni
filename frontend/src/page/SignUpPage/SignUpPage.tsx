@@ -236,7 +236,6 @@ function SignupPage() {
             </div>
           </div>
           <div className="signup-phone">
-            {/* <label htmlFor="label phone">전화번호</label> */}
             <div className="label-name">전화번호</div>
             <Input
               classes="signup-input"
@@ -245,12 +244,11 @@ function SignupPage() {
               handleChange={handleChangePhone}
               placeholer="000-0000-0000"
             />
-            <div className="button-certify">
+            {/* <div className="button-certify">
               <Button classes="check-btn" content="인증하기" handleClick={Certify} />
-            </div>
+            </div> */}
           </div>
         </div>
-
         <div className="button-signup">
           <div className="btn">
             <Button classes="signup-btn" content="가입하기" handleClick={Signup} />
