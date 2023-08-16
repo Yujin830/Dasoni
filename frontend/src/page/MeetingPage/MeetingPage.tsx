@@ -166,7 +166,7 @@ function MeetingPage() {
       try {
         const response = await axios.get<string>(`/api/rooms/${roomId}/elapsedTime`);
         const elapsedSeconds = parseInt(response.data, 10);
-
+        console.log('시간', elapsedSeconds);
         setCurrentTime(calculateElapsedTime(elapsedSeconds));
       } catch (error) {
         console.error('Failed to fetch elapsed time:', error);

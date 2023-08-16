@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,11 @@ import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
+import signiel.heartsigniel.model.room.Room;
+import signiel.heartsigniel.model.room.RoomRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,10 +41,11 @@ public class WebSocketController {
     private final QuestionService questionService;
     private final SignalService signalService;
     private final MatchingRoomService matchingRoomService;
+    private final RoomRepository roomRepository;
 
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService, MatchingRoomService matchingRoomService) {
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService, MatchingRoomService matchingRoomService, RoomRepository roomRepository) {
         this.operations = operations;
         this.privateRoomService = privateRoomService;
         this.guideRepository = guideRepository;
@@ -47,6 +53,19 @@ public class WebSocketController {
         this.questionService = questionService;
         this.signalService = signalService;
         this.matchingRoomService = matchingRoomService;
+        this.roomRepository = roomRepository;
+    }
+
+
+    @MessageMapping("room/{roomId}/setTime")
+    public void sendTime(@DestinationVariable Long roomId){
+        Room room = roomRepository.findById(roomId).get();
+        LocalDateTime startTime = room.getStartTime();
+        Duration duration = Duration.between(startTime, LocalDateTime.now());
+
+        Long time = duration.getSeconds();
+
+        operations.convertAndSend("/topic/room/"+roomId+"/setTime", time);
     }
 
     /**

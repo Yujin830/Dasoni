@@ -56,7 +56,7 @@ public class MatchingService {
         if (lifeService.countRemainingLives(memberId) == 0){
             return Response.of(LifeCode.LACK_OF_LIFE, null);
         }
-        if (roomMemberRepository.findRoomMemberByMember(member) != null){
+        if (roomMemberRepository.findRoomMemberByMember(member) == null){
             return Response.of(MatchingCode.PENALTY_FOR_LEAVING_EARLY, null);
         }
         RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender(), type);

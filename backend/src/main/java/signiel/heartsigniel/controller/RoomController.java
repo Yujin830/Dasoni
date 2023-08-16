@@ -37,10 +37,10 @@ public class RoomController {
     }
 
     @GetMapping("{roomId}/elapsedTime")
-    public Duration getElapsedTime(@PathVariable Long roomId){
+    public ResponseEntity<Long> getElapsedTime(@PathVariable Long roomId){
         LocalDateTime startTime = privateRoomService.getRoomStartTime(roomId);
         Duration duration = Duration.between(startTime, LocalDateTime.now());
-        return duration;
+        return ResponseEntity.ok(duration.getSeconds());
     }
 
     @PostMapping("/{roomId}/members/{memberId}")
