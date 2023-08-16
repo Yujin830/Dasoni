@@ -19,7 +19,12 @@ import signiel.heartsigniel.model.question.Question;
 import signiel.heartsigniel.model.question.QuestionService;
 import signiel.heartsigniel.model.room.MatchingRoomService;
 import signiel.heartsigniel.model.room.PrivateRoomService;
+import signiel.heartsigniel.model.room.Room;
+import signiel.heartsigniel.model.room.RoomRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,12 +40,13 @@ public class WebSocketController {
     private final QuestionService questionService;
     private final SignalService signalService;
     private final MatchingRoomService matchingRoomService;
+    private final RoomRepository roomRepository;
 
 
 
     private final Map<Long, List<Question>> questionListPerRoom = new ConcurrentHashMap<>();
 
-    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService, MatchingRoomService matchingRoomService) {
+    public WebSocketController(SimpMessageSendingOperations operations, PrivateRoomService privateRoomService, GuideRepository guideRepository, ChatService chatService, QuestionService questionService, SignalService signalService, MatchingRoomService matchingRoomService, RoomRepository roomRepository) {
         this.operations = operations;
         this.privateRoomService = privateRoomService;
         this.guideRepository = guideRepository;
@@ -48,6 +54,25 @@ public class WebSocketController {
         this.questionService = questionService;
         this.signalService = signalService;
         this.matchingRoomService = matchingRoomService;
+        this.roomRepository = roomRepository;
+    }
+
+
+    @MessageMapping("room/{roomId}/megiEnter")
+    public void megiTimeSetting(@DestinationVariable Long roomId){
+        Room room = roomRepository.findById(roomId).get();
+
+        LocalDateTime nowTime = LocalDateTime.now();
+
+        Duration calculateTime = Duration.between(nowTime, room.getStartTime());
+
+        Long seconds = calculateTime.getSeconds();
+
+        log.info("calculateTotalTime" + calculateTime);
+        log.info("calculateSecond" + calculateTime.getSeconds());
+
+
+        operations.convertAndSend("/topic/room/"+roomId+"/megiEnter", seconds);
     }
 
     /**
