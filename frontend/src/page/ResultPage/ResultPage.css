@@ -3,12 +3,17 @@
 }
 
 #result-page main {
-  margin: 2rem 1rem;
+  height: 85%;
+  position: relative;
+  overflow: hidden;
+  /* margin-top: 2rem; */
+  margin: 1rem;
   text-align: center;
 }
 
 #result-page main #title-box {
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
+  height: 20%;
 }
 
 #result-page main #title-box .title {
@@ -26,42 +31,36 @@
 }
 
 #result-page main #user-info-box {
-  margin-bottom: 1.5rem;
+  /* margin-bottom: 1.5rem; */
+  height: 60%;
+  display: flex;
+  align-items: center;
 }
 
+#result-page main .show-rating {
+  height: 10%;
+}
 #result-page main .result-rating {
   font-size: 2rem;
   font-weight: 700;
   color: #232323;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 #result-page main .buttons {
   display: flex;
+  height: 10%;
   justify-content: flex-end;
-}
-
-#result-page main .buttons .extend-btn {
-  border: 1px solid #ec5e98;
-  background-color: #fff;
-  font-size: 1.1rem;
-  color: #ec5e98;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  width: auto;
-  padding: 0.8rem 2.2rem;
-  margin-right: 1.2rem;
-  cursor: pointer;
 }
 
 #result-page main .buttons .to-main-btn {
   background-color: #ec5e98;
+  height: 100%;
   font-size: 1.1rem;
   color: #fff;
-  padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   width: auto;
-  padding: 0.8rem 2.2rem;
+  width: 10rem;
 }
 
 #result-page #success-result .rank-avartar {
@@ -95,5 +94,11 @@
   }
   #result-page main .result-rating {
     font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 426px) {
+  #result-page main .buttons .to-main-btn {
+    width: 6rem;
   }
 }
