@@ -15,12 +15,13 @@
 }
 
 .message-container {
-  overflow-y: scroll;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
   padding-right: 0.5rem;
+  height: 100%;
 }
 
 /*scroll bar 스타일 지정 */
