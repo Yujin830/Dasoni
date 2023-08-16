@@ -70,23 +70,8 @@ function Header({ onModalToggle }: HeaderProps) {
   };
 
   // 사이드바 데이터 반영
-  const { rating, gender, matchCnt, profileImageSrc } = useAppSelector((state) => state.user);
+  const { rating, profileImageSrc } = useAppSelector((state) => state.user);
 
-  // 프로필 이미지 설정 안했을 때 default 이미지 설정
-  if (profileImageSrc == 'null') {
-    if (gender == 'female')
-      dispatch(
-        setProfileImageSrc(
-          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg',
-        ),
-      );
-    else
-      dispatch(
-        setProfileImageSrc(
-          'https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg',
-        ),
-      );
-  }
   return (
     <header className="header">
       <button className="material-symbols-outlined header-mobile" onClick={ToggleSidebar}>
