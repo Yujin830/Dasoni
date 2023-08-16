@@ -65,11 +65,13 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
         <h2>{isMatching ? '매칭중...' : isMatched ? '매칭완료!' : ''}</h2>
         <Hearts color="red" />
         {isMatched && <div>3초 후에 방으로 이동합니다.</div>}
-        <div className="matching-button">
-          <button className="close-button" onClick={handleCancel}>
-            매칭 취소
-          </button>
-        </div>
+        {isMatched ? null : (
+          <div className="matching-button">
+            <button className="close-button" onClick={handleCancel}>
+              매칭 취소
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
