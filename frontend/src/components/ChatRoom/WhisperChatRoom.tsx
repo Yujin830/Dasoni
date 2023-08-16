@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import { useAppSelector } from '../../app/hooks';
 import './WhisperChatRoom.css';
 import { useWebSocket } from '../../hooks/useWebSocket';
+import Loading01 from '../Loading/Loading';
 
 interface ChatMessage {
   senderNickname: '';
@@ -25,16 +26,19 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
   const { memberId } = useAppSelector((state) => state.user);
   const messageRef = useRef<HTMLDivElement | null>(null);
   const member = useAppSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
 
   const client = useWebSocket({
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}/chat`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
+        setIsLoading(false);
         setMessages((messages) => [...messages, chatMessage]);
       });
 
       client.subscribe(`/topic/room/${roomId}/whisper/${memberId}`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
+        // setIsLoading(false);
         console.log('chatmessage', chatMessage);
         setMessages((messages) => [...messages, chatMessage]);
       });
@@ -97,19 +101,26 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
 
   return (
     <div className="chat-room">
-      <div className="message-container" ref={messageRef}>
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
-          >
-            <strong>{msg.senderNickname}</strong>
-            {msg.content !== '상대방에게 마음이 전달되었어요.'
-              ? `누군가 : ${msg.content}`
-              : ` ${msg.content}`}
+      {isLoading ? (
+        <Loading01 />
+      ) : (
+        // 로딩이 완료되면 실제 대기방 UI를 렌더링합니다.
+        <>
+          <div className="message-container" ref={messageRef}>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
+              >
+                <strong>{msg.senderNickname}</strong>
+                {msg.content !== '상대방에게 마음이 전달되었어요.'
+                  ? `누군가 : ${msg.content}`
+                  : ` ${msg.content}`}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
       <form onSubmit={handleFormSubmit} className="chat-input">
         <select
           className="diff-member-selector"
