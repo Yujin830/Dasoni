@@ -39,11 +39,6 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
       dispatch(setRatingChange(-100)); // 레이팅 변화값 저장
       if (rating !== undefined) dispatch(setRating(rating - 100));
 
-      // 대기방 나가기 처리
-      console.log('나가기 roomId', roomId);
-      console.log('나가기 memmemberId', memberId);
-      await axios.delete(`/api/rooms/${roomId}/members/${memberId}`);
-
       // 메인으로 이동
       navigate('/result', { replace: true });
     }
