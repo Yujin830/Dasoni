@@ -7,7 +7,7 @@ const snowflakeAnimation = keyframes`
     opacity: 0;
   }
   100% {
-    transform: translateY(80vh) translateX(calc(100vw * var(--x)));
+    transform: translateY(100vh) translateX(calc(100vw * var(--x)));
     opacity: 1;
   }
 `;
