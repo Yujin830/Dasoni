@@ -17,9 +17,7 @@ import { setMatchMemberId, setRatingChange, setMeetingRoomId } from '../../app/s
 import { useDispatch } from 'react-redux';
 function MeetingPage() {
   const { roomId } = useParams();
-  const { memberId, nickname, gender, job, birth, remainLife } = useAppSelector(
-    (state) => state.user,
-  );
+  const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
     memberId !== undefined ? memberId : 0,
     nickname !== undefined ? nickname : '',

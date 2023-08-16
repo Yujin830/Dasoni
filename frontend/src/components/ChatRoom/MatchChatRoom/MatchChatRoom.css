@@ -1,0 +1,29 @@
+#match-chat-room {
+  position: relative;
+}
+
+#match-chat-room.chat-room .message-container {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 25px;
+}
+
+#match-chat-room .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#match-chat-room .close-btn:hover {
+  color: #ff257e;
+}
+
+#match-chat-room .message-other {
+  align-self: flex-start;
+  background-color: #ffe8ef;
+}

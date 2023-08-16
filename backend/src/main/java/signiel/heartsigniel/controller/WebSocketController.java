@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import signiel.heartsigniel.model.chat.ChatService;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
+import signiel.heartsigniel.model.chat.dto.MatchMemberMessage;
 import signiel.heartsigniel.model.chat.dto.MemberEntryExitDto;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.GuideRepository;
@@ -220,4 +221,14 @@ public class WebSocketController {
     }
 
 
+
+    /***
+     * 매칭된 상대와 채팅
+     * @param MatchMemberMessage : receiverId, gender, content로 구성
+     */
+    @MessageMapping("mypage/chat/{chattingMemberId}")
+    public void mathchChatting(@DestinationVariable Long chattingMemberId, @Payload MatchMemberMessage matchMemberMessage) {
+        operations.convertAndSend("/queue/mypage/chat/"+ chattingMemberId + "/" + matchMemberMessage.getMemberId(), matchMemberMessage);
+        operations.convertAndSend("/queue/mypage/chat/"+ matchMemberMessage.getMemberId() + "/" + chattingMemberId, matchMemberMessage);
+    }
 }
