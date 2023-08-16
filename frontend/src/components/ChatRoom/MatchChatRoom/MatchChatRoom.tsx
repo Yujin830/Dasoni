@@ -5,10 +5,10 @@ import { useWebSocket } from '../../../hooks/useWebSocket';
 import './MatchChatRoom.css';
 
 interface ChatMessage {
-  senderNickname: string;
+  memberId: number | undefined;
+  receiverId: number;
+  senderNickname: string | undefined;
   content: string;
-  timestamp: Date;
-  isUserMessage?: boolean;
 }
 
 interface MatchChatRoomProps {
@@ -35,19 +35,6 @@ function MatchChatRoom({ chattingMemberId, setSendBtn }: MatchChatRoomProps) {
         setMessages((messages) => [...messages, chatMessage]);
         console.log(messages);
       });
-
-      // 입장 및 퇴장 메시지에 대한 구독 추가
-      client.subscribe(`/queue/mypage/chat/${member.memberId}`, (res: any) => {
-        const chatMessage: ChatMessage = JSON.parse(res.body);
-        console.log(chatMessage);
-        // 메시지 내용이 입장이나 퇴장 메시지인 경우에만 처리
-        if (
-          chatMessage.content.includes(`입장하셨습니다.`) ||
-          chatMessage.content.includes(`퇴장하셨습니다.`)
-        ) {
-          setMessages((messages) => [...messages, chatMessage]);
-        }
-      });
     },
   });
 
@@ -70,11 +57,9 @@ function MatchChatRoom({ chattingMemberId, setSendBtn }: MatchChatRoomProps) {
         {},
         JSON.stringify({
           memberId: member.memberId,
+          receiverId: chattingMemberId,
           senderNickname: member.nickname,
           content: newMessage,
-          timestamp: new Date(),
-          isUserMessage: true,
-          receiverId: chattingMemberId,
         }),
       );
       console.log(member);
@@ -109,7 +94,9 @@ function MatchChatRoom({ chattingMemberId, setSendBtn }: MatchChatRoomProps) {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
+                className={`message ${
+                  member.nickname === msg.senderNickname ? 'message-own' : 'message-other'
+                }`}
               >
                 {msg.content.includes(`입장하셨습니다.`) ||
                 msg.content.includes(`퇴장하셨습니다.`) ? (

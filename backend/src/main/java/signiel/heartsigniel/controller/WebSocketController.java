@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import signiel.heartsigniel.model.chat.ChatService;
 import signiel.heartsigniel.model.chat.dto.ChatMessage;
+import signiel.heartsigniel.model.chat.dto.MatchMemberMessage;
 import signiel.heartsigniel.model.chat.dto.MemberEntryExitDto;
 import signiel.heartsigniel.model.chat.dto.WhisperMessage;
 import signiel.heartsigniel.model.guide.GuideRepository;
@@ -220,24 +221,14 @@ public class WebSocketController {
     }
 
 
+
     /***
      * 매칭된 상대와 채팅
-     * @param whisperMessage : receiverId, gender, content로 구성
+     * @param MatchMemberMessage : receiverId, gender, content로 구성
      */
     @MessageMapping("mypage/chat/{chattingMemberId}")
-    public void MathchChatting(@DestinationVariable Long chattingMemberId, @Payload WhisperMessage whisperMessage) {
-        System.out.println("match chatting");
-        System.out.println("chattingMemberId " + chattingMemberId);
-        System.out.println("whisperMessage " + whisperMessage);
-        whisperMessage.setStatus("OK");
-        int sequence = 1;
-        int senderId = Integer.parseInt(whisperMessage.getMemberId());
-        int receiverId = Math.toIntExact(chattingMemberId);
-
-        SingleSignalRequest signalRequest = new SingleSignalRequest(sequence, senderId, receiverId);
-//        signalService.storeSignalInRedis(roomId, signalRequest);
-
-        operations.convertAndSend("/queue/mypage/chat/"+ chattingMemberId + "/" + whisperMessage.getMemberId(), whisperMessage);
+    public void mathchChatting(@DestinationVariable Long chattingMemberId, @Payload MatchMemberMessage matchMemberMessage) {
+        operations.convertAndSend("/queue/mypage/chat/"+ chattingMemberId + "/" + matchMemberMessage.getMemberId(), matchMemberMessage);
+        operations.convertAndSend("/queue/mypage/chat/"+ matchMemberMessage.getMemberId() + "/" + chattingMemberId, matchMemberMessage);
     }
-
 }
