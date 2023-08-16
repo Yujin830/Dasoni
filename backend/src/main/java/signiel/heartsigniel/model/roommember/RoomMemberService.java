@@ -1,21 +1,15 @@
 package signiel.heartsigniel.model.roommember;
 
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.dto.Response;
 import signiel.heartsigniel.model.meeting.RatingService;
 import signiel.heartsigniel.model.meeting.dto.PersonalResult;
 import signiel.heartsigniel.model.member.Member;
 import signiel.heartsigniel.model.room.Room;
-import signiel.heartsigniel.model.room.RoomRepository;
-import signiel.heartsigniel.model.room.code.RoomCode;
-import signiel.heartsigniel.model.room.exception.NotFoundRoomException;
 import signiel.heartsigniel.model.roommember.code.RoomMemberCode;
 import signiel.heartsigniel.model.roommember.exception.NotFoundRoomMemberException;
 
 import javax.transaction.Transactional;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 
 @Service
@@ -23,12 +17,10 @@ import java.time.LocalDateTime;
 public class RoomMemberService {
     private final RoomMemberRepository roomMemberRepository;
     private final RatingService ratingService;
-    private final RoomRepository roomRepository;
 
-    public RoomMemberService(RoomMemberRepository roomMemberRepository,RatingService ratingService, RoomRepository roomRepository){
+    public RoomMemberService(RoomMemberRepository roomMemberRepository,RatingService ratingService){
         this.roomMemberRepository = roomMemberRepository;
         this.ratingService = ratingService;
-        this.roomRepository = roomRepository;
     }
 
     public RoomMember createRoomMember(Member member, Room room, boolean isSpecialUser){
