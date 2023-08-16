@@ -11,6 +11,7 @@ export const useWebSocket = ({ subscribe, onClientReady }: Param) => {
   // WebSocket 엔드포인트 URL을 여기에 입력합니다.
   const webSocketUrl = '/ws/chat';
   const [client, setClient] = useState<CompatClient | undefined>(undefined);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const socket = new SockJS(webSocketUrl);
@@ -22,10 +23,12 @@ export const useWebSocket = ({ subscribe, onClientReady }: Param) => {
       // 원하는 토픽이나 큐에 stompClient.subscribe()를 사용하여 구독할 수 있습니다.
       // 예시: stompClient.subscribe('/topic/someTopic', onMessageReceived);
       subscribe(stompClient);
+      setIsConnected(true);
     };
 
     const onDisconnected = () => {
       console.log('WebSocket 연결이 끊어졌습니다.');
+      setIsConnected(false);
     };
 
     const onError = (error: any) => {
@@ -42,7 +45,7 @@ export const useWebSocket = ({ subscribe, onClientReady }: Param) => {
   }, [webSocketUrl]);
 
   useEffect(() => {
-    if (client && onClientReady) {
+    if (client && isConnected && onClientReady) {
       onClientReady(client);
     }
   }, [client, onClientReady]);
