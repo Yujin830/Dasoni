@@ -1,18 +1,19 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import '../Modal.css';
 import './HelpModal.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Pagination, Navigation } from 'swiper';
+// import SwiperCore from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
-import './HelpModal.css';
-import '../Modal.css';
 
 interface HelpModalProps {
   onClose: () => void;
 }
+
+// SwiperCore.use([Navigation, Pagination]);
 
 const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
   return (
