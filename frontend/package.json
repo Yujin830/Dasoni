@@ -5,6 +5,8 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@stomp/stompjs": "^7.0.0",
+    "@tensorflow-models/blazeface": "^0.1.0",
+    "@tensorflow/tfjs": "^4.10.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
@@ -14,6 +16,7 @@
     "@types/redux-persist": "^4.3.1",
     "axios": "^1.4.0",
     "event-source-polyfill": "^1.0.31",
+    "face-api.js": "^0.22.2",
     "firebase": "^10.1.0",
     "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^2.0.6",
