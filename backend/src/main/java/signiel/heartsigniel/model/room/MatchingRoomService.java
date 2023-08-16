@@ -79,7 +79,7 @@ public class MatchingRoomService {
 
     public Response enqueueRoom(Long roomId) {
         // Redis에서 해당 roomId의 요청이 진행 중인지 확인
-        Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
+        Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_enqueue_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
 
         if (Boolean.TRUE.equals(isAbsent)) {
             // 중복 요청이 아님. 처리 계속 진행
