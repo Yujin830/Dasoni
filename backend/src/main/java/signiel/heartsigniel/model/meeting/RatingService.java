@@ -72,9 +72,6 @@ public class RatingService {
             if (roomType.equals("match")) {
                 Long myRating = member.getRating();
                 ratingChange = calculateRatingChange(myRating, avgRating, rank, K_FACTOR, roomMemberSize);
-                if (scoreBoard[roomMemberSequence.get(memberId.intValue())] == -1){
-                    ratingChange = -100L;
-                }
                 saveMemberRating(member, myRating + ratingChange);
             }
             int signalOpponent = mutuallySignaledList[roomMemberSequence.get(memberId.intValue())];
@@ -147,9 +144,6 @@ public class RatingService {
 
     public int[] calculatePersonalScore(List<SingleSignalRequest> singleSignalRequests, List<RoomMember> roomMembers, List<int[][]> signalBoards, Map<Integer, Integer> roomMemberSequence) {
 
-        // 시그널 전송 횟수 계산을 위한 리스트
-        int[] signalCount = new int[roomMembers.size()];
-
         // 3:3, 4:4 구분
         int roomMemberSize = roomMembers.size();
 
@@ -161,17 +155,6 @@ public class RatingService {
             int[] scoreBoard = calculateSignalScore(signalBoards.get(i), i+1);
             for (int j = 0; j < roomMemberSize; j++) {
                 finalScore[j] += scoreBoard[j];
-            }
-        }
-        for (SingleSignalRequest singleSignalRequest : singleSignalRequests) {
-            int senderIndex = roomMemberSequence.get(singleSignalRequest.getSenderId());
-            signalCount[senderIndex]++;
-        }
-
-// 시그널을 1번 혹은 0번 보낸 사용자의 점수 조절
-        for (int i = 0; i < signalCount.length; i++) {
-            if (signalCount[i] <= 1) {
-                finalScore[i] = -1;
             }
         }
 
