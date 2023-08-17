@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Header from '../../components/Header/Header';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import './MainPage.css';
 import Banner from '../../components/Banner/Banner';
 import IconButton from '../../components/Button/IconButton';
@@ -175,9 +175,14 @@ function MainPage() {
       } else {
         alert('빠른 매칭 중 오류가 발생했습니다.');
       }
-    } catch (error) {
-      console.log('빠른 매칭 오류', error);
-      alert('빠른 매칭 중 오류가 발생했습니다.');
+    } catch (err) {
+      const error = err as AxiosError;
+      if (error.response && error.response.status === 403) {
+        alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
+      } else {
+        console.log('빠른 매칭 오류', error);
+        alert('빠른 매칭 중 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -194,9 +199,14 @@ function MainPage() {
       } else {
         alert('메기 매칭 중 오류가 발생했습니다.');
       }
-    } catch (error) {
-      console.log('메기 매칭 오류', error);
-      alert('메기 매칭 중 오류가 발생했습니다.');
+    } catch (err) {
+      const error = err as AxiosError;
+      if (error.response && error.response.status === 403) {
+        alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
+      } else {
+        console.log('메기 매칭 오류', error);
+        alert('메기 매칭 중 오류가 발생했습니다.');
+      }
     }
   };
 
