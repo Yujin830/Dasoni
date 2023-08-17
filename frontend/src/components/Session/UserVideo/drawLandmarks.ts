@@ -1,13 +1,13 @@
-// drawLandmarks.ts
-import { Point } from './Point'; // 현재 파일과 동일한 경로에 있는 Point.ts 파일
+import { Point } from 'face-api.js';
 
-function drawLandmarks(ctx: CanvasRenderingContext2D, landmarks: Point[]) {
-  // draw landmarks using ctx
-  landmarks.forEach((landmark) => {
-    ctx.beginPath();
-    ctx.arc(landmark.x, landmark.y, 2, 0, 2 * Math.PI);
-    ctx.fillStyle = 'red';
-    ctx.fill();
+function drawLandmarks(context: CanvasRenderingContext2D, landmarks: Point[]) {
+  context.strokeStyle = '#FF0000'; // 빨간색 선으로 표시
+  context.lineWidth = 2;
+
+  landmarks.forEach((point) => {
+    context.beginPath();
+    context.arc(point.x, point.y, 2, 0, 2 * Math.PI);
+    context.stroke();
   });
 }
 

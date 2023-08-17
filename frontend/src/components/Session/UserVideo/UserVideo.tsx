@@ -14,6 +14,8 @@ import { setFinalSignalReceiver } from '../../../app/slices/meetingSlice';
 import * as faceapi from 'face-api.js';
 import drawLandmarks from './drawLandmarks'; // 수정된 drawLandmarks 파일 경로
 
+import eyeImageSrc from '../../../assets/image/eye_mask.png';
+
 interface UserVideoProps {
   streamManager: StreamManager;
   nickname: string;
@@ -40,41 +42,76 @@ function UserVideo({
 
   const dispatch = useDispatch();
 
-  const handleSendSignal = async () => {
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null); // 이 부분을 상위 scope에서 초기화
+  const [videoWidth, setVideoWidth] = useState(0);
+  const [videoHeight, setVideoHeight] = useState(0);
 
-    useEffect(() => {
-      async function setupCamera() {
-        const video = videoRef.current!;
-        const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-        video.srcObject = stream;
+  const handleMetadataLoad = () => {
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      setVideoWidth(videoElement.videoWidth); // 비디오 너비를 상태에 설정
+      setVideoHeight(videoElement.videoHeight); // 비디오 높이를 상태에 설정
+    }
+  };
+  useEffect(() => {
+    // 비디오 엘리먼트 메타데이터 로드 시점에 실행될 함수
 
-        return new Promise<void>((resolve) => {
-          video.onloadedmetadata = () => {
-            resolve();
-          };
-        });
-      }
+    console.log(videoHeight + ' ' + videoWidth + 'hhhhhhhhhhhhhhhhhhhhhhh');
+    // 비디오 엘리먼트에 loadedmetadata 이벤트 리스너 추가
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.addEventListener('loadedmetadata', handleMetadataLoad);
+    }
 
-      async function loadFaceAPI() {
-        await faceapi.nets.tinyFaceDetector.loadFromUri('/models'); // tinyFaceDetector 모델 로드
-      }
+    async function setupCamera() {
+      const video = videoRef.current!;
+      const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+      video.srcObject = stream;
 
-      async function detectFaceAndDrawOverlay() {
-        const video = videoRef.current!;
+      return new Promise<void>((resolve) => {
+        video.onloadedmetadata = () => {
+          resolve();
+        };
+      });
+    }
+
+    async function loadFaceAPI() {
+      await faceapi.nets.tinyFaceDetector.loadFromUri('/models'); // 얼굴 감지 모델 로드
+      await faceapi.nets.faceLandmark68Net.loadFromUri('/models'); // 랜드마크 감지 모델 로드
+    }
+
+    async function detectFaceAndDrawOverlay() {
+      const video = videoRef.current!;
+      video.play();
+
+      video.addEventListener('canplay', async () => {
         const canvas = canvasRef.current!;
-        canvas.width = video.width;
-        canvas.height = video.height;
 
-        const displaySize = { width: video.width, height: video.height };
+        if (!canvas) {
+          return; // canvas가 유효하지 않으면 중지
+        }
+
+        canvas.width = videoWidth;
+        canvas.height = videoHeight;
+
+        const displaySize = { width: videoWidth, height: videoHeight };
+        console.log('===============' + videoWidth + ' ' + videoHeight);
         const faceCanvas = faceapi.createCanvasFromMedia(video);
         document.body.append(faceCanvas);
 
         const ctx = canvas.getContext('2d')!;
         const faceCtx = faceCanvas.getContext('2d')!;
 
-        video.play();
+        // Overlay image on eyes (example: 'eye_image.png')
+        const eyeImage = new Image();
+        // import('../../../assets/image/eye_mask.png').then((image) => {
+        //   setRankImg(image.default);
+        // });
+        eyeImage.src = eyeImageSrc;
+        console.log('=========================================' + eyeImage.src);
+        await eyeImage.onload; // 이미지 로드가 완료될 때까지 대기
 
+        console.log(eyeImage.src);
         async function detectFace() {
           const faceDetections = await faceapi.detectAllFaces(
             video,
@@ -84,7 +121,7 @@ function UserVideo({
           faceCtx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
 
           if (faceDetections.length > 0) {
-            const face = faceDetections[0];
+            // const face = faceDetections[0];
             const landmarks = await faceapi.detectFaceLandmarks(video);
 
             // Draw landmarks on the faceCanvas
@@ -95,36 +132,39 @@ function UserVideo({
               drawLandmarks(faceCtx, leftEye);
               drawLandmarks(faceCtx, rightEye);
 
-              // Overlay image on eyes (example: 'eye_image.png')
-              const eyeImage = new Image();
-              eyeImage.src = '/path/to/eye_image.png';
+              // 이미지 그리기 작업
+              const eyeWidth = rightEye[3].x - leftEye[0].x;
+              const eyeHeight = (rightEye[4].y + rightEye[5].y) / 2 - rightEye[1].y; // 수정된 부분
+              const eyeX = leftEye[0].x;
+              const eyeY = leftEye[1].y - eyeHeight / 2;
 
-              eyeImage.onload = () => {
-                const eyeWidth = rightEye[3].x - leftEye[0].x;
-                const eyeHeight = (leftEye[4].y + leftEye[5].y) / 2 - leftEye[1].y;
-                const eyeX = leftEye[0].x;
-                const eyeY = leftEye[1].y - eyeHeight / 2;
+              // console.log(eyeWidth + ' ' + eyeHeight + 'eyeeeeeeeeeeeeeeeeeeeee');
 
-                ctx.drawImage(eyeImage, eyeX, eyeY, eyeWidth, eyeHeight);
-              };
+              ctx.drawImage(eyeImage, eyeX, eyeY, eyeWidth, eyeHeight);
             }
           }
-
           requestAnimationFrame(detectFace);
         }
-
         detectFace();
+      });
+    }
+
+    async function main() {
+      await setupCamera();
+      await loadFaceAPI();
+      detectFaceAndDrawOverlay();
+    }
+
+    main();
+    // 언마운트 시 이벤트 리스너 제거
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener('loadedmetadata', handleMetadataLoad);
       }
+    };
+  }, [videoRef]);
 
-      async function main() {
-        await setupCamera();
-        await loadFaceAPI();
-        detectFaceAndDrawOverlay();
-      }
-
-      main();
-    }, []);
-
+  const handleSendSignal = async () => {
     console.log(finalSignalReceiver);
     if (
       finalSignalReceiver === 0 &&
@@ -161,6 +201,7 @@ function UserVideo({
       <video className="stream-video" ref={videoRef}>
         <track kind="captions"></track>
       </video>
+      <canvas className="face-canvas" ref={canvasRef}></canvas>
       {signalOpen && (
         <button className="meeting-signal" onClick={handleSendSignal}>
           <span className={`material-symbols-outlined ${isSendSignal ? 'sended' : ''}`}>
