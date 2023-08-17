@@ -110,7 +110,7 @@ public class MemberService {
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
 
-            System.out.println(request.getLoginId() + " " + member.getRoles());
+
             memberRepository.save(member);
 
         } catch (Exception e) {
@@ -181,7 +181,6 @@ public class MemberService {
             member.setRoles(list);
         }
 
-        System.out.println("======================="+file);
 
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
@@ -198,7 +197,7 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"+member.getProfileImageSrc());
+
         return member.getProfileImageSrc();
 //        else return "null";
     }
@@ -220,7 +219,6 @@ public class MemberService {
             return "Update OK";
         }else{
 //            Image memberImage = imageRepo.findImageByAccessUrl(member.getProfileImageSrc());
-//            System.out.println("memberImage : "+ memberImage.getOriginName());
 //            imageService.deleteImage(memberImage.getStoredName());
             member.setProfileImageSrc(imageService.saveImage(image));
             memberRepository.save(member);
