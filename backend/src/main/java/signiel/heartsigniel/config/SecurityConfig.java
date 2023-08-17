@@ -86,7 +86,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/api/rooms").permitAll()
                 .antMatchers("/api/rooms/filter/**","/api/rooms/search/**","/api/alarm","/app/**","/topic/**","/ws/**","/api/chat/**","/api/register/**", "/api/login", "/api/guide", "/api/warn/**", "/api/users/**", "/api/question").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
-                .antMatchers(HttpMethod.POST,"/api/rooms/**").hasRole("user")
+                .antMatchers(HttpMethod.POST,"/api/rooms/**").hasRole("USER")
                 .antMatchers("/api/match/**", "/api/alarm/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()

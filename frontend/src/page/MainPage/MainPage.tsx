@@ -173,7 +173,7 @@ function MainPage() {
         console.log('빠른 매치 응답 : ', res.data);
         setFastModalOpen(true);
       } else {
-        alert('빠른 매칭 중 오류가 발생했습니다.');
+        alert('빠른 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
     } catch (err) {
       const error = err as AxiosError;
@@ -181,7 +181,7 @@ function MainPage() {
         alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
       } else {
         console.log('빠른 매칭 오류', error);
-        alert('빠른 매칭 중 오류가 발생했습니다.');
+        alert('빠른 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
     }
   };
@@ -197,7 +197,7 @@ function MainPage() {
         console.log('메기 매치 응답 : ', res.data);
         setMegiModalOpen(true);
       } else {
-        alert('메기 매칭 중 오류가 발생했습니다.');
+        alert('메기 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
     } catch (err) {
       const error = err as AxiosError;
@@ -205,7 +205,7 @@ function MainPage() {
         alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
       } else {
         console.log('메기 매칭 오류', error);
-        alert('메기 매칭 중 오류가 발생했습니다.');
+        alert('메기 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
     }
   };
