@@ -15,8 +15,10 @@ import axios from 'axios';
 import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
 import { setMatchMemberId, setRatingChange, setMeetingRoomId } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router';
 
 function MeetingPage() {
+  const location = useLocation();
   const { roomId } = useParams();
   const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } = useOpenvidu(
@@ -31,6 +33,7 @@ function MeetingPage() {
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
   const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
+  const [startSec, setStartSec] = useState(''); // 서버에서 받아온 시작 시간
   const [question, setQuestion] = useState(''); // 질문 저장
   const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
   const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
@@ -38,12 +41,21 @@ function MeetingPage() {
   const [firstSignal, setFirstSignal] = useState(false); // 첫인상 투표 보이기 / 안 보이기
   const [signalOpen, setSignalOpen] = useState(false); // 최종 선택 시그널 보이기 / 안 보이기
   const [requestResult, setRequestResult] = useState(false); // 최종 개인 결과 요청 가능 / 요청 불가능
+  const [isMegiFlag, setIsMegiFlag] = useState(false);
+  const [hasSentMegiMessage, setHasSentMegiMessage] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const client = useWebSocket({
     subscribe: (client) => {
+      client.subscribe(`/topic/room/${roomId}/megiEnterMessage`, (res: any) => {
+        console.log('enterMegi!!!');
+        console.log(res.body);
+        setGuideMessage('메기 등장!!! 메기 등장!!! 메기가 등장합니다!!');
+        setIsShow(true);
+      });
+
       // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
         setGuideMessage(res.body);
@@ -80,7 +92,13 @@ function MeetingPage() {
         setRequestResult(true);
       });
 
+      // 메기 입장 가능 결과 구독
       client.subscribe(`/topic/room/${roomId}/megi`, (res: any) => {
+        console.log(res.body);
+      });
+
+      // 메기 입장 완료 구독
+      client.subscribe(`/topic/room/${roomId}/megiEnter`, (res: any) => {
         console.log(res.body);
       });
     },
@@ -111,7 +129,7 @@ function MeetingPage() {
       }
 
       // 메기 입장
-      else if (minutes === '01' && seconds === '11') {
+      else if (minutes === '01' && seconds === '15') {
         client?.send(`/app/room/${roomId}/megi`, {}, 'megigo');
       }
 
@@ -141,6 +159,12 @@ function MeetingPage() {
 
       // 최종 시그널 메세지 open send
       else if (minutes === '02' && seconds === '30') client?.send(`/app/room/${roomId}/signal`);
+
+      if (isMegiFlag && !hasSentMegiMessage) {
+        // 원하는 로직 실행
+        client?.send(`/app/room/${roomId}/megiEnterMessage`);
+        setHasSentMegiMessage(true);
+      }
     },
   });
 
@@ -151,6 +175,34 @@ function MeetingPage() {
   useEffect(() => {
     dispatch(setMeetingRoomId(roomId));
   }, [roomId, dispatch]);
+
+  useEffect(() => {
+    if (location.state?.isMegi) {
+      console.log('isMegi?', location.state.isMegi);
+      console.log('isMegi is true', roomId);
+      setIsMegiFlag(true);
+
+      // 예) 특정 알림 표시, 데이터 요청 등의 로직
+    } else {
+      console.log('ismegi?', location.state.isMegi);
+    }
+  }, [location.state]);
+
+  // 서버 시간으로 타이머 설정
+  useEffect(() => {
+    fetchElapsedTime();
+  }, []);
+
+  const fetchElapsedTime = async () => {
+    try {
+      const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
+      console.log('시간', response.data);
+      console.log('시간', Number(response.data));
+      setStartSec(response.data);
+    } catch (error) {
+      console.error('Failed to fetch elapsed time:', error);
+    }
+  };
 
   useEffect(() => {
     if (audioRef.current) {
@@ -245,7 +297,7 @@ function MeetingPage() {
 
   return (
     <div id="meeting">
-      <TimeDisplay currentTime={currentTime} setCurrentTime={setCurrentTime} />
+      <TimeDisplay currentTime={currentTime} startSec={startSec} setCurrentTime={setCurrentTime} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
 
       <div id="meeting-video-container">
