@@ -49,6 +49,10 @@ function MeetingPage() {
 
   const client = useWebSocket({
     subscribe: (client) => {
+      //질문 만들어주는 메소드
+      client.subscribe(`/topic/room/${roomId}/makeQuestion`, (res: any) => {
+        console.log(res.body);
+      });
       // 메기 입장 시간 close
       client.subscribe(`/topic/room/${roomId}/endMegi`, (res: any) => {
         console.log('endMegiTime');
@@ -143,6 +147,10 @@ function MeetingPage() {
       else if (minutes === '01' && seconds === '35') {
         client?.send(`/app/room/${roomId}/open`);
       }
+      //질문 생성. 반드시!!! 랜덤주제보다 먼저 실행할것.
+      else if (minutes === '01' && seconds === '20') {
+        client?.send(`/app/room/${roomId}/makeQuestion`);
+      }
 
       // 랜덤 주제 1번
       else if (minutes === '01' && seconds === '40') {
@@ -166,8 +174,9 @@ function MeetingPage() {
       }
 
       // 최종 시그널 메세지 open send
-      else if (minutes === '02' && seconds === '30') client?.send(`/app/room/${roomId}/signal`);
-      else if (isMegiFlag && !hasSentMegiMessage) {
+      else if (minutes === '02' && seconds === '30') {
+        client?.send(`/app/room/${roomId}/signal`);
+      } else if (isMegiFlag && !hasSentMegiMessage) {
         setTimeout(() => {
           client?.send(`/app/room/${roomId}/megiEnterMessage`);
           setHasSentMegiMessage(true);

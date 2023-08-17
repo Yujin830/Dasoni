@@ -58,6 +58,13 @@ public class WebSocketController {
     }
 
 
+
+    @MessageMapping("room/{roomId}/makeQuestion")
+    public void makeQuestion(@DestinationVariable Long roomId){
+        List<Question> questionList = questionService.makeQuestionList(); // 랜덤 질문 리스트 생성,
+        questionListPerRoom.put(roomId, questionList);
+        operations.convertAndSend("/topic/room/" + roomId + "/makeQuestion", "makeQuestionComplete");
+    }
     @MessageMapping("room/{roomId}/megiEnterMessage")
     public void megiEnterMessage(@DestinationVariable Long roomId){
         String msg = "메기입장";
@@ -237,8 +244,6 @@ public class WebSocketController {
      */
     @MessageMapping("room/{roomId}/start")
     public void sendStartMessage(@DestinationVariable Long roomId) {
-        List<Question> questionList = questionService.makeQuestionList(); // 랜덤 질문 리스트 생성,
-        questionListPerRoom.put(roomId, questionList);
         privateRoomService.sendStartMessage(roomId);
     }
 
