@@ -110,20 +110,44 @@ public enum RatingQueue {
 
 
     public static RatingQueue getQueueByRatingAndGender(Long rating, String gender, String queueType) {
+        List<RatingQueue> matchingQueues = new ArrayList<>();
+
+        // Collect all matching queues
         for (RatingQueue queue : values()) {
             if (queue.gender.equals(gender) && rating >= queue.minRating && rating <= queue.maxRating && queue.type.equals(queueType)) {
-                return queue;
+                matchingQueues.add(queue);
             }
         }
-        return null; // or throw an exception
+
+        // If no matching queues found, return null or throw an exception
+        if (matchingQueues.isEmpty()) {
+            return null; // or throw an exception
+        }
+
+        // Find the queue with the midpoint closest to the user's rating
+        RatingQueue closestQueue = null;
+        long closestDifference = Long.MAX_VALUE;
+        for (RatingQueue queue : matchingQueues) {
+            long midpoint = (queue.minRating + queue.maxRating) / 2;
+            long difference = Math.abs(rating - midpoint);
+
+            if (difference < closestDifference) {
+                closestDifference = difference;
+                closestQueue = queue;
+            }
+        }
+
+        return closestQueue;
     }
 
     public static RatingQueue getMegiQueueByMedianRating(Long medianRating, String gender){
         for (RatingQueue queue : values()) {
-            if (queue.getMedianRating() == medianRating && queue.type.equals("match") && queue.gender.equals(gender)){
+            if (queue.getMedianRating().equals(medianRating) && queue.type.equals("special") && queue.gender.equals(gender)){
+                System.out.println("나다" + queue.getName());
                 return queue;
             }
         }
+        System.out.println("나야");
         return null;
     }
 

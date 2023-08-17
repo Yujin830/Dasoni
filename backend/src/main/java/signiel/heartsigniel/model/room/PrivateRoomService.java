@@ -258,7 +258,7 @@ public class PrivateRoomService {
 
     // 사설방 리스트 조회
     public Page<PrivateRoomList> getPrivateRoomsByTitle(String searchKeyword, Pageable pageable) {
-        Page<Room> roomList = roomRepository.findRoomByTitleContainingAndStartTimeIsNull(searchKeyword, pageable);
+        Page<Room> roomList = roomRepository.findRoomByTitleContainingAndStartTimeIsNullAndRoomType(searchKeyword,"private", pageable);
         // 각 Room 엔티티를 PrivateRoomList DTO로 변환
         return roomList.map(room -> new PrivateRoomList(room));
     }
@@ -269,7 +269,7 @@ public class PrivateRoomService {
     }
 
     public Page<PrivateRoomList> filterRoomByGender(String gender, Pageable pageable) {
-        Page<Room> roomList = roomRepository.findRoomsByGenderAndCountLessThanEqual(gender, 2L, pageable);
+        Page<Room> roomList = roomRepository.findRoomsByGenderAndCountLessThanEqualAndRoomType(gender, 2L,"private", pageable);
         return roomList.map(room -> PrivateRoomList.of(room));
     }
 
