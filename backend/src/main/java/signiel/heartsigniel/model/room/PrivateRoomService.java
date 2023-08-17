@@ -3,6 +3,7 @@ package signiel.heartsigniel.model.room;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -46,9 +48,10 @@ public class PrivateRoomService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MatchingService matchingService;
     private final ChatService chatService;
+    private final RedisTemplate<String, Long> redisTemplate;
 
     public PrivateRoomService(RoomRepository roomRepository, RoomMemberRepository roomMemberRepository, MemberRepository memberRepository, RoomMemberService roomMemberService, SimpMessageSendingOperations operations,
-                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService, MatchingService matchingService, ChatService chatService) {
+                              SimpMessagingTemplate simpMessagingTemplate,RatingService ratingService, LifeService lifeService, MatchingService matchingService, ChatService chatService, RedisTemplate<String, Long> redisTemplate) {
 
         this.roomRepository = roomRepository;
         this.matchingService = matchingService;
@@ -59,6 +62,7 @@ public class PrivateRoomService {
         this.lifeService = lifeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.chatService = chatService;
+        this.redisTemplate = redisTemplate;
 
     }
 
@@ -173,10 +177,15 @@ public class PrivateRoomService {
     }
 
     public Response endRoom(Long roomId){
-
-        Response response = ratingService.calculateTotalResult(roomId);
-        Room roomEntity = findRoomById(roomId);
-        roomRepository.delete(roomEntity);
+        Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_end_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
+        if (Boolean.TRUE.equals(isAbsent)){
+            //중복 요청이 아님. 처리 진행
+            Response response = ratingService.calculateTotalResult(roomId);
+            Room roomEntity = findRoomById(roomId);
+            roomRepository.delete(roomEntity);
+            return response;
+        }
+        Response response = Response.of(CommonCode.BAD_REQUEST, null);
         return response;
     }
 
@@ -232,6 +241,13 @@ public class PrivateRoomService {
         chatMessage.setContent(member.getNickname() + "님이 퇴장하셨습니다.");
         chatService.addMessage(roomId, chatMessage);
         simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
+    }
+
+
+    //미팅 방 시간 갱신을 위한 메서드
+    public LocalDateTime getRoomStartTime(Long roomId){
+        Room room = roomRepository.findById(roomId).get();
+        return room.getStartTime();
     }
 
     public Response roomInfo(Long roomId) {

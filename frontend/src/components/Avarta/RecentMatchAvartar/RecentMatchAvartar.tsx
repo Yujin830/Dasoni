@@ -21,7 +21,6 @@ function RecentMatchAvartar({
   recentUserList,
   setRecentUserList,
 }: recentMatchAvartar) {
-  const [profileImg, setProfileImg] = useState(''); // 상대방 프로필 이미지
   const [isHover, setIsHover] = useState(false); // 프로필이미지에 마우스 올림 / 내림
   const [sendBtn, setSendBtn] = useState(false); // 채팅 메세지 send / close
   const { memberId } = useAppSelector((state) => state.user);
@@ -69,15 +68,6 @@ function RecentMatchAvartar({
     setSendBtn((prev) => !prev);
   };
 
-  useEffect(() => {
-    // 상대가 기본 이미지일 경우 default 이미지 적용
-    if (src === 'null') {
-      if (gender === 'female')
-        setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg');
-      else setProfileImg('https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg');
-    } else setProfileImg(src);
-  }, []);
-
   return (
     <div
       className="recent-match-avartar"
@@ -90,7 +80,7 @@ function RecentMatchAvartar({
       <button className={`close ${isHover ? 'on-mouse' : ''}`} onClick={handleDeleteMatchMember}>
         <span className="material-symbols-outlined">close</span>
       </button>
-      <img className="profile" src={profileImg} alt="아바타 이미지" />
+      <img className="profile" src={src} alt="아바타 이미지" />
       <button className="chat" onClick={handleTogleChatting}>
         {!sendBtn ? (
           <span className="material-symbols-outlined">send</span>

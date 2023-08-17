@@ -211,6 +211,7 @@
   width: auto;
   height: 50vh;
   z-index: 3;
+  color: #232323;
 }
 
 @media (max-width: 430px) {

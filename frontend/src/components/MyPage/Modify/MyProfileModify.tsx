@@ -72,6 +72,7 @@ function MyProfileModify({ setType }: any) {
             type="text"
             value={String(modifyNickname)}
             handleChange={handleNicknameChange}
+            placeholer="선택해주세요"
           />
           <AddressSelecter
             modifySido={modifySido}
@@ -85,6 +86,7 @@ function MyProfileModify({ setType }: any) {
             type="text"
             value={String(modifyJob)}
             handleChange={handleJobChange}
+            placeholer="선택해주세요"
           />
         </div>
       </div>

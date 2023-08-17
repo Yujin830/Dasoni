@@ -15,6 +15,7 @@ import axios from 'axios';
 import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
 import { setMatchMemberId, setRatingChange, setMeetingRoomId } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
+
 function MeetingPage() {
   const { roomId } = useParams();
   const { memberId, nickname, gender, job, birth } = useAppSelector((state) => state.user);
@@ -30,6 +31,7 @@ function MeetingPage() {
     '다소니에 오신 여러분 환영합니다. 처음 만난 서로에게 자기소개를 해 주세요.',
   );
   const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
+  const [startSec, setStartSec] = useState(''); // 서버에서 받아온 시작 시간
   const [question, setQuestion] = useState(''); // 질문 저장
   const [isShow, setIsShow] = useState(true); // 가이드 보이기 / 안 보이기
   const [isQuestionTime, setIsQuestionTime] = useState(false); // 질문 보이기 / 안 보이기
@@ -157,6 +159,22 @@ function MeetingPage() {
     dispatch(setMeetingRoomId(roomId));
   }, [roomId, dispatch]);
 
+  // 서버 시간으로 타이머 설정
+  useEffect(() => {
+    fetchElapsedTime();
+  }, []);
+
+  const fetchElapsedTime = async () => {
+    try {
+      const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
+      console.log('시간', response.data);
+      console.log('시간', Number(response.data));
+      setStartSec(response.data);
+    } catch (error) {
+      console.error('Failed to fetch elapsed time:', error);
+    }
+  };
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
@@ -183,19 +201,16 @@ function MeetingPage() {
   }, [firstSignal]);
 
   // 최종 투표 닫기 & 전체 미팅 결과 계산 요청
-  const { waitingRoomMemberList } = useAppSelector((state) => state.waitingRoom);
   useEffect(() => {
     if (signalOpen) {
       setTimeout(async () => {
         setSignalOpen(false);
 
-        // 방장이면 전체 결과 서버로 조회
-        if (waitingRoomMemberList[0].roomLeader) {
-          const res = await axios.delete(`/api/rooms/${roomId}`);
-          console.log(res.data);
-          if (res.data.status.code === 7000) {
-            client?.send(`/app/room/${roomId}/requestResult`);
-          }
+        // 전체 결과 계산 요청
+        const res = await axios.delete(`/api/rooms/${roomId}`);
+        console.log(res.data);
+        if (res.data.status.code === 7000) {
+          client?.send(`/app/room/${roomId}/requestResult`);
         }
       }, 30000);
     }
@@ -214,18 +229,22 @@ function MeetingPage() {
     console.log(res.data);
 
     const data = res.data;
+    dispatch(setRating(data.content.roomMemberInfo.member.rating)); // 변경 후 레이팅 저장
+    dispatch(setRatingChange(data.content.ratingChange)); // 레이팅 변화값 저장
+    dispatch(setMeetingCount(data.content.roomMemberInfo.member.meetingCount)); // 미팅 카운트 증가
+    dispatch(setRemainLife(data.content.remainLife)); // 라이프 감소
     if (data.content.matchMemberId !== 0) {
       // 미팅 결과 저장
-      dispatch(setRating(data.content.roomMemberInfo.member.rating)); // 변경 후 레이팅 저장
-      dispatch(setRatingChange(data.content.ratingChange)); // 레이팅 변화값 저장
       dispatch(setMatchMemberId(data.content.matchMemberId)); // 매칭된 상대방 저장
-      dispatch(setMeetingCount(data.content.roomMemberInfo.member.meetingCount)); // 미팅 카운트 증가
-      dispatch(setRemainLife(data.content.remainLife)); // 라이프 감소
       navigate(`/sub-meeting/${roomId}`, { replace: true });
     } else {
       setGuideMessage(
-        '안타깝지만 마음이 이어지지 않았습니다.\n다음은 마음이 이어지기를 응원하겠습니다.\n이제 자유롭게 방을 나가셔도 됩니다',
+        '안타깝지만 마음이 이어지지 않았습니다.\n다음은 마음이 이어지기를 응원하겠습니다.\n3초후 세션이 종료 됩니다.',
       );
+      setIsShow(true);
+      setTimeout(() => {
+        navigate('/result', { replace: true });
+      }, 5000);
     }
   };
 
@@ -249,7 +268,7 @@ function MeetingPage() {
 
   return (
     <div id="meeting">
-      <TimeDisplay currentTime={currentTime} setCurrentTime={setCurrentTime} />
+      <TimeDisplay currentTime={currentTime} startSec={startSec} setCurrentTime={setCurrentTime} />
       <Guide isShow={isShow} guideMessage={guideMessage} />
 
       <div id="meeting-video-container">

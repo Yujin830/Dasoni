@@ -31,14 +31,14 @@ type RegCode = {
 const sidos: Sido[] = [
   {
     sidoId: -1,
-    sidoName: '선택하세요',
+    sidoName: '선택해주세요',
     sidoCode: -1,
   },
 ];
 const guguns: Gugun[] = [
   {
     gugunId: 0,
-    gugunName: '선택하세요',
+    gugunName: '선택해주세요',
     gugunCode: 0,
   },
 ];
@@ -114,7 +114,7 @@ function AddressSelecter({
       setGugnList([
         {
           gugunId: 0,
-          gugunName: '선택하세요',
+          gugunName: '선택해주세요',
           gugunCode: 0,
         },
       ]);

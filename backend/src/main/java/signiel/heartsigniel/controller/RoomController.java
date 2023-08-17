@@ -18,6 +18,10 @@ import signiel.heartsigniel.model.room.dto.PrivateRoomList;
 import signiel.heartsigniel.model.room.dto.StartRoomRequest;
 import signiel.heartsigniel.model.roommember.RoomMemberService;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @RestController
 @RequestMapping("/api/rooms")
 @Slf4j
@@ -31,6 +35,17 @@ public class RoomController {
         this.privateRoomService = privateRoomService;
         this.signalService = signalService;
         this.roomMemberService = roomMemberService;
+    }
+
+    @GetMapping("{roomId}/elapsedTime")
+    public ResponseEntity<Long> getElapsedTime(@PathVariable Long roomId){
+        LocalDateTime startTime = privateRoomService.getRoomStartTime(roomId);
+        long milliSec = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+        System.out.println("============ " + startTime);
+        System.out.println("============ 밀리세컨즈 " + milliSec);
+        Duration duration = Duration.between(startTime, LocalDateTime.now());
+        return ResponseEntity.ok(milliSec);
+//        return ResponseEntity.ok(duration.getSeconds());
     }
 
     @PostMapping("/{roomId}/members/{memberId}")

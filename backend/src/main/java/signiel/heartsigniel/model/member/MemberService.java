@@ -83,16 +83,30 @@ public class MemberService {
 
     public boolean register(SignRequest request) throws Exception {
         try {
-            Member member = Member.builder()
-                    .loginId(request.getLoginId())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .gender(request.getGender())
-                    .birth(request.getBirth())
-                    .phoneNumber(request.getPhoneNumber())
-                    .rating(1000L)
-                    .isFirst(0L)
-                    .profileImageSrc("null")
-                    .build();
+            Member member;
+            if(request.getGender().equals("male")) {
+                member = Member.builder()
+                        .loginId(request.getLoginId())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .gender(request.getGender())
+                        .birth(request.getBirth())
+                        .phoneNumber(request.getPhoneNumber())
+                        .rating(1000L)
+                        .isFirst(0L)
+                        .profileImageSrc("https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg")
+                        .build();
+            } else{
+                member = Member.builder()
+                        .loginId(request.getLoginId())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .gender(request.getGender())
+                        .birth(request.getBirth())
+                        .phoneNumber(request.getPhoneNumber())
+                        .rating(1000L)
+                        .isFirst(0L)
+                        .profileImageSrc("https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg")
+                        .build();
+            }
 
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_GUEST").build()));
 
@@ -168,7 +182,6 @@ public class MemberService {
         }
 
         System.out.println("======================="+file);
-//        System.out.println(file.getContentType());
 
         member.setNickname(memberUpdateDto.getNickname());
         member.setJob(memberUpdateDto.getJob());
@@ -176,9 +189,16 @@ public class MemberService {
         member.setGuGun(memberUpdateDto.getGuGun());
         if(file!=null)
             member.setProfileImageSrc(imageService.saveImage(file));
+//        else{
+//            if(member.getGender()=="male")
+//                member.setProfileImageSrc("https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_man.jpg");
+//            else
+//                member.setProfileImageSrc("https://signiel-bucket.s3.ap-northeast-2.amazonaws.com/default_woman.jpg");
+//        }
 
         memberRepository.save(member);
 
+        System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"+member.getProfileImageSrc());
         return member.getProfileImageSrc();
 //        else return "null";
     }
