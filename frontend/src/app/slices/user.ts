@@ -5,6 +5,8 @@ import setAuthorizationToken from '../../utils/setAuthorizationToken';
 import { ActivationState } from '@stomp/stompjs';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { PURGE } from 'redux-persist';
+import { persistor } from '../store';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export interface User {
@@ -78,7 +80,8 @@ const userSlice = createSlice({
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
         console.log(action.payload);
         return { ...state, ...action.payload };
-      });
+      })
+      .addCase(PURGE, () => initialState);
   },
 });
 
@@ -190,12 +193,14 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
     throw new Error('인증 정보가 올바르지 않습니다.');
   }
 });
+
 // 로그아웃 시 필요한 함수
-export const logout = () => {
+export const logout = async () => {
   localStorage.removeItem('jwtToken');
   localStorage.clear();
   sessionStorage.clear();
   setAuthorizationToken(null); // Axios 헤더에서 토큰을 null로 설정하는 함수를 가정합니다.
+  await persistor.purge(); // store 제거
   console.log('로그아웃', localStorage);
   // dispatch(resetUserState());
 };

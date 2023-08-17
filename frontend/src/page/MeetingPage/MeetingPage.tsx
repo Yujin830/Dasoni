@@ -54,11 +54,15 @@ function MeetingPage() {
         console.log('endMegiTime');
       });
       // 가이드 구독
+
       client.subscribe(`/topic/room/${roomId}/megiEnterMessage`, (res: any) => {
         console.log('enterMegi!!!');
         console.log(res.body);
+        setGuideMessage('메기 등장!!! 메기 등장!!! 메기가 등장합니다!!');
+        setIsShow(true);
       });
 
+      // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
         setGuideMessage(res.body);
         setIsShow(true);
@@ -188,12 +192,11 @@ function MeetingPage() {
 
       // 예) 특정 알림 표시, 데이터 요청 등의 로직
     } else {
-      console.log('ismegi?', location.state.isMegi);
+      console.log('ismegi?', false);
     }
   }, [location.state]);
 
   // 서버 시간으로 타이머 설정
-
   useEffect(() => {
     fetchElapsedTime();
   }, []);
@@ -202,7 +205,6 @@ function MeetingPage() {
     try {
       const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
       console.log('시간', response.data);
-      console.log('시간', Number(response.data));
       setStartSec(response.data);
     } catch (error) {
       console.error('Failed to fetch elapsed time:', error);

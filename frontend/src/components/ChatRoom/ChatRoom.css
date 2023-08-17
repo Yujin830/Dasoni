@@ -34,6 +34,11 @@
   background-color: #90caf9;
 }
 
+.chat-room .message-other {
+  align-self: flex-start;
+  background-color: #ffe8ef;
+}
+
 .chat-input {
   display: flex;
   gap: 0.5rem;

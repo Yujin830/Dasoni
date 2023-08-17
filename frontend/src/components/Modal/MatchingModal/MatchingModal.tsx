@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useAppSelector } from '../../../app/hooks';
 import { useNavigate } from 'react-router';
 import { Hearts } from 'react-loader-spinner';
-import { useWebSocket } from '../../../hooks/useWebSocket';
 
 interface MatchingModalProps {
   onClose: () => void;

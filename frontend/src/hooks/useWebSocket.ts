@@ -3,7 +3,7 @@ import { CompatClient, Stomp } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
 
 interface Param {
-  subscribe?: (client: CompatClient) => void;
+  subscribe: (client: CompatClient) => void;
   onClientReady?: (client: CompatClient) => void;
 }
 
@@ -21,7 +21,7 @@ export const useWebSocket = ({ subscribe, onClientReady }: Param) => {
       console.log('WebSocket에 연결되었습니다.');
       // 원하는 토픽이나 큐에 stompClient.subscribe()를 사용하여 구독할 수 있습니다.
       // 예시: stompClient.subscribe('/topic/someTopic', onMessageReceived);
-      if (subscribe != undefined) subscribe(stompClient);
+      subscribe(stompClient);
     };
 
     const onDisconnected = () => {
