@@ -194,6 +194,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
 export const logout = () => {
   localStorage.removeItem('jwtToken');
   localStorage.clear();
+  sessionStorage.clear();
   setAuthorizationToken(null); // Axios 헤더에서 토큰을 null로 설정하는 함수를 가정합니다.
   console.log('로그아웃', localStorage);
   // dispatch(resetUserState());

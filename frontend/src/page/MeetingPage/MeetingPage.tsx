@@ -49,6 +49,10 @@ function MeetingPage() {
 
   const client = useWebSocket({
     subscribe: (client) => {
+      // 메기 입장 시간 close
+      client.subscribe(`/topic/room/${roomId}/endMegi`, (res: any) => {
+        console.log('endMegiTime');
+      });
       // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/megiEnterMessage`, (res: any) => {
         console.log('enterMegi!!!');
@@ -148,6 +152,8 @@ function MeetingPage() {
       // 랜덤 주제 3번
       else if (minutes === '02' && seconds === '15') {
         client?.send(`/app/room/${roomId}/questions`, {}, '2');
+      } else if (minutes === '02' && seconds === '20') {
+        client?.send(`/app/room/${roomId}/endMegi`);
       }
 
       // 가이드 - 최종 투표
@@ -157,11 +163,11 @@ function MeetingPage() {
 
       // 최종 시그널 메세지 open send
       else if (minutes === '02' && seconds === '30') client?.send(`/app/room/${roomId}/signal`);
-
-      if (isMegiFlag && !hasSentMegiMessage) {
-        // 원하는 로직 실행
-        client?.send(`/app/room/${roomId}/megiEnterMessage`);
-        setHasSentMegiMessage(true);
+      else if (isMegiFlag && !hasSentMegiMessage) {
+        setTimeout(() => {
+          client?.send(`/app/room/${roomId}/megiEnterMessage`);
+          setHasSentMegiMessage(true);
+        }, 5000); // 5초 후 실행
       }
     },
   });
