@@ -7,11 +7,14 @@ interface TimeDisplayProps {
   setCurrentTime: (time: string) => void;
 }
 
+const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
 function TimeDisplay({ currentTime, startSec, setCurrentTime }: TimeDisplayProps) {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentTime = new Date();
-      const timeDiffInSeconds = Math.floor((currentTime.getTime() - Number(startSec)) / 1000);
+      const timeDiffInSeconds = Math.floor(
+        (currentTime.getTime() - (Number(startSec) + KR_TIME_DIFF)) / 1000,
+      );
       // const timeDiffInSeconds = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
 
       updateTimer(timeDiffInSeconds);

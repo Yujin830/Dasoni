@@ -11,11 +11,14 @@ import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Page<Room> findAllByRoomTypeAndStartTimeIsNull(String type, Pageable pageable);
-    Page<Room> findRoomByTitleContainingAndStartTimeIsNull(String title, Pageable pageable);
+    Page<Room> findRoomByTitleContainingAndStartTimeIsNullAndRoomType(String title, String roomType, Pageable pageable);
+
 
     @Query("SELECT r FROM room r " +
             "LEFT JOIN r.roomMembers rm ON rm.member.gender = :gender " +
+            "WHERE r.roomType = :roomType " +
             "GROUP BY r.id " +
             "HAVING COALESCE(COUNT(rm), 0) <= :count")
-    Page<Room> findRoomsByGenderAndCountLessThanEqual(@Param("gender") String gender, @Param("count") Long count, Pageable pageable);
+    Page<Room> findRoomsByGenderAndCountLessThanEqualAndRoomType(@Param("gender") String gender, @Param("count") Long count, @Param("roomType") String roomType, Pageable pageable);
+
 }
