@@ -125,8 +125,8 @@ function WaitingRoomPage() {
   const currentUserId = member.memberId;
   // memberList에서 방장(memberList에서 roomLeader가 true인)인지 여부를 확인하는 함수
   const isRoomLeaderInMemberList = (info: any) => {
-    console.log(info);
-    console.log(client);
+    // console.log(info);
+    // console.log(client);
     return info.roomLeader && info.member.memberId === currentUserId;
   };
 

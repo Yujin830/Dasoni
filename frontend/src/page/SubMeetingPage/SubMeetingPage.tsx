@@ -139,16 +139,16 @@ function SubMeetingPage() {
             onChangeMicStatus={onChangeMicStatus}
           />
         </div>
-        <div>
-          <AudioController
-            volume={volume}
-            muted={muted}
-            songName="submeeting"
-            handleMuteToggle={handleMuteToggle}
-            handleVolumeChange={handleVolumeChange}
-          />
-        </div>
         <ChatRoom />
+      </div>
+      <div>
+        <AudioController
+          volume={volume}
+          muted={muted}
+          songName="submeeting"
+          handleMuteToggle={handleMuteToggle}
+          handleVolumeChange={handleVolumeChange}
+        />
       </div>
     </div>
   );
