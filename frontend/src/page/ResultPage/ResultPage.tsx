@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header/Header';
-import Banner from '../../components/Banner/Banner';
 import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import FailResult from '../../components/Result/FailResult/FailResult';
@@ -42,7 +41,6 @@ function ResultPage() {
       // 매칭된 상대방 정보 가져오기
       try {
         const res = await axios.get(`/api/users/${resultOfRoomMember.matchMemberId}`);
-        console.log(res.data);
 
         if (res.status === 200) {
           setMatchMember(res.data);
@@ -54,7 +52,6 @@ function ResultPage() {
   };
 
   const handleClose = () => {
-    console.log('메인으로');
     // 정보 초기화
     dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
     dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
