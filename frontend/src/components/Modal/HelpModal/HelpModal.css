@@ -25,9 +25,9 @@
   margin-top: 1vh;
 }
 
-.pagenation {
+/* .pagenation {
   margin-bottom: 2vh;
-}
+} */
 
 .helpmodal-overlay {
   position: fixed;
@@ -44,6 +44,11 @@
   opacity: 1;
   visibility: visible;
   z-index: 1;
+}
+
+.swiper {
+  height: 100%;
+  width: 80%;
 }
 
 @media (max-width: 1024px) {

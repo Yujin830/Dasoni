@@ -35,16 +35,14 @@ public class MatchingService {
     private final MatchingRoomService matchingRoomService;
     private final RoomMemberRepository roomMemberRepository;
     private final RedisTemplate<String, Long> redisTemplate;
-    private final RoomMemberService roomMemberService;
     private AlarmService alarmService;
     private LifeService lifeService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public MatchingService(MemberRepository memberRepository, RoomMemberService roomMemberService, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService, LifeService lifeService){
+    public MatchingService(MemberRepository memberRepository, RoomMemberRepository roomMemberRepository, MatchingRoomService matchingRoomService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService, LifeService lifeService){
         this.memberRepository = memberRepository;
         this.matchingRoomService = matchingRoomService;
         this.roomMemberRepository = roomMemberRepository;
-        this.roomMemberService = roomMemberService;
         this.redisTemplate = redisTemplate;
         this.alarmService = alarmService;
         this.lifeService = lifeService;
@@ -57,6 +55,9 @@ public class MatchingService {
         }
         if (lifeService.countRemainingLives(memberId) == 0){
             return Response.of(LifeCode.LACK_OF_LIFE, null);
+        }
+        if (roomMemberRepository.findRoomMemberByMember(member) == null){
+            return Response.of(MatchingCode.PENALTY_FOR_LEAVING_EARLY, null);
         }
         RatingQueue queue = RatingQueue.getQueueByRatingAndGender(member.getRating(), member.getGender(), type);
         redisTemplate.opsForList().rightPush(queue.getName(), memberId);
@@ -80,8 +81,6 @@ public class MatchingService {
         if(type.equals("special")){
             if (redisTemplate.opsForList().size(queue.getName()) >= 1){
                 RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
-
-
                 // 상대 큐도 꽉차있을 경우
                 if(redisTemplate.opsForList().size(oppositeQueue.getName()) >= 1){
                     Room matchingRoom = matchingRoomService.findRoomForSpecialUser(queue);

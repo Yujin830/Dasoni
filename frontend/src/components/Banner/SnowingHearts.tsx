@@ -5,7 +5,8 @@ const SnowingHearts: React.FC = () => {
   const [snowflakes, setSnowflakes] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
-    const snowflakeInterval = setInterval(() => {
+    // 애니메이션 시작 함수 정의
+    const startAnimation = () => {
       const numFlakes = Math.floor(Math.random() * 15) + 15;
       const newSnowflakes: JSX.Element[] = [];
 
@@ -19,7 +20,13 @@ const SnowingHearts: React.FC = () => {
       }
 
       setSnowflakes(newSnowflakes);
-    }, 12000);
+    };
+
+    // 페이지 로드시 애니메이션 시작
+    startAnimation();
+
+    // 12초마다 애니메이션 갱신
+    const snowflakeInterval = setInterval(startAnimation, 12000);
 
     return () => clearInterval(snowflakeInterval);
   }, []);

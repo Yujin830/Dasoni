@@ -1,5 +1,5 @@
 #success-result {
-  width: 60%;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,4 +11,23 @@
   font-size: 4rem;
   margin: 0 2.5rem;
   transition: all 0.5s;
+}
+
+@media (max-width: 720px) {
+  #success-result {
+    height: 50%;
+  }
+  #success-result .heart {
+    margin: 0 1rem;
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 424px) {
+  #success-result {
+    height: 40%;
+  }
+  #success-result .heart {
+    margin: 0 0.5rem;
+  }
 }

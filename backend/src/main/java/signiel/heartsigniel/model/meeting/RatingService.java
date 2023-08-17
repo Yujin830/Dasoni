@@ -72,11 +72,17 @@ public class RatingService {
             if (roomType.equals("match")) {
                 Long myRating = member.getRating();
                 ratingChange = calculateRatingChange(myRating, avgRating, rank, K_FACTOR, roomMemberSize);
+                if (scoreBoard[roomMemberSequence.get(memberId.intValue())] == -1){
+                    ratingChange = -100L;
+                }
                 saveMemberRating(member, myRating + ratingChange);
             }
             int signalOpponent = mutuallySignaledList[roomMemberSequence.get(memberId.intValue())];
             if (signalOpponent != 0) {
-                addMatchedMemberId(memberId, (long) signalOpponent, sortedRoomMembers.get(rank-1).getMember().getProfileImageSrc());
+//                addMatchedMemberId(memberId, (long) signalOpponent, sortedRoomMembers.get(rank-1).getMember().getProfileImageSrc());
+//                addMatchedMemberId(memberId, (long) signalOpponent, roomMembers.get(roomMemberSequence.get(signalOpponent)).getMember().getProfileImageSrc());
+                Optional<Member> opponent = memberRepository.findById((long) signalOpponent);
+                addMatchedMemberId(memberId, (long) signalOpponent, opponent.get().getProfileImageSrc());
             }
             if (roomMember.isSpecialUser()) {
                 ratingChange *= 2;
@@ -154,7 +160,7 @@ public class RatingService {
         for (int i = 0; i < signalBoards.size(); i++) {
             int[] scoreBoard = calculateSignalScore(signalBoards.get(i), i+1);
             for (int j = 0; j < roomMemberSize; j++) {
-                finalScore[i] = scoreBoard[i] + finalScore[i];
+                finalScore[j] += scoreBoard[j];
             }
         }
         for (SingleSignalRequest singleSignalRequest : singleSignalRequests) {
@@ -165,7 +171,7 @@ public class RatingService {
 // 시그널을 1번 혹은 0번 보낸 사용자의 점수 조절
         for (int i = 0; i < signalCount.length; i++) {
             if (signalCount[i] <= 1) {
-                finalScore[i] -= 100;
+                finalScore[i] = -1;
             }
         }
 

@@ -1,24 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useWebSocket } from '../../hooks/useWebSocket';
-import { useParams } from 'react-router';
-import { useAppSelector } from '../../app/hooks';
-import './ChatRoom.css';
-import Loading01 from '../Loading/Loading';
+import React, { useState, useRef, useEffect } from 'react';
+import Loading01 from '../../Loading/Loading';
+import { useAppSelector } from '../../../app/hooks';
+import { useWebSocket } from '../../../hooks/useWebSocket';
+import './MatchChatRoom.css';
 
 interface ChatMessage {
-  senderNickname: string;
+  memberId: number | undefined;
+  receiverId: number;
+  senderNickname: string | undefined;
   content: string;
-  timestamp: Date;
-  isUserMessage?: boolean;
 }
 
-const ChatRoom: React.FC = () => {
+interface MatchChatRoomProps {
+  chattingMemberId: number;
+  setSendBtn: (state: any) => void;
+}
+
+function MatchChatRoom({ chattingMemberId, setSendBtn }: MatchChatRoomProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const { roomId } = useParams();
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
   const messageRef = useRef<HTMLDivElement | null>(null);
   const member = useAppSelector((state) => state.user);
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 관리하는 상태 변수
 
   const client = useWebSocket({
     subscribe: (client) => {
@@ -26,23 +29,11 @@ const ChatRoom: React.FC = () => {
       console.log('로딩완료');
 
       // 기존의 채팅 메시지에 대한 구독
-      client.subscribe(`/topic/room/${roomId}/chat`, (res: any) => {
+      client.subscribe(`/queue/mypage/chat/${member.memberId}/${chattingMemberId}`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
         console.log(chatMessage);
         setMessages((messages) => [...messages, chatMessage]);
         console.log(messages);
-      });
-      // 입장 및 퇴장 메시지에 대한 구독 추가
-      client.subscribe(`/topic/room/${roomId}`, (res: any) => {
-        const chatMessage: ChatMessage = JSON.parse(res.body);
-        console.log(chatMessage);
-        // 메시지 내용이 입장이나 퇴장 메시지인 경우에만 처리
-        if (
-          chatMessage.content.includes(`입장하셨습니다.`) ||
-          chatMessage.content.includes(`퇴장하셨습니다.`)
-        ) {
-          setMessages((messages) => [...messages, chatMessage]);
-        }
       });
     },
   });
@@ -62,13 +53,13 @@ const ChatRoom: React.FC = () => {
     if (newMessage && client?.connected) {
       console.log(client.connected);
       client.send(
-        `/app/room/${roomId}/chat`,
+        `/app/mypage/chat/${chattingMemberId}`,
         {},
         JSON.stringify({
+          memberId: member.memberId,
+          receiverId: chattingMemberId,
           senderNickname: member.nickname,
           content: newMessage,
-          timestamp: new Date(),
-          isUserMessage: true,
         }),
       );
       console.log(member);
@@ -76,13 +67,20 @@ const ChatRoom: React.FC = () => {
       setNewMessage('');
     }
   };
+
+  // 메시지 전송
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // 새로고침을 막습니다
     sendMessage(); // 메시지를 보냅니다
   };
 
+  // 채팅창 닫기
+  const handleCloseChatting = () => {
+    setSendBtn(false);
+  };
+
   return (
-    <div className="chat-room">
+    <div id="match-chat-room" className="chat-room">
       {/* 로딩 중일 때 스켈레톤 UI를 표시합니다. */}
       {isLoading ? (
         <Loading01 />
@@ -90,16 +88,14 @@ const ChatRoom: React.FC = () => {
         // 로딩이 완료되면 실제 대기방 UI를 렌더링합니다.
         <>
           <div className="message-container" ref={messageRef}>
+            <button className="close-btn" onClick={handleCloseChatting}>
+              <span className="material-symbols-outlined">cancel</span>
+            </button>
             {messages.map((msg, index) => (
               <div
                 key={index}
                 className={`message ${
-                  member.nickname === msg.senderNickname
-                    ? 'message-own'
-                    : msg.content.includes('입장하셨습니다.') ||
-                      msg.content.includes('퇴장하셨습니다.')
-                    ? 'message-system'
-                    : 'message-other'
+                  member.nickname === msg.senderNickname ? 'message-own' : 'message-other'
                 }`}
               >
                 {msg.content.includes(`입장하셨습니다.`) ||
@@ -123,6 +119,6 @@ const ChatRoom: React.FC = () => {
       </form>
     </div>
   );
-};
+}
 
-export default ChatRoom;
+export default MatchChatRoom;

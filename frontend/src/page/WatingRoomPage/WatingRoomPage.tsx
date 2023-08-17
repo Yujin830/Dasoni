@@ -125,8 +125,8 @@ function WaitingRoomPage() {
   const currentUserId = member.memberId;
   // memberList에서 방장(memberList에서 roomLeader가 true인)인지 여부를 확인하는 함수
   const isRoomLeaderInMemberList = (info: any) => {
-    console.log(info);
-    console.log(client);
+    // console.log(info);
+    // console.log(client);
     return info.roomLeader && info.member.memberId === currentUserId;
   };
 
@@ -158,34 +158,28 @@ function WaitingRoomPage() {
             <div id="waiting-room-body">
               <div id="member-list-box">
                 <div className="waiting-room-content">
-                  {sameGenderMemberList.map((info) => {
-                    console.log(info);
-                    return (
-                      <WaitingMemberBox
-                        key={info.member.memberId}
-                        nickname={info.member.nickname}
-                        rating={info.member.rating}
-                        matchCnt={info.member.meetingCount}
-                        gender={info.member.gender}
-                        profileImageSrc={info.member.profileImageSrc}
-                      />
-                    );
-                  })}
+                  {sameGenderMemberList.map((info) => (
+                    <WaitingMemberBox
+                      key={info.member.memberId}
+                      nickname={info.member.nickname}
+                      rating={info.member.rating}
+                      matchCnt={info.member.meetingCount}
+                      gender={info.member.gender}
+                      profileImageSrc={info.member.profileImageSrc}
+                    />
+                  ))}
                 </div>
                 <div className="waiting-room-content">
-                  {diffGenderMemberList.map((info) => {
-                    console.log(info);
-                    return (
-                      <WaitingMemberBox
-                        key={info.member.memberId}
-                        nickname={info.member.nickname}
-                        rating={info.member.rating}
-                        matchCnt={info.member.meetingCount}
-                        gender={info.member.gender}
-                        profileImageSrc={info.member.profileImageSrc}
-                      />
-                    );
-                  })}
+                  {diffGenderMemberList.map((info) => (
+                    <WaitingMemberBox
+                      key={info.member.memberId}
+                      nickname={info.member.nickname}
+                      rating={info.member.rating}
+                      matchCnt={info.member.meetingCount}
+                      gender={info.member.gender}
+                      profileImageSrc={info.member.profileImageSrc}
+                    />
+                  ))}
                 </div>
               </div>
               <ChatRoom />

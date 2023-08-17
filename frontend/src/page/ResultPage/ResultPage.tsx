@@ -15,6 +15,7 @@ import {
   setRatingChange,
 } from '../../app/slices/meetingSlice';
 import { useDispatch } from 'react-redux';
+import SnowingHearts from '../../components/Banner/SnowingHearts';
 
 function ResultPage() {
   const [success, setSuccess] = useState(false);
@@ -68,8 +69,9 @@ function ResultPage() {
   return (
     <div id="result-page">
       <Header />
-      <Banner />
+      {/* <Banner /> */}
       <main>
+        <SnowingHearts />
         <div id="title-box">
           <h2 className="title">매칭 결과</h2>
           <h3 className="title-msg">
@@ -88,7 +90,9 @@ function ResultPage() {
             <FailResult profileSrc={profileImageSrc} />
           )}
         </div>
-        <h3 className="result-rating">{resultOfRoomMember.ratingChange} point</h3>
+        <div className="show-rating">
+          <h3 className="result-rating">{resultOfRoomMember.ratingChange} point</h3>
+        </div>
         <div className="buttons">
           <FilledButton content="메인으로" classes="to-main-btn" handleClick={handleClose} />
         </div>

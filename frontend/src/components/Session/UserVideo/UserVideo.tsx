@@ -28,7 +28,7 @@ function UserVideo({
   year,
 }: UserVideoProps) {
   const { videoRef, speaking } = useStream(streamManager);
-  const { roomId } = useAppSelector((state) => state.waitingRoom);
+  const { roomId } = useAppSelector((state) => state.meetingRoom);
   const { memberId } = useAppSelector((state) => state.user);
   const { finalSignalReceiver } = useAppSelector((state) => state.meetingRoom);
   const [isSendSignal, setIsSendSignal] = useState(false);

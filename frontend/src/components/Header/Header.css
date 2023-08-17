@@ -228,17 +228,36 @@
   border-radius: 1rem;
 }
 
+@media (min-width: 1400px) {
+  .header .logo {
+    width: 8%;
+  }
+}
+
+@media (max-width: 1400px) {
+  .header .logo {
+    width: 12%;
+  }
+}
+
+@media (max-width: 1024px) {
+  #filter-menu ul {
+    width: 15%;
+  }
+}
+
+@media (max-width: 768px) {
+  .header .logo {
+    width: 30%;
+  }
+}
+
 @media (max-width: 430px) {
   .header .logo {
     width: 40%;
   }
   .header .header-mobile {
     display: none;
-  }
-}
-@media (max-width: 1024px) {
-  #filter-menu ul {
-    width: 15%;
   }
 }
 @media (max-width: 690px) {
