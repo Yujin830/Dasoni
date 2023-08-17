@@ -1,6 +1,4 @@
 .time-display {
-  width: 100px; /* 타이머 컴포넌트 전체 너비 */
-  height: 40px; /* 타이머 컴포넌트 전체 높이 */
   background-color: #fff; /* 배경색 */
   border-radius: 8px; /* 테두리를 둥글게 만듦 */
   display: flex;
@@ -8,6 +6,9 @@
   align-items: center;
   font-size: 1.2rem;
   font-weight: bold;
+  position: absolute;
+  top: 30px;
+  left: 1.2rem;
 }
 
 .time {

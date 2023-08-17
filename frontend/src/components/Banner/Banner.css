@@ -1,12 +1,26 @@
 #banner {
   width: 100%;
   height: 15rem;
+  background-size: cover;
   background-color: #ffd8e4;
   color: #ec5e98;
   font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+  /* flex-direction: column; */
+}
+
+#banner #am {
+  width: 100%;
+  height: 0;
+  /* background-color: red; */
+}
+
+#banner .snow {
+  top: 0;
 }
 
 #banner .highlight {
@@ -17,17 +31,85 @@
   font-size: 3rem;
 }
 
-#banner h2 span {
+#banner h2 .t1 {
+  opacity: 0;
+  animation: fade 1000ms 150ms forwards;
+}
+#banner h2 .t2 {
+  opacity: 0;
+  animation: fade 1000ms 250ms forwards;
+}
+#banner h2 .t3 {
+  opacity: 0;
+  animation: fade 1000ms 350ms forwards;
+}
+#banner h2 .t4 {
+  opacity: 0;
+  animation: fade 1000ms 450ms forwards;
+}
+#banner h2 .t5 {
+  opacity: 0;
+  animation: fade 1000ms 550ms forwards;
+}
+#banner h2 .t6 {
+  opacity: 0;
+  animation: fade 1000ms 650ms forwards;
+}
+#banner h2 .t7 {
+  opacity: 0;
+  animation: fade 1000ms 750ms forwards;
+}
+#banner h2 .t8 {
+  opacity: 0;
+  animation: fade 1000ms 850ms forwards;
+}
+#banner h2 .highlight {
   font-size: 4rem;
+  opacity: 0;
+  animation: fade 1000ms 950ms forwards;
+}
+@keyframes fade {
+  to {
+    opacity: 1;
+  }
 }
 
 #banner h3 {
   font-size: 2rem;
 }
-
-#banner h3 span {
+#banner h3 .t11 {
+  opacity: 0;
+  animation: fade 1000ms 1050ms forwards;
+}
+#banner h3 .t12 {
+  opacity: 0;
+  animation: fade 1000ms 1150ms forwards;
+}
+#banner h3 .t13 {
+  opacity: 0;
+  animation: fade 1000ms 1250ms forwards;
+}
+#banner h3 .t14 {
+  opacity: 0;
+  animation: fade 1000ms 1350ms forwards;
+}
+#banner h3 .t15 {
+  opacity: 0;
+  animation: fade 1000ms 1450ms forwards;
+}
+#banner h3 .t16 {
+  opacity: 0;
+  animation: fade 1000ms 1550ms forwards;
+}
+#banner h3 .highlight {
+  opacity: 0;
+  animation: fade 1000ms 1650ms forwards;
   font-size: 3rem;
   position: relative;
+}
+#banner h3 .t17 {
+  opacity: 0;
+  animation: fade 1000ms 1750ms forwards;
 }
 
 #banner h3 span img {
@@ -37,4 +119,23 @@
   left: 50%;
   width: 8rem;
   transform: translateX(-50%);
+}
+
+@media (max-width: 1023px) {
+  #banner h3 {
+    display: none;
+  }
+}
+@media (min-width: 375px) {
+  #banner .mobile {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  #banner h2 span {
+    font-size: 2rem;
+  }
+  #banner h2 .highlight {
+    font-size: 2.5rem;
+  }
 }

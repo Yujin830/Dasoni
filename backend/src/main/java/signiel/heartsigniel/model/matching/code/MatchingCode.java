@@ -8,8 +8,11 @@ public enum MatchingCode implements ResponseCode {
     MATCHING_FAILED(2102, "매칭에 실패하였습니다."),
     MATCHING_PENDING(2103, "매칭 대기 중입니다."),
     USER_ADDED_TO_MATCH(2104, "사용자가 매칭에 추가되었습니다."),
-    USER_REMOVED_FROM_MATCH(2105, "사용자가 매칭에서 제거되었습니다."),
-    ALREADY_IN_MATCHING_QUEUE(2106, "이미 매칭 대기열에 등록되어 있습니다.");
+    DEQUEUE_SUCCESS(2105, "큐 대기열에서 성공적으로 제외되었습니다."),
+    ALREADY_IN_MATCHING_QUEUE(2106, "이미 매칭 대기열에 등록되어 있습니다."),
+    ENQUEUE_SUCCESS(2107,"큐 대기열에 성공적으로 등록되었습니다."),
+    DEQUEUE_FAIL(2108, "사용자가 큐에 존재하지 않습니다."),
+    PENALTY_FOR_LEAVING_EARLY(2110, "미팅 중도 탈주로 인한 페널티가 부과됩니다. 해당 행동은 팀의 협업에 방해가 되며, 다음부터는 주의해 주시기 바랍니다.");    ;
 
     private final int code;
     private final String message;

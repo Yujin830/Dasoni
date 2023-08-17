@@ -7,6 +7,7 @@
 
 #waiting-page #waiting-room-box {
   width: calc(100vw - 4rem);
+  height: 90%;
   border-radius: 0.5rem;
   background: #d9d9d9;
   display: flex;
@@ -17,7 +18,7 @@
 
 #waiting-page #waiting-room-top {
   width: 100%;
-  height: 3rem;
+  height: 7%;
   border-radius: 0.5rem 0.5rem 0rem 0rem;
   background: #ffd8e4;
   display: flex;
@@ -25,6 +26,7 @@
   align-items: center;
   padding: 0 1rem;
   box-sizing: border-box;
+  margin-bottom: auto;
 }
 
 #waiting-page #waiting-room-top .title {
@@ -49,18 +51,93 @@
 
 #waiting-page #waiting-room-body {
   display: flex;
+  width: 100%;
+  height: 80%;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
-#waiting-page #waiting-room-content {
+#waiting-page #member-list-box {
+  width: 75%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#waiting-page .waiting-room-content {
+  width: 90%;
+  /* height: 25%; */
   display: grid;
-  grid-template-columns: 0.6fr 0.6fr 0.6fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
-  margin: 2rem 2rem 1.5rem;
+  margin: 2rem 1.5rem 2rem;
 }
 
 #waiting-page #waiting-room-footer {
   margin: 0 2rem 2rem;
+  height: 10%;
   display: flex;
   justify-content: space-between;
+}
+
+#waiting-page #waiting-room-footer .btn {
+  width: 10rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+#waiting-page #waiting-room-footer .start-btn {
+  background: #ecc835;
+}
+
+#waiting-page #waiting-room-footer .exit-btn {
+  background: #ec5e98;
+}
+
+#waiting-page .chat-room {
+  width: 20%;
+  /* position: absolute;
+  right: 2rem; */
+  height: 60vh;
+  background: #ffd8e4;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: hidden;
+  /* z-index: 2; */
+  margin: 2rem 0 1.5rem;
+  width: auto;
+  padding: 1rem 0 1rem 1rem;
+}
+
+@media (max-width: 426px) {
+  #waiting-page #waiting-room-box #waiting-room-top .info {
+    display: none;
+  }
+  #waiting-page #waiting-room-box {
+    height: 100%;
+    width: 100%;
+  }
+  #waiting-page #waiting-room-body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  #waiting-page #member-list-box {
+    width: 100%;
+    height: 60%;
+  }
+  #waiting-page .chat-room {
+    width: 90%;
+    height: 40%;
+  }
+  #waiting-page .waiting-room-content {
+    gap: 1vh;
+    margin: 1vh 1vh;
+  }
 }

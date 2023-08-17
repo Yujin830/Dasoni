@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './TimeDisplay.css';
 
-function TimeDisplay() {
-  const [currentTime, setCurrentTime] = useState<string>('00:00');
-  const startTime = new Date(); // 현재 시간을 시작 시간으로 설정
+interface TimeDisplayProps {
+  currentTime: string;
+  startSec: string | number;
+  setCurrentTime: (time: string) => void;
+}
 
+const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+function TimeDisplay({ currentTime, startSec, setCurrentTime }: TimeDisplayProps) {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentTime = new Date();
-      const timeDiffInSeconds = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
+      const timeDiffInSeconds = Math.floor(
+        (currentTime.getTime() - Number(startSec) + KR_TIME_DIFF) / 1000,
+      );
+      // const timeDiffInSeconds = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
+
       updateTimer(timeDiffInSeconds);
     }, 1000);
 
     // 컴포넌트가 언마운트되면 인터벌 해제
     return () => clearInterval(intervalId);
-  }, []);
+  }, [startSec]);
 
   function updateTimer(timeInSeconds: number) {
+    // console.log('timeInSeconds', timeInSeconds);
     const minutes = Math.floor(timeInSeconds / 60)
       .toString()
       .padStart(2, '0');

@@ -3,9 +3,6 @@ package signiel.heartsigniel.common.dto;
 import lombok.Getter;
 import lombok.Setter;
 import signiel.heartsigniel.common.code.ResponseCode;
-import signiel.heartsigniel.model.chat.WebSocketInfo;
-import signiel.heartsigniel.model.member.Member;
-import signiel.heartsigniel.model.member.dto.MeetingRoomMemberReq;
 
 @Setter
 @Getter
@@ -17,7 +14,7 @@ public class Response<T> {
 
     @Getter
     @Setter
-    private static class Status {
+    public static class Status {
         private int code;
         private String message;
     }

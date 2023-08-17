@@ -1,0 +1,28 @@
+#fail-result {
+  width: 20%;
+  margin: 0 auto;
+}
+
+@media (max-width: 992px) {
+  #fail-result {
+    width: 25%;
+  }
+}
+
+@media (max-width: 768px) {
+  #fail-result {
+    width: 32%;
+  }
+}
+
+@media (max-width: 576px) {
+  #fail-result {
+    width: 40%;
+  }
+}
+
+@media (max-width: 360px) {
+  #fail-result {
+    width: 60%;
+  }
+}

@@ -9,23 +9,30 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^27.5.2",
-    "@types/node": "^17.0.45",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "@types/redux-persist": "^4.3.1",
     "axios": "^1.4.0",
+    "event-source-polyfill": "^1.0.31",
     "firebase": "^10.1.0",
     "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^2.0.6",
     "openvidu-browser": "^2.28.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-loader-spinner": "^5.3.4",
+    "react-loading-skeleton": "^3.3.1",
     "react-redux": "^8.1.1",
     "react-router": "^6.14.2",
     "react-router-dom": "^6.14.2",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.4",
+    "redux-persist": "^6.0.0",
+    "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
-    "swiper": "^10.0.4",
+    "styled-component": "^2.8.0",
+    "styled-components": "^6.0.7",
+    "swiper": "^8.4.6",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "websocket": "^1.0.34"
@@ -55,6 +62,7 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^17.0.45",
     "@types/sockjs-client": "^1.5.1",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
@@ -70,5 +78,5 @@
     "eslit": "^6.0.0",
     "prettier": "^3.0.0"
   },
-  "proxy": "http://localhost:8081/api/"
+  "proxy": "http://localhost:8081/"
 }

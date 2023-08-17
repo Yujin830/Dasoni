@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import RecentMatchAvartar from '../../components/Avarta/RecentMatchAvartar/RecentMatchAvartar';
+import RankAvartar from '../Avarta/RankAvartar/RackAvartar';
+import ExpPointBar from '../Element/ExpPointBar';
+import user, { deleteUserAsync } from '../../app/slices/user';
+import { useAppDispatch } from '../../app/hooks';
+import { useNavigate } from 'react-router';
+import axios from 'axios';
 
-function MyProfile({ setType }: any) {
-  const { loginId, nickname, job, birth, siDo, guGun } = useAppSelector((state) => state.user);
+function MyProfile({ setType }: { setType: (type: string) => void }) {
+  const { memberId, loginId, nickname, job, birth, siDo, guGun, gender } = useAppSelector(
+    (state) => state.user,
+  );
+  console.log(siDo, guGun);
+  const user = useAppSelector((state) => state.user);
+  const [recentUserList, setRecentUserList] = useState<any[]>([]);
 
-  // TODO : 최근 매칭된 다소니 리스트 조회 recentUserList로 state 변경
-  const recentUserList = useState([]);
-  const faketUserList = [
-    { profileImg: 'rank_profile.png', userId: 1 },
-    { profileImg: 'rank_profile.png', userId: 2 },
-    { profileImg: 'rank_profile.png', userId: 3 },
-    { profileImg: 'rank_profile.png', userId: 4 },
-    { profileImg: 'rank_profile.png', userId: 5 },
-    { profileImg: 'rank_profile.png', userId: 6 },
-  ];
-
-  const deleteUser = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const deleteUser = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    if (confirm(`탈퇴하면 복구할 수 없습니다.\n정말 탈퇴하시겠습니까?`)) {
-      // TODO : 회원 탈퇴 API 개발
-      alert(`탈퇴 되었습니다.`);
-      // location : 로그인 화면으로 이동
+    if (window.confirm(`탈퇴하면 복구할 수 없습니다.\n정말 탈퇴하시겠습니까?`)) {
+      try {
+        // TODO : 회원 탈퇴
+        await dispatch(deleteUserAsync(user));
+        alert(`탈퇴 되었습니다.`);
+        // location : 로그인 화면으로 이동
+        navigate('/');
+      } catch (error) {
+        console.error(error);
+        alert(`탈퇴 중에 오류가 발생했습니다.`);
+      }
     }
   };
 
@@ -30,9 +39,24 @@ function MyProfile({ setType }: any) {
     setType('modify');
   };
 
+  const changePw = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setType('changePw');
+  };
+
   useEffect(() => {
-    // TODO : 최근 매칭된 다소니 리스트 조회 API 개발
+    getRecentMatchedMemberList();
   }, []);
+
+  // 최근 매칭된 다소니 리스트 조회
+  const getRecentMatchedMemberList = async () => {
+    const res = await axios.get(`/api/users/${memberId}/history`);
+    console.log(res.data);
+
+    if (res.status === 200) {
+      setRecentUserList(res.data.content);
+    }
+  };
 
   return (
     <div className="content">
@@ -61,11 +85,21 @@ function MyProfile({ setType }: any) {
         </tbody>
       </table>
       <div id="recent-matched-user-box">
-        <p>최근 매칭된 다소니</p>
+        <div className="recent-matched-title">
+          <p>최근 매칭된 다소니</p>
+        </div>
         <div id="matched-user-list">
           {recentUserList.length > 0 ? (
-            faketUserList.map((user) => (
-              <RecentMatchAvartar key={user.userId} src={user.profileImg} />
+            recentUserList.map((member: any, index) => (
+              <RecentMatchAvartar
+                key={member.opponentId}
+                matchedMemberId={member.opponentId}
+                src={member.profileImageUrl}
+                matchedMemberIndex={index}
+                gender={gender === 'male' ? 'female' : 'male'}
+                recentUserList={recentUserList}
+                setRecentUserList={setRecentUserList}
+              />
             ))
           ) : (
             <p>최근 매칭된 다소니가 없습니다</p>
@@ -73,6 +107,9 @@ function MyProfile({ setType }: any) {
         </div>
       </div>
       <footer>
+        <a className="btn mobile" href="/" onClick={changePw}>
+          비밀번호 변경
+        </a>
         <a className="btn modify" href="/" onClick={modifyUser}>
           회원 정보 수정
         </a>

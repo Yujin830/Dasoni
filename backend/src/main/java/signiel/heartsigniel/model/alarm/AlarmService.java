@@ -1,17 +1,21 @@
 package signiel.heartsigniel.model.alarm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import signiel.heartsigniel.model.alarm.code.AlarmCode;
-import signiel.heartsigniel.model.party.Party;
-import signiel.heartsigniel.model.partymember.PartyMember;
 import signiel.heartsigniel.model.room.Room;
+import signiel.heartsigniel.model.roommember.RoomMember;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AlarmService {
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
@@ -30,27 +34,37 @@ public class AlarmService {
         return emitter;
     }
 
-    public void sendMatchCompleteMessage(Room room) {
-        // male party members
-        for (PartyMember member : room.getMaleParty().getMembers()) {
-            sendEmitterMessage(member, room.getVideoUrl());
-        }
-
-        // female party members
-        for (PartyMember member : room.getFemaleParty().getMembers()) {
-            sendEmitterMessage(member, room.getVideoUrl());
-        }
+    public void sendMegiMatchCompleteMessage(Room room, RoomMember roomMember){
+        sendEmitterMessage(roomMember, room);
     }
 
-    private void sendEmitterMessage(PartyMember member, String videoUrl) {
-        SseEmitter emitter = this.emitters.get(member.getMember().getMemberId());
+    public void sendMatchCompleteMessage(Room room) {
+        // male party members
+        // roomMember- > 6명이 모여있는 list.
+        for (RoomMember roomMember : room.getRoomMembers()) {
+            sendEmitterMessage(roomMember, room);
+        }
+
+    }
+
+    private void sendEmitterMessage(RoomMember roomMember, Room room) {
+        SseEmitter emitter = this.emitters.get(roomMember.getMember().getMemberId());
 
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().name("match").data("화상채팅방 구현하면 고"));
+                // roomId와 메시지 정보를 함께 전송
+                Map<String, Object> responseData = new HashMap<>();
+                if(roomMember.isSpecialUser()){
+                    responseData.put("megi", true);
+                }else{
+                    responseData.put("megi", false);
+                }
+                responseData.put("status", "OK");
+                responseData.put("roomId", room.getId());
+                emitter.send(SseEmitter.event().name("match").data(responseData));
                 emitter.complete();
+
             } catch (IOException e) {
-                // Emit a send failure error
                 emitter.completeWithError(new RuntimeException(AlarmCode.ALARM_SEND_FAIL.getMessage()));
             }
         }

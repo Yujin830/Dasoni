@@ -10,67 +10,34 @@ import FilledButton from '../../components/Button/FilledButton';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
-import { setHelpModalVisible, setOpenRoomModalVisible } from '../../app/slices/waitingSlice';
+import {
+  setHelpModalVisible,
+  setOpenQuickMatchingModalVisible,
+  setOpenRoomModalVisible,
+} from '../../app/slices/waitingSlice';
 import { WaitingRoomInfoRes } from '../../apis/response/waitingRoomRes';
-
+import { useAppSelector } from '../../app/hooks';
+import MatchingModal from '../../components/Modal/MatchingModal/MatchingModal';
 import HelpModal from '../../components/Modal/HelpModal/HelpModal';
 import OpenRoomModal from '../../components/Modal/OpenRoomModal/OpenRoomModal';
+import SkeletonElement from '../../components/SkeletonElement/SkeletonElement';
+import SkeletonMainPage from './SkeletonMainPage';
 
 // 서버 주소를 환경에 따라 설정
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
-const styles = {
-  iconBtn: {
-    width: '5rem',
-    height: '2.5rem',
-    borderRadius: '6.25rem',
-    background: 'rgba(238, 114, 165, 0.50)',
-  },
-  searchBar: {
-    width: '16rem',
-    height: '2.5rem',
-    borderRadius: '1.5rem',
-    background: '#FFE8EF',
-    color: '#555',
-    fontSize: '0.8rem',
-    border: 'none',
-    paddingLeft: '1rem',
-  },
-  createRoomBtn: {
-    width: '8rem',
-    height: '3rem',
-    borderRadius: '0.5rem',
-    background: '#ECC835',
-    color: '#fff',
-    fontSize: '1.2rem',
-    fontWeight: '600',
-  },
-  fastMatchBtn: {
-    width: '8rem',
-    height: '3rem',
-    borderRadius: '0.5rem',
-    background: '#EC5E98',
-    color: '#fff',
-    fontSize: '1.2rem',
-    fontWeight: '600',
-  },
-  pagenationBtn: {
-    width: '5.5rem',
-    height: '2.5rem',
-    borderRadius: '6.25rem',
-    background: '#FFE8EF',
-    color: '#555',
-    fontSize: '1rem',
-  },
-};
-
 function MainPage() {
+  // 미팅 대기방 리스트
+
   //모달 띄우기
   const helpModalVisible = useSelector((state: RootState) => state.waitingRoom.helpModalVisible);
   const openRoomModalVisible = useSelector(
     (state: RootState) => state.waitingRoom.openRoomModalVisible,
   );
+  // const openQuickMatchingModalVisible = useSelector(
+  //   (state: RootState) => state.waitingRoom.openQuickMatchingModalVisible,
+  // );
 
   // Toggle HelpModal visibility
   const handleHelpModalToggle = () => {
@@ -81,10 +48,33 @@ function MainPage() {
     dispatch(setOpenRoomModalVisible(!openRoomModalVisible));
   };
 
+  // const handleOpenQuickMatchingToggle = () => {
+  //   dispatch(setOpenQuickMatchingModalVisible(!openQuickMatchingModalVisible));
+  // };
+
+  const [isFastModalOpen, setFastModalOpen] = useState(false);
+  const [isMegiModalOpen, setMegiModalOpen] = useState(false);
+
   // 필터 버튼 토클
   const [isOpen, setIsOpen] = useState(false);
   const handleToggleFilter = () => {
     setIsOpen((prevState) => !prevState);
+  };
+
+  // 필터 적용
+  const handleClickFilter = async (gender: string) => {
+    console.log(gender);
+
+    try {
+      const res = await axios.get(`/api/rooms/filter/${gender}`);
+      console.log(res);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 검색창 입력값
@@ -94,21 +84,29 @@ function MainPage() {
   };
 
   // 검색
-  const search = (searchInput: string) => {
+  const search = async (searchInput: string) => {
     if (searchInput === '') {
-      alert('검색어를 입력해주세요');
+      getWaitingRoomList();
       return;
     }
 
-    console.log(searchInput);
-    // TODO : 검색 API 로직 개발
+    try {
+      const res = await axios.get(`/api/rooms/search/${searchInput}`);
+
+      if (res.status === 200) {
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 미팅 대기방 리스트
   const [waitingRoomList, setWaitingRoomList] = useState<WaitingRoomInfoRes[]>([]);
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
   const getWaitingRoomList = async () => {
     try {
-      const res = await axios.get('/rooms');
+      const res = await axios.get('/api/rooms');
       console.log(res);
       if (res.status === 200) {
         setWaitingRoomList(res.data.content.content);
@@ -121,16 +119,85 @@ function MainPage() {
     getWaitingRoomList();
   }, []);
 
-  // 방 만들기 모달 open
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const createRoom = () => {
-    console.log('방 만들기');
+
+  // 방목록 페이지 넘기기
+  const nextRoomList = async () => {
+    try {
+      const nextPage = currentPage + 1; // 현재 페이지에서 1 증가
+      const res = await axios.get(`/api/rooms?page=${nextPage}`);
+      console.log('다음');
+      if (res.status === 200) {
+        const nextPageData = res.data.content.content;
+
+        if (nextPageData.length > 0) {
+          setCurrentPage(nextPage);
+          setWaitingRoomList(nextPageData);
+        } else {
+          console.log('다음 페이지에 방이 없습니다.');
+          // 다음 페이지에 방이 없을 경우 처리
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
+  const prevRoomList = async () => {
+    try {
+      const prevPage = Math.max(currentPage - 1, 0); // 현재 페이지에서 1 감소, 최소 0 이상
+      const res = await axios.get(`/api/rooms?page=${prevPage}`);
+      console.log('이전');
+      if (res.status === 200) {
+        setCurrentPage(prevPage);
+        console.log('현재페이지:', prevPage, 'content:', res.data.content);
+        setWaitingRoomList(res.data.content.content);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const member = useAppSelector((state) => state.user);
+
   // 빠른 매칭 모달 open
-  const matchFast = () => {
-    alert('빠른 매칭 진행 중');
+  const matchFast = async () => {
+    const memberId = member.memberId;
+    const queueType = 'normal';
+
+    try {
+      const res = await axios.post(`api/match/members/${memberId}/${queueType}`);
+
+      if (res.status === 200) {
+        console.log('빠른 매치 응답 : ', res.data);
+        setFastModalOpen(true);
+      } else {
+        alert('빠른 매칭 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.log('빠른 매칭 오류', error);
+      alert('빠른 매칭 중 오류가 발생했습니다.');
+    }
+  };
+
+  //메기 매칭
+  const megiMatch = async () => {
+    const memberId = member.memberId;
+    const queueType = 'special';
+    try {
+      const res = await axios.post(`api/match/members/${memberId}/${queueType}`);
+
+      if (res.status === 200) {
+        console.log('메기 매치 응답 : ', res.data);
+        setMegiModalOpen(true);
+      } else {
+        alert('메기 매칭 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.log('메기 매칭 오류', error);
+      alert('메기 매칭 중 오류가 발생했습니다.');
+    }
   };
 
   // 새로고침 버튼 클릭
@@ -141,10 +208,7 @@ function MainPage() {
 
   return (
     <div id="main" className={openRoomModalVisible ? 'modal-visible' : ''}>
-      <Header
-        onModalToggle={handleHelpModalToggle}
-        // onOpenRoomModalToggle={handleOpenRoomModalToggle}
-      />
+      <Header onModalToggle={handleHelpModalToggle} />
       <Banner />
       <main>
         <div id="main-top">
@@ -153,23 +217,27 @@ function MainPage() {
           </button>
           <div id="filter-box">
             <IconButton
-              style={styles.iconBtn}
+              classes="filter-btn"
               content="필터"
               iconPosition="left"
               icon="filter_list"
               handleClick={handleToggleFilter}
             />
             <ul className={isOpen ? 'show' : ''}>
-              <li>남자만 입장 가능</li>
-              <li>여자만 입장 가능</li>
+              <li role="presentation" onClick={() => handleClickFilter('male')}>
+                남자만 입장 가능
+              </li>
+              <li role="presentation" onClick={() => handleClickFilter('female')}>
+                여자만 입장 가능
+              </li>
             </ul>
           </div>
           <div id="search-box">
             <NoLableInput
-              style={styles.searchBar}
+              classes="search-bar"
               type="text"
               value={searchInput}
-              placeholer="검색어를 입력해주세요."
+              placeholer="검색하기"
               handleChange={handleSearchInput}
             />
             <button
@@ -187,47 +255,59 @@ function MainPage() {
                   key={room.roomId}
                   roomId={room.roomId}
                   title={room.title}
-                  malePartyMemberCount={room.malePartyMemberCount}
-                  femalePartyMemberCount={room.femalePartyMemberCount}
-                  malePartyAvgRating={room.malePartyAvgRating}
-                  femalePartyAvgRating={room.femalePartyAvgRating}
-                  megiAcceptable={room.megiAcceptable}
+                  maleMemberCount={room.maleMemberCount}
+                  femaleMemberCount={room.femaleMemberCount}
+                  maleAvgRating={room.maleAvgRating}
+                  femaleAvgRating={room.femaleAvgRating}
+                  ratingLimit={room.ratingLimit}
                 />
               ))
-            : null}
+            : '존재하는 방이 없습니다.'}
+          {!waitingRoomList && <SkeletonMainPage />}
         </div>
         <div id="room-footer">
-          <div id="btn-box">
-            <FilledButton
-              content="방 만들기"
-              style={styles.createRoomBtn}
-              handleClick={handleOpenRoomModalToggle}
-            />
-            <FilledButton content="빠른 매칭" style={styles.fastMatchBtn} handleClick={matchFast} />
-          </div>
           <div id="pagenationBtn-box">
             <IconButton
-              style={styles.pagenationBtn}
+              classes="page-btn"
               content="이전"
               iconPosition="left"
-              handleClick={createRoom}
+              handleClick={prevRoomList}
               icon="chevron_left"
             />
             <IconButton
-              style={styles.pagenationBtn}
+              classes="page-btn"
               content="다음"
               iconPosition="right"
-              handleClick={createRoom}
+              handleClick={nextRoomList}
               icon="chevron_right"
             />
+          </div>
+          <div id="btn-box">
+            <FilledButton
+              classes="create-room-btn"
+              content="방 만들기"
+              handleClick={handleOpenRoomModalToggle}
+            />
+            <FilledButton classes="fast-match-btn" content="빠른 매칭" handleClick={matchFast} />
+            <FilledButton classes="megi-match-btn" content="메기 매칭" handleClick={megiMatch} />
           </div>
         </div>
       </main>
       {/* HelpModal 컴포넌트를 렌더링합니다. */}
       {helpModalVisible && <HelpModal onClose={handleHelpModalToggle} />}
-
+      <div className={`helpmodal-overlay ${helpModalVisible == true ? 'active' : ''}`}></div>
       {/* OpenRoomModal 컴포넌트를 렌더링합니다. */}
       {openRoomModalVisible && <OpenRoomModal onClose={handleOpenRoomModalToggle} />}
+      <div
+        className={`openroommodal-overlay ${openRoomModalVisible == true ? 'active' : ''}`}
+      ></div>
+      {/* MatchingModal 컴포넌트를 렌더링합니다. */}
+      {/* {openQuickMatchingModalVisible && <MatchingModal onClose={handleOpenQuickMatchingToggle} />} */}
+      {isFastModalOpen && <MatchingModal onClose={() => setFastModalOpen(false)} />}
+      {isMegiModalOpen && <MatchingModal onClose={() => setMegiModalOpen(false)} />}
+      {/* <div
+        className={`matchingmodal-overlay ${openQuickMatchingModalVisible == true ? 'active' : ''}`}
+      ></div> */}
     </div>
   );
 }

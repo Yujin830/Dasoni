@@ -1,13 +1,18 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import userReducer from './slices/user';
-import waitingReducer from './slices/waitingSlice';
+import persistedUserReducer from './slices/user';
+import { persistStore } from 'redux-persist';
+import persistedWaitingReducer from './slices/waitingSlice';
+import persistedMeetingReducer from './slices/meetingSlice';
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
-    waitingRoom: waitingReducer,
+    user: persistedUserReducer,
+    waitingRoom: persistedWaitingReducer,
+    meetingRoom: persistedMeetingReducer,
   },
 });
+
+export const persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
