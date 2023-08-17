@@ -57,15 +57,15 @@ function AddressSelecter({
   const [didMount, setDidMount] = useState(false);
 
   useEffect(() => {
-    console.log('sidoList:', sidoList);
-    console.log('gugunList:', gugunList);
+    // console.log('sidoList:', sidoList);
+    // console.log('gugunList:', gugunList);
   }, [sidoList, gugunList]);
 
   const dispatch = useDispatch();
 
   const handleSidoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const sidoString = e.target.options[e.target.selectedIndex].getAttribute('data-sido');
-    console.log(sidoString);
+    // console.log(sidoString);
     dispatch(setSido(sidoString));
     setModifySido(Number(e.target.value));
   };
@@ -73,7 +73,7 @@ function AddressSelecter({
   const handleGugunChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(e.target.value);
     const gugunString = e.target.options[e.target.selectedIndex].getAttribute('data-gugun');
-    console.log(gugunString);
+    // console.log(gugunString);
     dispatch(setGugun(gugunString));
     setModifyGugun(Number(e.target.value));
   };
@@ -126,15 +126,15 @@ function AddressSelecter({
 
   // mount 완료 설정
   useEffect(() => {
-    console.log(`mount ${mountCountRef.current}`);
+    // console.log(`mount ${mountCountRef.current}`);
     mountCountRef.current++;
     setDidMount(true);
-    return () => console.log('unmount');
+    // return () => console.log('unmount');
   }, []);
 
   // mount 됐을 때만 api 불러와서 시군구 설정
   useEffect(() => {
-    console.log('didMount', didMount);
+    // console.log('didMount', didMount);
     if (didMount) {
       getSido();
       getGugun(modifySido);

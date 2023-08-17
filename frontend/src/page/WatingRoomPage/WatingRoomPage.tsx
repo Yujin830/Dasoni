@@ -11,8 +11,6 @@ import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAppSelector } from '../../app/hooks';
 import convertScoreToName from '../../utils/convertScoreToName';
-// BGM
-import song from '../../assets/music/lobby.mp3';
 import AudioController from '../../components/AudioController/AudioController';
 import { useDispatch } from 'react-redux';
 import { setWaitingMemberList } from '../../app/slices/waitingSlice';
@@ -83,7 +81,7 @@ function WaitingRoomPage() {
       if (res.data.status.code !== 1224) {
         alert('미팅이 3초 후 시작됩니다');
         client?.send(`/app/room/${roomId}/start`);
-      }
+      } else alert('참가 인원이 부족합니다');
     }
   };
 

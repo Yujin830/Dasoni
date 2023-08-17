@@ -179,7 +179,7 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
       meetingCount: data.meetingCount || 0,
       profileImageSrc: data.profileImageSrc,
       job: data.job || '선택해 주세요',
-      siDo: data.siDo || '선택해',
+      siDo: data.siDo !== -1 ? data.siDo : '선택해',
       guGun: data.guGun || '주세요',
       // roles: data.roles,
       remainLife: data.remainLife,
