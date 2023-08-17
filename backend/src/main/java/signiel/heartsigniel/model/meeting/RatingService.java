@@ -160,7 +160,7 @@ public class RatingService {
         for (int i = 0; i < signalBoards.size(); i++) {
             int[] scoreBoard = calculateSignalScore(signalBoards.get(i), i+1);
             for (int j = 0; j < roomMemberSize; j++) {
-                finalScore[i] = scoreBoard[i] + finalScore[i];
+                finalScore[j] += scoreBoard[j];
             }
         }
         for (SingleSignalRequest singleSignalRequest : singleSignalRequests) {

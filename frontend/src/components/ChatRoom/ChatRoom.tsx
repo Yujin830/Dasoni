@@ -93,7 +93,14 @@ const ChatRoom: React.FC = () => {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`message ${member.nickname === msg.senderNickname ? 'message-own' : ''}`}
+                className={`message ${
+                  member.nickname === msg.senderNickname
+                    ? 'message-own'
+                    : msg.content.includes('입장하셨습니다.') ||
+                      msg.content.includes('퇴장하셨습니다.')
+                    ? 'message-system'
+                    : 'message-other'
+                }`}
               >
                 {msg.content.includes(`입장하셨습니다.`) ||
                 msg.content.includes(`퇴장하셨습니다.`) ? (
