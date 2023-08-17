@@ -6,10 +6,10 @@
   alt="다소니 로고"
 /></div>
 
-
 <br>
 
 ## 🔧 기술 스택
+
 <br>
 
 ### 서버 아키텍처
@@ -17,6 +17,7 @@
 ![Alt text](image.png)
 
 ### Back-end & Front-end
+
 ![Java](https://img.shields.io/badge/Java-yellow.svg?&style=for-the-badge&logo=java&logoColor=#3776AB)
 ![Spring](https://img.shields.io/badge/Spring-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?&style=for-the-badge&logo=Spring%20Boot&logoColor=white)
@@ -39,10 +40,12 @@
 ![Nginx](https://img.shields.io/badge/Nginx-009639.svg?&style=for-the-badge&logo=Nginx&logoColor=white)
 
 ### Collaboration Tools
+
 ![Notion](https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=로고색상)
 ![Mattermost](https://img.shields.io/badge/Mattermost-0058CC.svg?&style=for-the-badge&logo=Mattermost&logoColor=로고색상)
 
 ### Issue & Configuration Management
+
 ![GitLab](https://img.shields.io/badge/Gitlab-FC6D26.svg?&style=for-the-badge&logo=Gitlab&logoColor=#FC6D26)
 ![Jira](https://img.shields.io/badge/Jira-0052CC.svg?&style=for-the-badge&logo=Jira&logoColor=Blue)
 
@@ -51,29 +54,35 @@
 ## 0️⃣ 목차
 
 ### 1️⃣ 프로젝트 개요
-  - 🔹 팀 소개
-  - 🔹 프로젝트
+
+- 🔹 팀 소개
+- 🔹 프로젝트
+
 ### 2️⃣ 기획 & 설계
-  - 🔹 기획
-    - 🔹 요구사항 정의서
-    - 🔹 피그마
-    - 🔹 ERD
-  - 🔹 설계
-    - 🔹 API 문서
+
+- 🔹 기획
+  - 🔹 요구사항 정의서
+  - 🔹 피그마
+  - 🔹 ERD
+- 🔹 설계
+  - 🔹 API 문서
 
 ### 3️⃣ 핵심 기능
-  - 🔹 실시간 매칭
-  - 🔹 다대다 화상 미팅
-  - 🔹 레이팅 시스템
-  
+
+- 🔹 실시간 매칭
+- 🔹 다대다 화상 미팅
+- 🔹 레이팅 시스템
+
 ### 4️⃣ 협업 & 팀 컨벤션
-  - 🔹 Commit Convention
-  - 🔹 Git Flow
-  - 🔹 Team Rule & Culture
+
+- 🔹 Commit Convention
+- 🔹 Git Flow
+- 🔹 Team Rule & Culture
 
 ### 5️⃣ 🚨 트러블 슈팅 🚨
-  - [X] [SSE와 비동기 처리](https://github.com/YeryunJung)
-  - [X] [매칭 알고리즘 구조 개선](https://github.com/Fishphobiagg)
+
+- [x] [SSE와 비동기 처리](https://github.com/YeryunJung)
+- [x] [매칭 알고리즘 구조 개선](https://github.com/Fishphobiagg)
 
 <br>
 
@@ -88,13 +97,15 @@
 /></div>
 
 ## 👋 팀 소개
+
 <br>
 
-| **강한(팀장**) | **이명우** | **권현우**                                             | **김유진** | **김선희** | **민경현** |
-| --- | --- |-----------------------------------------------------| --- |--- | --- |
-| <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend <br> DevOps</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:pink">Frontend</p> | <p align="left" style="color:pink">Frontend</p> |
-| WebSocket <br> 채팅,매칭,알람 서비스 | 매칭, 레이팅 알고리즘 <br> REST API | CI/CD <br> 프로필 사진 API                               |  |  |
-|  | [@Fishphobiagg](https://github.com/Fishphobiagg) | [@mycodeisnoob](https://github.com/mycodeisnoob)    |  |  |  |
+| **강한(팀장**)                                    | **이명우**                                        | **권현우**                                                    | **김유진**                                        | **김선희**                                      | **민경현**                                        |
+| ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------- |
+| <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend <br> DevOps</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:pink">Frontend</p> | <p align="left" style="color:pink">Frontend</p>   |
+| WebSocket <br> 채팅,매칭,알람 서비스              | 매칭, 레이팅 알고리즘 <br> REST API               | CI/CD <br> 프로필 사진 API                                    |                                                   |                                                 | 회원가입 및 로그인 <br> 모달 및 컴포넌트 <br> CSS |
+|                                                   | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)              |                                                   |                                                 |                                                   |
+
 <br>
 
 ## 🍳 프로젝트
