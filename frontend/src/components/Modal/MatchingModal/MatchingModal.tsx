@@ -26,13 +26,16 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
       setIsMatched(true);
 
       setTimeout(() => {
-        navigateToMeetingRoom(parseData.roomId);
+        navigateToMeetingRoom(parseData.roomId, parseData.megi);
       }, 3000);
     }
   });
 
-  const navigateToMeetingRoom = (roomId: string) => {
-    navigate(`/meeting/${roomId}`, { replace: true });
+  const navigateToMeetingRoom = (roomId: string, isMegi: boolean) => {
+    navigate(`/meeting/${roomId}`, {
+      replace: true,
+      state: { isMegi },
+    });
     eventSource.close();
     onClose();
   };

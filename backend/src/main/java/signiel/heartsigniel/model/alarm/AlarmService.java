@@ -49,6 +49,11 @@ public class AlarmService {
             try {
                 // roomId와 메시지 정보를 함께 전송
                 Map<String, Object> responseData = new HashMap<>();
+                if(roomMember.isSpecialUser()){
+                    responseData.put("megi", true);
+                }else{
+                    responseData.put("megi", false);
+                }
                 responseData.put("status", "OK");
                 responseData.put("roomId", room.getId());
                 emitter.send(SseEmitter.event().name("match").data(responseData));
