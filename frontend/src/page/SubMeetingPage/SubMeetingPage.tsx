@@ -25,7 +25,7 @@ function SubMeetingPage() {
   );
 
   const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
-  const [startSec, setStartSec] = useState(new Date().getTime() + 9 * 60 * 60 * 1000); // 서버에서 받아온 시작 시간
+  const [startSec, setStartSec] = useState(new Date().getTime()); // 서버에서 받아온 시작 시간
   const [guideMessage, setGuideMessage] = useState(
     '서로의 마음이 닿은 여러분, 이제 마음을 확인하며 둘만의 즐거운 시간 보내기 바랍니다',
   );
