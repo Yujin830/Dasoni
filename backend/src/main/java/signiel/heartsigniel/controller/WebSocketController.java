@@ -58,26 +58,13 @@ public class WebSocketController {
     }
 
 
-<<<<<<< HEAD
-=======
     @MessageMapping("room/{roomId}/megiEnterMessage")
     public void megiEnterMessage(@DestinationVariable Long roomId){
         String msg = "메기입장";
         log.info(msg);
         operations.convertAndSend("/topic/room/"+roomId+"/megiEnterMessage", msg);
     }
-    @MessageMapping("room/{roomId}/setTime")
-    public void sendTime(@DestinationVariable Long roomId){
-        Room room = roomRepository.findById(roomId).get();
-        LocalDateTime startTime = room.getStartTime();
-        Duration duration = Duration.between(startTime, LocalDateTime.now());
 
-        Long time = duration.getSeconds();
-
-        operations.convertAndSend("/topic/room/"+roomId+"/setTime", time);
-    }
-
->>>>>>> feat/BACK-439
     /**
      * 메기 입장 가능!
      */

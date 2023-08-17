@@ -49,12 +49,14 @@ function MeetingPage() {
 
   const client = useWebSocket({
     subscribe: (client) => {
-      // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/megiEnterMessage`, (res: any) => {
         console.log('enterMegi!!!');
         console.log(res.body);
+        setGuideMessage('메기 등장!!! 메기 등장!!! 메기가 등장합니다!!');
+        setIsShow(true);
       });
 
+      // 가이드 구독
       client.subscribe(`/topic/room/${roomId}/guide`, (res: any) => {
         setGuideMessage(res.body);
         setIsShow(true);
@@ -187,7 +189,6 @@ function MeetingPage() {
   }, [location.state]);
 
   // 서버 시간으로 타이머 설정
-
   useEffect(() => {
     fetchElapsedTime();
   }, []);

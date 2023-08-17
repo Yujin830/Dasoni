@@ -45,6 +45,7 @@ function SubMeetingPage() {
     }
   }, [volume, muted]);
 
+  // 서버 시간으로 타이머 설정
   useEffect(() => {
     fetchElapsedTime();
   }, []);
@@ -52,12 +53,9 @@ function SubMeetingPage() {
   const fetchElapsedTime = async () => {
     try {
       const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
-      // const elapsedSeconds = parseInt(response.data, 10);
       console.log('시간', response.data);
       console.log('시간', Number(response.data));
       setStartSec(response.data);
-      // console.log('시간', elapsedSeconds);
-      // calculateElapsedTime(elapsedSeconds);
     } catch (error) {
       console.error('Failed to fetch elapsed time:', error);
     }
