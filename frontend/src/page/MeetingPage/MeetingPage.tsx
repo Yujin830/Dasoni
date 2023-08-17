@@ -197,7 +197,6 @@ function MeetingPage() {
     try {
       const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
       console.log('시간', response.data);
-      console.log('시간', Number(response.data));
       setStartSec(response.data);
     } catch (error) {
       console.error('Failed to fetch elapsed time:', error);
