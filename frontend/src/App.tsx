@@ -11,6 +11,8 @@ import ResultModal from './components/Modal/ResultModal/ResultModal';
 import SubMeetingPage from './page/SubMeetingPage/SubMeetingPage';
 import ResultPage from './page/ResultPage/ResultPage';
 
+import HeartCursor from './components/HeartCursor';
+
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -33,9 +35,9 @@ function App() {
           <Route path="/test" element={<ResultModal onClose={handleCloseModal} />} />{' '}
         </Routes>
       </BrowserRouter>
+      <HeartCursor />
     </div>
   );
 }
 
 export default App;
-3;
