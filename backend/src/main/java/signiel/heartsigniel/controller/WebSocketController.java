@@ -81,6 +81,15 @@ public class WebSocketController {
         operations.convertAndSend("/topic/room/" + roomId + "/megi", megi);
     }
 
+    @MessageMapping("room/{roomId}/endMegi")
+    public void endMegiEnterTime(@DestinationVariable Long roomId){
+        log.info("메기 입장 불가");
+
+        matchingRoomService.dequeueRoom(roomId);
+
+        operations.convertAndSend("/topic/room/" + roomId + "/endMegi");
+    }
+
 
     /**
      * 유저 정보 오픈!!
