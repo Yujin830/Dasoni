@@ -16,8 +16,6 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
   const [isMatching, setIsMatching] = useState<boolean>(true);
   const [isMatched, setIsMatched] = useState<boolean>(false);
 
-  const client = useWebSocket({});
-
   const eventSource = new EventSource(`api/alarm/subscribe/${member.memberId}`);
 
   eventSource.addEventListener('match', (event: MessageEvent) => {
@@ -26,9 +24,6 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
     if (parseData.status === 'OK') {
       setIsMatching(false);
       setIsMatched(true);
-
-      // 매기 매칭 완료 메시지 send
-      client?.send(`/app/room/${parseData.roomId}/megiEnter`);
 
       setTimeout(() => {
         navigateToMeetingRoom(parseData.roomId);

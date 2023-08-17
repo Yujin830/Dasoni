@@ -40,7 +40,7 @@ public class RoomController {
     @GetMapping("{roomId}/elapsedTime")
     public ResponseEntity<Long> getElapsedTime(@PathVariable Long roomId){
         LocalDateTime startTime = privateRoomService.getRoomStartTime(roomId);
-        long milliSec = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+        long milliSec = startTime.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
         System.out.println("============ " + startTime);
         System.out.println("============ 밀리세컨즈 " + milliSec);
         Duration duration = Duration.between(startTime, LocalDateTime.now());

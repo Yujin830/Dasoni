@@ -8,10 +8,6 @@ interface TimeDisplayProps {
 }
 
 function TimeDisplay({ currentTime, startSec, setCurrentTime }: TimeDisplayProps) {
-  // const startTime = new Date(); // 현재 시간을 시작 시간으로 설정
-  // console.log('startTime ', startTime.getTime());
-
-  console.log(`startSec ${startSec}`);
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentTime = new Date();
@@ -31,7 +27,6 @@ function TimeDisplay({ currentTime, startSec, setCurrentTime }: TimeDisplayProps
       .toString()
       .padStart(2, '0');
     const seconds = (timeInSeconds % 60).toString().padStart(2, '0');
-    // console.log(`${minutes}:${seconds}`);
     setCurrentTime(`${minutes}:${seconds}`);
   }
 
