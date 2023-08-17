@@ -9,6 +9,7 @@ import signiel.heartsigniel.model.roommember.RoomMember;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -31,6 +32,10 @@ public class AlarmService {
         emitter.onCompletion(() -> this.emitters.remove(memberId));
 
         return emitter;
+    }
+
+    public void sendMegiMatchCompleteMessage(Room room, RoomMember roomMember){
+        sendEmitterMessage(roomMember, room);
     }
 
     public void sendMatchCompleteMessage(Room room) {

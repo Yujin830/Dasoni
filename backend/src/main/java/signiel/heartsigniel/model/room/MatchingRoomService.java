@@ -127,14 +127,12 @@ public class MatchingRoomService {
         RatingQueue maleQueue = RatingQueue.getMegiQueueByMedianRating(roomLimitRating, "male");
         RatingQueue femaleQueue = RatingQueue.getMegiQueueByMedianRating(roomLimitRating, "female");
 
-        if (redisTemplate.opsForList().size(maleQueue.getName()) >= 1 && redisTemplate.opsForList().size(femaleQueue.getName()) >= 1){
+        if (redisTemplate.opsForList().size(maleQueue.getName()) >= 1 && redisTemplate.opsForList().size(femaleQueue.getName()) >= 1 && redisTemplate.opsForList().size("ROOM_"+room.getRatingLimit()) >= 1){
+            redisTemplate.opsForList().leftPop("ROOM_"+room.getRatingLimit());
             Long maleMemberId = redisTemplate.opsForList().leftPop(maleQueue.getName());
             Long femaleMemberId = redisTemplate.opsForList().leftPop(femaleQueue.getName());
             joinRoom(room, maleMemberId, true);
             joinRoom(room, femaleMemberId, true);
-            scheduler.schedule(() -> {
-                alarmService.sendMatchCompleteMessage(room);
-            }, 1000, TimeUnit.MILLISECONDS);
             return Response.of(RoomQueueCode.MATCHING_SUCCESS, SpecialMemberMatchingResponse.of(room.getId()));
         }
         return Response.of(RoomQueueCode.ENQUEUE_SUCCESS, null);
@@ -160,6 +158,14 @@ public class MatchingRoomService {
 
         RoomMember roomMember = roomMemberService.createRoomMember(member, room, isSpecialUser, isRoomLeader);
         room.getRoomMembers().add(roomMember);
+
+        // 메기 매칭 메시지 전송 및 생명 감소, 나중에 무조건 리팩토링
+        if (isSpecialUser){
+            lifeService.useLife(member);
+            scheduler.schedule(() -> {
+                alarmService.sendMegiMatchCompleteMessage(room, roomMember);
+            }, 1000, TimeUnit.MILLISECONDS);
+        }
         roomRepository.save(room);
     }
 

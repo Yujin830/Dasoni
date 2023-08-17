@@ -143,11 +143,9 @@ public enum RatingQueue {
     public static RatingQueue getMegiQueueByMedianRating(Long medianRating, String gender){
         for (RatingQueue queue : values()) {
             if (queue.getMedianRating().equals(medianRating) && queue.type.equals("special") && queue.gender.equals(gender)){
-                System.out.println("나다" + queue.getName());
                 return queue;
             }
         }
-        System.out.println("나야");
         return null;
     }
 
