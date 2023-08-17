@@ -184,7 +184,7 @@ function MeetingPage() {
 
       // 예) 특정 알림 표시, 데이터 요청 등의 로직
     } else {
-      console.log('ismegi?', location.state.isMegi);
+      console.log('ismegi?', false);
     }
   }, [location.state]);
 

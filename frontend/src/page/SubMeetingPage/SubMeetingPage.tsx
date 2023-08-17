@@ -25,7 +25,7 @@ function SubMeetingPage() {
   );
 
   const [currentTime, setCurrentTime] = useState('00:00'); // 타이머 state
-  const [startSec, setStartSec] = useState(''); // 서버에서 받아온 시작 시간
+  const [startSec, setStartSec] = useState(new Date().getTime()); // 서버에서 받아온 시작 시간
   const [guideMessage, setGuideMessage] = useState(
     '서로의 마음이 닿은 여러분, 이제 마음을 확인하며 둘만의 즐거운 시간 보내기 바랍니다',
   );
@@ -44,22 +44,6 @@ function SubMeetingPage() {
       audioRef.current.muted = muted;
     }
   }, [volume, muted]);
-
-  // 서버 시간으로 타이머 설정
-  useEffect(() => {
-    fetchElapsedTime();
-  }, []);
-
-  const fetchElapsedTime = async () => {
-    try {
-      const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
-      console.log('시간', response.data);
-      console.log('시간', Number(response.data));
-      setStartSec(response.data);
-    } catch (error) {
-      console.error('Failed to fetch elapsed time:', error);
-    }
-  };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value));

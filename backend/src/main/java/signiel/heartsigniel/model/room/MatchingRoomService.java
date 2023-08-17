@@ -126,17 +126,18 @@ public class MatchingRoomService {
         Long roomLimitRating = room.getRatingLimit();
         RatingQueue maleQueue = RatingQueue.getMegiQueueByMedianRating(roomLimitRating, "male");
         RatingQueue femaleQueue = RatingQueue.getMegiQueueByMedianRating(roomLimitRating, "female");
-        Long maleMemberId = (maleQueue != null) ? redisTemplate.opsForList().leftPop(maleQueue.getName()) : null;
-        Long femaleMemberId = (femaleQueue != null) ? redisTemplate.opsForList().leftPop(femaleQueue.getName()) : null;
-        if (maleMemberId == null || femaleMemberId == null){
-            return Response.of(RoomQueueCode.ENQUEUE_SUCCESS, null);
+
+        if (redisTemplate.opsForList().size(maleQueue.getName()) >= 1 && redisTemplate.opsForList().size(femaleQueue.getName()) >= 1){
+            Long maleMemberId = redisTemplate.opsForList().leftPop(maleQueue.getName());
+            Long femaleMemberId = redisTemplate.opsForList().leftPop(femaleQueue.getName());
+            joinRoom(room, maleMemberId, true);
+            joinRoom(room, femaleMemberId, true);
+            scheduler.schedule(() -> {
+                alarmService.sendMatchCompleteMessage(room);
+            }, 1000, TimeUnit.MILLISECONDS);
+            return Response.of(RoomQueueCode.MATCHING_SUCCESS, SpecialMemberMatchingResponse.of(room.getId()));
         }
-        joinRoom(room, maleMemberId, true);
-        joinRoom(room, femaleMemberId, true);
-        scheduler.schedule(() -> {
-            alarmService.sendMatchCompleteMessage(room);
-        }, 1000, TimeUnit.MILLISECONDS);
-        return Response.of(RoomQueueCode.MATCHING_SUCCESS, SpecialMemberMatchingResponse.of(room.getId()));
+        return Response.of(RoomQueueCode.ENQUEUE_SUCCESS, null);
     }
 
     @Transactional
@@ -152,6 +153,9 @@ public class MatchingRoomService {
         // 방에 리더가 없고, 멤버가 없는 경우 첫 번째 멤버로 판단
         if (!hasLeader && room.getRoomMembers().isEmpty()) {
             isRoomLeader = true;
+        }
+        if (isSpecialUser){
+            lifeService.useLife(member);
         }
 
         RoomMember roomMember = roomMemberService.createRoomMember(member, room, isSpecialUser, isRoomLeader);

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { PURGE } from 'redux-persist';
 
 export interface MeetingState {
   roomId: number;
@@ -41,6 +42,9 @@ const meetingSlice = createSlice({
     setMatchMemberId(state, action) {
       state.resultOfRoomMember.matchMemberId = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => meetingInitialState);
   },
 });
 
