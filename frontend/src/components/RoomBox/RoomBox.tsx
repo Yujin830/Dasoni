@@ -96,9 +96,6 @@ function RoomBox({
   femaleAvgRating,
   ratingLimit,
 }: RoomBoxProps) {
-  const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
-  // TODO : isFull 확인하는 로직
-
   const member = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -146,18 +143,14 @@ function RoomBox({
   };
 
   return (
-    <div className={isFull ? 'room-box disabled' : 'room-box'}>
+    <div className="room-box">
       <div className="room-header">
         <div className="title-box">
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
         {femaleMemberCount + maleMemberCount < 2 * FULL_COUNT ? (
-          <FilledButton
-            style={isFull ? styles.disabled : styles.basic}
-            content="입장하기"
-            handleClick={onClickEnter}
-          />
+          <FilledButton style={styles.basic} content="입장하기" handleClick={onClickEnter} />
         ) : null}
       </div>
       <div className="content">
