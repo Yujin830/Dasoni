@@ -31,3 +31,9 @@
 #sub-meeting .container .chat-room {
   height: 60vh;
 }
+
+#sub-meeting #audio-controls {
+  position: absolute;
+  top: 30px;
+  right: 1.2rem;
+}

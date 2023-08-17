@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 export interface MeetingState {
   roomId: number;
@@ -45,4 +47,12 @@ const meetingSlice = createSlice({
 export const { setMeetingRoomId, setFinalSignalReceiver, setRatingChange, setMatchMemberId } =
   meetingSlice.actions;
 
-export default meetingSlice.reducer;
+const meetingPersistConfig = {
+  key: 'meetingRoom', // localStorage key for meetingSlice
+  storage, // Use localStorage as storage
+};
+
+const persistedMeetingReducer = persistReducer(meetingPersistConfig, meetingSlice.reducer);
+
+export default persistedMeetingReducer;
+// export default meetingSlice.reducer;
