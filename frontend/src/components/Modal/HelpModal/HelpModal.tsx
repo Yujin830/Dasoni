@@ -9,6 +9,9 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 
+import helpModal1 from '../../../assets/image/GIF/helpModal-1.gif';
+import helpModal2 from '../../../assets/image/GIF/helpModal-2.gif';
+
 interface HelpModalProps {
   onClose: () => void;
 }
@@ -42,7 +45,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
               여러 입장 조건을 걸어 원하는 사람들과 미팅을 시작하세요! <br /> 어떤 인연이 기다리고
               있을까요?
             </div>
-            <div className="content">방 만드는 과정 GIF</div>
+            <div className="content">
+              <img className="image" alt="helpModal-1" src={helpModal1}></img>
+            </div>
           </div>
         </SwiperSlide>
         <SwiperSlide>
@@ -58,7 +63,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
               사람들과 <br /> 자동 매치해줍니다. 모든 사람들이 모이면 자동으로 미팅이 시작됩니다.
               <br />
             </div>
-            <div className="content">빠른 매칭 GIF</div>
+            <div className="content">
+              <img className="image" alt="helpModal-2" src={helpModal2}></img>
+            </div>
           </div>
         </SwiperSlide>
         <SwiperSlide>

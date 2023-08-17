@@ -51,6 +51,11 @@
   width: 80%;
 }
 
+.modal .box .image {
+  height: 100%;
+  width: 100%;
+}
+
 @media (max-width: 1024px) {
   .modal {
     width: 80%;
