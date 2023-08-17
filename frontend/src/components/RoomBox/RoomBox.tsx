@@ -4,7 +4,7 @@ import maleIcon from '../../assets/image/male_icon.png';
 import femaleIcon from '../../assets/image/female_icon.png';
 import FilledButton from '../Button/FilledButton';
 import './RoomBox.css';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -137,7 +137,13 @@ function RoomBox({
           dispatch(setWaitingMemberList([waitingMember]));
         }
       } catch (err) {
-        console.error(err);
+        const error = err as AxiosError;
+        if (error.response && error.response.status === 403) {
+          alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
+        } else {
+          console.error('Error during room creation:', err);
+          alert('방 생성 중 문제가 발생했습니다.');
+        }
       }
     }
   };

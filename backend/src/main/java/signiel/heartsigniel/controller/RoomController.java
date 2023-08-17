@@ -83,6 +83,7 @@ public class RoomController {
 
     @PostMapping("")
     public ResponseEntity<Response> createRoom(@RequestBody PrivateRoomCreate privateRoomCreateRequest) {
+
         Response response = privateRoomService.createRoom(privateRoomCreateRequest);
         return ResponseEntity.ok(response);
     }

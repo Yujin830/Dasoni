@@ -6,7 +6,7 @@ import NoLabelInput from '../../Input/NoLabelInput/NoLabelInput';
 import Button from '../../Button/FilledButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import {
   setMaster,
   setRatingLimit,
@@ -44,50 +44,62 @@ function OpenRoomModal({ onClose }: OpenRoomModalProps) {
 
   const OpenRoom = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
     // 남은 라이프 확인
     if (member.remainLife === 0) {
       alert('오늘은 모든 라이프를 소진하여 더 이상 입장할 수 없습니다.');
       return;
     }
+
     const data = {
       memberId: member.memberId,
       title: roomTitle,
       megiAcceptable: megiAcceptable,
       ratingLimit: ratingLimit,
     };
-    // 백엔드로 data 디스패치 하는 API 호출
 
-    console.log(data);
-    const res = await axios.post('/api/rooms', data);
-    console.log(res);
-    if (res.status === 200) {
-      // 리덕스에 생성한 대기방 정보 저장
-      dispatch(setWaitingRoomId(res.data.content.createdRoomId));
-      dispatch(setRoomType('private'));
-      dispatch(setRoomTitle(data.title));
-      dispatch(setRatingLimit(data.ratingLimit));
+    try {
+      const res = await axios.post('/api/rooms', data);
 
-      const waitingMember = {
-        member: {
-          memberId: member.memberId,
-          nickname: member.nickname,
-          gender: member.gender,
-          profileImageSrc: member.profileImageSrc,
-          rating: member.rating,
-          meetingCount: member.matchCnt,
-          job: member.job,
-        },
-        roomLeader: true,
-        specialUser: false,
-      };
-      dispatch(setWaitingMemberList([waitingMember]));
+      if (res.status === 200) {
+        // 리덕스에 생성한 대기방 정보 저장
+        dispatch(setWaitingRoomId(res.data.content.createdRoomId));
+        dispatch(setRoomType('private'));
+        dispatch(setRoomTitle(data.title));
+        dispatch(setRatingLimit(data.ratingLimit));
 
-      // TODO : 모달 닫기
-      onClose();
-      // 대기방으로 이동
-      navigate(`/waiting-room/${res.data.content.createdRoomId}`);
+        const waitingMember = {
+          member: {
+            memberId: member.memberId,
+            nickname: member.nickname,
+            gender: member.gender,
+            profileImageSrc: member.profileImageSrc,
+            rating: member.rating,
+            meetingCount: member.matchCnt,
+            job: member.job,
+          },
+          roomLeader: true,
+          specialUser: false,
+        };
+        dispatch(setWaitingMemberList([waitingMember]));
+
+        // 모달 닫기
+        onClose();
+
+        // 대기방으로 이동
+        navigate(`/waiting-room/${res.data.content.createdRoomId}`);
+      }
+    } catch (err) {
+      const error = err as AxiosError;
+      if (error.response && error.response.status === 403) {
+        alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
+      } else {
+        console.error('Error during room creation:', err);
+        alert('방 생성 중 문제가 발생했습니다.');
+      }
     }
   };
+
   return (
     <div className="openroom-modal">
       <div className="header">

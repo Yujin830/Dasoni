@@ -3,6 +3,7 @@ package signiel.heartsigniel.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -82,9 +83,11 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(PERMIT_SWAGGER_URL_ARRAY).permitAll()
                 // 회원가입과 로그인은 모두 승인
-                .antMatchers("/api/alarm","/","/**","/app/**","/topic/**","/ws/**","/api/chat/**","/api/register/**", "/api/login", "/api/guide", "/api/warn/**", "/api/users/**", "/api/question").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/rooms").permitAll()
+                .antMatchers("/api/rooms/filter/**","/api/rooms/search/**","/api/alarm","/app/**","/topic/**","/ws/**","/api/chat/**","/api/register/**", "/api/login", "/api/guide", "/api/warn/**", "/api/users/**", "/api/question").permitAll()
                 // /rooms 로 시작하는 요청은 USER(추가 정보를 입력한 회원) 권한이 있는 유저에게만 허용
-                .antMatchers("/api/rooms/**", "/api/match/**", "/api/alarm/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST,"/api/rooms/**").hasRole("USER")
+                .antMatchers("/api/match/**", "/api/alarm/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
                 // JWT 인증 필터 적용
