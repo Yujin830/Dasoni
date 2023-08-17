@@ -3,7 +3,7 @@ import './TimeDisplay.css';
 
 interface TimeDisplayProps {
   currentTime: string;
-  startSec: string;
+  startSec: string | number;
   setCurrentTime: (time: string) => void;
 }
 

@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { PURGE } from 'redux-persist';
 
 export interface WaitingState {
   roomId: number;
@@ -58,6 +59,9 @@ const waitingSlice = createSlice({
     setOpenQuickMatchingModalVisible(state, action: PayloadAction<boolean>) {
       state.openQuickMatchingModalVisible = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 

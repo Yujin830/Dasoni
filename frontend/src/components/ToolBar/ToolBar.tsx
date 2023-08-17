@@ -3,9 +3,8 @@ import './ToolBar.css';
 import { useNavigate, useParams } from 'react-router';
 import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
-import { setMeetingCount, setRating, setRemainLife } from '../../app/slices/user';
 import { useDispatch } from 'react-redux';
-import { setRatingChange } from '../../app/slices/meetingSlice';
+import { setMeetingCount, setRemainLife } from '../../app/slices/user';
 
 interface ToolBarProps {
   onChangeCameraStatus: (status: boolean) => void;
@@ -18,6 +17,7 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
   const navigate = useNavigate();
   const { roomId } = useAppSelector((state) => state.meetingRoom);
   const { memberId, rating } = useAppSelector((state) => state.user);
+  const pathName = location.pathname.split('/')[1];
 
   const dispatch = useDispatch();
 
@@ -36,9 +36,6 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
       console.log(res.data);
       dispatch(setRemainLife(res.data.content.remainLife));
       dispatch(setMeetingCount(res.data.content.meetingCount));
-      dispatch(setRatingChange(-100)); // 레이팅 변화값 저장
-      if (rating !== undefined) dispatch(setRating(rating - 100));
-
       // 메인으로 이동
       navigate('/result', { replace: true });
     }
@@ -72,9 +69,11 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
           <span className="material-symbols-outlined filled">videocam_off</span>
         </button>
       )}
-      <button onClick={handleExitBtn}>
-        <span className="material-symbols-outlined filled">logout</span>
-      </button>
+      {pathName !== 'meeting' && (
+        <button onClick={handleExitBtn}>
+          <span className="material-symbols-outlined filled">logout</span>
+        </button>
+      )}
     </div>
   );
 }
