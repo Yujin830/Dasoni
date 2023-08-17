@@ -39,11 +39,6 @@ function ResultPage() {
     if (resultOfRoomMember.matchMemberId !== 0) {
       setSuccess(true);
 
-      // 정보 초기화
-      dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
-      dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
-      dispatch(setMatchMemberId(0)); // 매칭된 상대 memberId 초기화
-
       // 매칭된 상대방 정보 가져오기
       try {
         const res = await axios.get(`/api/users/${resultOfRoomMember.matchMemberId}`);
@@ -56,6 +51,10 @@ function ResultPage() {
         console.error(err);
       }
     }
+    // 정보 초기화
+    dispatch(setFinalSignalReceiver(0)); // 선택한 최종투표자 초기화
+    dispatch(setRatingChange(0)); // 변화한 레이팅 점수 초기화
+    dispatch(setMatchMemberId(0)); // 매칭된 상대 memberId 초기화
   };
 
   const handleClose = () => {
