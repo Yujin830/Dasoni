@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WaitingMember } from '../../apis/response/waitingRoomRes';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 export interface WaitingState {
   roomId: number;
@@ -71,4 +73,12 @@ export const {
   setOpenQuickMatchingModalVisible,
 } = waitingSlice.actions;
 
-export default waitingSlice.reducer;
+const waitingPersistConfig = {
+  key: 'waitingRoom', // localStorage key for waitingSlice
+  storage, // Use localStorage as storage
+};
+
+const persistedWaitingReducer = persistReducer(waitingPersistConfig, waitingSlice.reducer);
+
+export default persistedWaitingReducer;
+// export default waitingSlice.reducer;

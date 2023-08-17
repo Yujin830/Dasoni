@@ -1,14 +1,14 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import waitingSlice from './slices/waitingSlice';
-import meetingSlice from './slices/meetingSlice';
 import persistedUserReducer from './slices/user';
 import { persistStore } from 'redux-persist';
+import persistedWaitingReducer from './slices/waitingSlice';
+import persistedMeetingReducer from './slices/meetingSlice';
 
 export const store = configureStore({
   reducer: {
     user: persistedUserReducer,
-    waitingRoom: waitingSlice,
-    meetingRoom: meetingSlice,
+    waitingRoom: persistedWaitingReducer,
+    meetingRoom: persistedMeetingReducer,
   },
 });
 
