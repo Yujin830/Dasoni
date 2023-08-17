@@ -3,6 +3,8 @@ import axios from 'axios';
 import { RootState } from '../store';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
 import { ActivationState } from '@stomp/stompjs';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 // 이 리덕스 모듈에서 관리 할 상태의 타입을 선언
 export interface User {
@@ -190,13 +192,10 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
 });
 // 로그아웃 시 필요한 함수
 export const logout = () => {
-  // 로컬 스토리지에서 토큰 삭제
   localStorage.removeItem('jwtToken');
-  // localStorage.clear()
-  // Axios 헤더에서 인증 토큰 제거
+  localStorage.clear();
   setAuthorizationToken(null); // Axios 헤더에서 토큰을 null로 설정하는 함수를 가정합니다.
   console.log('로그아웃', localStorage);
-  // 필요에 따라 Redux 상태를 초기화하는 액션을 디스패치할 수도 있습니다.
   // dispatch(resetUserState());
 };
 
@@ -206,5 +205,11 @@ export const getUserInfo = (state: RootState) => state.user;
 export const { setSido, setGugun, setRating, setRemainLife, setMeetingCount, setProfileImageSrc } =
   userSlice.actions;
 
-// 로그인 reducer export
-export default userSlice.reducer;
+// persistReducer를 사용하여 redux-persist 적용
+const persistConfig = {
+  key: 'user', // localStorage key
+  storage, // localStorage
+};
+const persistedUserReducer = persistReducer(persistConfig, userSlice.reducer);
+
+export default persistedUserReducer;

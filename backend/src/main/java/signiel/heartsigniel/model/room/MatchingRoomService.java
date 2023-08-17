@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import signiel.heartsigniel.common.dto.Response;
+import signiel.heartsigniel.model.alarm.AlarmService;
 import signiel.heartsigniel.model.life.LifeService;
 import signiel.heartsigniel.model.matching.code.RoomQueueCode;
 import signiel.heartsigniel.model.matching.queue.RatingQueue;
@@ -20,6 +21,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -32,13 +35,16 @@ public class MatchingRoomService {
     private final MemberRepository memberRepository;
     private final RoomMemberService roomMemberService;
     private final RedisTemplate<String, Long> redisTemplate;
+    private final AlarmService alarmService;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public MatchingRoomService(RoomRepository roomRepository, LifeService lifeService, MemberRepository memberRepository, RoomMemberService roomMemberService, RedisTemplate<String, Long> redisTemplate){
+    public MatchingRoomService(RoomRepository roomRepository, LifeService lifeService, MemberRepository memberRepository, RoomMemberService roomMemberService, RedisTemplate<String, Long> redisTemplate, AlarmService alarmService){
         this.roomRepository = roomRepository;
         this.memberRepository = memberRepository;
         this.lifeService = lifeService;
         this.roomMemberService = roomMemberService;
         this.redisTemplate = redisTemplate;
+        this.alarmService = alarmService;
     }
 
     public Room createRoom(RatingQueue queue) {
@@ -74,7 +80,7 @@ public class MatchingRoomService {
     public Response enqueueRoom(Long roomId) {
         log.info("enqueuRoom called");
         // Redis에서 해당 roomId의 요청이 진행 중인지 확인
-        Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
+        Boolean isAbsent = redisTemplate.opsForValue().setIfAbsent("room_enqueue_request_" + roomId, 0L, 10, TimeUnit.SECONDS);
 
         if (Boolean.TRUE.equals(isAbsent)) {
             // 중복 요청이 아님. 처리 계속 진행
@@ -127,6 +133,9 @@ public class MatchingRoomService {
         }
         joinRoom(room, maleMemberId, true);
         joinRoom(room, femaleMemberId, true);
+        scheduler.schedule(() -> {
+            alarmService.sendMatchCompleteMessage(room);
+        }, 1000, TimeUnit.MILLISECONDS);
         return Response.of(RoomQueueCode.MATCHING_SUCCESS, SpecialMemberMatchingResponse.of(room.getId()));
     }
 
