@@ -51,17 +51,17 @@ function MeetingPage() {
     subscribe: (client) => {
       //질문 만들어주는 메소드
       client.subscribe(`/topic/room/${roomId}/makeQuestion`, (res: any) => {
-        console.log(res.body);
+        // console.log(res.body);
       });
       // 메기 입장 시간 close
       client.subscribe(`/topic/room/${roomId}/endMegi`, (res: any) => {
-        console.log('endMegiTime');
+        // console.log('endMegiTime');
       });
       // 가이드 구독
 
       client.subscribe(`/topic/room/${roomId}/megiEnterMessage`, (res: any) => {
-        console.log('enterMegi!!!');
-        console.log(res.body);
+        // console.log('enterMegi!!!');
+        // console.log(res.body);
         setGuideMessage('메기 등장!!! 메기 등장!!! 메기가 등장합니다!!');
         setIsShow(true);
       });
@@ -75,7 +75,7 @@ function MeetingPage() {
 
       // 질문 구독
       client.subscribe(`/topic/room/${roomId}/questions`, (res: any) => {
-        console.log('질문 ', res.body);
+        // console.log('질문 ', res.body);
         setQuestion(res.body);
         setIsQuestionTime(true);
       });
@@ -87,19 +87,19 @@ function MeetingPage() {
 
       // 유저 정보 공개 구독
       client.subscribe(`/topic/room/${roomId}/open`, (res: any) => {
-        console.log(res.body);
+        // console.log(res.body);
         setUserInfoOepn(true);
       });
 
       // 최종 시그널 오픈 구독
       client.subscribe(`/topic/room/${roomId}/signal`, (res: any) => {
-        console.log(res.body);
+        // console.log(res.body);
         setSignalOpen(true);
       });
 
       // 최종 개인 결과 요청 가능 구독
       client.subscribe(`/topic/room/${roomId}/requestResult`, (res: any) => {
-        console.log(res.body);
+        // console.log(res.body);
         setRequestResult(true);
       });
 
@@ -120,8 +120,9 @@ function MeetingPage() {
       // console.log(client);
       // console.log(`${minutes} ${seconds}`);
 
-      if (minutes === '05' && seconds === '00') {
-        client?.send(`/app/room/${roomId}/guide`, {}, '5');
+      //질문 생성. 반드시!!! 랜덤주제보다 먼저 실행할것.
+      if (minutes === '00' && seconds === '25') {
+        client?.send(`/app/room/${roomId}/makeQuestion`);
       }
 
       // 가이드 - 첫인상 투표
@@ -134,48 +135,48 @@ function MeetingPage() {
         client?.send(`/app/room/${roomId}/firstSignal`);
       }
 
+      // 랜덤 주제 1번
+      else if (minutes === '01' && seconds === '00') {
+        client?.send(`/app/room/${roomId}/questions`, {}, '0');
+      }
+
       // 가이드 - 정보 공개
-      else if (minutes === '01' && seconds === '10') {
+      else if (minutes === '01' && seconds === '15') {
         client?.send(`/app/room/${roomId}/guide`, {}, '20');
       }
 
       // 메기 입장
-      else if (minutes === '01' && seconds === '15') {
+      else if (minutes === '01' && seconds === '20') {
         client?.send(`/app/room/${roomId}/megi`, {}, 'megigo');
       }
 
       // 유저 정보 공개
-      else if (minutes === '01' && seconds === '35') {
+      else if (minutes === '01' && seconds === '25') {
         client?.send(`/app/room/${roomId}/open`);
       }
-      //질문 생성. 반드시!!! 랜덤주제보다 먼저 실행할것.
-      else if (minutes === '01' && seconds === '20') {
-        client?.send(`/app/room/${roomId}/makeQuestion`);
-      }
 
-      // 랜덤 주제 1번
-      else if (minutes === '01' && seconds === '40') {
-        client?.send(`/app/room/${roomId}/questions`, {}, '0');
-      }
       // 랜덤 주제 2번
-      else if (minutes === '01' && seconds === '50') {
+      else if (minutes === '01' && seconds === '35') {
         client?.send(`/app/room/${roomId}/questions`, {}, '1');
       }
 
       // 랜덤 주제 3번
-      else if (minutes === '02' && seconds === '15') {
+      else if (minutes === '02' && seconds === '00') {
         client?.send(`/app/room/${roomId}/questions`, {}, '2');
-      } else if (minutes === '02' && seconds === '20') {
+      }
+
+      // 메기 입장 금지
+      else if (minutes === '02' && seconds === '30') {
         client?.send(`/app/room/${roomId}/endMegi`);
       }
 
       // 가이드 - 최종 투표
-      else if (minutes === '02' && seconds === '25') {
+      else if (minutes === '02' && seconds === '35') {
         client?.send(`/app/room/${roomId}/guide`, {}, '50');
       }
 
       // 최종 시그널 메세지 open send
-      else if (minutes === '02' && seconds === '30') {
+      else if (minutes === '02' && seconds === '40') {
         client?.send(`/app/room/${roomId}/signal`);
       } else if (isMegiFlag && !hasSentMegiMessage) {
         setTimeout(() => {
