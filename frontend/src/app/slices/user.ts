@@ -168,15 +168,21 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
     setAuthorizationToken(data.token);
 
     // 로그인시 시도 ,구군 이름 가져오기
-    const siDoRes = await axios.get(
-      `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${data.siDo}*000000`,
-    );
-    const sidoName = siDoRes.data.regcodes[0].name;
+    let sidoName = '선택해';
+    if (data.siDo !== null) {
+      const siDoRes = await axios.get(
+        `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${data.siDo}*000000`,
+      );
+      sidoName = siDoRes.data.regcodes[0].name;
+    }
 
-    const guGunRes = await axios.get(
-      `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${data.guGun}`,
-    );
-    const guGunName = guGunRes.data.regcodes[0].name.split(' ')[1];
+    let guGunName = '주세요';
+    if (data.guGun !== null) {
+      const guGunRes = await axios.get(
+        `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${data.guGun}`,
+      );
+      guGunName = guGunRes.data.regcodes[0].name.split(' ')[1];
+    }
 
     // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
     return {
@@ -211,7 +217,7 @@ export const logout = async () => {
   sessionStorage.clear();
   setAuthorizationToken(null); // Axios 헤더에서 토큰을 null로 설정하는 함수를 가정합니다.
   await persistor.purge(); // store 제거
-  console.log('로그아웃', localStorage);
+  // console.log('로그아웃', localStorage);
   // dispatch(resetUserState());
 };
 
