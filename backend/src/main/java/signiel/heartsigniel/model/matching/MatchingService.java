@@ -103,14 +103,14 @@ public class MatchingService {
                 }return Response.of(MatchingCode.MATCHING_PENDING, null);
             }
         }
-        if (redisTemplate.opsForList().size(queue.getName()) >= 2) {
+        if (redisTemplate.opsForList().size(queue.getName()) >= 1) {
             RatingQueue oppositeQueue = RatingQueue.getOppositeGenderQueue(queue);
-            if (redisTemplate.opsForList().size(oppositeQueue.getName()) >= 2) {
+            if (redisTemplate.opsForList().size(oppositeQueue.getName()) >= 1) {
                 // 해당 큐와 상대 성별 큐에서 3명씩 팝해서 매칭(createRoom을 향후 Q1, Q2 넣도록 변경)
                 Room matchingRoom = matchingRoomService.createRoom(queue);
 
                 // 방의 리더 체크
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 1; i++) {
                     Long queueMemberId = redisTemplate.opsForList().leftPop(queue.getName());
                     Long opponentQueueMemberId = redisTemplate.opsForList().leftPop(oppositeQueue.getName());
                     matchingRoomService.joinRoom(matchingRoom, queueMemberId, false);
