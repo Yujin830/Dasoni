@@ -111,8 +111,18 @@
   overflow-y: hidden;
   /* z-index: 2; */
   margin: 2rem 0 1.5rem;
-  width: auto;
   padding: 1rem 0 1rem 1rem;
+}
+#waiting-page .chat-room .chat-input {
+  width: 100%;
+}
+#waiting-page .chat-room .chat-input input {
+  width: 75%;
+}
+#waiting-page .chat-room .chat-input button {
+  width: 25%;
+  margin-right: 1rem;
+  padding: 0 0.5rem;
 }
 
 @media (max-width: 426px) {

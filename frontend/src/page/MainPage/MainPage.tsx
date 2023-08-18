@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Header from '../../components/Header/Header';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import './MainPage.css';
 import Banner from '../../components/Banner/Banner';
 import IconButton from '../../components/Button/IconButton';
@@ -63,11 +63,8 @@ function MainPage() {
 
   // 필터 적용
   const handleClickFilter = async (gender: string) => {
-    console.log(gender);
-
     try {
       const res = await axios.get(`/api/rooms/filter/${gender}`);
-      console.log(res);
 
       if (res.status === 200) {
         setWaitingRoomList(res.data.content.content);
@@ -107,7 +104,6 @@ function MainPage() {
   const getWaitingRoomList = async () => {
     try {
       const res = await axios.get('/api/rooms');
-      console.log(res);
       if (res.status === 200) {
         setWaitingRoomList(res.data.content.content);
       }
@@ -135,8 +131,7 @@ function MainPage() {
           setCurrentPage(nextPage);
           setWaitingRoomList(nextPageData);
         } else {
-          console.log('다음 페이지에 방이 없습니다.');
-          // 다음 페이지에 방이 없을 경우 처리
+          alert('마지막 페이지 입니다.');
         }
       }
     } catch (err) {
@@ -151,8 +146,9 @@ function MainPage() {
       console.log('이전');
       if (res.status === 200) {
         setCurrentPage(prevPage);
-        console.log('현재페이지:', prevPage, 'content:', res.data.content);
         setWaitingRoomList(res.data.content.content);
+      } else {
+        alert('첫 번째 페이지입니다.');
       }
     } catch (err) {
       console.error(err);
@@ -170,14 +166,17 @@ function MainPage() {
       const res = await axios.post(`api/match/members/${memberId}/${queueType}`);
 
       if (res.status === 200) {
-        console.log('빠른 매치 응답 : ', res.data);
         setFastModalOpen(true);
       } else {
-        alert('빠른 매칭 중 오류가 발생했습니다.');
+        alert('빠른 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
-    } catch (error) {
-      console.log('빠른 매칭 오류', error);
-      alert('빠른 매칭 중 오류가 발생했습니다.');
+    } catch (err) {
+      const error = err as AxiosError;
+      if (error.response && error.response.status === 403) {
+        alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
+      } else {
+        alert('빠른 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      }
     }
   };
 
@@ -189,14 +188,17 @@ function MainPage() {
       const res = await axios.post(`api/match/members/${memberId}/${queueType}`);
 
       if (res.status === 200) {
-        console.log('메기 매치 응답 : ', res.data);
         setMegiModalOpen(true);
       } else {
-        alert('메기 매칭 중 오류가 발생했습니다.');
+        alert('메기 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
-    } catch (error) {
-      console.log('메기 매칭 오류', error);
-      alert('메기 매칭 중 오류가 발생했습니다.');
+    } catch (err) {
+      const error = err as AxiosError;
+      if (error.response && error.response.status === 403) {
+        alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
+      } else {
+        alert('메기 매칭 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      }
     }
   };
 

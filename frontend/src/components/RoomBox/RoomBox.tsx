@@ -4,7 +4,7 @@ import maleIcon from '../../assets/image/male_icon.png';
 import femaleIcon from '../../assets/image/female_icon.png';
 import FilledButton from '../Button/FilledButton';
 import './RoomBox.css';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -96,9 +96,6 @@ function RoomBox({
   femaleAvgRating,
   ratingLimit,
 }: RoomBoxProps) {
-  const [isFull, setIsFull] = useState(false); // 참여 인원이 가득 찼는지 저장하는 state
-  // TODO : isFull 확인하는 로직
-
   const member = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -140,24 +137,26 @@ function RoomBox({
           dispatch(setWaitingMemberList([waitingMember]));
         }
       } catch (err) {
-        console.error(err);
+        const error = err as AxiosError;
+        if (error.response && error.response.status === 403) {
+          alert('마이페이지에서 추가 정보를 먼저 입력해주세요!');
+        } else {
+          console.error('Error during room creation:', err);
+          alert('방 생성 중 문제가 발생했습니다.');
+        }
       }
     }
   };
 
   return (
-    <div className={isFull ? 'room-box disabled' : 'room-box'}>
+    <div className="room-box">
       <div className="room-header">
         <div className="title-box">
           <img src={titleImg} alt="하트 이미지" />
           <h4>{title}</h4>
         </div>
         {femaleMemberCount + maleMemberCount < 2 * FULL_COUNT ? (
-          <FilledButton
-            style={isFull ? styles.disabled : styles.basic}
-            content="입장하기"
-            handleClick={onClickEnter}
-          />
+          <FilledButton style={styles.basic} content="입장하기" handleClick={onClickEnter} />
         ) : null}
       </div>
       <div className="content">

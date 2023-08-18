@@ -66,7 +66,6 @@ public class RoomMemberService {
 //       }
 
         // 그렇지 않으면 개인 결과 조회
-        // System.out.println("======================" + memberId + " " + roomId);
         PersonalResult personalResult = ratingService.getAndDeletePersonalResultFromRedis(memberId, roomId);
         return Response.of(RoomMemberCode.FETCH_MEETING_RESULT_SUCCESS, personalResult);
     }

@@ -10,6 +10,7 @@ import { useAppSelector } from '../../app/hooks';
 import RankAvartar from '../../components/Avarta/RankAvartar/RackAvartar';
 import ExpPointBar from '../../components/Element/ExpPointBar';
 import { useDispatch } from 'react-redux';
+import convertScoreToPercent from '../../utils/convertScoreToPercent';
 
 interface HeaderProps {
   onModalToggle?: () => void;
@@ -120,12 +121,14 @@ function Header({ onModalToggle }: HeaderProps) {
             </div>
             <div className="sidebar-rating">My Rating</div> */}
             <div className="sidebar-profile">
-              <RankAvartar profileSrc={profileImageSrc} point={rating} />
+              <div className="profile-container">
+                <RankAvartar profileSrc={profileImageSrc} point={rating} />
+              </div>
             </div>
 
             <div className="sidebar-rating">
               {/* <p className="title"> Signal</p> */}
-              <ExpPointBar percent={70} points={rating} />
+              <ExpPointBar percent={convertScoreToPercent(rating || 0)} points={rating} />
             </div>
             <div className="sidebar-heart">
               <h2>Rating Info</h2>

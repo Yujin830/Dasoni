@@ -21,8 +21,6 @@ public class SignalService {
 
     // 클라이언트에서 들어온 시그널 정보 캐싱
     public Response storeSignalInRedis(Long roomId, SingleSignalRequest singleSignalRequest){
-        log.info("roomId  =" + roomId);
-        log.info("SignalDto = " + singleSignalRequest);
         redisTemplate.opsForList().rightPush("room:" + roomId + ":signal", singleSignalRequest);
         return Response.of(SignalCode.SIGNAL_TRANSMISSION_SUCCESS, null);
     }
