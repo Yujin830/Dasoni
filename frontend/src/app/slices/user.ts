@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
-import { ActivationState } from '@stomp/stompjs';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { PURGE } from 'redux-persist';
@@ -74,11 +73,11 @@ const userSlice = createSlice({
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         // 로그인 응답 처리 코드
-        console.log(action.payload);
+        // console.log(action.payload);
         return { ...state, ...action.payload };
       })
       .addCase(modifyUserAsync.fulfilled, (state, action) => {
-        console.log(action.payload);
+        // console.log(action.payload);
         return { ...state, ...action.payload };
       })
       .addCase(PURGE, () => initialState);
@@ -105,8 +104,8 @@ export const signupAsync = createAsyncThunk('user/SIGNUP', async (user: User) =>
 // 회원 탈퇴
 export const deleteUserAsync = createAsyncThunk('DELETE_USER', async (user: User) => {
   const response = await axios.delete(`/api/users/${user.memberId}`);
-  console.log('회원탈퇴');
-  console.log(response);
+  // console.log('회원탈퇴');
+  // console.log(response);
   localStorage.removeItem('jwtToken');
   return {};
 });
@@ -120,7 +119,7 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
     job: modifyUser.job,
     nickname: modifyUser.nickname,
   };
-  console.log(requestData);
+  // console.log(requestData);
 
   const fd = new FormData();
   if (modifyUser.profileImage !== null && modifyUser.profileImage !== undefined) {
@@ -128,15 +127,15 @@ export const modifyUserAsync = createAsyncThunk('MODIFY_USER', async (modifyUser
   }
   fd.append('key', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
 
-  console.log('here', modifyUser);
+  // console.log('here', modifyUser);
   const response = await axios.patch(`/api/users/${modifyUser.memberId}`, fd, {
     headers: {
       'Content-Type': `multipart/form-data`,
     },
   });
   const data = response.data;
-  console.log('from 서버');
-  console.log(data);
+  // console.log('from 서버');
+  // console.log(data);
 
   return {
     // siDo: modifyUser.siDo,
@@ -160,13 +159,24 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
 
     // 서버로부터 받은 응답 처리 (응답 형식에 맞게 수정해야 함)
     const data = response.data;
-    console.log('from 서버');
-    console.log(data);
+    // console.log('from 서버');
+    // console.log(data);
     localStorage.removeItem('jwtToken');
     // 서버에서 받은 토큰을 localstorage에 저장
     localStorage.setItem('jwtToken', data.token);
     // axios 호출시마다 토큰을 header에 포함하도록 설정
     setAuthorizationToken(data.token);
+
+    // 로그인시 시도 ,구군 이름 가져오기
+    const siDoRes = await axios.get(
+      `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${data.siDo}*000000`,
+    );
+    const sidoName = siDoRes.data.regcodes[0].name;
+
+    const guGunRes = await axios.get(
+      `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${data.guGun}`,
+    );
+    const guGunName = guGunRes.data.regcodes[0].name.split(' ')[1];
 
     // 여기서 필요에 따라 응답 데이터를 가공하여 리덕스 상태로 업데이트
     return {
@@ -179,8 +189,8 @@ export const loginAsync = createAsyncThunk('user/LOGIN', async (user: User) => {
       meetingCount: data.meetingCount || 0,
       profileImageSrc: data.profileImageSrc,
       job: data.job || '선택해 주세요',
-      siDo: data.siDo !== -1 ? data.siDo : '선택해',
-      guGun: data.guGun || '주세요',
+      siDo: data.siDo !== -1 ? sidoName : '선택해',
+      guGun: data.guGun !== 0 ? guGunName : '주세요',
       // roles: data.roles,
       remainLife: data.remainLife,
       rating: data.rating || 1000,
