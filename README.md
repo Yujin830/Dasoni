@@ -83,6 +83,7 @@
 
 - [x] [SSE와 비동기 처리](https://github.com/YeryunJung)
 - [x] [매칭 알고리즘 구조 개선](https://github.com/Fishphobiagg)
+- [x] [리덕스 스토어 새로고침 상태유지](https://choyeon-dev.tistory.com/entry/Redux-persist-%EC%83%88%EB%A1%9C%EA%B3%A0%EC%B9%A8%EC%97%90%EB%8F%84-%EC%9C%A0%EC%A7%80%EB%90%98%EB%8A%94-store-%EB%A7%8C%EB%93%A4%EA%B8%B0-with-Redux-toolkit)
 
 <br>
 
@@ -104,7 +105,7 @@
 | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------- |
 | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend <br> DevOps</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:pink">Frontend</p> | <p align="left" style="color:pink">Frontend</p>   |
 | WebSocket <br> 채팅,매칭,알람 서비스              | 매칭, 레이팅 알고리즘 <br> REST API               | CI/CD <br> 프로필 사진 API                                    |                                                   |                                                 | 회원가입 및 로그인 <br> 모달 및 컴포넌트 <br> CSS |
-|                                                   | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)              |                                                   |                                                 |                                                   |
+|                                                   | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)              |                                                   |                                                 | [@minaldo15](https://github.com/minaldo15)        |
 
 <br>
 
