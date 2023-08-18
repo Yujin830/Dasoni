@@ -107,13 +107,13 @@ function RoomBox({
       alert('오늘은 모든 라이프를 소진하여 더 이상 입장할 수 없습니다.');
       return;
     } else {
-      console.log('입장하기');
+      // console.log('입장하기');
       try {
         const res = await axios.post(`/api/rooms/${roomId}/members/${member.memberId}`);
-        console.log(res);
+        // console.log(res);
 
         if (res.status === 200) {
-          console.log('입장 성공');
+          // console.log('입장 성공');
           dispatch(setRoomType('private'));
           dispatch(setWaitingRoomId(roomId));
           dispatch(setRoomTitle(title));

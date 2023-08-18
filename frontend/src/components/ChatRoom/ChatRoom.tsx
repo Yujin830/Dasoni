@@ -23,19 +23,19 @@ const ChatRoom: React.FC = () => {
   const client = useWebSocket({
     subscribe: (client) => {
       setIsLoading(false);
-      console.log('로딩완료');
+      // console.log('로딩완료');
 
       // 기존의 채팅 메시지에 대한 구독
       client.subscribe(`/topic/room/${roomId}/chat`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
-        console.log(chatMessage);
+        // console.log(chatMessage);
         setMessages((messages) => [...messages, chatMessage]);
-        console.log(messages);
+        // console.log(messages);
       });
       // 입장 및 퇴장 메시지에 대한 구독 추가
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
-        console.log(chatMessage);
+        // console.log(chatMessage);
         // 메시지 내용이 입장이나 퇴장 메시지인 경우에만 처리
         if (
           chatMessage.content.includes(`입장하셨습니다.`) ||
@@ -60,7 +60,7 @@ const ChatRoom: React.FC = () => {
 
   const sendMessage = () => {
     if (newMessage && client?.connected) {
-      console.log(client.connected);
+      // console.log(client.connected);
       client.send(
         `/app/room/${roomId}/chat`,
         {},
@@ -71,8 +71,8 @@ const ChatRoom: React.FC = () => {
           isUserMessage: true,
         }),
       );
-      console.log(member);
-      console.log(newMessage);
+      // console.log(member);
+      // console.log(newMessage);
       setNewMessage('');
     }
   };

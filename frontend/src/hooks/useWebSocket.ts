@@ -18,14 +18,14 @@ export const useWebSocket = ({ subscribe, onClientReady }: Param) => {
     setClient(stompClient);
 
     const onConnected = () => {
-      console.log('WebSocket에 연결되었습니다.');
+      // console.log('WebSocket에 연결되었습니다.');
       // 원하는 토픽이나 큐에 stompClient.subscribe()를 사용하여 구독할 수 있습니다.
       // 예시: stompClient.subscribe('/topic/someTopic', onMessageReceived);
       subscribe(stompClient);
     };
 
     const onDisconnected = () => {
-      console.log('WebSocket 연결이 끊어졌습니다.');
+      // console.log('WebSocket 연결이 끊어졌습니다.');
     };
 
     const onError = (error: any) => {

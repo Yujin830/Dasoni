@@ -40,7 +40,7 @@ const MatchingModal: React.FC<MatchingModalProps> = ({ onClose }) => {
   };
 
   eventSource.onopen = () => {
-    console.log('onopen', eventSource.readyState);
+    // console.log('onopen', eventSource.readyState);
   };
 
   eventSource.onerror = (event: Event) => {

@@ -36,7 +36,7 @@ function UserVideo({
   const dispatch = useDispatch();
 
   const handleSendSignal = async () => {
-    console.log(finalSignalReceiver);
+    // console.log(finalSignalReceiver);
     if (
       finalSignalReceiver === 0 &&
       confirm('한 번 선택하면 취소할 수 없습니다.\n이분에게 마음을 전하시겠습니까?')
@@ -48,8 +48,8 @@ function UserVideo({
         receiverId: streamData.memberId,
       };
 
-      console.log('시그널 전송');
-      console.log(signalData);
+      // console.log('시그널 전송');
+      // console.log(signalData);
 
       // 서버로 시그널 데이터 전송
       try {

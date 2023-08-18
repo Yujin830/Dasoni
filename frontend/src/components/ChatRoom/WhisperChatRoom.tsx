@@ -38,7 +38,7 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
 
       client.subscribe(`/topic/room/${roomId}/whisper/${memberId}`, (res: any) => {
         const chatMessage: ChatMessage = JSON.parse(res.body);
-        console.log('chatmessage', chatMessage);
+        // console.log('chatmessage', chatMessage);
         setMessages((messages) => [...messages, chatMessage]);
       });
     },
@@ -56,7 +56,7 @@ function WhisperChatRoom({ diffGenderMemberList }: WhisperChatRoomProps) {
   }, [messages]);
 
   const sendMessage = () => {
-    console.log('whispertarget', whisperTarget);
+    // console.log('whispertarget', whisperTarget);
     if (newMessage && client?.connected) {
       client.send(
         `/app/room/${roomId}/whisper/${whisperTarget}`,

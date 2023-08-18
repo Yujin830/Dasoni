@@ -33,7 +33,7 @@ function ToolBar({ onChangeCameraStatus, onChangeMicStatus }: ToolBarProps) {
     if (confirm('미팅 중 퇴장 시 패널티를 받습니다.\n정말 나가시겠습니까?')) {
       // 라이프 감소, 미팅 수 증가, 레이팅 마이너스
       const res = await axios.get(`/api/members/${memberId}`);
-      console.log(res.data);
+      // console.log(res.data);
       dispatch(setRemainLife(res.data.content.remainLife));
       dispatch(setMeetingCount(res.data.content.meetingCount));
       // 메인으로 이동

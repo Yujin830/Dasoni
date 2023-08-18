@@ -30,15 +30,15 @@ export const useOpenvidu = (
   useEffect(() => {
     const openVidu = new OpenVidu();
     const session = openVidu.initSession();
-    console.log('session 초기화');
+    // console.log('session 초기화');
 
     // 스트림 생성 이벤트 구독
     // 스트림 생성 시 subscriber 세팅
     session.on('streamCreated', (event) => {
-      console.log(event);
+      // console.log(event);
       const subscriber = session.subscribe(event.stream, undefined);
       const data = JSON.parse(event.stream.connection.data);
-      console.log('data', data);
+      // console.log('data', data);
       setSubscribers((prev) => [
         ...prev.filter((it) => it.memberId !== data.memberId),
         {
@@ -58,7 +58,7 @@ export const useOpenvidu = (
       event.preventDefault();
 
       const data = JSON.parse(event.stream.connection.data);
-      console.log('data', data);
+      // console.log('data', data);
       setSubscribers((prev) => prev.filter((it) => it.memberId !== data.memberId));
     });
 
@@ -71,7 +71,7 @@ export const useOpenvidu = (
     if (session) {
       getToken(meetingRoomId).then(async (token) => {
         try {
-          console.log(token);
+          // console.log(token);
           // 획득한 토큰으로 세션에 연결
           await session.connect(token, JSON.stringify({ memberId, nickname, gender, job, year }));
           await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
@@ -90,7 +90,7 @@ export const useOpenvidu = (
             mirror: false, // 거울모드 설정
           });
 
-          console.log('publisher ' + publisher);
+          // console.log('publisher ' + publisher);
           setPublisher(publisher);
           session.publish(publisher); // 세션에 publisher 객체 게시, 세션의 streamCreated 이벤트 발생
         } catch (err: any) {
@@ -124,7 +124,7 @@ export const useOpenvidu = (
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => leaveSession());
-    console.log('나가기');
+    // console.log('나가기');
     return () => {
       window.removeEventListener('beforeunload', () => leaveSession());
     };
@@ -177,8 +177,8 @@ const createSession = async (roomId: string) => {
     );
 
     if (res.status == 200) {
-      console.log('세션 생성', res);
-      console.log(res.data.sessionId);
+      // console.log('세션 생성', res);
+      // console.log(res.data.sessionId);
       return res.data.sessionId; // sessionId 반환
     }
   } catch (err) {
@@ -195,7 +195,7 @@ const createSession = async (roomId: string) => {
 // 토큰 생성
 const createToken = async (sessionId: string) => {
   try {
-    console.log('sessionId ' + sessionId);
+    // console.log('sessionId ' + sessionId);
     const res = await axios.post(
       `${APPLICATION_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
       {},
@@ -208,7 +208,7 @@ const createToken = async (sessionId: string) => {
     );
 
     if (res.status == 200) {
-      console.log(res);
+      // console.log(res);
       return res.data.token; // 토큰 반환
     }
   } catch (err) {
