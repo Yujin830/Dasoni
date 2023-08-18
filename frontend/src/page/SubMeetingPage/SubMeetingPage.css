@@ -18,6 +18,12 @@
   padding: 1rem 0;
 }
 
+#sub-meeting .video-container .v-con {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 #sub-meeting .video-container .me {
   width: 20%;
   margin: 1rem 0;
