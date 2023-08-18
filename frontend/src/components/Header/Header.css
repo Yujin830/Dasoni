@@ -209,6 +209,11 @@
   align-items: center;
   justify-content: center;
 }
+.sd-body .sidebar-profile .profile-container {
+  width: 17rem;
+  height: 17rem;
+}
+
 .sd-body .sidebar-rating {
   height: 20%;
   background-color: #fff6f9;
@@ -246,6 +251,13 @@
   }
 }
 
+@media (max-width: 900px) {
+  .sd-body .sidebar-profile .profile-container {
+    width: 12rem;
+    height: 12rem;
+  }
+}
+
 @media (max-width: 768px) {
   .header .logo {
     width: 30%;
@@ -263,5 +275,9 @@
 @media (max-width: 690px) {
   #filter-menu ul {
     width: 32%;
+  }
+  .sd-body .sidebar-profile .profile-container {
+    width: 8rem;
+    height: 8rem;
   }
 }

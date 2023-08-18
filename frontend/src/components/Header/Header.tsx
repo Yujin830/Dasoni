@@ -121,7 +121,9 @@ function Header({ onModalToggle }: HeaderProps) {
             </div>
             <div className="sidebar-rating">My Rating</div> */}
             <div className="sidebar-profile">
-              <RankAvartar profileSrc={profileImageSrc} point={rating} />
+              <div className="profile-container">
+                <RankAvartar profileSrc={profileImageSrc} point={rating} />
+              </div>
             </div>
 
             <div className="sidebar-rating">
