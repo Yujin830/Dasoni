@@ -43,7 +43,7 @@ function WaitingRoomPage() {
     subscribe: (client) => {
       client.subscribe(`/topic/room/${roomId}`, (res: any) => {
         const data = JSON.parse(res.body);
-        console.log(data);
+        // console.log(data);
         data.privateRoomInfo.roomMemberInfoList.map((roomMemberInfo: any) => {
           if (roomMemberInfo.member.memberId === member.memberId) {
             dispatch(setWaitingMemberList([roomMemberInfo]));
@@ -76,7 +76,7 @@ function WaitingRoomPage() {
         roomLeaderId: waitingRoomMemberList[0].roomMemberId,
         roomId: roomId,
       });
-      console.log(res.data);
+      // console.log(res.data);
 
       if (res.data.status.code !== 1224) {
         alert('미팅이 3초 후 시작됩니다');

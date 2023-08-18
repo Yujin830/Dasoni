@@ -123,7 +123,7 @@ function MainPage() {
     try {
       const nextPage = currentPage + 1; // 현재 페이지에서 1 증가
       const res = await axios.get(`/api/rooms?page=${nextPage}`);
-      console.log('다음');
+      // console.log('다음');
       if (res.status === 200) {
         const nextPageData = res.data.content.content;
 
@@ -143,7 +143,7 @@ function MainPage() {
     try {
       const prevPage = Math.max(currentPage - 1, 0); // 현재 페이지에서 1 감소, 최소 0 이상
       const res = await axios.get(`/api/rooms?page=${prevPage}`);
-      console.log('이전');
+      // console.log('이전');
       if (res.status === 200) {
         setCurrentPage(prevPage);
         setWaitingRoomList(res.data.content.content);
@@ -204,7 +204,7 @@ function MainPage() {
 
   // 새로고침 버튼 클릭
   const onClickRefreshBtn = () => {
-    console.log('새로고침');
+    // console.log('새로고침');
     getWaitingRoomList();
   };
 
