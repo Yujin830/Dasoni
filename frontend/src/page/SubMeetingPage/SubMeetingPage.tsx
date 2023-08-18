@@ -56,7 +56,7 @@ function SubMeetingPage() {
     subscribe: (client) => {
       // 서브 세션 방 종료
       client.subscribe(`/topic/room/${roomId}/subClose`, (res: any) => {
-        console.log(res.body);
+        // console.log(res.body);
         setGuideMessage('3초 후 세션이 종료됩니다.');
         setIsClose(true);
         setIsShow(true);

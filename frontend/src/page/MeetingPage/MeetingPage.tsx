@@ -105,12 +105,12 @@ function MeetingPage() {
 
       // 메기 입장 가능 결과 구독
       client.subscribe(`/topic/room/${roomId}/megi`, (res: any) => {
-        console.log(res.body);
+        // console.log(res.body);
       });
 
       // 메기 입장 완료 구독
       client.subscribe(`/topic/room/${roomId}/megiEnter`, (res: any) => {
-        console.log(res.body);
+        // console.log(res.body);
       });
     },
     onClientReady: (client) => {
@@ -197,13 +197,13 @@ function MeetingPage() {
 
   useEffect(() => {
     if (location.state?.isMegi) {
-      console.log('isMegi?', location.state.isMegi);
-      console.log('isMegi is true', roomId);
+      // console.log('isMegi?', location.state.isMegi);
+      // console.log('isMegi is true', roomId);
       setIsMegiFlag(true);
 
       // 예) 특정 알림 표시, 데이터 요청 등의 로직
     } else {
-      console.log('ismegi?', false);
+      // console.log('ismegi?', false);
     }
   }, [location.state]);
 
@@ -215,7 +215,7 @@ function MeetingPage() {
   const fetchElapsedTime = async () => {
     try {
       const response = await axios.get(`/api/rooms/${roomId}/elapsedTime`);
-      console.log('시간', response.data);
+      // console.log('시간', response.data);
       setStartSec(response.data);
     } catch (error) {
       console.error('Failed to fetch elapsed time:', error);
@@ -255,7 +255,7 @@ function MeetingPage() {
 
         // 전체 결과 계산 요청
         const res = await axios.delete(`/api/rooms/${roomId}`);
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.status.code === 7000) {
           client?.send(`/app/room/${roomId}/requestResult`);
         }
@@ -273,7 +273,7 @@ function MeetingPage() {
   // 개인 투표 결과 요청
   const requestPersonalResult = async () => {
     const res = await axios.get(`/api/rooms/${roomId}/members/${memberId}`);
-    console.log(res.data);
+    // console.log(res.data);
 
     const data = res.data;
     dispatch(setRating(data.content.roomMemberInfo.member.rating)); // 변경 후 레이팅 저장

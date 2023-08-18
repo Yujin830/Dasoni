@@ -40,7 +40,7 @@ function LoginPage() {
     try {
       const response: any = await dispatch(loginAsync(data));
       if (response.payload) {
-        console.log('로그인 성공!');
+        // console.log('로그인 성공!');
         alert('로그인되었습니다.');
         if (response.payload.isFirst === 1) {
           setModalOpen(true);
@@ -49,7 +49,7 @@ function LoginPage() {
           navigate('/main'); // 두번째 로그인부터는 바로 메인으로
         }
       } else {
-        console.log('로그인 실패');
+        // console.log('로그인 실패');
 
         alert('올바르지 않은 아이디 혹은 비밀번호입니다.');
         setModalOpen(false); // 로그인에 실패하면 모달 닫기
