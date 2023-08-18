@@ -35,8 +35,8 @@
   height: 50%;
 }
 .top .imag-container {
-  width: 90%;
-  height: auto;
+  width: 13rem;
+  height: 13rem;
 }
 .my-side-bar .info {
   height: 40%;
@@ -214,6 +214,18 @@
   color: #232323;
 }
 
+@media (max-width: 1120px) {
+  .top .imag-container {
+    width: 10rem;
+    height: 10rem;
+  }
+}
+@media (max-width: 860px) {
+  .top .imag-container {
+    width: 8rem;
+    height: 8rem;
+  }
+}
 @media (max-width: 430px) {
   .mypage .my-side-bar {
     display: none;

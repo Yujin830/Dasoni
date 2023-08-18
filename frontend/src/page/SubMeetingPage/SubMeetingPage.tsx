@@ -108,33 +108,35 @@ function SubMeetingPage() {
       <Guide isShow={isShow} guideMessage={guideMessage} />
       <div className="container">
         <div className="video-container">
-          <div className="video-row me">
-            {publisher &&
-              me.map((stream, index) => (
-                <UserVideo
-                  signalOpen={false}
-                  userInfoOpen={false}
-                  key={index}
-                  nickname={stream.nickname}
-                  job={''}
-                  year={''}
-                  streamManager={stream.streamManager}
-                />
-              ))}
-          </div>
-          <div className="video-row other">
-            {publisher &&
-              other.map((stream, index) => (
-                <UserVideo
-                  signalOpen={false}
-                  userInfoOpen={false}
-                  key={index}
-                  nickname={stream.nickname}
-                  job={''}
-                  year={''}
-                  streamManager={stream.streamManager}
-                />
-              ))}
+          <div className="v-con">
+            <div className="video-row me">
+              {publisher &&
+                me.map((stream, index) => (
+                  <UserVideo
+                    signalOpen={false}
+                    userInfoOpen={false}
+                    key={index}
+                    nickname={stream.nickname}
+                    job={''}
+                    year={''}
+                    streamManager={stream.streamManager}
+                  />
+                ))}
+            </div>
+            <div className="video-row other">
+              {publisher &&
+                other.map((stream, index) => (
+                  <UserVideo
+                    signalOpen={false}
+                    userInfoOpen={false}
+                    key={index}
+                    nickname={stream.nickname}
+                    job={''}
+                    year={''}
+                    streamManager={stream.streamManager}
+                  />
+                ))}
+            </div>
           </div>
           <ToolBar
             onChangeCameraStatus={onChangeCameraStatus}
