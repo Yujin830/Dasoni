@@ -1,0 +1,30 @@
+.stream-video {
+  width: 100%;
+  border-radius: 0.6rem;
+}
+
+.meeting-signal {
+  position: absolute;
+  top: 0;
+  right: 30px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.meeting-signal span {
+  color: #ff257e;
+  transition: all 0.3s;
+}
+
+.meeting-signal span:hover {
+  transform: scale(1.5);
+}
+
+.meeting-signal span.sended {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+}

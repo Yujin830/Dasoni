@@ -1,0 +1,62 @@
+.recent-match-avartar {
+  position: relative;
+  height: 60%;
+  padding: 1vh;
+}
+
+.recent-match-avartar .profile {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+.recent-match-avartar .close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border-radius: 50%;
+  background-color: #fff;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  cursor: pointer;
+}
+
+.recent-match-avartar .close.on-mouse {
+  display: flex;
+}
+
+.recent-match-avartar .close:hover {
+  background-color: #232323;
+  color: #fff;
+}
+
+.recent-match-avartar .chat {
+  background-color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  position: absolute;
+  bottom: 1vh;
+  right: 1vh;
+  padding: 0.2rem;
+  color: #232323;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+}
+
+.recent-match-avartar .chat:hover {
+  background-color: #232323;
+  color: #fff;
+}

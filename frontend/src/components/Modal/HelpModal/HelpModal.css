@@ -1,0 +1,84 @@
+.modal .box .explain {
+  width: 100%;
+  height: 25%;
+  color: #232323;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 2.5vh;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25rem; /* 111.111% */
+  letter-spacing: 0.00625rem;
+  margin-top: 1vh;
+}
+.modal .box .mobile_explain {
+  width: 100%;
+  height: 25%;
+  color: #232323;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 2.5vh;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25rem; /* 111.111% */
+  letter-spacing: 0.00625rem;
+  margin-top: 1vh;
+}
+
+/* .pagenation {
+  margin-bottom: 2vh;
+} */
+
+.helpmodal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: 0.5s;
+  opacity: 0;
+  visibility: hidden;
+}
+.helpmodal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.swiper {
+  height: 100%;
+  width: 80%;
+}
+
+.modal .box .image {
+  height: 100%;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .modal {
+    width: 80%;
+  }
+}
+@media (max-width: 768px) {
+  .modal .box h2 {
+    font-size: 3vh;
+  }
+  .modal .box .explain {
+    font-size: 2vh;
+  }
+}
+@media (min-width: 426px) {
+  .mobile_explain {
+    display: none;
+  }
+}
+@media (max-width: 426px) {
+  .modal {
+    width: 90%;
+  }
+  .modal .box .explain {
+    display: none;
+  }
+}

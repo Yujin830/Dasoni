@@ -1,0 +1,105 @@
+#result-page {
+  height: 100vh;
+}
+
+#result-page main {
+  height: 85%;
+  position: relative;
+  overflow: hidden;
+  /* margin-top: 2rem; */
+  margin: 1rem;
+  text-align: center;
+}
+
+#result-page main #title-box {
+  /* margin-bottom: 2rem; */
+  height: 20%;
+}
+
+#result-page main #title-box .title {
+  color: #ec5e98;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+#result-page main #title-box .title-msg {
+  color: #232323;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+#result-page main #user-info-box {
+  /* margin-bottom: 1.5rem; */
+  height: 60%;
+  display: flex;
+  align-items: center;
+}
+
+#result-page main .show-rating {
+  height: 10%;
+}
+#result-page main .result-rating {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #232323;
+  /* margin-bottom: 2rem; */
+}
+
+#result-page main .buttons {
+  display: flex;
+  height: 10%;
+  justify-content: flex-end;
+}
+
+#result-page main .buttons .to-main-btn {
+  background-color: #ec5e98;
+  height: 100%;
+  font-size: 1.1rem;
+  color: #fff;
+  border-radius: 0.5rem;
+  width: auto;
+  width: 10rem;
+}
+
+#result-page #success-result .rank-avartar {
+  width: 80%;
+  height: 60%;
+}
+
+#result-page #faile-result .rank-avartar {
+  width: 80%;
+}
+
+@media (max-width: 1200px) {
+  #result-page main #title-box .title {
+    font-size: 2.5rem;
+  }
+
+  #result-page main #title-box .title-msg {
+    font-size: 1.8rem;
+  }
+  #result-page main .result-rating {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #result-page main #title-box .title {
+    font-size: 2rem;
+  }
+
+  #result-page main #title-box .title-msg {
+    font-size: 1.5rem;
+  }
+  #result-page main .result-rating {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 426px) {
+  #result-page main .buttons .to-main-btn {
+    width: 6rem;
+  }
+}

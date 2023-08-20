@@ -1,0 +1,55 @@
+.video-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-box .video-name {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  background: #fff;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+  box-sizing: border-box;
+}
+
+.video-box .speaking-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 0.3rem;
+  background-color: #598eff;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 1rem;
+}
+
+.video-box .speaking-box .speaking-signal::after {
+  content: '';
+  width: 0.25rem;
+  height: 0.1rem;
+  margin-right: 0.1rem;
+  background-color: #fff;
+  display: inline-block;
+  border-radius: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.video-box .speaking-box .speaking-signal {
+  box-sizing: border-box;
+}
+
+.video-box .speaking-box .speaking-signal.normal.speaking::after {
+  height: 0.4rem;
+}
+
+.video-box .speaking-box .speaking-signal.large.speaking::after {
+  height: 0.7rem;
+}

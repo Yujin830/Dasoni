@@ -1,58 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from './page/LoginPage/LoginPage';
+import SignUpPage from './page/SignUpPage/SignUpPage';
+import MyPage from './page/MyPage/MyPage';
+import MainPage from './page/MainPage/MainPage';
+import WaitingRoomPage from './page/WatingRoomPage/WatingRoomPage';
+import MeetingPage from './page/MeetingPage/MeetingPage';
+import RatingModal from './components/Modal/RatingModal/RatingModal';
+import ResultModal from './components/Modal/ResultModal/ResultModal';
+import SubMeetingPage from './page/SubMeetingPage/SubMeetingPage';
+import ResultPage from './page/ResultPage/ResultPage';
 
 function App() {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    // 모달을 닫는 동작을 여기에 구현
+    setModalOpen(false);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginPage />}></Route>
+          <Route path="/main" element={<MainPage />}></Route>
+          <Route path="/waiting-room/:roomId" element={<WaitingRoomPage />}></Route>
+          <Route path="/meeting/:roomId" element={<MeetingPage />}></Route>
+          <Route path="/sub-meeting/:roomId" element={<SubMeetingPage />}></Route>
+          <Route path="/result" element={<ResultPage />}></Route>
+          <Route path="/signup" element={<SignUpPage />}></Route>
+          <Route path="/mypage" element={<MyPage />}></Route>
+          <Route path="/test" element={<ResultModal onClose={handleCloseModal} />} />{' '}
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
 
 export default App;
+3;

@@ -17,8 +17,11 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### yml ingnore ###
+backend/src/main/resources/application.yml
+
 ### IntelliJ IDEA ###
-.idea
+*.idea
 *.iws
 *.iml
 *.ipr

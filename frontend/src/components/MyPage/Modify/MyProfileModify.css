@@ -1,0 +1,47 @@
+#user {
+  border-bottom: 2px solid #232323;
+}
+
+.mypage .modify-form {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mypage .modify-form .info-input {
+  width: 70%;
+  height: 7vh;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  border: 3px solid #d9d9d9;
+  background: #fff;
+  color: #898989;
+  font-size: 2.5vh;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.7rem;
+}
+
+footer {
+  border-top: 2px solid #232323;
+}
+
+@media (max-width: 970px) {
+  .mypage .modify-form .info-input {
+    width: 90%;
+  }
+  .mypage .modify-form .AddressSelecter {
+    justify-content: center;
+    width: 100%;
+  }
+  .mypage .modify-form .AddressSelecter .AddressContainer {
+    width: 90%;
+  }
+  .mypage .modify-form .AddressSelecter select {
+    width: calc(50% - 0.75rem);
+    height: 3rem;
+    /* font-size: 2vh; */
+  }
+}

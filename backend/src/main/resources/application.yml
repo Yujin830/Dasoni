@@ -1,14 +1,28 @@
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-    groups-order: DESC
-    operationsSorter: method
-    disable-swagger-default-url: true
-    display-request-duration: true
-  api-docs:
-    path: /api-docs
-  show-actuator: true
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
-  paths-to-match:
-    - /v1/**
+security:
+  jwt:
+    secret: "${JWT_SECRET}"
+
+#    header: Authorization
+#    secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+#    token-validty-in-seconds: 86400
+
+logging:
+  level:
+    org.hibernate.sql: debug
+    org.hibernate.type: trace
+
+cloud:
+  aws:
+    credentials:
+      access-key: "${AWS_ACCESS_KEY}"
+      secret-key: "${AWS_SECRET_KEY}"
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+#servers:
+#  - url: http://i9a307.p.ssafy.io/
+#    description: Production server
+
+# access-key와 secret-key는 반드시 gitignore 확인!!!!!!
+# 두번 확인 !!!!
