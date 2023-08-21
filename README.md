@@ -12,10 +12,6 @@
 
 <br>
 
-### 서버 아키텍처
-
-![Alt text](image.png)
-
 ### Back-end & Front-end
 
 ![Java](https://img.shields.io/badge/Java-yellow.svg?&style=for-the-badge&logo=java&logoColor=#3776AB)
@@ -63,9 +59,11 @@
 - 🔹 기획
   - 🔹 요구사항 정의서
   - 🔹 피그마
-  - 🔹 ERD
+
 - 🔹 설계
   - 🔹 API 문서
+  - 🔹 서비스 아키텍처
+  - 🔹 ERD
 
 ### 3️⃣ 핵심 기능
 
@@ -105,7 +103,7 @@
 | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------- |
 | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend <br> DevOps</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:pink">Frontend</p> | <p align="left" style="color:pink">Frontend</p>   |
 | WebSocket <br> 채팅,매칭,알람 서비스              | 매칭, 레이팅 알고리즘 <br> REST API               | CI/CD <br> 프로필 사진 API                                    |                                                   |                                                 | 회원가입 및 로그인 <br> 모달 및 컴포넌트 <br> CSS |
-|                                                   | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)              |                                                   |                                                 | [@minaldo15](https://github.com/minaldo15)        |
+|                                                   | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)| [@Yujin830](https://github.com/Yujin830) | [@KimSeonHui](https://github.com/KimSeonHui) | [@minaldo15](https://github.com/minaldo15)|
 
 <br>
 
@@ -115,9 +113,18 @@
 
 <h1 align="center"> 기획 & 설계 </h1>
 
+<p align="center">프로젝트 기획 및 설계 문서들입니다</p>
+
 ## 🖋 기획
 
+### 📃 [요구사항 정의서](https://plump-sailor-daa.notion.site/4d2fb2d9fa3049e6a0689b2c40d1cd52?pvs=4)
+### 🎨 [피그마](https://www.figma.com/file/lMRXAT3HPBflT8HtT5Z20T/%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%97%98?type=design&node-id=102%3A567&mode=design&t=cq2dlHwKx8UW5FVs-1)
+
 ## 🛠 설계
+
+### 📕 [API 문서](https://plump-sailor-daa.notion.site/API-57a6d9c4a1f24f96bcd6625c08a53d73?pvs=4)
+### 💿 [ERD](/img/ERD.png)
+### 📁 [서비스 아키텍처](/img/Tech.png)
 
 <br>
 
@@ -133,7 +140,13 @@
 
 ## 팀 컨벤션
 
+### 브랜치 전략 : git-flow 사용
+
+### 
+
 ## 협업
+
+
 
 <br>
 
