@@ -103,7 +103,7 @@
 | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------- |
 | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend <br> DevOps</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:pink">Frontend</p> | <p align="left" style="color:pink">Frontend</p>   |
 | WebSocket <br> 채팅,매칭,알람 서비스              | 매칭, 레이팅 알고리즘 <br> REST API               | CI/CD <br> 프로필 사진 API                                    |                                                   |                                                 | 회원가입 및 로그인 <br> 모달 및 컴포넌트 <br> CSS |
-|                                                   | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)| [@Yujin830](https://github.com/Yujin830) | [@KimSeonHui](https://github.com/KimSeonHui) | [@minaldo15](https://github.com/minaldo15)|
+| [@27kanghan](https://github.com/27kanghan) | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)| [@Yujin830](https://github.com/Yujin830) | [@KimSeonHui](https://github.com/KimSeonHui) | [@minaldo15](https://github.com/minaldo15)|
 
 <br>
 
