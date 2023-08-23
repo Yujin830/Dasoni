@@ -83,6 +83,7 @@
 - [x] [SSE와 비동기 처리](https://github.com/YeryunJung)
 - [x] [매칭 알고리즘 구조 개선](https://github.com/Fishphobiagg)
 - [x] [리덕스 스토어 새로고침 상태유지](https://github.com/minaldo15)
+- [x] [WebSocket과 STOMP, SSE 비동기 처리](https://velog.io/@27kanghan/WebSocket-STOMP-React%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%A4%91-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85)
 
 <br>
 
