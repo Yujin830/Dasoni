@@ -84,6 +84,7 @@
 - [x] [매칭 알고리즘 구조 개선](https://github.com/Fishphobiagg)
 - [x] [리덕스 스토어 새로고침 상태유지](https://github.com/minaldo15)
 - [x] [WebSocket과 STOMP, SSE 비동기 처리](https://velog.io/@27kanghan/WebSocket-STOMP-React%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%A4%91-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85)
+- [x] [커스텀 훅으로 웹 소켓 연결 중복 코드 제거, 비동기 상태 설정으로 Stomp client 에러 해결](https://sunsunny.tistory.com/93)
 
 <br>
 
@@ -104,7 +105,7 @@
 | **강한(팀장**)                                    | **이명우**                                        | **권현우**                                                    | **김유진**                                        | **김선희**                                      | **민경현**                                        |
 | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------- |
 | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:skyblue">Backend <br> DevOps</p> | <p align="left" style="color:skyblue">Backend</p> | <p align="left" style="color:pink">Frontend</p> | <p align="left" style="color:pink">Frontend</p>   |
-| WebSocket <br> 채팅,매칭,알람 서비스              | 매칭, 레이팅 알고리즘 <br> REST API               | CI/CD <br> 프로필 사진 API                                    |                                                   |                                                 | 회원가입 및 로그인 <br> 모달 및 컴포넌트 <br> CSS |
+| WebSocket <br> 채팅,매칭,알람 서비스              | 매칭, 레이팅 알고리즘 <br> REST API               | CI/CD <br> 프로필 사진 API                                    |                                                   |  WebSocket 대기방, 미팅 시스템 <br > WebRTC <br> UX / UI                              | 회원가입 및 로그인 <br> 모달 및 컴포넌트 <br> CSS |
 | [@27kanghan](https://github.com/27kanghan)        | [@Fishphobiagg](https://github.com/Fishphobiagg)  | [@mycodeisnoob](https://github.com/mycodeisnoob)              | [@Yujin830](https://github.com/Yujin830)          | [@KimSeonHui](https://github.com/KimSeonHui)    | [@minaldo15](https://github.com/minaldo15)        |
 
 <br>
