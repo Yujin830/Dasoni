@@ -1,6 +1,10 @@
-<div align="center"><img src="frontend/src/assets/image/logo.png"
+<div align="center">
+<a href="https://lab.ssafy.com/s09-webmobile1-sub2/S09P12A307"><img src="frontend/src/assets/image/logo.png"
   alt="다소니 로고"
-/></div>
+/>
+</a>
+<p>☝로고를 클릭하면 UCC로 이동합니다</p>
+</div>
 
 <br>
 
@@ -83,7 +87,7 @@
 
 일반적으로 미팅/소개팅을 할 때는 상대방의 사진과 간단한 정보 등을 전달 받게 됩니다. 하지만 막상 실제로 만나보면 이전에 받은 사진과 실물이 달라 실망할 때 많습니다.
 
-그래서 [다소니](https://i9a307.p.ssafy.io/)는 미리 주고받는 사진 없이 다양한 사람들과의 랜덤 미팅으로 실망감 대신 설레고 즐길 수 있는 미팅을 만들고자 했습니다.
+그래서 [다소니](https://i9a307.p.ssafy.io/)는 미리 주고받는 정보 없이 다양한 사람들과의 랜덤 미팅으로 실망감 대신 설레고 즐길 수 있는 미팅을 만들고자 했습니다.
 
 <br>
 
