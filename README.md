@@ -147,15 +147,15 @@
 
 ### 실시간 매칭
 
-- (https://github.com/minaldo15/class_work/blob/main/project/assets/%EC%A7%B1%EA%B5%AC%EB%B9%A0%EB%A5%B8%EB%A7%A4%EC%B9%AD-_online-video-cutter.com_.gif)
+- ![image](https://github.com/minaldo15/class_work/blob/main/project/assets/%EC%A7%B1%EA%B5%AC%EB%B9%A0%EB%A5%B8%EB%A7%A4%EC%B9%AD-_online-video-cutter.com_.gif)
 
 ### 다대다 화상 미팅
 
-- (https://github.com/minaldo15/class_work/blob/main/project/assets/%EC%A7%B1%EA%B5%AC%EC%82%AC%EC%84%A4%EB%B0%A9-_online-video-cutter.com_.gif)
+- ![image](https://github.com/minaldo15/class_work/blob/main/project/assets/%EC%A7%B1%EA%B5%AC%EC%82%AC%EC%84%A4%EB%B0%A9-_online-video-cutter.com_.gif)
 
 ### 레이팅 시스템
 
-- (https://github.com/minaldo15/class_work/blob/main/project/assets/%EC%9C%A0%EB%A6%AC%ED%99%94%EB%A9%B4-_online-video-cutter.com_.gif)
+- ![image](https://github.com/minaldo15/class_work/blob/main/project/assets/%EC%9C%A0%EB%A6%AC%ED%99%94%EB%A9%B4-_online-video-cutter.com_.gif)
 - 로직
 
 <br><br>
