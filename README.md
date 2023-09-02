@@ -145,8 +145,30 @@
 ![짱구빠른매칭-_online-video-cutter com_](https://github.com/minaldo15/class_work/assets/122500569/15434eac-ac60-4f66-98c5-13f15ebf688c)
 
 ### 다대다 화상 미팅
+#### 미팅방 입장
 ![짱구사설방-_online-video-cutter com_](https://github.com/minaldo15/class_work/assets/122500569/21f710af-1215-460b-860b-87a4613ed1a4)
 
+
+#### 첫인상 투표
+![첫인상 투표](./img/first_vote.GIF)
+
+
+#### 정보 공개
+![정보 공개](./img/open_info.GIF)
+
+
+#### 질문 공개
+![질문 공개](./img/open_question.GIF)
+
+#### 메기 입장
+![메기 입장](./img/megi_enter.GIF)
+
+#### 최종 투표
+![최종 투표](./img/fianl_vote.GIF)
+
+
+#### 매칭된 둘만의 채팅방
+![매칭된 둘만의 채팅방](./img/match_session.GIF)
 
 <br><br>
 
