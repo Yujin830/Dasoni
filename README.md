@@ -168,7 +168,7 @@
 
 
 #### 매칭된 둘만의 채팅방
-![매칭된 둘만의 채팅방](./img/match_session.GIF)
+![매칭된 둘만의 채팅방](./img/match_session.gif)
 
 <br><br>
 
