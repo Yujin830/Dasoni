@@ -134,10 +134,6 @@
 
 ![13 미팅방페이지 - 최종 시그널](https://github.com/KimSeonHui/cs-study/assets/44824456/86b157d7-d72d-4d0d-afb6-dfec65662d45)
 
-### 레이팅 시스템
-
-- 시연 시나리오
-- 로직
 
 <br><br>
 
@@ -146,26 +142,37 @@
 ## 핵심 기능
 
 ### 실시간 매칭
-
-- ![짱구빠른매칭-_online-video-cutter com_](https://github.com/minaldo15/class_work/assets/122500569/15434eac-ac60-4f66-98c5-13f15ebf688c)
+![짱구빠른매칭-_online-video-cutter com_](https://github.com/minaldo15/class_work/assets/122500569/15434eac-ac60-4f66-98c5-13f15ebf688c)
 
 ### 다대다 화상 미팅
+#### 미팅방 입장
+![짱구사설방-_online-video-cutter com_](https://github.com/minaldo15/class_work/assets/122500569/21f710af-1215-460b-860b-87a4613ed1a4)
 
-- ![짱구사설방-_online-video-cutter com_](https://github.com/minaldo15/class_work/assets/122500569/21f710af-1215-460b-860b-87a4613ed1a4)
 
-### 레이팅 시스템
+#### 첫인상 투표
+![첫인상 투표](./img/first_vote.GIF)
 
-- ![유리화면-_online-video-cutter com_](https://github.com/minaldo15/class_work/assets/122500569/feb3731c-c966-4ac7-bc0e-8db55d806b99)
 
-- 로직
+#### 정보 공개
+![정보 공개](./img/open_info.GIF)
+
+
+#### 질문 공개
+![질문 공개](./img/open_question.GIF)
+
+#### 메기 입장
+![메기 입장](./img/megi_enter.GIF)
+
+#### 최종 투표
+![최종 투표](./img/fianl_vote.GIF)
+
+
+#### 매칭된 둘만의 채팅방
+![매칭된 둘만의 채팅방](./img/match_session.GIF)
 
 <br><br>
 
 # ⚽트러블 슈팅
-
-- [x] [SSE와 비동기 처리](https://github.com/YeryunJung)
-- [x] [매칭 알고리즘 구조 개선](https://github.com/Fishphobiagg)
-- [x] [리덕스 스토어 새로고침 상태유지](https://github.com/minaldo15)
 - [x] [WebSocket과 STOMP, SSE 비동기 처리](https://velog.io/@27kanghan/WebSocket-STOMP-React%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%A4%91-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85)
 - [x] [커스텀 훅으로 웹 소켓 연결 중복 코드 제거, 비동기 상태 설정으로 Stomp client 에러 해결](https://sunsunny.tistory.com/93)
 - [x] [로컬 환경과 배포 환경에서 시간이 상이함으로 발생하는 문제 해결](https://velog.io/@hjk8596/%EB%A1%9C%EC%BB%AC-%ED%99%98%EA%B2%BD%EA%B3%BC-%EB%B0%B0%ED%8F%AC-%EC%84%9C%EB%B2%84-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%8B%9C%EA%B0%84%EC%9D%B4-%EC%83%81%EC%9D%B4%ED%95%98%EC%97%AC-%EC%9D%BC%EC%96%B4%EB%82%98%EB%8A%94-%EB%AC%B8%EC%A0%9C)
